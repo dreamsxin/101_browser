@@ -1,7 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "compiler_backend", "projects\compiler_backend\compiler_backend.vcproj", "{0FCA25E9-C3FB-4BA8-BB7D-CE55DB3135AD}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0FCA25E9-C3FB-4BA8-BB7D-CE55DB3135AD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0FCA25E9-C3FB-4BA8-BB7D-CE55DB3135AD}.Debug|Win32.Build.0 = Debug|Win32
+		{0FCA25E9-C3FB-4BA8-BB7D-CE55DB3135AD}.Release|Win32.ActiveCfg = Release|Win32
+		{0FCA25E9-C3FB-4BA8-BB7D-CE55DB3135AD}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection

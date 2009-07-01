@@ -1,2 +1,12 @@
 *.ncb
 *.suo
+*.user
+*.dep
+*.obj
+*.manifest
+*.exe
+*.ilk
+*.pdb
+*.idb
+*.res
+BuildLog.htm
