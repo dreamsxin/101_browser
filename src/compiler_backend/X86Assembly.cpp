@@ -9,7 +9,7 @@ AssemblyInstruction moveToEAX(unsigned int in_value)
 
 AssemblyInstruction moveToEBX(unsigned int in_value)
 {
-	unsigned char opCode[5]={0xB9};
+	unsigned char opCode[5]={0xBB};
 	memcpy(opCode+1, &in_value, 4);
 	return AssemblyInstruction(opCode, opCode+5);
 }
