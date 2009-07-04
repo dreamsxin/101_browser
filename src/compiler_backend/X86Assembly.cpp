@@ -4,26 +4,26 @@ AssemblyInstruction moveToRegister32(Register32 in_register, int in_value)
 {
 	unsigned char opCode[5]={0xB8+in_register};
 	memcpy(opCode+1, &in_value, 4);
-	return AssemblyInstruction(opCode, opCode+5);
+	return AssemblyInstruction(opCode, opCode+sizeof(opCode));
 }
 
 AssemblyInstruction pop32(Register32 in_register)
 {
 	unsigned char opCode[1]={0x58+in_register};
-	return AssemblyInstruction(opCode, opCode+1);
+	return AssemblyInstruction(opCode, opCode+sizeof(opCode));
 }
 
 AssemblyInstruction push32(int in_value)
 {
 	unsigned char opCode[5]={0x68};
 	memcpy(opCode+1, &in_value, 4);
-	return AssemblyInstruction(opCode, opCode+5);
+	return AssemblyInstruction(opCode, opCode+sizeof(opCode));
 }
 
 AssemblyInstruction ret()
 {
 	unsigned char opCode[1]={0xC3};
-	return AssemblyInstruction(opCode, opCode+1);
+	return AssemblyInstruction(opCode, opCode+sizeof(opCode));
 }
 
 CompiledProgram::CompiledProgram(Program in_program)
