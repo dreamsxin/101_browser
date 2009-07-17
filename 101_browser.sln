@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "compiler_backend", "project
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "parser", "projects\parser\parser.vcproj", "{7AAA2692-2A5A-4779-9936-6A164A390750}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gui", "projects\gui\gui.vcproj", "{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,10 @@ Global
 		{7AAA2692-2A5A-4779-9936-6A164A390750}.Debug|Win32.Build.0 = Debug|Win32
 		{7AAA2692-2A5A-4779-9936-6A164A390750}.Release|Win32.ActiveCfg = Release|Win32
 		{7AAA2692-2A5A-4779-9936-6A164A390750}.Release|Win32.Build.0 = Release|Win32
+		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.Debug|Win32.Build.0 = Debug|Win32
+		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.Release|Win32.ActiveCfg = Release|Win32
+		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
