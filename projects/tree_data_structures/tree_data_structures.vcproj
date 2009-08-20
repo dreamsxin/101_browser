@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="parser"
-	ProjectGUID="{7AAA2692-2A5A-4779-9936-6A164A390750}"
-	RootNamespace="parser"
+	Name="tree_data_structures"
+	ProjectGUID="{F908111E-9B0B-497E-AF81-A38CB1CB37F0}"
+	RootNamespace="tree_data_structures"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -41,13 +41,12 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
-				WarningLevel="4"
+				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -115,7 +114,6 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../../include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -173,15 +171,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\src\parser\Parser.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\parser\ParserDataStructures.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\parser\ParserUnicodeEncodings.cpp"
+				RelativePath="..\..\src\tree_data_structures\TreeDataStructuresTest.cpp"
 				>
 			</File>
 		</Filter>
@@ -191,11 +181,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\include\parser\ParserDataStructures.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\parser\ParserUnicodeEncodings.h"
+				RelativePath="..\..\include\tree_data_structures\MultiCategorialTree.h"
 				>
 			</File>
 		</Filter>
@@ -205,10 +191,6 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
-		<File
-			RelativePath=".\ClassDiagram1.cd"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

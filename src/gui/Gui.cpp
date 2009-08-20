@@ -73,7 +73,8 @@ void ReshapeGL (int width, int height)									// Reshape The Window When It's M
 void destroyWindow(Window* in_window);
 
 bool createWindow(Window* in_window, std::wstring in_titleText, 
-				  int in_width, int in_height, BYTE in_colorBits, BYTE in_depthBits)
+				  int in_width, int in_height, BYTE in_colorBits, BYTE in_depthBits, 
+				  int nCmdShow)
 {
 	int			PixelFormat;											// Holds The Results After Searching For A Match
 	DWORD		dwExStyle = WS_EX_APPWINDOW;							// Window Extended Style
@@ -160,7 +161,7 @@ bool createWindow(Window* in_window, std::wstring in_titleText,
 		return false;													// Return False
 	}
 
-	ShowWindow (in_window->hWnd, SW_NORMAL);							// Make The Window Visible
+	ShowWindow (in_window->hWnd, nCmdShow);								// Make The Window Visible
 	in_window->isVisible = true;
 
 	ReshapeGL(in_width, in_height);
@@ -195,8 +196,8 @@ void showErrorMessageBox(const wchar_t* const in_message)
 }
 
 int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
-					HINSTANCE	hPrevInstance,		// Previous Instance
-					LPSTR		lpCmdLine,			// Command Line Parameters
+					HINSTANCE,	// hPrevInstance	// Previous Instance
+					LPSTR,		//lpCmdLine,		// Command Line Parameters
 					int			nCmdShow)			// Window Show State
 {
 	MSG		msg;									// Windows Message Structure
@@ -211,7 +212,8 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 		return 0;
 	}
 
-	if (!createWindow(&window, L"101 browser", 640, 480, 32, 32))
+	// for the 2nd time (and so on) we replace nCmdShow by SW_NORMAL (for example)
+	if (!createWindow(&window, L"101 browser", 640, 480, 32, 32, nCmdShow))
 	{
 		showErrorMessageBox(L"Could not create window!");// Quit If Window Was Not Created
 		return 0;

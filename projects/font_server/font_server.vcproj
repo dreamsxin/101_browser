@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="parser"
-	ProjectGUID="{7AAA2692-2A5A-4779-9936-6A164A390750}"
-	RootNamespace="parser"
+	Name="font_server"
+	ProjectGUID="{E6D6C259-034B-4045-804D-6DB07D7D897D}"
+	RootNamespace="font_server"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -47,7 +47,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
-				WarningLevel="4"
+				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -173,15 +173,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\src\parser\Parser.cpp"
+				RelativePath="..\..\src\font_server\FontServerTest.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\parser\ParserDataStructures.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\parser\ParserUnicodeEncodings.cpp"
+				RelativePath="..\..\src\font_server\ReadTTF.cpp"
 				>
 			</File>
 		</Filter>
@@ -191,11 +187,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\include\parser\ParserDataStructures.h"
+				RelativePath="..\..\include\font_server\DynamicMemory.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\parser\ParserUnicodeEncodings.h"
+				RelativePath="..\..\include\font_server\FontServer.h"
 				>
 			</File>
 		</Filter>
@@ -205,10 +201,6 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
-		<File
-			RelativePath=".\ClassDiagram1.cd"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

@@ -43,7 +43,7 @@ class CompiledProgram
 protected:
 	size_t mProgSize;
 	LPVOID mpProg;
-	CompiledProgram(const CompiledProgram& in_crProgram) {}
+	CompiledProgram(const CompiledProgram&) {}
 
 public:
 	CompiledProgram(Program in_program);

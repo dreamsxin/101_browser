@@ -9,4 +9,6 @@
 *.pdb
 *.idb
 *.res
+testfiles/fonts/*.ttf
+testfiles/fonts/*.TTF
 BuildLog.htm
