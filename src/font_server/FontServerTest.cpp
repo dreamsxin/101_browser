@@ -3,7 +3,7 @@
 
 int main(int argc, char** argv)
 {
-	printf("%i\n", readTTF("../../testfiles/fonts/LucidaBrightRegular.ttf"));
+	printf("%i\n", readTTF("../../testfiles/fonts/timesi.ttf"));
 
 	return 0;
 }

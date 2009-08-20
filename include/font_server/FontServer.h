@@ -59,7 +59,7 @@ public:
 
 	// Required
 	void* table_OS2;  // 'OS/2'
-	void* table_cmap; // 'cmap'
+	void* table_cmap; // 'cmap' - mapping of characters to glyphs
 	void* table_glyf; // 'glyf'
 	void* table_head; // 'head'
 	void* table_hhea; // 'hhea'
@@ -70,10 +70,17 @@ public:
 	void* table_post; // 'post'
 
 	// Optional
+	void* table_DSIG; // 'DSIG' - meaning unknown -> 'digital signature' ?
+	void* table_GDEF; // 'GDEF' - for Open Type
+	void* table_GPOS; // 'GPOS' - for Open Type
 	void* table_LTSH; // 'LTSH'
+	void* table_PCLT; // 'PCLT' - PCL5 
+	void* table_VDMX; // 'VDMX'
 	void* table_cvt;  // 'cvt '
 	void* table_fpgm; // 'fpgm'
+	void* table_gasp; // 'gasp'
 	void* table_hdmx; // 'hdmx'
+	void* table_kern; // 'kern' - kerning
 	void* table_prep; // 'prep'
 };
 

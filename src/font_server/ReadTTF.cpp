@@ -81,6 +81,8 @@ int readTTF(char* filename) {
 
 	for (vector<TableDirectory>::iterator i=font.tableDirectories.begin(); i!=font.tableDirectories.end(); ++i)
 	{
+		printf("Table:\t%c%c%c%c\n", i->tag.bytes[0], i->tag.bytes[1], i->tag.bytes[2], i->tag.bytes[3]);
+		
 		DynamicMemory actTable((i->length+3)& ~3);
 
 		fseek(fontFile, i->offset, SEEK_SET);
@@ -96,7 +98,7 @@ int readTTF(char* filename) {
 
 		switch (i->tag.uint) {
 			case CHAR4_TO_UINT_LIL_ENDIAN('c', 'm', 'a', 'p'):
-				printf("cmap found\n");
+				//printf("cmap found\n");
 				break;
 			case CHAR4_TO_UINT_LIL_ENDIAN('g', 'l', 'y', 'f'):
 				break;

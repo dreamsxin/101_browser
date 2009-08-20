@@ -11,4 +11,6 @@
 *.res
 testfiles/fonts/*.ttf
 testfiles/fonts/*.TTF
+testfiles/fonts/*.fon
+testfiles/fonts/*.FON
 BuildLog.htm
