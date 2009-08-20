@@ -35,6 +35,8 @@ unsigned int computeCheckSum(const DynamicMemory& actTable, const bool headAdjus
 	return sum;
 }
 
+
+
 int readTTF(char* filename) {
 	FILE* fontFile = fopen(filename, "rb");
 

@@ -29,8 +29,27 @@ public:
 	unsigned int length;
 };
 
+class CmapTableEntry
+{
+public:
+	unsigned short platformID;
+	unsigned short encodingID;
+	unsigned int offset;
+};
+
+class CmapTable
+{
+public:
+	unsigned short versionNumber;
+	unsigned short encodingTablesCount;
+	std::vector<CmapTableEntry> cmapTableEntries;
+};
+
+
 // Stop packing structures to 1-byte boundaries
 #pragma pack(pop)
+
+
 
 class TrueTypeFont
 {
