@@ -1,0 +1,98 @@
+#ifndef _AVLTreeClasses_h
+#define _AVLTreeClasses_h
+
+#include <cassert>
+
+#include "BasicDataStructures/Tree/BinaryTree.h"
+#include "BasicDataStructures/Tree/BinaryTreeHelper.h"
+
+typedef signed char AVLTreeNodePropertyType;
+
+// If this function does not return NULL, the return value
+// is the new root of the tree
+template <typename Type> BinaryTreeNode<Type, AVLTreeNodePropertyType>* avlTreeInserted(
+	BinaryTreeNode<Type, AVLTreeNodePropertyType>* in_pNode)
+{
+	assert(in_pNode);
+
+	in_pNode->nodeProperty()=0;
+
+	BinaryTreeNode<Type, AVLTreeNodePropertyType>* pActNode = in_pNode;
+
+	while (!isRoot(pActNode))
+	{
+		assert((pActNode->parent()->nodeProperty()==-1) || (pActNode->parent()->nodeProperty()==0) || (pActNode->parent()->nodeProperty()==1));
+		
+		if (isLeftChild(pActNode))
+		{
+			pActNode->parent()->nodeProperty()--;
+		}
+		else
+		{
+			pActNode->parent()->nodeProperty()++;
+		}
+
+		pActNode=pActNode->parent();
+
+		if (pActNode->nodeProperty()==0)
+			return NULL;
+		// if it is -1 or 1 -> simply continue
+		else if (pActNode->nodeProperty()==-2)
+		{
+			BinaryTreeNode<Type, AVLTreeNodePropertyType>* pChild = pActNode->left();
+			assert(pChild);
+
+			assert(pChild->nodeProperty()==-1 || pChild->nodeProperty()==1);
+
+			if (pChild->nodeProperty()==-1)
+			{
+				return rotateAVLTreeRight(pActNode);
+			}
+			else 
+			{
+				assert(pChild->nodeProperty()==1);
+
+				BinaryTreeNode<Type, AVLTreeNodePropertyType>* res = rotateAVLTreeLeft(pChild);
+
+				// pChild is not root; so rotateAVLTreeLeft must not set a new root
+				// (=return of a non-NULL value)
+				assert(!res);
+				return rotateAVLTreeRight(pActNode);
+			}
+			break;
+		}
+		else if (pActNode->nodeProperty()==2)
+		{
+			BinaryTreeNode<Type, AVLTreeNodePropertyType>* pChild = pActNode->right();
+			assert(pChild);
+
+			assert(pChild->nodeProperty()==-1 || pChild->nodeProperty()==1);
+
+			if (pChild->nodeProperty()==1)
+			{
+				return rotateAVLTreeLeft(pActNode);
+			}
+			else
+			{
+				assert(pChild->nodeProperty()==-1);
+
+				BinaryTreeNode<Type, AVLTreeNodePropertyType>* res = rotateAVLTreeRight(pChild);
+
+				// pChild is not root; so rotateAVLTreeRight must not set a new root
+				// (=return of a non-NULL value)
+				assert(!res);
+				return rotateAVLTreeLeft(pActNode);
+			}
+			break;
+		}
+	}
+
+	return NULL;
+}
+
+template <typename Type> struct AVLTreeDefiner
+{
+	typedef BinaryTree<Type, AVLTreeNodePropertyType> AVLTree;
+};
+
+#endif

@@ -25,8 +25,8 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 bool registerWindowClass(const Window& in_window)
 {
 	WNDCLASSEX windowClass;												// Window Class
-	ZeroMemory (&windowClass, sizeof (WNDCLASSEX));						// Make Sure Memory Is Cleared
-	windowClass.cbSize			= sizeof (WNDCLASSEX);					// Size Of The windowClass Structure
+	ZeroMemory(&windowClass, sizeof(WNDCLASSEX));						// Make Sure Memory Is Cleared
+	windowClass.cbSize			= sizeof(WNDCLASSEX);					// Size Of The windowClass Structure
 	windowClass.style			= CS_HREDRAW | CS_VREDRAW | CS_OWNDC;	// Redraws The Window For Any Movement / Resizing
 	windowClass.lpfnWndProc		= (WNDPROC)(WndProc);					// WindowProc Handles Messages
 	windowClass.hInstance		= in_window.hInstance;					// Set The Instance
