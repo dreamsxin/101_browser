@@ -3,7 +3,8 @@
 *.user
 *.dep
 *.obj
-*.manifest
+*.embed.manifest
+*.intermediate.manifest
 *.exe
 *.ilk
 *.pdb
