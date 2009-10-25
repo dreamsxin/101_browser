@@ -70,7 +70,7 @@ public:
 	void* table_post; // 'post'
 
 	// Optional
-	void* table_DSIG; // 'DSIG' - meaning unknown -> 'digital signature' ?
+	void* table_DSIG; // 'DSIG' - meaning unknown -> 'digital signature'?
 	void* table_GDEF; // 'GDEF' - for Open Type
 	void* table_GPOS; // 'GPOS' - for Open Type
 	void* table_LTSH; // 'LTSH'

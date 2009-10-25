@@ -155,34 +155,6 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\include\BasicDataStructures\Tree\AVLTree.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\BasicDataStructures\Tree\AVLTreeClasses.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\BasicDataStructures\Tree\AVLTreeRotate.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\BasicDataStructures\Tree\BinaryTree.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\BasicDataStructures\Tree\BinaryTreeClasses.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\BasicDataStructures\Tree\BinaryTreeHelper.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\BasicDataStructures\Tree\BinaryTreeImpl.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\include\BasicDataStructures\Comparator.h"
 				>
 			</File>
@@ -191,13 +163,41 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\BasicDataStructures\Tree\MultiCategorialTree.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\include\BasicDataStructures\Permuter.h"
 				>
 			</File>
+			<Filter
+				Name="Tree"
+				>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Tree\AVLTree.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Tree\AVLTreeClasses.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Tree\AVLTreeRotate.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Tree\BinaryTree.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Tree\BinaryTreeClasses.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Tree\BinaryTreeHelper.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Tree\BinaryTreeImpl.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"

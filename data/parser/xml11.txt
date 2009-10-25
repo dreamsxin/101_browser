@@ -1,0 +1,237 @@
+2 Documents
+
+2.1 Well-Formed XML Documents
+
+Document
+[1]   	document	   ::=   	( prolog element Misc* ) - ( Char* RestrictedChar Char* ) 
+
+2.2 Characters
+
+Character Range
+[2]   	Char	   ::=   	[#x1-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]	/* any Unicode character, excluding the surrogate blocks, FFFE, and FFFF. */
+[2a]   	RestrictedChar	   ::=   	[#x1-#x8] | [#xB-#xC] | [#xE-#x1F] | [#x7F-#x84] | [#x86-#x9F]
+
+2.3 Common Syntactic Constructs
+
+White Space
+[3]   	S	   ::=   	(#x20 | #x9 | #xD | #xA)+
+
+Names and Tokens
+[4]   	NameStartChar	   ::=   	":" | [A-Z] | "_" | [a-z] | [#xC0-#xD6] | [#xD8-#xF6] | [#xF8-#x2FF] | [#x370-#x37D] | [#x37F-#x1FFF] | [#x200C-#x200D] | [#x2070-#x218F] | [#x2C00-#x2FEF] | [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD] | [#x10000-#xEFFFF]
+[4a]   	NameChar	   ::=   	NameStartChar | "-" | "." | [0-9] | #xB7 | [#x0300-#x036F] | [#x203F-#x2040]
+[5]   	Name	   ::=   	NameStartChar (NameChar)*
+[6]   	Names	   ::=   	Name (#x20 Name)*
+[7]   	Nmtoken	   ::=   	(NameChar)+
+[8]   	Nmtokens	   ::=   	Nmtoken (#x20 Nmtoken)*
+
+Literals
+[9]   	EntityValue	   ::=   	'"' ([^%&"] | PEReference | Reference)* '"'
+			|  "'" ([^%&'] | PEReference | Reference)* "'"
+[10]   	AttValue	   ::=   	'"' ([^<&"] | Reference)* '"'
+			|  "'" ([^<&'] | Reference)* "'"
+[11]   	SystemLiteral	   ::=   	('"' [^"]* '"') | ("'" [^']* "'")
+[12]   	PubidLiteral	   ::=   	'"' PubidChar* '"' | "'" (PubidChar - "'")* "'"
+[13]   	PubidChar	   ::=   	#x20 | #xD | #xA | [a-zA-Z0-9] | [-'()+,./:=?;!*#@$_%]
+
+2.4 Character Data and Markup
+
+Character Data
+[14]   	CharData	   ::=   	[^<&]* - ([^<&]* ']]>' [^<&]*)
+
+2.5 Comments
+
+Comments
+[15]   	Comment	   ::=   	'<!--' ((Char - '-') | ('-' (Char - '-')))* '-->'
+
+2.6 Processing Instructions
+
+Processing Instructions
+[16]   	PI	   ::=   	'<?' PITarget (S (Char* - (Char* '?>' Char*)))? '?>'
+[17]   	PITarget	   ::=   	Name - (('X' | 'x') ('M' | 'm') ('L' | 'l'))
+
+2.7 CDATA Sections
+
+CDATA Sections
+[18]   	CDSect	   ::=   	CDStart CData CDEnd
+[19]   	CDStart	   ::=   	'<![CDATA['
+[20]   	CData	   ::=   	(Char* - (Char* ']]>' Char*))
+[21]   	CDEnd	   ::=   	']]>'
+
+2.8 Prolog and Document Type Declaration
+
+Prolog
+[22]   	prolog	   ::=   	XMLDecl Misc* (doctypedecl Misc*)?
+[23]   	XMLDecl	   ::=   	'<?xml' VersionInfo EncodingDecl? SDDecl? S? '?>'
+[24]   	VersionInfo	   ::=   	S 'version' Eq ("'" VersionNum "'" | '"' VersionNum '"')
+[25]   	Eq	   ::=   	S? '=' S?
+[26]   	VersionNum	   ::=   	'1.1'
+[27]   	Misc	   ::=   	Comment | PI | S 
+
+Document Type Definition
+[28]   	doctypedecl	   ::=   	'<!DOCTYPE' S Name (S ExternalID)? S? ('[' intSubset ']' S?)? '>'	[VC: Root Element Type]
+				[WFC: External Subset]
+[28a]   	DeclSep	   ::=   	PEReference | S 	[WFC: PE Between Declarations]
+[28b]   	intSubset	   ::=   	(markupdecl | DeclSep)*
+[29]   	markupdecl	   ::=   	elementdecl | AttlistDecl | EntityDecl | NotationDecl | PI | Comment 	[VC: Proper Declaration/PE Nesting]
+				[WFC: PEs in Internal Subset]
+
+External Subset
+[30]   	extSubset	   ::=   	TextDecl? extSubsetDecl
+[31]   	extSubsetDecl	   ::=   	( markupdecl | conditionalSect | DeclSep)*
+
+2.9 Standalone Document Declaration
+
+Standalone Document Declaration
+[32]   	SDDecl	   ::=   	S 'standalone' Eq (("'" ('yes' | 'no') "'") | ('"' ('yes' | 'no') '"')) 	[VC: Standalone Document Declaration]
+
+3 Logical Structures
+
+Element
+[39]   	element	   ::=   	EmptyElemTag
+			| STag content ETag 	[WFC: Element Type Match]
+				[VC: Element Valid]
+
+3.1 Start-Tags, End-Tags, and Empty-Element Tags
+
+Start-tag
+[40]   	STag	   ::=   	'<' Name (S Attribute)* S? '>'	[WFC: Unique Att Spec]
+[41]   	Attribute	   ::=   	Name Eq AttValue 	[VC: Attribute Value Type]
+				[WFC: No External Entity References]
+				[WFC: No < in Attribute Values]
+
+End-tag
+[42]   	ETag	   ::=   	'</' Name S? '>'
+
+Content of Elements
+[43]   	content	   ::=   	CharData? ((element | Reference | CDSect | PI | Comment) CharData?)*
+
+Tags for Empty Elements
+[44]   	EmptyElemTag	   ::=   	'<' Name (S Attribute)* S? '/>'	[WFC: Unique Att Spec]
+
+3.2 Element Type Declarations
+
+Element Type Declaration
+[45]   	elementdecl	   ::=   	'<!ELEMENT' S Name S contentspec S? '>'	[VC: Unique Element Type Declaration]
+[46]   	contentspec	   ::=   	'EMPTY' | 'ANY' | Mixed | children 
+
+3.2.1 Element Content
+
+Element-content Models
+[47]   	children	   ::=   	(choice | seq) ('?' | '*' | '+')?
+[48]   	cp	   ::=   	(Name | choice | seq) ('?' | '*' | '+')?
+[49]   	choice	   ::=   	'(' S? cp ( S? '|' S? cp )+ S? ')'	[VC: Proper Group/PE Nesting]
+[50]   	seq	   ::=   	'(' S? cp ( S? ',' S? cp )* S? ')'	[VC: Proper Group/PE Nesting]
+
+3.2.2 Mixed Content
+
+Mixed-content Declaration
+[51]   	Mixed	   ::=   	'(' S? '#PCDATA' (S? '|' S? Name)* S? ')*'
+			| '(' S? '#PCDATA' S? ')' 	[VC: Proper Group/PE Nesting]
+				[VC: No Duplicate Types]
+
+3.3 Attribute-List Declarations
+
+Attribute-list Declaration
+[52]   	AttlistDecl	   ::=   	'<!ATTLIST' S Name AttDef* S? '>'
+[53]   	AttDef	   ::=   	S Name S AttType S DefaultDecl 
+
+3.3.1 Attribute Types
+
+Attribute Types
+[54]   	AttType	   ::=   	StringType | TokenizedType | EnumeratedType
+[55]   	StringType	   ::=   	'CDATA'
+[56]   	TokenizedType	   ::=   	'ID'	[VC: ID]
+				[VC: One ID per Element Type]
+				[VC: ID Attribute Default]
+			| 'IDREF'	[VC: IDREF]
+			| 'IDREFS'	[VC: IDREF]
+			| 'ENTITY'	[VC: Entity Name]
+			| 'ENTITIES'	[VC: Entity Name]
+			| 'NMTOKEN'	[VC: Name Token]
+			| 'NMTOKENS'	[VC: Name Token]
+
+Enumerated Attribute Types
+[57]   	EnumeratedType	   ::=   	NotationType | Enumeration
+[58]   	NotationType	   ::=   	'NOTATION' S '(' S? Name (S? '|' S? Name)* S? ')' 	[VC: Notation Attributes]
+				[VC: One Notation Per Element Type]
+				[VC: No Notation on Empty Element]
+				[VC: No Duplicate Tokens]
+[59]   	Enumeration	   ::=   	'(' S? Nmtoken (S? '|' S? Nmtoken)* S? ')'	[VC: Enumeration]
+				[VC: No Duplicate Tokens]
+
+3.3.2 Attribute Defaults
+
+Attribute Defaults
+[60]   	DefaultDecl	   ::=   	'#REQUIRED' | '#IMPLIED'
+			| (('#FIXED' S)? AttValue)	[VC: Required Attribute]
+				[VC: Attribute Default Value Syntactically Correct]
+				[WFC: No < in Attribute Values]
+				[VC: Fixed Attribute Default]
+				[WFC: No External Entity References]
+
+3.4 Conditional Sections
+
+Conditional Section
+[61]   	conditionalSect	   ::=   	includeSect | ignoreSect
+[62]   	includeSect	   ::=   	'<![' S? 'INCLUDE' S? '[' extSubsetDecl ']]>' 	[VC: Proper Conditional Section/PE Nesting]
+[63]   	ignoreSect	   ::=   	'<![' S? 'IGNORE' S? '[' ignoreSectContents* ']]>'	[VC: Proper Conditional Section/PE Nesting]
+[64]   	ignoreSectContents	   ::=   	Ignore ('<![' ignoreSectContents ']]>' Ignore)*
+[65]   	Ignore	   ::=   	Char* - (Char* ('<![' | ']]>') Char*) 
+
+4 Physical Structures
+
+4.1 Character and Entity References
+
+Character Reference
+[66]   	CharRef	   ::=   	'&#' [0-9]+ ';'
+			| '&#x' [0-9a-fA-F]+ ';'	[WFC: Legal Character]
+
+Entity Reference
+[67]   	Reference	   ::=   	EntityRef | CharRef
+[68]   	EntityRef	   ::=   	'&' Name ';'	[WFC: Entity Declared]
+				[VC: Entity Declared]
+				[WFC: Parsed Entity]
+				[WFC: No Recursion]
+[69]   	PEReference	   ::=   	'%' Name ';'	[VC: Entity Declared]
+				[WFC: No Recursion]
+				[WFC: In DTD]
+
+4.2 Entity Declarations
+
+Entity Declaration
+[70]   	EntityDecl	   ::=   	GEDecl | PEDecl
+[71]   	GEDecl	   ::=   	'<!ENTITY' S Name S EntityDef S? '>'
+[72]   	PEDecl	   ::=   	'<!ENTITY' S '%' S Name S PEDef S? '>'
+[73]   	EntityDef	   ::=   	EntityValue | (ExternalID NDataDecl?)
+[74]   	PEDef	   ::=   	EntityValue | ExternalID 
+
+4.2.2 External Entities
+
+External Entity Declaration
+[75]   	ExternalID	   ::=   	'SYSTEM' S SystemLiteral
+			| 'PUBLIC' S PubidLiteral S SystemLiteral
+[76]   	NDataDecl	   ::=   	S 'NDATA' S Name 	[VC: Notation Declared]
+
+4.3 Parsed Entities
+
+4.3.1 The Text Declaration
+
+Text Declaration
+[77]   	TextDecl	   ::=   	'<?xml' VersionInfo? EncodingDecl S? '?>'
+
+4.3.2 Well-Formed Parsed Entities
+
+Well-Formed External Parsed Entity
+[78]   	extParsedEnt	   ::=   	( TextDecl? content ) - ( Char* RestrictedChar Char* ) 
+
+4.3.3 Character Encoding in Entities
+
+Encoding Declaration
+[80]   	EncodingDecl	   ::=   	S 'encoding' Eq ('"' EncName '"' | "'" EncName "'" )
+[81]   	EncName	   ::=   	[A-Za-z] ([A-Za-z0-9._] | '-')*	/* Encoding name contains only Latin characters */
+
+4.7 Notation Declarations
+
+Notation Declarations
+[82]   	NotationDecl	   ::=   	'<!NOTATION' S Name S (ExternalID | PublicID) S? '>'	[VC: Unique Notation Name]
+[83]   	PublicID	   ::=   	'PUBLIC' S PubidLiteral 
