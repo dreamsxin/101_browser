@@ -18,4 +18,6 @@ testfiles/fonts/*.fon
 testfiles/fonts/*.FON
 BuildLog.htm
 lib/zlib/*
+Debug/*.lib
+Release/*.lib
 projects/zlib/*/*.lib
