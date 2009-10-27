@@ -42,7 +42,7 @@ public:
 	 * Return value:
 	 * the number of read bytes
 	 */
-	virtual size_t read(void* in_buffer, size_t in_size, size_t in_count);
+	virtual size_t read(void* in_buffer, size_t in_size, size_t in_count) = 0;
 };
 
 #endif

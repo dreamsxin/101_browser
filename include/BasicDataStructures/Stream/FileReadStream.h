@@ -12,10 +12,10 @@ protected:
 public:
 	inline FileReadStream() : mFile(NULL) { }
 
-	virtual bool open(char* in_openType);
+	virtual bool open(const char* in_openType);
 	virtual void close();
-	virtual bool isOpen();
-	virtual size_t FileReadStream::read(void* in_buffer, size_t in_size, size_t in_count);
+	virtual bool isOpen() const;
+	virtual size_t read(void* in_buffer, size_t in_size, size_t in_count);
 };
 
 #endif

@@ -1,13 +1,13 @@
 #include "BasicDataStructures/Stream/FileReadStream.h"
 
-bool FileReadStream::open(char* in_filename)
+bool FileReadStream::open(const char* in_filename)
 {
 	closeIfOpen();
 	mFile = fopen(in_filename, "r");
 	return isOpen();
 }
 
-bool FileReadStream::isOpen()
+bool FileReadStream::isOpen() const
 {
 	return mFile != NULL;
 }
@@ -22,5 +22,8 @@ void FileReadStream::close()
 
 size_t FileReadStream::read(void* in_buffer, size_t in_size, size_t in_count)
 {
-	return fread(in_buffer, in_size, in_count, mFile);
+	if (isOpen())
+		return fread(in_buffer, in_size, in_count, mFile);
+	else
+		return 0;
 }
