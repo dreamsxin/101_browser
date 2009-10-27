@@ -12,11 +12,12 @@
 *.res
 *.aps
 *.exp
-*.swf
 testfiles/fonts/*.ttf
 testfiles/fonts/*.TTF
 testfiles/fonts/*.fon
 testfiles/fonts/*.FON
+testfiles/swf/*.swf
+testfiles/pdf/*.pdf
 BuildLog.htm
 lib/zlib/*
 lib/BasicDataStructures/*/*.lib

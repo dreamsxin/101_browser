@@ -1,14 +1,12 @@
 #ifndef _BasicStream_h
 #define _BasicStream_h
 
-template <typename OpenType> class BasicStream
+/*!
+ * Implements a stream with the ability to be opened and closed
+ */
+template <typename OpenType> class BasicOpenStream
 {
 public:
-	inline virtual ~BasicStream()
-	{
-		closeIfOpen();
-	}
-
 	/*!
 	 * Return value:
 	 * true:  success
@@ -27,6 +25,10 @@ public:
 	/*!
 	 * A little helper function which usually should be called at the beginning 
 	 * of each open(...) implementation
+	 *
+	 * It should also be called in the destructor (on the reason it is a pure
+	 * virtual function here we can't use it in BasicStream<OpenType>'s 
+	 * destructor)
 	 */
 	inline void closeIfOpen()
 	{
@@ -35,7 +37,10 @@ public:
 	}
 };
 
-template <typename OpenType> class BasicReadStream : public BasicStream<OpenType>
+/*!
+ * Implements a stream which can be read
+ */
+class BasicReadStream
 {
 public:
 	/*!
@@ -43,6 +48,15 @@ public:
 	 * the number of read bytes
 	 */
 	virtual size_t read(void* in_buffer, size_t in_size, size_t in_count) = 0;
+};
+
+/*!
+ * A stream which can also run "backward"
+ */
+class RevertibleReadStream : public BasicReadStream
+{
+public:
+	virtual void revert(long in_offset) = 0;
 };
 
 #endif

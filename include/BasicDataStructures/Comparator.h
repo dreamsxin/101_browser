@@ -29,6 +29,4 @@ template <typename Type> inline CompareResult simpleCompare(Type in_a, Type in_b
 	return Equal;
 }
 
-
-
 #endif

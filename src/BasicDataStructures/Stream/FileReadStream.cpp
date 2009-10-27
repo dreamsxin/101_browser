@@ -3,7 +3,7 @@
 bool FileReadStream::open(const char* in_filename)
 {
 	closeIfOpen();
-	mFile = fopen(in_filename, "r");
+	mFile = fopen(in_filename, "rb");
 	return isOpen();
 }
 
@@ -26,4 +26,9 @@ size_t FileReadStream::read(void* in_buffer, size_t in_size, size_t in_count)
 		return fread(in_buffer, in_size, in_count, mFile);
 	else
 		return 0;
+}
+
+void FileReadStream::revert(long in_offset)
+{
+	fseek(mFile, -in_offset, SEEK_CUR);
 }
