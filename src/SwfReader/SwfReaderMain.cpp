@@ -1,34 +1,28 @@
 #include "BasicDataStructures/Stream/FileReadStream.h"
 #include "BasicDataStructures/Stream/ZStream.h"
+#include "SwfReader/SwfStructure.h"
 #include <cstdlib>
 #include <cstring>
-
-struct SwfHeader
-{
-	char Signature[3];
-	unsigned char Version;
-	unsigned int FileLength;
-};
 
 int main(int argc, char** argv)
 {
 	FileReadStream stream;
 
-	if (!stream.open("testfiles/swf/watch-vfl127661.swf"))
+	if (!stream.open("testfiles/swf/gibbets.swf"))
 		exit(1);
 
-	SwfHeader header;
+	SwfFile swfFile;
 
-	if (stream.read(&header, sizeof(SwfHeader), 1)!=1)
+	if (stream.read(&swfFile.swfHeader1, sizeof(swfFile.swfHeader1), 1)!=1)
 		exit(1);
 	
 	BasicReadStream* streamToContinue = NULL;
 
 	bool compressed;
 
-	if (strncmp(header.Signature, "CWS", 3)==0)
+	if (strncmp(swfFile.swfHeader1.Signature, "CWS", 3)==0)
 		compressed = true;
-	else if (strncmp(header.Signature, "FWS", 3)==0)
+	else if (strncmp(swfFile.swfHeader1.Signature, "FWS", 3)==0)
 		compressed = false;
 	else
 	{
@@ -46,19 +40,53 @@ int main(int argc, char** argv)
 		streamToContinue = &stream;
 	}
 
-	unsigned char* restOfFile = new unsigned char[header.FileLength-sizeof(SwfHeader)];
+	if (!readRECT(streamToContinue, &swfFile.swfHeader2.FrameSize))
+		exit(1);
 
-	size_t inflatedBytes = streamToContinue->read(restOfFile, 1, header.FileLength-sizeof(SwfHeader));
+	if (streamToContinue->read(&swfFile.swfHeader2.FrameRate, sizeof(unsigned short), 2)!=2)
+		exit(1);
+
+	while (true)
+	{
+		Tag tag;
+
+		unsigned short TagCodeAndLength;
+		if (streamToContinue->read(&TagCodeAndLength, sizeof(unsigned short), 1)!=1)
+		{
+			break;
+		}
+
+		tag.recordHeader.TagCode = TagCodeAndLength>>6;
+		unsigned short prematureLength = TagCodeAndLength & ((1<<6)-1);
+
+		if (prematureLength == 0x3F)
+		{
+			if (streamToContinue->read(&tag.recordHeader.Length, sizeof(signed int), 1)!=1)
+			{
+				exit(1);
+			}
+		}
+		else
+		{
+			tag.recordHeader.Length = prematureLength;
+		}
+
+		tag.tagContent = new unsigned char[tag.recordHeader.Length];
+
+		if (streamToContinue->read(tag.tagContent, 1, tag.recordHeader.Length)!=tag.recordHeader.Length)
+		{
+			exit(1);
+		}
+
+		swfFile.tags.push_back(tag);
+	}
+
+	// Cleaning up
 
 	if (compressed)
 	{
 		delete streamToContinue;
 	}
-
-	delete[] restOfFile;
-
-	if (inflatedBytes < header.FileLength-sizeof(SwfHeader))
-		exit(1);
 
 	printf("Reading SWF succeeded\n");
 	return 0;

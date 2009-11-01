@@ -40,7 +40,7 @@ size_t ZStream::read(void* in_buffer, size_t in_size, size_t in_count)
 	if (!isOpen())
 		return 0;
 	
-	strm.avail_out = in_size* in_count;
+	strm.avail_out = in_size * in_count;
 	strm.next_out = (unsigned char*) in_buffer;
 
 	do
