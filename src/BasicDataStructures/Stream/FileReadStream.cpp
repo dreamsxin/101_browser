@@ -2,7 +2,7 @@
 
 bool FileReadStream::open(const char* in_filename)
 {
-	closeIfOpen();
+	close();
 	mFile = fopen(in_filename, "rb");
 	return isOpen();
 }
@@ -14,7 +14,7 @@ bool FileReadStream::isOpen() const
 
 void FileReadStream::close()
 {
-	if (mFile != NULL)
+	if (isOpen())
 		fclose(mFile);
 
 	mFile = NULL;

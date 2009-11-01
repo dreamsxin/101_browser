@@ -6,7 +6,7 @@
 
 class FileReadStream : public BasicOpenStream<const char*>, public RevertibleReadStream
 {
-protected:
+private:
 	FILE* mFile;
 
 	inline FileReadStream& operator=(FileReadStream& in_frs) { return *this; }
@@ -17,7 +17,7 @@ public:
 
 	inline virtual ~FileReadStream()
 	{
-		closeIfOpen();
+		close();
 	}
 
 	virtual bool open(const char* in_openType);

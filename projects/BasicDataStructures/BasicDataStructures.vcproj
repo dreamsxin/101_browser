@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../include"
+				AdditionalIncludeDirectories="../../include;..\..\include\zlib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -106,7 +106,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../../include"
+				AdditionalIncludeDirectories="../../include;..\..\include\zlib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -154,6 +154,10 @@
 			>
 			<File
 				RelativePath="..\..\src\BasicDataStructures\Stream\FileReadStream.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\BasicDataStructures\Stream\ZStream.cpp"
 				>
 			</File>
 		</Filter>
@@ -215,6 +219,10 @@
 				</File>
 				<File
 					RelativePath="..\..\include\BasicDataStructures\Stream\FileReadStream.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Stream\ZStream.h"
 					>
 				</File>
 			</Filter>

@@ -13,6 +13,14 @@ public:
 	 * false: failure (e. g. file not found or permission denied)
 	 */
 	virtual bool open(OpenType in_openType) = 0;
+	
+	/*!
+	 * Closes the stream if it is open. If it is not open it does nothing
+	 *
+	 * It should also be called in the destructor (on the reason it is a pure
+	 * virtual function here we can't use it in BasicStream<OpenType>'s 
+	 * destructor)
+	 */
 	virtual void close() = 0;
 
 	/*!
@@ -21,20 +29,6 @@ public:
 	 * After close() is called it must return false
 	 */
 	virtual bool isOpen() const = 0;
-
-	/*!
-	 * A little helper function which usually should be called at the beginning 
-	 * of each open(...) implementation
-	 *
-	 * It should also be called in the destructor (on the reason it is a pure
-	 * virtual function here we can't use it in BasicStream<OpenType>'s 
-	 * destructor)
-	 */
-	inline void closeIfOpen()
-	{
-		if (isOpen())
-			close();
-	}
 };
 
 /*!
