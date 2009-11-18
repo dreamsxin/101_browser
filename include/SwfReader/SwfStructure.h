@@ -1,7 +1,7 @@
 #ifndef _SwfStructure_h
 #define _SwfStructure_h
 
-#include "BasicDataStructures/Stream/BasicStream.h"
+#include "BasicDataStructures/Stream/BasicReadStream.h"
 #include <cstdlib>
 #include <list>
 

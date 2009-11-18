@@ -3,7 +3,7 @@
 
 #include <string>
 #include <list>
-#include "Parser/AbstractParser.h"
+#include "BasicDataStructures/Parser/AbstractParser.h"
 
 class TokenParser : public AbstractParser
 {

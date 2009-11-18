@@ -1,4 +1,4 @@
-#include "Parser/ParserTypes.h"
+#include "BasicDataStructures/Parser/ParserTypes.h"
 
 TokenParser::TokenParser(char in_token) : token(in_token)
 {

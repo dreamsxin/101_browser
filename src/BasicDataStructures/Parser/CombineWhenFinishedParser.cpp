@@ -1,4 +1,4 @@
-#include "Parser/ParserTypes.h"
+#include "BasicDataStructures/Parser/ParserTypes.h"
 
 CombineWhenFinishedParser::CombineWhenFinishedParser()
 {

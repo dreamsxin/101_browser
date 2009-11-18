@@ -1,5 +1,5 @@
-#ifndef _XmlDefinitionMetaParser_h
-#define _XmlDefinitionMetaParser_h
+#ifndef _XmlDefinition_h
+#define _XmlDefinition_h
 
 #include <list>
 #include <string>

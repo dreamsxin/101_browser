@@ -1,7 +1,8 @@
 #ifndef _FileReadStream_h
 #define _FileReadStream_h
 
-#include "BasicDataStructures/Stream/BasicStream.h"
+#include "BasicDataStructures/Stream/BasicOpenStream.h"
+#include "BasicDataStructures/Stream/RevertibleReadStream.h"
 #include <cstdio>
 
 class FileReadStream : public BasicOpenStream<const char*>, public RevertibleReadStream

@@ -1,0 +1,48 @@
+PlaceObject
+
+Field	Type 	Comment
+Header	RECORDHEADER	Tag type = 4
+CharacterId	UI16	ID of character to place
+Depth	UI16	Depth of character
+Matrix	MATRIX	Transform matrix data
+ColorTransform (optional)	CXFORM	Color transform data
+
+PlaceObject2
+
+Field	Type 	Comment
+Header	RECORDHEADER	Tag type = 26
+PlaceFlagHasClipActions 	UB[1]	SWF 5 and later: has clip actions (sprite characters only) Otherwise: always 0
+PlaceFlagHasClipDepth 	UB[1]	Has clip depth
+PlaceFlagHasName 	UB[1]	Has name
+PlaceFlagHasRatio 	UB[1]	Has ratio
+PlaceFlagHasColorTransform	UB[1]	Has color transform
+PlaceFlagHasMatrix 	UB[1]	Has matrix
+PlaceFlagHasCharacter 	UB[1]	Places a character
+PlaceFlagMove 	UB[1]	Defines a character to be moved
+Depth 	UI16	Depth of character
+CharacterId 	If PlaceFlagHasCharacter UI16	ID of character to place
+Matrix	If PlaceFlagHasMatrix MATRIX	Transform matrix data
+ColorTransform 	If PlaceFlagHasColorTransform CXFORMWITHALPHA	Color transform data
+Ratio	If PlaceFlagHasRatio UI16
+Name 	If PlaceFlagHasName STRING	Name of character
+ClipDepth	If PlaceFlagHasClipDepth UI16	Clip depth
+ClipActions	If PlaceFlagHasClipActions CLIPACTIONS	SWF 5 and later: Clip Actions Data
+ 
+CLIPACTIONS
+
+Field 	Type 	Comment
+Reserved 	UI16 	Must be 0
+AllEventFlags 	CLIPEVENTFLAGS	All events used in these clip actions
+ClipActionRecords	CLIPACTIONRECORD [one or more]	Individual event handlers
+ClipActionEndFlag 	If SWF version <= 5, UI16	Must be 0
+		If SWF version >= 6, UI32
+ 
+CLIPACTIONRECORD
+
+Field	Type 	Comment
+EventFlags 	CLIPEVENTFLAGS	Events to which this  handler applies
+ActionRecordSize 	UI32	Offset in bytes from  end of this field to next CLIPACTIONRECORD (or ClipActionEndFlag)
+KeyCode	If EventFlags contain ClipEventKeyPress: UI8	Key code to trap (see
+	Otherwise absent	“DefineButton2” on page 226)
+Actions	ACTIONRECORD [one or more]	Actions to perform
+

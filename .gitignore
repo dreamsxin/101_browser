@@ -24,3 +24,5 @@ lib/BasicDataStructures/*/*.lib
 Debug/*.lib
 Release/*.lib
 projects/zlib/*/*.lib
+data/parser/*.zip
+data/parser/*.doc

@@ -152,14 +152,42 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
-			<File
-				RelativePath="..\..\src\BasicDataStructures\Stream\FileReadStream.cpp"
+			<Filter
+				Name="Stream"
 				>
-			</File>
-			<File
-				RelativePath="..\..\src\BasicDataStructures\Stream\ZStream.cpp"
+				<File
+					RelativePath="..\..\src\BasicDataStructures\Stream\FileReadStream.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\BasicDataStructures\Stream\ZStream.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Parser"
 				>
-			</File>
+				<File
+					RelativePath="..\..\src\BasicDataStructures\Parser\CombineWhenFinishedParser.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\BasicDataStructures\Parser\ParserDataStructures.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\BasicDataStructures\Parser\ParserUnicodeEncodings.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\BasicDataStructures\Parser\TokenParser.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\BasicDataStructures\Parser\UntilParser.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -214,7 +242,15 @@
 				Name="Stream"
 				>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Stream\BasicStream.h"
+					RelativePath="..\..\include\BasicDataStructures\Stream\BasicOpenStream.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Stream\BasicReadStream.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Stream\BasicWriteStream.h"
 					>
 				</File>
 				<File
@@ -222,7 +258,31 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\include\BasicDataStructures\Stream\RevertibleReadStream.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\include\BasicDataStructures\Stream\ZStream.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Parser"
+				>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Parser\AbstractParser.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Parser\ParserDataStructures.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Parser\ParserTypes.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Parser\ParserUnicodeEncodings.h"
 					>
 				</File>
 			</Filter>

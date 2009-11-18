@@ -1,10 +1,11 @@
-#include "BasicDataStructures/Stream/BasicStream.h"
+#include "BasicDataStructures/Stream/BasicOpenStream.h"
+#include "BasicDataStructures/Stream/BasicReadStream.h"
 #include "zlib.h"
 
 class ZStream : public BasicReadStream, public BasicOpenStream<BasicReadStream*>
 {
 private:
-	static const size_t bufferSize=16384;
+	static const size_t bufferSize=0x4000;
 
 	BasicReadStream* mpStream;
 	bool mOpen;

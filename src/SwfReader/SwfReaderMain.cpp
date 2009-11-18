@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <cstring>
 
+using namespace std;
+
 int main(int argc, char** argv)
 {
 	FileReadStream stream;
@@ -83,10 +85,18 @@ int main(int argc, char** argv)
 
 	// Cleaning up
 
+	for (list<Tag>::iterator i=swfFile.tags.begin(); i!=swfFile.tags.end(); )
+	{
+		delete[] (i->tagContent);
+		i=swfFile.tags.erase(i);
+	}
+
 	if (compressed)
 	{
 		delete streamToContinue;
 	}
+
+	stream.close();
 
 	printf("Reading SWF succeeded\n");
 	return 0;
