@@ -180,7 +180,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\BasicDataStructures\Parser\UntilParser.cpp"
+					RelativePath="..\..\src\BasicDataStructures\Parser\UntilCharacterParser.cpp"
 					>
 				</File>
 			</Filter>
@@ -283,6 +283,10 @@
 				</File>
 				<File
 					RelativePath="..\..\include\BasicDataStructures\Parser\StringParser.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Parser\UntilCharacterParser.h"
 					>
 				</File>
 			</Filter>
