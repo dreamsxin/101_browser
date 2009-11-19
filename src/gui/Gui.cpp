@@ -219,8 +219,6 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 		return 0;
 	}
 
-
-
 	destroyWindow(&window);
 
 	if (!unregisterWindowClass(window))

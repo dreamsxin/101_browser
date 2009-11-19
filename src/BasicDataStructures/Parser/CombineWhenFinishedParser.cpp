@@ -1,5 +1,6 @@
 #include "BasicDataStructures/Parser/ParserTypes.h"
 
+/*
 CombineWhenFinishedParser::CombineWhenFinishedParser()
 {
 	initialize();
@@ -49,3 +50,4 @@ bool CombineWhenFinishedParser::acceptWhenTerminate() const
 
 	return false;
 }
+*/

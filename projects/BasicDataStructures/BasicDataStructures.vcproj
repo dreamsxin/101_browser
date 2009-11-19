@@ -172,15 +172,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\BasicDataStructures\Parser\ParserDataStructures.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\BasicDataStructures\Parser\ParserUnicodeEncodings.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\BasicDataStructures\Parser\TokenParser.cpp"
+					RelativePath="..\..\src\BasicDataStructures\Parser\StringParser.cpp"
 					>
 				</File>
 				<File
@@ -283,6 +279,10 @@
 				</File>
 				<File
 					RelativePath="..\..\include\BasicDataStructures\Parser\ParserUnicodeEncodings.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Parser\StringParser.h"
 					>
 				</File>
 			</Filter>

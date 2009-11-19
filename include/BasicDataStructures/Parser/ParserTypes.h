@@ -5,21 +5,12 @@
 #include <list>
 #include "BasicDataStructures/Parser/AbstractParser.h"
 
-class TokenParser : public AbstractParser
+class StringParser : public AbstractParser<std::string>
 {
-	char token;
-	bool parsed; // tells whether the token was already parsed
-	bool valid;
 
-public:
-	TokenParser(char in_token);
-
-	virtual void initialize();
-	virtual bool isFinished() const;
-	virtual void parseToken(char in_token);
-	virtual bool acceptWhenTerminate() const;
 };
 
+/*
 class CombineWhenFinishedParser : public AbstractParser
 {
 	std::list<AbstractParser*> parserList;
@@ -36,6 +27,6 @@ public:
 	virtual bool isFinished() const;
 	virtual void parseToken(char in_token);
 	virtual bool acceptWhenTerminate() const;
-};
+};*/
 
 #endif
