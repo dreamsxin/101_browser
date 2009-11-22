@@ -19,35 +19,19 @@ bool StringParser::isOpen() const
 	return mParsedPartsOK;
 }
 
-size_t StringParser::write(const void* in_buffer, size_t in_size, size_t in_count)
+bool StringParser::parseToken(char in_token)
 {
-	if (in_size==0)
+	if (!mParsedPartsOK)
+		return false;
+
+	if (mCurrentIndex>=mStringToParse.length())
+		return false;
+
+	if (in_token!=mStringToParse.at(mCurrentIndex))
 	{
-		if (mParsedPartsOK)
-			return in_count;
-		else
-			return 0;
+		mParsedPartsOK = false;
+		return false;
 	}
 
-	size_t parsedCount = 0;
-
-	for (size_t i=0; i<in_count; i++)
-	{
-		if (!mParsedPartsOK)
-			break;
-
-		if (mCurrentIndex>=mStringToParse.length())
-			break;
-
-		if (((unsigned char*) in_buffer)[in_size*parsedCount]!=mStringToParse.at(mCurrentIndex))
-		{
-			mParsedPartsOK = false;
-			break;
-		}
-
-		mCurrentIndex++;
-		parsedCount++;
-	}
-
-	return parsedCount;
+	return true;
 }

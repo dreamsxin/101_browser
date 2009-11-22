@@ -22,7 +22,7 @@ public:
 	virtual bool isOpen() const;
 	virtual void close();
 
-	virtual size_t write(const void* in_buffer, size_t in_size, size_t in_count);
+	virtual bool parseToken(char in_token);
 };
 
 #endif

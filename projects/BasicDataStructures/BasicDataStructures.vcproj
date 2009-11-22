@@ -168,10 +168,6 @@
 				Name="Parser"
 				>
 				<File
-					RelativePath="..\..\src\BasicDataStructures\Parser\CombineWhenFinishedParser.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\BasicDataStructures\Parser\ParserUnicodeEncodings.cpp"
 					>
 				</File>

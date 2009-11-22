@@ -169,6 +169,10 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{E97BF0CC-EB71-43A2-B4BA-8CB5F1E11214}"
+			RelativePathToProject=".\projects\BasicDataStructures\BasicDataStructures.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter

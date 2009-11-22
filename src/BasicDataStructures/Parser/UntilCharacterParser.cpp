@@ -18,34 +18,19 @@ void UntilCharacterParser::close()
 	mReachedCharacter = true;
 }
 
-size_t UntilCharacterParser::write(const void* in_buffer, size_t in_size, size_t in_count)
+bool UntilCharacterParser::parseToken(char in_token)
 {
-	if (in_size==0)
+	if (mReachedCharacter)
+		return false;
+
+	if (in_token!=mUntilCharacter)
 	{
-		if (!mReachedCharacter)
-			return in_count;
-		else
-			return 0;
+		mReadCharacters.push_back(in_token);
+	}
+	else
+	{
+		mReachedCharacter = true;
 	}
 
-	size_t parsedCount = 0;
-
-	for (size_t i=0; i<in_count; i++)
-	{
-		if (mReachedCharacter)
-			break;
-
-		if (((unsigned char*) in_buffer)[in_size*parsedCount]!=mUntilCharacter)
-		{
-			mReadCharacters.push_back(((unsigned char*) in_buffer)[in_size*parsedCount]);
-			parsedCount++;
-		}
-		else
-		{
-			mReachedCharacter = true;
-			break;
-		}
-	}
-
-	return parsedCount;
+	return true;
 }

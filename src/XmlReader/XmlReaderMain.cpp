@@ -27,17 +27,17 @@ int main(int argc, char** argv)
 
 	stringParser.open("2 Docume");
 
-	char buffer[1];
+	char currentToken;
 
 	untilCharacterParser.open('\n');
 
 	while (true)
 	{
-		size_t readCount = stream.read(buffer, 1, 1);
+		size_t readCount = stream.read(&currentToken, 1, 1);
 		if (readCount == 0)
-			break;		
+			break;
 
-		size_t writeCount = untilCharacterParser.write(buffer, 1, readCount);
+		bool parseOK = untilCharacterParser.parseToken(currentToken);
 
 		if (!untilCharacterParser.isOpen())
 		{
