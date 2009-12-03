@@ -93,42 +93,45 @@ template <typename Type, typename NodePropertyType> InsertResult BinaryTree<Type
 }
 
 template <typename Type, typename NodePropertyType> template <typename OtherType>
-FindResult<Type> BinaryTree<Type, NodePropertyType>::get(
+const Type* BinaryTree<Type, NodePropertyType>::get(
 	const OtherType& in_pItem, 
 	CompareResult (*in_pContainedIn)(const OtherType&, const Type&))
 {
-		BinaryTreeNode<Type, NodePropertyType>* actNode=root();
+	BinaryTreeNode<Type, NodePropertyType>* actNode=root();
 
-		if (actNode==NULL)
-			return NULL;
+	Type* out_result = NULL;
 
-		FindResult<Type> out_findResult;
-		terminate = false;
+	if (actNode==NULL)
+		return NULL;
 
-		while (!terminate)
+	terminate = false;
+
+	while (!terminate)
+	{
+		CompareResult compResult=(*in_pContainedIn)(in_pItem, actNode->datum());
+
+		switch (compResult)
 		{
-			CompareResult compResult=(*in_pContainedIn)(in_pItem, actNode->datum());
-
-			switch (compResult)
-			{
-			case Equal:
-			case ContainedIn:
-				out_findResult = {true, compResult, actNode->datum()};
-				terminate = true;
-			case Contains:
-			case NotComparableLess:
-			case NotComparableGreater:
-			case ErrorInCode:
-				out_findResult = {false, compResult, actNode->datum()};
-				terminate = true;
-			case Less:
-				actNode = actNode->left();
-			case Greater:
-				actNode = actNode->right();
-			}
+		case Equal:
+		case ContainedIn:
+			out_result = actNode->datum();
+			// the missing break ist correct
+		case Contains:
+		case NotComparableLess:
+		case NotComparableGreater:
+		case ErrorInCode:
+			terminate = true;
+			break;
+		case Less:
+			actNode = actNode->left();
+			break;
+		case Greater:
+			actNode = actNode->right();
+			break;
 		}
-
-		return out_findResult;
 	}
+
+	return out_findResult;
+}
 
 #endif

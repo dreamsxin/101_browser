@@ -1,7 +1,7 @@
-#include "BasicDataStructures/Stream/ZStream.h"
+#include "BasicDataStructures/Stream/ZReadStream.h"
 #include <cstdlib>
 
-bool ZStream::open(BasicReadStream* in_pStream)
+bool ZReadStream::open(BasicReadStream* in_pStream)
 {
 	close();
 
@@ -21,7 +21,7 @@ bool ZStream::open(BasicReadStream* in_pStream)
     return isOpen();
 }
 
-void ZStream::close()
+void ZReadStream::close()
 {
 	if (isOpen() && mUsed)
 		inflateEnd(&strm);
@@ -30,12 +30,12 @@ void ZStream::close()
 	mUsed = false;
 }
 
-bool ZStream::isOpen() const
+bool ZReadStream::isOpen() const
 {
 	return mOpen;
 }
 
-size_t ZStream::read(void* in_buffer, size_t in_size, size_t in_count)
+size_t ZReadStream::read(void* in_buffer, size_t in_size, size_t in_count)
 {
 	if (!isOpen())
 		return 0;

@@ -118,7 +118,7 @@ public:
 
 	InsertResult insert(const Type& in_datum);
 
-	template <typename OtherType> FindResult<Type> get(
+	template <typename OtherType> const Type* get(
 		const OtherType& in_pItem,
 		CompareResult (*in_pContainedIn)(const OtherType&, const Type&));
 };

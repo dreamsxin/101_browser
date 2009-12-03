@@ -10,7 +10,7 @@ int main(int argc, char** argv)
 {
 	if (argc<2)
 	{
-		fprintf(stderr, "Usage: Parser filename\n");
+		fprintf(stderr, "Usage: XmlReader filename\n");
 		exit(1);
 	}
 
@@ -22,14 +22,10 @@ int main(int argc, char** argv)
 		exit(1);
 	}
 
-	StringParser stringParser;
-	UntilCharacterParser untilCharacterParser;
-
-	stringParser.open("2 Docume");
+	StringParser stringParser("2 Docume");
+	UntilCharacterParser untilCharacterParser('\n');
 
 	char currentToken;
-
-	untilCharacterParser.open('\n');
 
 	while (true)
 	{
@@ -39,7 +35,7 @@ int main(int argc, char** argv)
 
 		bool parseOK = untilCharacterParser.parseToken(currentToken);
 
-		if (!untilCharacterParser.isOpen())
+		if (untilCharacterParser.isDone())
 		{
 			if (untilCharacterParser.mReadCharacters.size()>0 && *untilCharacterParser.mReadCharacters.begin()=='[')
 			{
@@ -52,7 +48,7 @@ int main(int argc, char** argv)
 				printf("\n");
 			}
 
-			untilCharacterParser.open('\n');
+			untilCharacterParser.reset();
 		}
 	}
 

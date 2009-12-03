@@ -1,8 +1,11 @@
+#ifndef _ZReadStream_h
+#define _ZReadStream_h
+
 #include "BasicDataStructures/Stream/BasicOpenStream.h"
 #include "BasicDataStructures/Stream/BasicReadStream.h"
 #include "zlib.h"
 
-class ZStream : public BasicReadStream, public BasicOpenStream<BasicReadStream*>
+class ZReadStream : public BasicReadStream, public BasicOpenStream<BasicReadStream*>
 {
 private:
 	static const size_t bufferSize=0x4000;
@@ -14,11 +17,11 @@ private:
 	unsigned char mBuffer[bufferSize];
 
 public:
-	inline ZStream() : mOpen(false), mUsed(false) {
+	inline ZReadStream() : mOpen(false), mUsed(false) {
 
 	}
 
-	inline virtual ~ZStream()
+	inline virtual ~ZReadStream()
 	{
 		close();
 	}
@@ -35,3 +38,5 @@ public:
 
 	virtual size_t read(void* in_buffer, size_t in_size, size_t in_count);
 };
+
+#endif

@@ -4,25 +4,25 @@
 #include "BasicDataStructures/Parser/AbstractParser.h"
 #include <list>
 
-class UntilCharacterParser : public AbstractParser<char>
+class UntilCharacterParser : public AbstractParser
 {
 protected:
 	bool mReachedCharacter;
-	char mUntilCharacter;	
+	char mUntilCharacter;
+
+	virtual bool parseTokenIfNotDone(char in_token);
 
 public:
 	std::list<char> mReadCharacters;
 
-	inline UntilCharacterParser()
+	inline UntilCharacterParser(char in_untilCharacter) : mUntilCharacter(in_untilCharacter)
 	{
-		open(0x0);
+		reset();
 	}
 
-	virtual bool open(char in_untilCharacter);
-	virtual bool isOpen() const;
-	virtual void close();
-
-	virtual bool parseToken(char in_token);
+	virtual void reset();
+	virtual bool isDone() const;
+	virtual bool isOK() const;
 };
 
 #endif

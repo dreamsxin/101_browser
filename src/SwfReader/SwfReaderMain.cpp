@@ -1,5 +1,5 @@
 #include "BasicDataStructures/Stream/FileReadStream.h"
-#include "BasicDataStructures/Stream/ZStream.h"
+#include "BasicDataStructures/Stream/ZReadStream.h"
 #include "SwfReader/SwfStructure.h"
 #include <cstdlib>
 #include <cstring>
@@ -33,9 +33,9 @@ int main(int argc, char** argv)
 
 	if (compressed)
 	{
-		ZStream* zstream = new ZStream();
-		zstream->open(&stream);
-		streamToContinue = zstream;
+		ZReadStream* zreadstream = new ZReadStream();
+		zreadstream->open(&stream);
+		streamToContinue = zreadstream;
 	}
 	else
 	{

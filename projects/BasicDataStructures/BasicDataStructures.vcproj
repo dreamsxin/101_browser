@@ -160,7 +160,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\BasicDataStructures\Stream\ZStream.cpp"
+					RelativePath="..\..\src\BasicDataStructures\Stream\ZReadStream.cpp"
 					>
 				</File>
 			</Filter>
@@ -254,7 +254,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Stream\ZStream.h"
+					RelativePath="..\..\include\BasicDataStructures\Stream\ZReadStream.h"
 					>
 				</File>
 			</Filter>
@@ -267,10 +267,6 @@
 				</File>
 				<File
 					RelativePath="..\..\include\BasicDataStructures\Parser\ParserDataStructures.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\include\BasicDataStructures\Parser\ParserTypes.h"
 					>
 				</File>
 				<File

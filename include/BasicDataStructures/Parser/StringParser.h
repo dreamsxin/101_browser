@@ -4,24 +4,25 @@
 #include "BasicDataStructures/Parser/AbstractParser.h"
 #include <string>
 
-class StringParser : public AbstractParser<std::string>
+class StringParser : public AbstractParser
 {
 protected:
 	bool mParsedPartsOK;
 	std::string mStringToParse;
 	size_t mCurrentIndex;
 
+	virtual bool parseTokenIfNotDone(char in_token);
+
 public:
-	inline StringParser()
+	inline StringParser(std::string in_string_to_parse)
+		: mStringToParse(in_string_to_parse)
 	{
-		open("");
+		reset();
 	}
-
-	virtual bool open(std::string in_stringToParse);
-	virtual void close();
-	virtual bool isOpen() const;
-
-	virtual bool parseToken(char in_token);
+	
+	virtual void reset();
+	virtual bool isDone() const;
+	virtual bool isOK() const;
 };
 
 #endif
