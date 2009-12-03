@@ -6,19 +6,19 @@ bool ZReadStream::open(BasicReadStream* in_pStream)
 	close();
 
 	mpStream = in_pStream;
-	
+
 	int ret;
 
 	strm.zalloc = Z_NULL;
-    strm.zfree = Z_NULL;
-    strm.opaque = Z_NULL;
-    strm.avail_in = 0;
-    strm.next_in = Z_NULL;
-    ret = inflateInit(&strm);
+	strm.zfree = Z_NULL;
+	strm.opaque = Z_NULL;
+	strm.avail_in = 0;
+	strm.next_in = Z_NULL;
+	ret = inflateInit(&strm);
 
 	mOpen = (ret == Z_OK);
 
-    return isOpen();
+	return isOpen();
 }
 
 void ZReadStream::close()
@@ -39,7 +39,7 @@ size_t ZReadStream::read(void* in_buffer, size_t in_size, size_t in_count)
 {
 	if (!isOpen())
 		return 0;
-	
+
 	strm.avail_out = in_size * in_count;
 	strm.next_out = (unsigned char*) in_buffer;
 
@@ -56,15 +56,15 @@ size_t ZReadStream::read(void* in_buffer, size_t in_size, size_t in_count)
 			}
 			strm.next_in = mBuffer;
 		}
-		
+
 		int ret = inflate(&strm, Z_SYNC_FLUSH);
 
 		switch (ret)
 		{
-			case Z_NEED_DICT:
-            case Z_DATA_ERROR:
-            case Z_MEM_ERROR:
-				close();
+		case Z_NEED_DICT:
+		case Z_DATA_ERROR:
+		case Z_MEM_ERROR:
+			close();
 		}
 
 		mUsed = true;

@@ -1,18 +1,13 @@
 #include "BasicDataStructures/Parser/StringParser.h"
 
-
 bool StringParser::parseTokenIfNotDone(char in_token)
 {
-	if (!mParsedPartsOK)
-		return false;
-
 	if (in_token!=mStringToParse.at(mCurrentIndex))
 	{
 		mParsedPartsOK = false;
-		return false;
 	}
 
-	return true;
+	return mParsedPartsOK;
 }
 
 void StringParser::reset()
@@ -23,10 +18,10 @@ void StringParser::reset()
 
 bool StringParser::isDone() const
 {
-	return mCurrentIndex == mStringToParse.length();
+	return mCurrentIndex == mStringToParse.length() || !mParsedPartsOK;
 }
 
 bool StringParser::isOK() const
 {
-	return mParsedPartsOK;
+	return mCurrentIndex == mStringToParse.length() && mParsedPartsOK;
 }

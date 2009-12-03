@@ -176,6 +176,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\BasicDataStructures\Parser\UnionParser.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\BasicDataStructures\Parser\UntilCharacterParser.cpp"
 					>
 				</File>
@@ -275,6 +279,10 @@
 				</File>
 				<File
 					RelativePath="..\..\include\BasicDataStructures\Parser\StringParser.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Parser\UnionParser.h"
 					>
 				</File>
 				<File
