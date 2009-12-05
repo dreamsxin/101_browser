@@ -16,15 +16,24 @@ protected:
 	/*!
 	 * the number of remaining bits until a new byte has to be read
 	 */
-	unsigned char mBitsRemaining;
+	unsigned char mRemainingBitsCount;
 	/*!
 	 * the last read byte. For further bit partitioning
 	 */
 	unsigned char mCurrentByte;
 
+	/*!
+	 * Reads a bit. Return value:
+	 * 1 - a bit was read
+	 * 0 - no bit was read
+	 *
+	 * in_buffer: buffer to a single character
+	 */
+	unsigned char readBit(unsigned char* in_buffer);
+
 public:
 	inline BigEndianBitLittleEndianByteBitReadStream() 
-		: mpStream(NULL), mBitsRemaining(0) {
+		: mpStream(NULL), mRemainingBitsCount(0) {
 
 	}
 
