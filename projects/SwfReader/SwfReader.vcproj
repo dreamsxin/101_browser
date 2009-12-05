@@ -188,10 +188,6 @@
 				RelativePath="..\..\src\SwfReader\SwfReaderMain.cpp"
 				>
 			</File>
-			<File
-				RelativePath="..\..\src\SwfReader\SwfStructure.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"

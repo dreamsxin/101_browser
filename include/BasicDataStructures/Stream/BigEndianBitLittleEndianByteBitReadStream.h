@@ -46,11 +46,21 @@ public:
 	virtual void close();
 	virtual bool isOpen() const;
 
-	/*!
-	 * Important: in_size is in bits, not in bytes. Also it is returned how many
-	 * bits were read.
-	 */
+	// Only for compatibility with BasicReadStream
 	virtual size_t read(void* in_buffer, size_t in_size, size_t in_count);
+
+	/*!
+	 * Important: in_size is in bits, not in bytes.
+	 */
+	virtual size_t readBits(void* in_buffer, size_t in_size, size_t in_count);
+
+	/*!
+	 * Here we have an additional parameter in_blockSize. It tells us the real size of 
+	 * the block (the remaining bits become padded by zeros)
+	 * 
+	 * Important: in_size is in bits, not in bytes.
+	 */
+	virtual size_t readBits(void* in_buffer, size_t in_size, size_t in_count, size_t in_blockSize);
 };
 
 #endif

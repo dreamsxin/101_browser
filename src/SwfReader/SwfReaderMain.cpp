@@ -1,3 +1,4 @@
+#include "BasicDataStructures/Stream/BigEndianBitLittleEndianByteBitReadStream.h"
 #include "BasicDataStructures/Stream/FileReadStream.h"
 #include "BasicDataStructures/Stream/ZReadStream.h"
 #include "SwfReader/SwfStructure.h"
@@ -42,9 +43,18 @@ int main(int argc, char** argv)
 		streamToContinue = &stream;
 	}
 
-	if (!readRECT(streamToContinue, &swfFile.swfHeader2.FrameSize))
-		exit(1);
+	{
+		BigEndianBitLittleEndianByteBitReadStream beblebbrs;
+		beblebbrs.open(streamToContinue);
 
+		if (beblebbrs.readBits(&swfFile.swfHeader2.FrameSize.NBits, 5, 1)!=1)
+			exit(1);
+		
+		if (beblebbrs.readBits(&swfFile.swfHeader2.FrameSize.Xmin, 5, 4, 4)!=4)
+			exit(1);
+	}
+
+	// read FrameRate and FrameCount
 	if (streamToContinue->read(&swfFile.swfHeader2.FrameRate, sizeof(unsigned short), 2)!=2)
 		exit(1);
 
@@ -58,7 +68,7 @@ int main(int argc, char** argv)
 			break;
 		}
 
-		tag.recordHeader.TagCode = TagCodeAndLength>>6;
+		tag.recordHeader.TagType = TagCodeAndLength>>6;
 		tag.recordHeader.Length = TagCodeAndLength & ((1<<6)-1);
 
 		if (tag.recordHeader.Length == 0x3F)

@@ -5,23 +5,18 @@
 #include <cstdlib>
 #include <list>
 
-
 struct RECT
 {
 	unsigned char NBits; // NBits UB[5]	Bits in each rect value field
 	// signed int is the size required for SB[UB[5]]
+#pragma pack(push, 1)
 	signed int Xmin; // Xmin SB[Nbits] x minimum position for rect
 	signed int Xmax; // Xmax SB[Nbits] x maximum position for rect
 	signed int Ymin; // Ymin SB[Nbits] y minimum position for rect
 	signed int Ymax; // Ymax SB[Nbits] y maximum position for rect
-	// TODO: get rid of this
-	unsigned char* XminXmaxYminYmax;
+#pragma pack(pop)
 
-	inline RECT() : XminXmaxYminYmax(NULL) { }
-	inline ~RECT()
-	{
-		delete[] XminXmaxYminYmax;
-	}
+	inline RECT() : Xmin(0), Xmax(0), Ymin(0), Ymax(0) { }
 };
 
 /*!
@@ -43,14 +38,18 @@ struct SwfHeader1
 struct SwfHeader2
 {
 	RECT FrameSize;
+#pragma pack(push, 1)
 	unsigned short FrameRate;
 	unsigned short FrameCount;
+#pragma pack(pop)
 };
 
 struct RECORDHEADER
 {
-	unsigned char TagCode;
-	signed int Length;
+	unsigned char TagType; // 6 Bits
+	signed int Length;     // 10 bits or SI32
+
+	RECORDHEADER() : TagType(0), Length(0) { }
 };
 
 struct Tag

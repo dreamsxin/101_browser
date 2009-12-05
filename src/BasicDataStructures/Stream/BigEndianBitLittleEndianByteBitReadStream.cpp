@@ -1,4 +1,5 @@
 #include "BasicDataStructures/Stream/BigEndianBitLittleEndianByteBitReadStream.h"
+#include <cstring>
 
 unsigned char BigEndianBitLittleEndianByteBitReadStream::readBit(unsigned char* in_buffer)
 {
@@ -40,6 +41,12 @@ bool BigEndianBitLittleEndianByteBitReadStream::isOpen() const
 size_t BigEndianBitLittleEndianByteBitReadStream::read
 (void* in_buffer, size_t in_size, size_t in_count)
 {
+	return readBits(in_buffer, 8*in_size, in_count);
+}
+
+size_t BigEndianBitLittleEndianByteBitReadStream::readBits
+(void* in_buffer, size_t in_size, size_t in_count)
+{
 	unsigned char bitIndex = 0;
 
 	// the number of complete bytes of the structure to read
@@ -51,7 +58,7 @@ size_t BigEndianBitLittleEndianByteBitReadStream::read
 
 	unsigned char* currentPosition = (unsigned char*) in_buffer;
 
-	size_t readBitsCount = 0;
+	size_t readStructsCount = 0;
 
 	for (size_t currentStructIndex=0; currentStructIndex<in_count; currentStructIndex++)
 	{
@@ -59,29 +66,48 @@ size_t BigEndianBitLittleEndianByteBitReadStream::read
 			currentStructRemainingBit<structRemainingBits; currentStructRemainingBit++)
 		{
 			if (readBit(currentPosition)==0)
-				return readBitsCount;
-			else
-				readBitsCount++;
+				goto end_of_read;
 		}
 
 		if (structRemainingBits>0)
 			currentPosition++;
 
 		for (size_t currentCompleteByte = 0; currentCompleteByte < structCompleteBytesCount; 
-			currentCompleteByte)
+			currentCompleteByte++)
 		{
 			for (unsigned char currentCompleteByteBit = 0; currentCompleteByteBit < 8; 
 				currentCompleteByteBit++)
 			{
 				if (readBit(currentPosition)==0)
-					return readBitsCount;
-				else
-					readBitsCount++;
+					goto end_of_read;
 			}
 
 			currentPosition++;
 		}
+
+		readStructsCount++;
 	}
 
-	return readBitsCount;
+end_of_read:
+	return readStructsCount;
+}
+
+size_t BigEndianBitLittleEndianByteBitReadStream::readBits
+(void* in_buffer, size_t in_size, size_t in_count, size_t in_blockSize)
+{
+	unsigned char* currentPosition = (unsigned char*) in_buffer;
+	size_t readBlocksCount = 0;
+
+	for (size_t currentBlockIndex = 0; currentBlockIndex < in_count; currentBlockIndex++)
+	{
+		memset(currentPosition, 0, in_blockSize);
+
+		if (read(currentPosition, in_size, 1)!=1)
+			break;
+
+		currentPosition+=in_blockSize;
+		readBlocksCount++;
+	}
+
+	return readBlocksCount;
 }

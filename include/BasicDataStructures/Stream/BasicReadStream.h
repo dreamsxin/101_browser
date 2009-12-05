@@ -11,11 +11,7 @@ public:
 
 	/*!
 	 * Return value:
-	 * the number of read bytes
-	 * 
-	 * This function may call close() on the stream if there is no more data
-	 * to fetch (but it MUST NOT do this if the implementing class is a 
-	 * subclass of RevertibleReadStream)
+	 * the number of read structures of size in_size
 	 */
 	virtual size_t read(void* in_buffer, size_t in_size, size_t in_count) = 0;
 };
