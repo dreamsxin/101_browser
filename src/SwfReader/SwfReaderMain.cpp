@@ -59,18 +59,14 @@ int main(int argc, char** argv)
 		}
 
 		tag.recordHeader.TagCode = TagCodeAndLength>>6;
-		unsigned short prematureLength = TagCodeAndLength & ((1<<6)-1);
+		tag.recordHeader.Length = TagCodeAndLength & ((1<<6)-1);
 
-		if (prematureLength == 0x3F)
+		if (tag.recordHeader.Length == 0x3F)
 		{
 			if (streamToContinue->read(&tag.recordHeader.Length, sizeof(signed int), 1)!=1)
 			{
 				exit(1);
 			}
-		}
-		else
-		{
-			tag.recordHeader.Length = prematureLength;
 		}
 
 		tag.tagContent = new unsigned char[tag.recordHeader.Length];
