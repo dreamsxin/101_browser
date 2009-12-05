@@ -1,48 +1,190 @@
-PlaceObject
+CHAPTER 4
+Control Tags
 
-Field	Type 	Comment
-Header	RECORDHEADER	Tag type = 4
-CharacterId	UI16	ID of character to place
+SetBackgroundColor
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 9
+BackgroundColor	RGB	Color of the display background
+
+FrameLabel
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 43
+Name	STRING	Label for frame
+
+Protect
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 24
+
+End
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 0
+
+ExportAssets
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 56
+Count	UI16	Number of assets to export
+Tag1	UI16	First character ID to export
+Name1	STRING	Identifier for first exported
+		character
+...		
+TagN	UI16	Last character ID to export
+NameN	STRING	Identifier for last exported
+		character
+
+ImportAssets
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 57
+URL	STRING URL	where the source
+		SWF file can be found
+Count	UI16	Number of assets to import
+Tag1	UI16	Character ID to use for first
+		imported character in
+		importing SWF file (need
+		not match character ID in
+		exporting SWF file)
+Name1	STRING	Identifier for first imported
+		character (must match an
+		identifier in exporting SWF
+		file)
+...
+TagN	UI16	Character ID to use for last
+		imported character in
+		importing SWF file
+NameN	STRING	Identifier for last imported
+		character
+
+EnableDebugger
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 58
+Password	Null-terminated STRING. (0	MD5-encrypted password
+	is NULL)	
+
+EnableDebugger2
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 64
+Reserved	UI16	Always 0
+Password	Null-terminated STRING.	MD5-encrypted password
+	(0 is NULL)
+
+ScriptLimits
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 65
+MaxRecursionDepth	UI16	Maximum recursion depth
+ScriptTimeoutSeconds	UI16	Maximum ActionScript
+		processing time before
+		script stuck dialog box
+		displays
+
+SetTabIndex
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 66
 Depth	UI16	Depth of character
-Matrix	MATRIX	Transform matrix data
-ColorTransform (optional)	CXFORM	Color transform data
+TabIndex	UI16	Tab order value
 
-PlaceObject2
+FileAttributes
+Field	Type	Comment
+Header	RECORDHEADER 	Tag type = 69
+Reserved	UB[1]	Must be 0
+UseDirectBlit	UB[1]	If 1, the SWF file uses hardware acceleration
+		to blit graphics to the screen, where such
+		acceleration is available.
+		If 0, the SWF file will not use hardware
+		accelerated graphics facilities.
+		Minimum file version is 10.
+UseGPU	UB[1]	If 1, the SWF file uses GPU compositing
+		features when drawing graphics, where such
+		acceleration is available.
+		If 0, the SWF file will not use hardware
+		accelerated graphics facilities.
+		Minimum file version is 10.
+HasMetadata	UB[1]	If 1, the SWF file contains the Metadata tag.
+		If 0, the SWF file does not contain the
+		Metadata tag.
+ActionScript3	UB[1]	If 1, this SWF uses ActionScript 3.0.
+		If 0, this SWF uses ActionScript 1.0 or 2.0.
+		Minimum file format version is 9.
+Reserved	UB[2]	Must be 0
+UseNetwork	UB[1]	If 1, this SWF file is given network file access
+		when loaded locally.
+		If 0, this SWF file is given local file access
+		when loaded locally.
+Reserved	UB[24]	Must be 0
 
-Field	Type 	Comment
-Header	RECORDHEADER	Tag type = 26
-PlaceFlagHasClipActions 	UB[1]	SWF 5 and later: has clip actions (sprite characters only) Otherwise: always 0
-PlaceFlagHasClipDepth 	UB[1]	Has clip depth
-PlaceFlagHasName 	UB[1]	Has name
-PlaceFlagHasRatio 	UB[1]	Has ratio
-PlaceFlagHasColorTransform	UB[1]	Has color transform
-PlaceFlagHasMatrix 	UB[1]	Has matrix
-PlaceFlagHasCharacter 	UB[1]	Places a character
-PlaceFlagMove 	UB[1]	Defines a character to be moved
-Depth 	UI16	Depth of character
-CharacterId 	If PlaceFlagHasCharacter UI16	ID of character to place
-Matrix	If PlaceFlagHasMatrix MATRIX	Transform matrix data
-ColorTransform 	If PlaceFlagHasColorTransform CXFORMWITHALPHA	Color transform data
-Ratio	If PlaceFlagHasRatio UI16
-Name 	If PlaceFlagHasName STRING	Name of character
-ClipDepth	If PlaceFlagHasClipDepth UI16	Clip depth
-ClipActions	If PlaceFlagHasClipActions CLIPACTIONS	SWF 5 and later: Clip Actions Data
- 
-CLIPACTIONS
+ImportAssets2
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 71
+URL	STRING	URL where the source
+		SWF file can be found
+Reserved	UI8	Must be 1
+Reserved	UI8	Must be 0
+Count	UI16	Number of assets to import
+Tag1	UI16	Character ID to use for first
+		imported character in
+		importing SWF file (need
+		not match character ID in
+		exporting SWF file)
+Name1	STRING	Identifier for first imported
+		character (must match an
+		identifier in exporting SWF
+		file)
+...		
+TagN	UI16	Character ID to use for last
+		imported character in
+		importing SWF file
+NameN	STRING	Identifier for last imported
+		character
 
-Field 	Type 	Comment
-Reserved 	UI16 	Must be 0
-AllEventFlags 	CLIPEVENTFLAGS	All events used in these clip actions
-ClipActionRecords	CLIPACTIONRECORD [one or more]	Individual event handlers
-ClipActionEndFlag 	If SWF version <= 5, UI16	Must be 0
-		If SWF version >= 6, UI32
- 
-CLIPACTIONRECORD
+SymbolClass
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 76
+NumSymbols	UI16	Number of symbols that
+		will be associated by this
+		tag.
+Tag1	U16	The 16-bit character tag ID
+		for the symbol to associate
+Name1	STRING	The fully-qualified name of
+		the ActionScript 3.0 class
+		with which to associate this
+		symbol. The class must
+		have already been
+		declared by a DoABC tag.
+...	...	...
+TagN	U16	Tag ID for symbol N
+NameN	STRING	Fully-qualified class name
+		for symbol N
 
-Field	Type 	Comment
-EventFlags 	CLIPEVENTFLAGS	Events to which this  handler applies
-ActionRecordSize 	UI32	Offset in bytes from  end of this field to next CLIPACTIONRECORD (or ClipActionEndFlag)
-KeyCode	If EventFlags contain ClipEventKeyPress: UI8	Key code to trap (see
-	Otherwise absent	“DefineButton2” on page 226)
-Actions	ACTIONRECORD [one or more]	Actions to perform
+Metadata
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 77
+Metadata	STRING	XML Metadata
 
+DefineScalingGrid
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 78
+CharacterId	UI16	ID of sprite or button
+		character upon which the
+		scaling grid will be applied.
+Splitter	RECT	Center region of 9-slice
+		grid
+
+DefineSceneAndFrameLabelData
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 86
+SceneCount	EncodedU32	Number of scenes
+Offset1	EncodedU32	Frame offset for scene 1
+Name1	STRING	Name of scene 1
+...	...	...
+OffsetN	EncodedU32	Frame offset for scene N
+NameN	STRING	Name of scene N
+FrameLabelCount	EncodedU32	Number of frame labels
+FrameNum1	EncodedU32	Frame number of frame
+		label #1 (zero-based,
+		global to symbol)
+FrameLabel1	STRING	Frame label string of frame
+		label #1
+...	...	...
+FrameNumN	EncodedU32	Frame number of frame
+		label #N (zero-based,
+		global to symbol)
+FrameLabelN	STRING	Frame label string of frame
+		label #N
