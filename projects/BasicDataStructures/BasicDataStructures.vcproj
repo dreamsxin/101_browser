@@ -156,6 +156,10 @@
 				Name="Stream"
 				>
 				<File
+					RelativePath="..\..\src\BasicDataStructures\Stream\BigEndianBitLittleEndianByteBitReadStream.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\BasicDataStructures\Stream\FileReadStream.cpp"
 					>
 				</File>
@@ -247,6 +251,10 @@
 				</File>
 				<File
 					RelativePath="..\..\include\BasicDataStructures\Stream\BasicWriteStream.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Stream\BigEndianBitLittleEndianByteBitReadStream.h"
 					>
 				</File>
 				<File

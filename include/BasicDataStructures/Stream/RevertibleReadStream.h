@@ -12,5 +12,4 @@ public:
 	virtual void revert(long in_offset) = 0;
 };
 
-
 #endif

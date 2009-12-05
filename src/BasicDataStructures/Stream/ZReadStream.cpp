@@ -28,6 +28,7 @@ void ZReadStream::close()
 
 	mOpen = false;
 	mUsed = false;
+	mpStream = NULL;
 }
 
 bool ZReadStream::isOpen() const

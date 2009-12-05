@@ -7,6 +7,8 @@
 class BasicReadStream
 {
 public:
+	virtual ~BasicReadStream() { }
+
 	/*!
 	 * Return value:
 	 * the number of read bytes

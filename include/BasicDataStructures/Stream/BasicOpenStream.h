@@ -7,6 +7,8 @@
 template <typename OpenType> class BasicOpenStream
 {
 public:
+	virtual ~BasicOpenStream<OpenType>() { }
+
 	/*!
 	 * Return value:
 	 * true:  success
