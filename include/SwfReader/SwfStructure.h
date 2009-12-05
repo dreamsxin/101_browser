@@ -9,13 +9,11 @@
 struct RECT
 {
 	unsigned char NBits; // NBits UB[5]	Bits in each rect value field
-#pragma pack(push, 1)
 	// signed int is the size required for SB[UB[5]]
 	signed int Xmin; // Xmin SB[Nbits] x minimum position for rect
 	signed int Xmax; // Xmax SB[Nbits] x maximum position for rect
 	signed int Ymin; // Ymin SB[Nbits] y minimum position for rect
 	signed int Ymax; // Ymax SB[Nbits] y maximum position for rect
-#pragma pack(pop)
 	// TODO: get rid of this
 	unsigned char* XminXmaxYminYmax;
 
