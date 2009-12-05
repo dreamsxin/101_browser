@@ -47,10 +47,12 @@ int main(int argc, char** argv)
 		BigEndianBitLittleEndianByteBitReadStream beblebbrs;
 		beblebbrs.open(streamToContinue);
 
-		if (beblebbrs.readBits(&swfFile.swfHeader2.FrameSize.NBits, 5, 1)!=1)
+		if (beblebbrs.readBits(&swfFile.swfHeader2.FrameSize.NBits, 5, 1, 
+			sizeof(swfFile.swfHeader2.FrameSize.NBits))!=1)
 			exit(1);
 		
-		if (beblebbrs.readBits(&swfFile.swfHeader2.FrameSize.Xmin, 5, 4, 4)!=4)
+		if (beblebbrs.readBits(&swfFile.swfHeader2.FrameSize.Xmin, 5, 4, 
+			sizeof(swfFile.swfHeader2.FrameSize.Xmin))!=4)
 			exit(1);
 	}
 

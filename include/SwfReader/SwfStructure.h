@@ -46,8 +46,8 @@ struct SwfHeader2
 
 struct RECORDHEADER
 {
-	unsigned char TagType; // 6 Bits
-	signed int Length;     // 10 bits or SI32
+	unsigned short TagType; // 10 Bits
+	signed int Length;      // 6 bits or SI32
 
 	RECORDHEADER() : TagType(0), Length(0) { }
 };
