@@ -25,19 +25,19 @@ int main(int argc, char** argv)
 	StringParser stringParser("2 Docume");
 	UntilCharacterParser untilCharacterParser('\n');
 
-	char currentToken;
-
 	while (true)
 	{
-		size_t readCount = stream.read(&currentToken, 1, 1);
-		if (readCount == 0)
+		char currentToken;
+
+		if (stream.read(&currentToken, 1, 1) != 1)
 			break;
 
 		bool parseOK = untilCharacterParser.parseToken(currentToken);
 
 		if (untilCharacterParser.isDone())
 		{
-			if (untilCharacterParser.mReadCharacters.size()>0 && *untilCharacterParser.mReadCharacters.begin()=='[')
+			if (untilCharacterParser.mReadCharacters.size()>0 && 
+				(*untilCharacterParser.mReadCharacters.begin()=='[' || *untilCharacterParser.mReadCharacters.begin()=='\t'))
 			{
 				for (std::list<char>::iterator i=untilCharacterParser.mReadCharacters.begin(); 
 					i!=untilCharacterParser.mReadCharacters.end(); i++)
