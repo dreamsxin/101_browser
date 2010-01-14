@@ -26,3 +26,7 @@ Release/*.lib
 projects/zlib/*/*.lib
 data/*/*.zip
 data/*/*.doc
+Makefile
+CMakeFiles
+CMakeCache.txt
+cmake_install.cmake
