@@ -1,0 +1,18 @@
+5 Template Rules
+
+5.2 Patterns
+
+Patterns
+[1]    	Pattern 	   ::=    	LocationPathPattern 	
+			| Pattern '|' LocationPathPattern 	
+[2]    	LocationPathPattern 	   ::=    	'/' RelativePathPattern? 	
+			| IdKeyPattern (('/' | '//') RelativePathPattern)? 	
+			| '//'? RelativePathPattern 	
+[3]    	IdKeyPattern 	   ::=    	'id' '(' Literal ')' 	
+			| 'key' '(' Literal ',' Literal ')' 	
+[4]    	RelativePathPattern 	   ::=    	StepPattern 	
+			| RelativePathPattern '/' StepPattern 	
+			| RelativePathPattern '//' StepPattern 	
+[5]    	StepPattern 	   ::=    	ChildOrAttributeAxisSpecifier NodeTest Predicate* 	
+[6]    	ChildOrAttributeAxisSpecifier 	   ::=    	AbbreviatedAxisSpecifier 	
+			| ('child' | 'attribute') '::'	

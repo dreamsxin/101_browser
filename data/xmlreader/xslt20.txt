@@ -1,0 +1,22 @@
+5 Features of the XSLT Language
+
+5.5 Patterns
+
+5.5.2 Syntax of Patterns
+
+Patterns
+[1]    	Pattern 	   ::=    	PathPattern
+			| Pattern '|' PathPattern
+[2]    	PathPattern 	   ::=    	RelativePathPattern
+			| '/' RelativePathPattern?
+			| '//' RelativePathPattern
+			| IdKeyPattern (('/' | '//') RelativePathPattern)?
+[3]    	RelativePathPattern 	   ::=    	PatternStep (('/' | '//') RelativePathPattern)?
+[4]    	PatternStep 	   ::=    	PatternAxis? NodeTest PredicateList
+[5]    	PatternAxis 	   ::=    	('child' '::' | 'attribute' '::' | '@')
+[6]    	IdKeyPattern 	   ::=    	'id' '(' IdValue ')'
+			| 'key' '(' StringLiteral ',' KeyValue ')'
+[7]    	IdValue 	   ::=    	StringLiteral | VarRef
+[8]    	KeyValue 	   ::=    	Literal | VarRef
+
+The constructs NodeTest, PredicateList, VarRef, Literal, and StringLiteral are part of the XPath expression language, and are defined in [XPath 2.0].
