@@ -188,6 +188,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="VirtualMachine"
+				>
+				<File
+					RelativePath="..\..\src\BasicDataStructures\VirtualMachine\VirtualMachineContext.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -295,6 +303,30 @@
 				</File>
 				<File
 					RelativePath="..\..\include\BasicDataStructures\Parser\UntilCharacterParser.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Util"
+				>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Util\MemoryManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\Util\SingleChain.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="VirtualMachine"
+				>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\VirtualMachine\InstructionContext.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\VirtualMachine\VirtualMachineContext.h"
 					>
 				</File>
 			</Filter>
