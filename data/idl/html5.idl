@@ -1,4 +1,4 @@
-module dom
+module html5
 {
 	// 2.7.2.1 HTMLCollection
 
@@ -360,26 +360,26 @@ module dom
 	// 4.4.1 The body element
 
 	interface HTMLBodyElement : HTMLElement {
-           attribute Function onafterprint;
-           attribute Function onbeforeprint;
-           attribute Function onbeforeunload;
-           attribute Function onblur;
-           attribute Function onerror;
-           attribute Function onfocus;
-           attribute Function onhashchange;
-           attribute Function onload;
-           attribute Function onmessage;
-           attribute Function onoffline;
-           attribute Function ononline;
-           attribute Function onpopstate;
-           attribute Function onpagehide;
-           attribute Function onpageshow;
-           attribute Function onredo;
-           attribute Function onresize;
-           attribute Function onstorage;
-           attribute Function onundo;
-           attribute Function onunload;
-};
+		attribute Function onafterprint;
+		attribute Function onbeforeprint;
+		attribute Function onbeforeunload;
+		attribute Function onblur;
+		attribute Function onerror;
+		attribute Function onfocus;
+		attribute Function onhashchange;
+		attribute Function onload;
+		attribute Function onmessage;
+		attribute Function onoffline;
+		attribute Function ononline;
+		attribute Function onpopstate;
+		attribute Function onpagehide;
+		attribute Function onpageshow;
+		attribute Function onredo;
+		attribute Function onresize;
+		attribute Function onstorage;
+		attribute Function onundo;
+		attribute Function onunload;
+	};
 
 	// 4.4.6 The h1, h2, h3, h4, h5, and h6 elements
 
@@ -404,15 +404,15 @@ module dom
 	// 4.5.5 The blockquote element
 
 	interface HTMLQuoteElement : HTMLElement {
-           attribute DOMString cite;
-};
+		attribute DOMString cite;
+	};
 
 	// 4.5.6 The ol element
 
 	interface HTMLOListElement : HTMLElement {
-           attribute boolean reversed;
-           attribute long start;
-};
+		attribute boolean reversed;
+		attribute long start;
+	};
 
 	// 4.5.7 The ul element
 
@@ -421,8 +421,8 @@ module dom
 	// 4.5.8 The li element
 
 	interface HTMLLIElement : HTMLElement {
-           attribute long value;
-};
+		attribute long value;
+	};
 
 	// 4.5.9 The dl element
 
