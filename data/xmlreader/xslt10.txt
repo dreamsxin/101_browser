@@ -1,3 +1,7 @@
+XSL Transformations (XSLT) Version 1.0
+W3C Recommendation 16 November 1999
+http://www.w3.org/TR/xslt/
+
 5 Template Rules
 
 5.2 Patterns

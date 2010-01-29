@@ -1,0 +1,71 @@
+Extensible Stylesheet Language (XSL) Version 1.1
+W3C Recommendation 05 December 2006
+http://www.w3.org/TR/xsl11/
+
+5.9.3 Basics
+
+[1]   	Expr	   ::=   	AdditiveExpr
+[2]   	PrimaryExpr	   ::=   	'(' Expr ')'
+			| Numeric
+			| Literal
+			| Color
+			| Keyword
+			| EnumerationToken
+			| FunctionCall
+
+5.9.4 Function Calls
+
+[3]   	FunctionCall	   ::=   	FunctionName '(' ( Argument ( ',' Argument)*)? ')'
+[4]   	Argument	   ::=   	Expr
+
+5.9.5 Numerics
+
+[5]   	Numeric	   ::=   	AbsoluteNumeric
+			| RelativeNumeric
+[6]   	AbsoluteNumeric	   ::=   	AbsoluteLength
+[7]   	AbsoluteLength	   ::=   	Number AbsoluteUnitName?
+[8]   	RelativeNumeric	   ::=   	Percent
+			| RelativeLength
+[9]   	Percent	   ::=   	Number '%'
+[10]   	RelativeLength	   ::=   	Number RelativeUnitName
+
+Numeric Expressions
+
+[11]   	AdditiveExpr	   ::=   	MultiplicativeExpr
+			| AdditiveExpr '+' MultiplicativeExpr
+			| AdditiveExpr '-' MultiplicativeExpr
+[12]   	MultiplicativeExpr	   ::=   	UnaryExpr
+			| MultiplicativeExpr MultiplyOperator UnaryExpr
+			| MultiplicativeExpr 'div' UnaryExpr
+			| MultiplicativeExpr 'mod' UnaryExpr
+[13]   	UnaryExpr	   ::=   	PrimaryExpr
+			| '-' UnaryExpr
+
+5.9.11 Lexical Structure
+
+Expression Lexical Structure
+
+[14]   	ExprToken	   ::=   	'(' | ')' | '%'
+			| Operator
+			| FunctionName
+			| EnumerationToken
+			| Number
+[15]   	Number	   ::=   	FloatingPointNumber
+[16]   	FloatingPointNumber	   ::=   	Digits ('.' Digits?)?
+			| '.' Digits
+[17]   	Digits	   ::=   	[0-9]+
+[18]   	Color	   ::=   	'#' AlphaOrDigits
+[19]   	AlphaOrDigits	   ::=   	[a-fA-F0-9]+
+[20]   	Literal	   ::=   	'"' [^"]* '"'
+			| "'" [^']* "'"
+[21]   	Operator	   ::=   	OperatorName
+			| MultiplyOperator
+			| '+' | '-'
+[22]   	OperatorName	   ::=   	'mod' | 'div'
+[23]   	MultiplyOperator	   ::=   	'*'
+[24]   	Keyword	   ::=   	'inherit'
+[25]   	FunctionName	   ::=   	NCName
+[26]   	EnumerationToken	   ::=   	NCName
+[27]   	AbsoluteUnitName	   ::=   	'cm' | 'mm' | 'in' | 'pt' | 'pc' | 'px'
+[28]   	RelativeUnitName	   ::=   	'em'
+[29]   	ExprWhitespace	   ::=   	S

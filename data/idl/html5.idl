@@ -1,0 +1,436 @@
+module dom
+{
+	// 2.7.2.1 HTMLCollection
+
+	interface HTMLCollection {
+		readonly attribute unsigned long length;
+		caller getter object item(in unsigned long index); // only returns Element
+		caller getter object namedItem(in DOMString name); // only returns Element
+	};
+
+	// 2.7.2.2 HTMLAllCollection
+
+	interface HTMLAllCollection : HTMLCollection {
+		// inherits length and item()
+		caller getter object namedItem(in DOMString name); // overrides inherited namedItem()
+		HTMLAllCollection tags(in DOMString tagName);
+	};
+
+	// 2.7.2.3 HTMLFormControlsCollection
+
+	interface HTMLFormControlsCollection : HTMLCollection {
+		// inherits length and item()
+		caller getter object namedItem(in DOMString name); // overrides inherited namedItem()
+	};
+
+	interface RadioNodeList : NodeList {
+		attribute DOMString value;
+	};
+
+	// 2.7.2.4 HTMLOptionsCollection
+
+	interface HTMLOptionsCollection : HTMLCollection {
+		// inherits item()
+		attribute unsigned long length; // overrides inherited length
+		caller getter object namedItem(in DOMString name); // overrides inherited namedItem()
+		void add(in HTMLElement element, in optional HTMLElement before);
+		void add(in HTMLElement element, in long before);
+		void remove(in long index);
+	};
+
+	// 2.7.3 DOMTokenList
+
+	interface DOMTokenList {
+		readonly attribute unsigned long length;
+		getter DOMString item(in unsigned long index);
+		boolean contains(in DOMString token);
+		void add(in DOMString token);
+		void remove(in DOMString token);
+		boolean toggle(in DOMString token);
+		stringifier DOMString ();
+	};
+
+	// 2.7.4 DOMSettableTokenList
+
+	interface DOMSettableTokenList : DOMTokenList {
+		attribute DOMString value;
+	};
+
+	// 2.7.6 DOMStringMap
+
+	interface DOMStringMap {
+		getter DOMString (in DOMString name);
+		setter void (in DOMString name, in DOMString value);
+		creator void (in DOMString name, in DOMString value);
+		deleter void (in DOMString name);
+	};
+
+	// 2.7.8 Exceptions
+
+	const unsigned short SECURITY_ERR = 18;
+	const unsigned short NETWORK_ERR = 19;
+	const unsigned short ABORT_ERR = 20;
+	const unsigned short URL_MISMATCH_ERR = 21;
+	const unsigned short QUOTA_EXCEEDED_ERR = 22;
+	const unsigned short PARSE_ERR = 81;
+	const unsigned short SERIALIZE_ERR = 82;
+
+	// 3.1.1 Documents in the DOM
+
+	[OverrideBuiltins]
+	interface HTMLDocument {
+		// resource metadata management
+		[PutForwards=href] readonly attribute Location location;
+		readonly attribute DOMString URL;
+		attribute DOMString domain;
+		readonly attribute DOMString referrer;
+		attribute DOMString cookie;
+		readonly attribute DOMString lastModified;
+		readonly attribute DOMString compatMode;
+		attribute DOMString charset;
+		readonly attribute DOMString characterSet;
+		readonly attribute DOMString defaultCharset;
+		readonly attribute DOMString readyState;
+
+		// DOM tree accessors
+		getter any (in DOMString name);
+		attribute DOMString title;
+		attribute DOMString dir;
+		attribute HTMLElement body;
+		readonly attribute HTMLHeadElement head;
+		readonly attribute HTMLCollection images;
+		readonly attribute HTMLCollection embeds;
+		readonly attribute HTMLCollection plugins;
+		readonly attribute HTMLCollection links;
+		readonly attribute HTMLCollection forms;
+		readonly attribute HTMLCollection scripts;
+		NodeList getElementsByName(in DOMString elementName);
+		NodeList getElementsByClassName(in DOMString classNames);
+
+		// dynamic markup insertion
+		attribute DOMString innerHTML;
+		HTMLDocument open(in optional DOMString type, in optional DOMString replace);
+		WindowProxy open(in DOMString url, in DOMString name, in DOMString features, in optional boolean replace);
+		void close();
+		void write(in DOMString... text);
+		void writeln(in DOMString... text);
+
+		// user interaction
+		Selection getSelection();
+		readonly attribute Element activeElement;
+		boolean hasFocus();
+		attribute DOMString designMode;
+		boolean execCommand(in DOMString commandId);
+		boolean execCommand(in DOMString commandId, in boolean showUI);
+		boolean execCommand(in DOMString commandId, in boolean showUI, in DOMString value);
+		boolean queryCommandEnabled(in DOMString commandId);
+		boolean queryCommandIndeterm(in DOMString commandId);
+		boolean queryCommandState(in DOMString commandId);
+		boolean queryCommandSupported(in DOMString commandId);
+		DOMString queryCommandValue(in DOMString commandId);
+		readonly attribute HTMLCollection commands;
+
+		// event handler IDL attributes
+		attribute Function onabort;
+		attribute Function onblur;
+		attribute Function oncanplay;
+		attribute Function oncanplaythrough;
+		attribute Function onchange;
+		attribute Function onclick;
+		attribute Function oncontextmenu;
+		attribute Function ondblclick;
+		attribute Function ondrag;
+		attribute Function ondragend;
+		attribute Function ondragenter;
+		attribute Function ondragleave;
+		attribute Function ondragover;
+		attribute Function ondragstart;
+		attribute Function ondrop;
+		attribute Function ondurationchange;
+		attribute Function onemptied;
+		attribute Function onended;
+		attribute Function onerror;
+		attribute Function onfocus;
+		attribute Function onformchange;
+		attribute Function onforminput;
+		attribute Function oninput;
+		attribute Function oninvalid;
+		attribute Function onkeydown;
+		attribute Function onkeypress;
+		attribute Function onkeyup;
+		attribute Function onload;
+		attribute Function onloadeddata;
+		attribute Function onloadedmetadata;
+		attribute Function onloadstart;
+		attribute Function onmousedown;
+		attribute Function onmousemove;
+		attribute Function onmouseout;
+		attribute Function onmouseover;
+		attribute Function onmouseup;
+		attribute Function onmousewheel;
+		attribute Function onpause;
+		attribute Function onplay;
+		attribute Function onplaying;
+		attribute Function onprogress;
+		attribute Function onratechange;
+		attribute Function onreadystatechange;
+		attribute Function onscroll;
+		attribute Function onseeked;
+		attribute Function onseeking;
+		attribute Function onselect;
+		attribute Function onshow;
+		attribute Function onstalled;
+		attribute Function onsubmit;
+		attribute Function onsuspend;
+		attribute Function ontimeupdate;
+		attribute Function onvolumechange;
+		attribute Function onwaiting;
+	};
+	Document implements HTMLDocument;
+
+	// 3.2.2 Elements in the DOM
+
+	interface HTMLElement : Element {
+		// DOM tree accessors
+		NodeList getElementsByClassName(in DOMString classNames);
+
+		// dynamic markup insertion
+		attribute DOMString innerHTML;
+		attribute DOMString outerHTML;
+		void insertAdjacentHTML(in DOMString position, in DOMString text);
+
+		// metadata attributes
+		attribute DOMString id;
+		attribute DOMString title;
+		attribute DOMString lang;
+		attribute DOMString dir;
+		attribute DOMString className;
+		readonly attribute DOMTokenList classList;
+		readonly attribute DOMStringMap dataset;
+
+		// user interaction
+		attribute boolean hidden;
+		void click();
+		void scrollIntoView();
+		void scrollIntoView(in boolean top);
+		attribute long tabIndex;
+		void focus();
+		void blur();
+		attribute DOMString accessKey;
+		readonly attribute DOMString accessKeyLabel;
+		attribute boolean draggable;
+		attribute DOMString contentEditable;
+		readonly attribute boolean isContentEditable;
+		attribute HTMLMenuElement contextMenu;
+		attribute DOMString spellcheck;
+
+		// command API
+		readonly attribute DOMString commandType;
+		readonly attribute DOMString label;
+		readonly attribute DOMString icon;
+		readonly attribute boolean disabled;
+		readonly attribute boolean checked;
+
+		// styling
+		readonly attribute CSSStyleDeclaration style;
+
+		// event handler IDL attributes
+		attribute Function onabort;
+		attribute Function onblur;
+		attribute Function oncanplay;
+		attribute Function oncanplaythrough;
+		attribute Function onchange;
+		attribute Function onclick;
+		attribute Function oncontextmenu;
+		attribute Function ondblclick;
+		attribute Function ondrag;
+		attribute Function ondragend;
+		attribute Function ondragenter;
+		attribute Function ondragleave;
+		attribute Function ondragover;
+		attribute Function ondragstart;
+		attribute Function ondrop;
+		attribute Function ondurationchange;
+		attribute Function onemptied;
+		attribute Function onended;
+		attribute Function onerror;
+		attribute Function onfocus;
+		attribute Function onformchange;
+		attribute Function onforminput;
+		attribute Function oninput;
+		attribute Function oninvalid;
+		attribute Function onkeydown;
+		attribute Function onkeypress;
+		attribute Function onkeyup;
+		attribute Function onload;
+		attribute Function onloadeddata;
+		attribute Function onloadedmetadata;
+		attribute Function onloadstart;
+		attribute Function onmousedown;
+		attribute Function onmousemove;
+		attribute Function onmouseout;
+		attribute Function onmouseover;
+		attribute Function onmouseup;
+		attribute Function onmousewheel;
+		attribute Function onpause;
+		attribute Function onplay;
+		attribute Function onplaying;
+		attribute Function onprogress;
+		attribute Function onratechange;
+		attribute Function onreadystatechange;
+		attribute Function onscroll;
+		attribute Function onseeked;
+		attribute Function onseeking;
+		attribute Function onselect;
+		attribute Function onshow;
+		attribute Function onstalled;
+		attribute Function onsubmit;
+		attribute Function onsuspend;
+		attribute Function ontimeupdate;
+		attribute Function onvolumechange;
+		attribute Function onwaiting;
+	};
+
+	interface HTMLUnknownElement : HTMLElement { };
+
+	// 4.1.1 The html element
+
+	interface HTMLHtmlElement : HTMLElement {};
+
+	// 4.2.1 The head element
+
+	interface HTMLHeadElement : HTMLElement {};
+
+	// 4.2.2 The title element
+
+	interface HTMLTitleElement : HTMLElement {
+		attribute DOMString text;
+	};
+
+	// 4.2.3 The base element
+
+	interface HTMLBaseElement : HTMLElement {
+		attribute DOMString href;
+		attribute DOMString target;
+	};
+
+	// 4.2.4 The link element
+
+	interface HTMLLinkElement : HTMLElement {
+		attribute boolean disabled;
+		attribute DOMString href;
+		attribute DOMString rel;
+		readonly attribute DOMTokenList relList;
+		attribute DOMString media;
+		attribute DOMString hreflang;
+		attribute DOMString type;
+		[PutForwards=value] readonly attribute DOMSettableTokenList sizes;
+	};
+	HTMLLinkElement implements LinkStyle;
+
+	// 4.2.5 The meta element
+
+	interface HTMLMetaElement : HTMLElement {
+		attribute DOMString name;
+		attribute DOMString httpEquiv;
+		attribute DOMString content;
+	};
+
+	// 4.2.6 The style element
+
+	interface HTMLStyleElement : HTMLElement {
+		attribute boolean disabled;
+		attribute DOMString media;
+		attribute DOMString type;
+		attribute boolean scoped;
+	};
+	HTMLStyleElement implements LinkStyle;
+
+	// 4.3.1 The script element
+
+	interface HTMLScriptElement : HTMLElement {
+		attribute DOMString src;
+		attribute boolean async;
+		attribute boolean defer;
+		attribute DOMString type;
+		attribute DOMString charset;
+		attribute DOMString text;
+	};
+
+	// 4.4.1 The body element
+
+	interface HTMLBodyElement : HTMLElement {
+           attribute Function onafterprint;
+           attribute Function onbeforeprint;
+           attribute Function onbeforeunload;
+           attribute Function onblur;
+           attribute Function onerror;
+           attribute Function onfocus;
+           attribute Function onhashchange;
+           attribute Function onload;
+           attribute Function onmessage;
+           attribute Function onoffline;
+           attribute Function ononline;
+           attribute Function onpopstate;
+           attribute Function onpagehide;
+           attribute Function onpageshow;
+           attribute Function onredo;
+           attribute Function onresize;
+           attribute Function onstorage;
+           attribute Function onundo;
+           attribute Function onunload;
+};
+
+	// 4.4.6 The h1, h2, h3, h4, h5, and h6 elements
+
+	interface HTMLHeadingElement : HTMLElement {};
+
+	// 4.5.1 The p element
+
+	interface HTMLParagraphElement : HTMLElement {};
+
+	// 4.5.2 The hr element
+
+	interface HTMLHRElement : HTMLElement {};
+
+	// 4.5.3 The br element
+
+	interface HTMLBRElement : HTMLElement {};
+
+	// 4.5.4 The pre element
+
+	interface HTMLPreElement : HTMLElement {};
+
+	// 4.5.5 The blockquote element
+
+	interface HTMLQuoteElement : HTMLElement {
+           attribute DOMString cite;
+};
+
+	// 4.5.6 The ol element
+
+	interface HTMLOListElement : HTMLElement {
+           attribute boolean reversed;
+           attribute long start;
+};
+
+	// 4.5.7 The ul element
+
+	interface HTMLUListElement : HTMLElement {};
+
+	// 4.5.8 The li element
+
+	interface HTMLLIElement : HTMLElement {
+           attribute long value;
+};
+
+	// 4.5.9 The dl element
+
+	interface HTMLDListElement : HTMLElement {};
+
+	// 4.5.12 The div element
+
+	interface HTMLDivElement : HTMLElement {};
+
+	// TODO: Insert remaining interfaces
+};

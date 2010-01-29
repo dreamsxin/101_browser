@@ -1,3 +1,7 @@
+XQuery 1.0: An XML Query Language
+W3C Recommendation 23 January 2007
+http://www.w3.org/TR/xquery/
+
 A XQuery Grammar
 
 A.1 EBNF

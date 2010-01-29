@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PdfReader", "projects\PdfRe
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XmlReader", "projects\XmlReader\XmlReader.vcproj", "{733736C2-83AC-4AE1-A6A3-8DAF4393573E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VirtualMachine", "projects\VirtualMachine\VirtualMachine.vcproj", "{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -213,6 +215,26 @@ Global
 		{733736C2-83AC-4AE1-A6A3-8DAF4393573E}.LIB Release|Win32.Build.0 = Release|Win32
 		{733736C2-83AC-4AE1-A6A3-8DAF4393573E}.Release|Win32.ActiveCfg = Release|Win32
 		{733736C2-83AC-4AE1-A6A3-8DAF4393573E}.Release|Win32.Build.0 = Release|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.Debug|Win32.Build.0 = Debug|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.DLL ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.DLL ASM Debug|Win32.Build.0 = Debug|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.DLL ASM Release|Win32.ActiveCfg = Release|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.DLL ASM Release|Win32.Build.0 = Release|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.DLL Debug|Win32.ActiveCfg = Debug|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.DLL Debug|Win32.Build.0 = Debug|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.DLL Release|Win32.ActiveCfg = Release|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.DLL Release|Win32.Build.0 = Release|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.LIB ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.LIB ASM Debug|Win32.Build.0 = Debug|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.LIB ASM Release|Win32.ActiveCfg = Release|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.LIB ASM Release|Win32.Build.0 = Release|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.LIB Debug|Win32.ActiveCfg = Debug|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.LIB Debug|Win32.Build.0 = Debug|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.LIB Release|Win32.ActiveCfg = Release|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.LIB Release|Win32.Build.0 = Release|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.Release|Win32.ActiveCfg = Release|Win32
+		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,3 +1,7 @@
+XSL Transformations (XSLT) Version 2.0
+W3C Recommendation 23 January 2007
+http://www.w3.org/TR/xslt20/
+
 5 Features of the XSLT Language
 
 5.5 Patterns

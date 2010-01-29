@@ -1,3 +1,7 @@
+XML Path Language (XPath) 2.0
+W3C Recommendation 23 January 2007
+http://www.w3.org/TR/xpath20/
+
 A XPath Grammar
 
 A.1 EBNF
