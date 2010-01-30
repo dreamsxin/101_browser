@@ -1,0 +1,1 @@
+For recreating html5.idl call ../util/create_html5_idl.bat
