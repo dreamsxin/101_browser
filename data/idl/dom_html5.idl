@@ -1,0 +1,17 @@
+// HTML5
+// 2.7.8 Exceptions
+// http://www.whatwg.org/specs/web-apps/current-work/multipage/urls.html#exceptions
+// http://www.whatwg.org/specs/web-apps/current-work/#exceptions
+//
+// Adding of exceptions codes that are not defined in DOM3
+
+module dom_html5
+{
+  const unsigned short      SECURITY_ERR                   = 18;
+  const unsigned short      NETWORK_ERR                    = 19;
+  const unsigned short      ABORT_ERR                      = 20;
+  const unsigned short      URL_MISMATCH_ERR               = 21;
+  const unsigned short      QUOTA_EXCEEDED_ERR             = 22;
+  const unsigned short      PARSE_ERR                      = 81
+  const unsigned short      SERIALIZE_ERR                  = 82;
+};

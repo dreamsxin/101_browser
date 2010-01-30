@@ -1,0 +1,10 @@
+XPointer element() Scheme
+W3C Recommendation 25 March 2003
+http://www.w3.org/TR/xptr-element/
+
+3 Language and Processing
+
+element() Scheme Syntax
+
+[1]   	ElementSchemeData	   ::=   	(NCName ChildSequence?) | ChildSequence
+[2]   	ChildSequence	   ::=   	('/' [1-9] [0-9]*)+

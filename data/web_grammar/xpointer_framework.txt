@@ -1,0 +1,19 @@
+XPointer Framework
+W3C Recommendation 25 March 2003
+http://www.w3.org/TR/xptr-framework/
+
+3 Language and Processing
+
+3.1 Syntax
+
+XPointer Framework Syntax
+
+[1]   	Pointer	   ::=   	Shorthand | SchemeBased
+[2]   	Shorthand	   ::=   	NCName
+[3]   	SchemeBased	   ::=   	PointerPart (S? PointerPart)*
+[4]   	PointerPart	   ::=   	SchemeName '(' SchemeData ')'
+[5]   	SchemeName	   ::=   	QName
+[6]   	SchemeData	   ::=   	EscapedData*
+[7]   	EscapedData	   ::=   	NormalChar | '^(' | '^)' | '^^' | '(' SchemeData ')'
+[8]   	NormalChar	   ::=   	UnicodeChar - [()^]
+[9]   	UnicodeChar	   ::=   	[#x0-#x10FFFF]

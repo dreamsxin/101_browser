@@ -1,0 +1,10 @@
+XPointer xmlns() Scheme
+W3C Recommendation 25 March 2003
+http://www.w3.org/TR/xptr-xmlns/
+
+3 Language and Processing
+
+xmlns() Scheme Syntax
+
+[1]   	XmlnsSchemeData	   ::=   	NCName S? '=' S? EscapedNamespaceName
+[2]   	EscapedNamespaceName	   ::=   	EscapedData*

@@ -1,1 +1,1 @@
-For recreating html5.idl call ../util/create_html5_idl.bat
+For recreating html5.idl and webworkers.idl call ../util/create_dynamic_idl.bat
