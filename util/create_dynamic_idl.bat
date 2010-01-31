@@ -13,7 +13,13 @@ java -cp htmlparser-1.2.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --templat
 sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/webdatabase.idl
 
 
+wget http://dev.w3.org/html5/webstorage/ -O webstorage.html
+java -cp htmlparser-1.2.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_webstorage_idl.xslt --input-html=webstorage.html --output-xml=../data/idl/temp_.idl
+sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/webstorage.idl
+
+
 rm ../data/idl/temp_.idl
 rm html5.html
 rm webworkers.html
 rm webdatabase.html
+rm webstorage.html
