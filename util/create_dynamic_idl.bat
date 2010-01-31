@@ -8,6 +8,12 @@ java -cp htmlparser-1.2.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --templat
 sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/webworkers.idl
 
 
+wget http://dev.w3.org/html5/webdatabase/ -O webdatabase.html
+java -cp htmlparser-1.2.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_webdatabase_idl.xslt --input-html=webdatabase.html --output-xml=../data/idl/temp_.idl
+sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/webdatabase.idl
+
+
 rm ../data/idl/temp_.idl
 rm html5.html
 rm webworkers.html
+rm webdatabase.html
