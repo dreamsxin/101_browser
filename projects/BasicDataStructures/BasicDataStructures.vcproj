@@ -196,6 +196,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="BigNumber"
+				>
+				<File
+					RelativePath="..\..\src\BasicDataStructures\BigNumber\BigInteger.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -208,6 +216,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\BasicDataStructures\Interval.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\BasicDataStructures\Maybe.h"
 				>
 			</File>
 			<File
@@ -327,6 +339,14 @@
 				</File>
 				<File
 					RelativePath="..\..\include\BasicDataStructures\VirtualMachine\VirtualMachineContext.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="BigNumber"
+				>
+				<File
+					RelativePath="..\..\include\BasicDataStructures\BigNumber\BigInteger.h"
 					>
 				</File>
 			</Filter>
