@@ -84,8 +84,13 @@ bool dec(UnsignedBigInteger* in_pInt)
 	 */
 	assert(in_pInt->limbs[in_pInt->numberSize-1]==0);
 
+	size_t newNumberSize = in_pInt->numberSize;
+
+	while (in_pInt->limbs[newNumberSize-1]==0)
+		newNumberSize--;
+
 	unsigned long* newLimbs = (unsigned long*) 
-		realloc(in_pInt->limbs, in_pInt->numberSize-1);
+		realloc(in_pInt->limbs, newNumberSize);
 
 	assert(newLimbs);
 
@@ -93,7 +98,7 @@ bool dec(UnsignedBigInteger* in_pInt)
 		return false;
 
 	in_pInt->limbs = newLimbs;
-	in_pInt->allocedLimbsCount = in_pInt->numberSize-1;
+	in_pInt->allocedLimbsCount = newNumberSize;
 
 	return true;
 }
