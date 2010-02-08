@@ -215,7 +215,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\BasicDataStructures\HigherOrderFunctions.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\BasicDataStructures\Interval.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\BasicDataStructures\Iterator.h"
 				>
 			</File>
 			<File
@@ -224,6 +232,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\BasicDataStructures\Permuter.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\BasicDataStructures\Unicode.h"
 				>
 			</File>
 			<Filter
