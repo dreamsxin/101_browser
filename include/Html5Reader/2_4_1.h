@@ -5,6 +5,7 @@
 // Draft Standard — 6 February 2010
 
 #include "BasicDataStructures/Unicode.h"
+#include "BasicDataStructures/Collections.h"
 
 inline bool isSpaceCharacter(UnicodeCodePoint in_p)
 {
@@ -33,6 +34,11 @@ inline bool isAlphanumericASCIICharacter(UnicodeCodePoint in_p)
 		|| 
 		(0x0061 <= in_p && in_p <= 0x007A) // U+0061 LATIN SMALL LETTER A to U+007A LATIN SMALL LETTER Z
 		);
+}
+
+inline bool collectSequenceOfCharacters()
+{
+
 }
 
 #endif

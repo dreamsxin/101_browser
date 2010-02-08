@@ -7,16 +7,16 @@
 template <typename State, typename Type> void map(Iterator<State, Type>* in_pIt, 
 											 void (*in_pfFunc)(Type*))
 {
-	assert(in_pIt->mfpEnd);
-	assert(in_pIt->mfpGet);
-	assert(in_pIt->mfpNext);
+	assert(in_pIt->mpfEnd);
+	assert(in_pIt->mpfGet);
+	assert(in_pIt->mpfNext);
 
-	while (!(*(in_pIt->mfpEnd))())
+	while (!(*(in_pIt->mpfEnd))())
 	{
-		Type* pCurrentValue = (*(in_pIt->mfpGet))();
+		Type* pCurrentValue = (*(in_pIt->mpfGet))();
 		(*in_pFunc)(*pCurrentValue);
 
-		(*(in_pIt->mfpNext))(in_pIt->mState);
+		(*(in_pIt->mpfNext))(in_pIt->mState);
 	}
 }
 

@@ -31,7 +31,7 @@ inline void convertTokenToASCIIUppercase(UnicodeCodePoint* in_pp)
 }
 
 template <typename State> void convertStringToASCIIUppercase(
-	Iterator<State, UnicodeCodePoint>* in_pIt)
+	Iterator<UnicodeCodePoint, State>* in_pIt)
 {
 	map(in_it, &convertTokenToASCIIUppercase);
 }
@@ -43,36 +43,36 @@ inline void convertTokenToASCIILowercase(UnicodeCodePoint* in_pp)
 }
 
 template <typename State> void convertStringToASCIILowercase(
-	Iterator<State, UnicodeCodePoint>* in_pIt)
+	Iterator<UnicodeCodePoint, State>* in_pIt)
 {
 	map(in_it, &convertTokenToASCIILowercase);
 }
 
 template <typename State> bool prefixMatch(
-	Iterator<State, UnicodeCodePoint>* in_pPatternIt,
-	Iterator<State, UnicodeCodePoint>* in_pStringIt)
+	Iterator<UnicodeCodePoint, State>* in_pPatternIt,
+	Iterator<UnicodeCodePoint, State>* in_pStringIt)
 {
-	assert(in_pPatternIt->mfpEnd);
-	assert(in_pPatternIt->mfpGet);
-	assert(in_pPatternIt->mfpNext);
+	assert(in_pPatternIt->mpfEnd);
+	assert(in_pPatternIt->mpfGet);
+	assert(in_pPatternIt->mpfNext);
 
-	assert(in_pStringIt->mfpEnd);
-	assert(in_pStringIt->mfpGet);
-	assert(in_pStringIt->mfpNext);
+	assert(in_pStringIt->mpfEnd);
+	assert(in_pStringIt->mpfGet);
+	assert(in_pStringIt->mpfNext);
 
 	while (true)
 	{
-		if ((*(in_pPatternIt->mfpEnd))())
+		if ((*(in_pPatternIt->mpfEnd))())
 			return true;
 
-		if ((*(in_pStringIt->mfpEnd))())
+		if ((*(in_pStringIt->mpfEnd))())
 			return false;
 
-		if ((*(in_pPatternIt->mfpGet))()!=(*(in_pStringIt->mfpGet))())
+		if ((*(in_pPatternIt->mpfGet))()!=(*(in_pStringIt->mpfGet))())
 			return false;
 
-		(*(in_pPatternIt->mfpNext))(in_pPatternIt->mState);
-		(*(in_pStringIt->mfpNext))(in_pStringIt->mState);
+		(*(in_pPatternIt->mpfNext))(in_pPatternIt->mState);
+		(*(in_pStringIt->mpfNext))(in_pStringIt->mState);
 	}
 }
 

@@ -1,7 +1,7 @@
 #ifndef _Iterator_h
 #define _Iterator_h
 
-template <typename State, typename Type> struct Iterator
+template <typename Type, typename State> struct Iterator
 {
 	/*!
 	 * The current state of the iterator
@@ -13,19 +13,19 @@ template <typename State, typename Type> struct Iterator
 	 * true if the iterator is at the end
 	 * false otherwise
 	 */
-	bool (*mfpEnd)();
+	bool (*mpfEnd)();
 	
 	/*
-	 * Gets the value. If the iterator is invalid 
+	 * Gets a pointer to the value. If the iterator is invalid 
 	 * the result is not defined.
 	 */
-	Type* (*mfpGet)(const State* const);
+	Type* (*mpfGet)(const State* const);
 
 	/*!
 	 * Iterates the state to the next. If the iterator is
 	 * at the end the result is not defined.
 	 */
-	void (*mfpNext)(State*);
+	void (*mpfNext)(State*);
 };
 
 #endif
