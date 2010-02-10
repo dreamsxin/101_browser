@@ -1,8 +1,9 @@
 #include <windows.h>
 #define _USE_MATH_DEFINES
 #include <cmath>
-#include <gl\gl.h>			// Header File For The OpenGL32 Library
+#include <gl/gl.h>			// Header File For The OpenGL32 Library
 #include <string>
+#include "gui/GuiComponentsDefaults.h"
 
 struct Window
 {
@@ -218,6 +219,8 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 		showErrorMessageBox(L"Could not create window!");// Quit If Window Was Not Created
 		return 0;
 	}
+
+	// Here comes the main loop
 
 	destroyWindow(&window);
 
