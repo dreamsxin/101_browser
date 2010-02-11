@@ -180,6 +180,14 @@
 				RelativePath="..\..\src\gui\Gui.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\src\gui\GuiOpenGL.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\gui\GuiOpenGLState.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -192,6 +200,14 @@
 			</File>
 			<File
 				RelativePath="..\..\include\gui\GuiComponentsDefaults.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\gui\GuiOpenGL.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\gui\GuiOpenGLState.h"
 				>
 			</File>
 		</Filter>

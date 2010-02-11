@@ -1,9 +1,9 @@
 #include <windows.h>
-#define _USE_MATH_DEFINES
-#include <cmath>
-#include <gl/gl.h>			// Header File For The OpenGL32 Library
 #include <string>
+#include <cstdlib>
 #include "gui/GuiComponentsDefaults.h"
+#include "gui/GuiOpenGL.h"
+#include "gui/GuiOpenGLState.h"
 
 struct Window
 {
@@ -14,13 +14,40 @@ struct Window
 	HGLRC		hGLRC;		    // Permanent Rendering Context
 	bool isVisible;				// Is the window visible?
 
-	Window(HINSTANCE in_hInstance) : hInstance(in_hInstance), hWnd(0), hDC(0), hGLRC(0), isVisible(false)
+	Window(HINSTANCE in_hInstance) 
+		: hInstance(in_hInstance), hWnd(0), hDC(0), hGLRC(0), isVisible(false)
 	{ }
 };
 
+bool runProgram = true;
+FILE* log = NULL;
+
 LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+	Window* window = (Window*) GetWindowLongPtr(hWnd, GWL_USERDATA);
+
+	fprintf(log, "%u\treceived %x\n", GetTickCount(), uMsg);
+	fflush(log);
+
+	switch (uMsg)
+	{
+	case WM_CREATE:
+		{
+			CREATESTRUCT* creation = (CREATESTRUCT*)(lParam);
+			window = (Window*)(creation->lpCreateParams);
+			SetWindowLongPtr(hWnd, GWL_USERDATA, (LONG_PTR) window);
+		}
+		return 0;
+	case WM_CLOSE:
+		runProgram = false;
+		return 0;
+	default:
+		fprintf(log, "Did not handle\n");
+		fflush(log);
+		return DefWindowProc(hWnd, uMsg, wParam, lParam);
+	}
+	
+	
 }
 
 bool registerWindowClass(const Window& in_window)
@@ -46,31 +73,6 @@ bool unregisterWindowClass(const Window& in_window)
 	return true;
 }
 
-void ReshapeGL (int width, int height)									// Reshape The Window When It's Moved Or Resized
-{
-	glViewport (0, 0, (GLsizei)(width), (GLsizei)(height));				// Reset The Current Viewport
-	glMatrixMode (GL_PROJECTION);										// Select The Projection Matrix
-	glLoadIdentity ();													// Reset The Projection Matrix
-	if (height==0)
-		height=1;
-
-	float aspect = (GLfloat)(width)/(GLfloat)(height);
-	float fov = 45.0f;
-	float zNear = 1.0f;
-	float zFar = 100.0f;
-
-	float top = tanf(fov*(((float) M_PI)/360.0f)) * zNear;
-	float bottom = -top;
-	float left = aspect * bottom;
-	float right = aspect * top;
-
-	// Avoid using gluPerspective
-	glFrustum(left, right, bottom, top, zNear, zFar);
-	
-	glMatrixMode (GL_MODELVIEW);										// Select The Modelview Matrix
-	glLoadIdentity ();													// Reset The Modelview Matrix
-}
-
 void destroyWindow(Window* in_window);
 
 bool createWindow(Window* in_window, std::wstring in_titleText, 
@@ -88,18 +90,22 @@ bool createWindow(Window* in_window, std::wstring in_titleText,
 
 	AdjustWindowRectEx(&windowRect, dwStyle, FALSE, dwExStyle);			// Adjust Window To True Requested Size
 
-	in_window->hWnd = CreateWindowEx (dwExStyle,						// Extended Style
-								   in_window->windowClassName.c_str(),	// Class Name
-								   in_titleText.c_str(),				// Window Title
-								   dwStyle,								// Window Style
-								   windowRect.left,						// Window X Position
-								   windowRect.top,						// Window Y Position
-								   windowRect.right - windowRect.left,	// Window Width
-								   windowRect.bottom - windowRect.top,	// Window Height
-								   HWND_DESKTOP,						// Desktop Is Window's Parent
-								   0,									// No Menu
-								   in_window->hInstance,				// Pass The Window Instance
-								   in_window);
+	in_window->hWnd = CreateWindowEx (
+		dwExStyle,						// Extended Style
+		in_window->windowClassName.c_str(),	// Class Name
+		in_titleText.c_str(),				// Window Title
+		dwStyle,								// Window Style
+		// We don't use windowRect.left and windowRect.top here
+		// since this moves the window corner to places with negative screen
+		// coordinates
+		0,									// Window X Position
+		0,									// Window Y Position
+		windowRect.right - windowRect.left,	// Window Width
+		windowRect.bottom - windowRect.top,	// Window Height
+		HWND_DESKTOP,						// Desktop Is Window's Parent
+		0,									// No Menu
+		in_window->hInstance,				// Pass The Window Instance
+		in_window);
 
 	if (!in_window->hWnd)
 		// Note that destroyWindow(in_window); is not necessary here
@@ -126,7 +132,7 @@ bool createWindow(Window* in_window, std::wstring in_titleText,
 		0,																// Shift Bit Ignored
 		0,																// No Accumulation Buffer
 		0, 0, 0, 0,														// Accumulation Bits Ignored
-		in_depthBits,													// 16Bit Z-Buffer (Depth Buffer)  
+		in_depthBits,													// Z-Buffer (Depth Buffer) Bits
 		0,																// No Stencil Buffer
 		0,																// No Auxiliary Buffer
 		PFD_MAIN_PLANE,													// Main Drawing Layer
@@ -197,13 +203,12 @@ void showErrorMessageBox(const wchar_t* const in_message)
 }
 
 int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
-					HINSTANCE,	// hPrevInstance	// Previous Instance
-					LPSTR,		//lpCmdLine,		// Command Line Parameters
+					HINSTANCE,	// hPrevInstance,	// Previous Instance
+					LPSTR,		// lpCmdLine,		// Command Line Parameters
 					int			nCmdShow)			// Window Show State
 {
-	MSG		msg;									// Windows Message Structure
-	bool	done=false;								// Bool Variable To Exit Loop
-	
+	log = fopen("log.txt", "w+");
+
 	Window window(hInstance);
 	window.windowClassName = L"101_window_class";
 
@@ -214,13 +219,42 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 	}
 
 	// for the 2nd time (and so on) we replace nCmdShow by SW_NORMAL (for example)
-	if (!createWindow(&window, L"101 browser", 640, 480, 32, 32, nCmdShow))
+	if (!createWindow(&window, L"101 browser", 640, 480, 32, 32, SW_NORMAL /*nCmdShow*/))
 	{
 		showErrorMessageBox(L"Could not create window!");// Quit If Window Was Not Created
+		destroyWindow(&window);
 		return 0;
 	}
 
-	// Here comes the main loop
+	initializeOpenGLGuiState();
+
+	DWORD tickCount = GetTickCount();
+
+	while (runProgram)
+	{
+		MSG msg;										// Windows Message Structure
+
+		if (PeekMessage(&msg, window.hWnd, 0, 0, PM_REMOVE)!=0)
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		else if (!window.isVisible)
+		{
+			WaitMessage();
+		}
+		else
+		{
+			DWORD nextTickCount = GetTickCount ();
+			if (nextTickCount-tickCount>10)
+			{
+				UpdateGuiState(nextTickCount-tickCount);
+				tickCount = nextTickCount;
+				drawGui();
+				SwapBuffers (window.hDC);
+			}
+		}
+	}
 
 	destroyWindow(&window);
 
