@@ -2,7 +2,6 @@
 #include <string>
 #include <cstdlib>
 #include "gui/GuiComponentsDefaults.h"
-#include "gui/GuiOpenGL.h"
 #include "gui/GuiOpenGLState.h"
 
 struct Window

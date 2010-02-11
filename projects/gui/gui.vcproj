@@ -181,10 +181,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\gui\GuiOpenGL.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\gui\GuiOpenGLState.cpp"
 				>
 			</File>
@@ -203,11 +199,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\gui\GuiOpenGL.h"
+				RelativePath="..\..\include\gui\GuiOpenGLState.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\gui\GuiOpenGLState.h"
+				RelativePath="..\..\include\gui\Vertex.h"
 				>
 			</File>
 		</Filter>

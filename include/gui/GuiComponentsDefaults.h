@@ -18,10 +18,11 @@ const Color4f cCheckBoxTopLeftBackgroundColor = {
 	220*cColorByteToFloat, 
 	220*cColorByteToFloat, 
 	215*cColorByteToFloat, 1.0f};
-const Color4f cCheckBoxTopRightBottomLeftBackgroundColor = {
+const Color4f cCheckBoxTopRightBackgroundColor = {
 	241*cColorByteToFloat, 
 	241*cColorByteToFloat, 
-	239*cColorByteToFloat, 1.0f}; 
+	239*cColorByteToFloat, 1.0f};
+const Color4f cCheckBoxBottomLeftBackgroundColor = cCheckBoxTopRightBackgroundColor;
 const Color4f cCheckBoxBottomRightBackgroundColor = cColorWhite;
 const Color4f cCheckBoxBorderColor = {
 	 28*cColorByteToFloat, 
@@ -42,12 +43,16 @@ const Color4f cTextBoxBorderColor = {
 // The width and height of the checkbox (without border)
 const unsigned int cCheckBoxWidth = 11;
 const unsigned int cCheckBoxHeight = 11;
+const unsigned int cCheckBoxBorderSize = 1;
+const unsigned int cCheckBoxTextDistance = 7;
 
 // all the size is 13 - and it gets clipped to this size
 const unsigned int cRadioButtonWidth = 11;
 const unsigned int cRadioButtonHeight = 11;
+const unsigned int cRadioButtonTextDistance = 7;
 
 // The height of the textbox (without border)
-const unsigned int cTextBoxHeight = 18; 
+const unsigned int cTextBoxHeight = 18;
+const unsigned int cTextBoxBorder = 1;
 
 #endif
