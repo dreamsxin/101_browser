@@ -40,6 +40,7 @@ const Color4f cTextBoxBorderColor = {
 	157*cColorByteToFloat, 
 	185*cColorByteToFloat, 1.0f};
 
+
 // The width and height of the checkbox (without border)
 const unsigned int cCheckBoxWidth = 11;
 const unsigned int cCheckBoxHeight = 11;
@@ -53,6 +54,6 @@ const unsigned int cRadioButtonTextDistance = 7;
 
 // The height of the textbox (without border)
 const unsigned int cTextBoxHeight = 18;
-const unsigned int cTextBoxBorder = 1;
+const unsigned int cTextBoxBorderSize = 1;
 
 #endif

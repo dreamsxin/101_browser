@@ -181,6 +181,18 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\gui\GuiComponentsBasic.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\gui\GuiComponentsCheckBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\gui\GuiComponentsTextBox.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\gui\GuiOpenGLState.cpp"
 				>
 			</File>
@@ -195,7 +207,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\gui\GuiComponentsBasic.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\gui\GuiComponentsCheckBox.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\gui\GuiComponentsDefaults.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\gui\GuiComponentsTextBox.h"
 				>
 			</File>
 			<File
