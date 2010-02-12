@@ -5,6 +5,7 @@ int main()
 {
 	testBasicDataStructures();
 	testBasicDataStructuresTree();
+	testGuiDataStructures();
 
 	return 0;
 }

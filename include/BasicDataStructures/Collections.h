@@ -3,9 +3,9 @@
 
 #include "BasicDataStructures/Iterator.h"
 
-template <typename Type, typename CollectionState, typename IteratorState> struct Collection
+template <typename Type, typename CollectionState> struct Collection
 {
-	Iterator<Type, IteratorState> (*mpfIterator)(CollectionState* in_pCollectionState);
+
 };
 
 template <typename CollectionState> struct Clearable

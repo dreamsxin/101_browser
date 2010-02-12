@@ -41,7 +41,6 @@ void initializeOpenGLGuiState()
 
 void UpdateGuiState(unsigned int deltaMilliSeconds)
 {
-	//angle += (float)(deltaMilliSeconds) / 5.0f;
 }
 
 void drawGui()

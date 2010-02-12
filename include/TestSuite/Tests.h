@@ -3,5 +3,6 @@
 
 void testBasicDataStructures();
 void testBasicDataStructuresTree();
+void testGuiDataStructures();
 
 #endif
