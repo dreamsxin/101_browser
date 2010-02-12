@@ -19,7 +19,6 @@ triangleStripBorderIteratorState_create(std::vector<Type>* in_pVector)
 	return out_state;
 }
 
-// TODO: Write code
 template <typename Type> bool triangleStripBorderIterator_end(
 	const TriangleStripBorderIteratorState<Type>* in_pIts)
 {
