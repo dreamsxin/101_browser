@@ -7,8 +7,8 @@
 void drawTextBox(float left, float top, float width, float height, float borderSize, 
 				 float currentHeight)
 {
-	std::vector<Vertex> boxVertices;
-	std::vector<Vertex> borderVertices;
+	std::vector<Vertex2f> boxVertices;
+	std::vector<Vertex2f> borderVertices;
 	createBoxVertices(&boxVertices, left, top, width, height, currentHeight);
 	createBorderVertices(&boxVertices, &borderVertices, borderSize);
 	drawVertexArray(&boxVertices, cTextBoxBackgroundColor);

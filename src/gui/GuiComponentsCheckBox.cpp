@@ -13,8 +13,8 @@ void drawCheckBox(float left, float top, float width, float height, float border
 		cCheckBoxTopLeftBackgroundColor, 
 		cCheckBoxTopRightBackgroundColor
 		};
-	std::vector<Vertex> boxVertices;
-	std::vector<Vertex> borderVertices;
+	std::vector<Vertex2f> boxVertices;
+	std::vector<Vertex2f> borderVertices;
 	createBoxVertices(&boxVertices, left, top, width, height, currentHeight);
 	createBorderVertices(&boxVertices, &borderVertices, borderSize);
 	drawVertexArray(&boxVertices, colors);
