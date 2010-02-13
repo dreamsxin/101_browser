@@ -11,10 +11,9 @@ struct Window
 	HWND		hWnd;		    // Holds Our Window Handle
 	HDC			hDC;		    // Private GDI Device Context
 	HGLRC		hGLRC;		    // Permanent Rendering Context
-	bool isVisible;				// Is the window visible?
 
 	Window(HINSTANCE in_hInstance) 
-		: hInstance(in_hInstance), hWnd(0), hDC(0), hGLRC(0), isVisible(false)
+		: hInstance(in_hInstance), hWnd(0), hDC(0), hGLRC(0)
 	{ }
 };
 
@@ -39,6 +38,25 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_CLOSE:
 		runProgram = false;
+		return 0;
+	case WM_SIZE:							// Size Action Has Taken Place
+		switch (wParam)						// Evaluate Size Action
+		{
+			case SIZE_MINIMIZED:
+				return 0;
+			case SIZE_RESTORED:
+			case SIZE_MAXIMIZED:
+				ReshapeGL(LOWORD(lParam), HIWORD(lParam));
+		}
+		break;
+	case WM_PAINT:
+		// I know many say should not put OpenGL code into this
+		// handler - but what should be done
+		// for drawing the window *while* resizing, moving etc.
+		UpdateGuiState();
+		drawGui();
+		SwapBuffers (window->hDC);
+		ValidateRect(window->hWnd, NULL);
 		return 0;
 	default:
 		fprintf(log, "Did not handle\n");
@@ -168,7 +186,6 @@ bool createWindow(Window* in_window, std::wstring in_titleText,
 	}
 
 	ShowWindow (in_window->hWnd, nCmdShow);								// Make The Window Visible
-	in_window->isVisible = true;
 
 	ReshapeGL(in_width, in_height);
 
@@ -227,31 +244,14 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 
 	initializeOpenGLGuiState();
 
-	DWORD tickCount = GetTickCount();
-
 	while (runProgram)
 	{
-		MSG msg;										// Windows Message Structure
+		MSG msg; // Windows Message Structure
 
-		if (PeekMessage(&msg, window.hWnd, 0, 0, PM_REMOVE)!=0)
+		if (GetMessage(&msg, window.hWnd, 0, 0)!=0)
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
-		}
-		else if (!window.isVisible)
-		{
-			WaitMessage();
-		}
-		else
-		{
-			DWORD nextTickCount = GetTickCount ();
-			if (nextTickCount-tickCount>10)
-			{
-				UpdateGuiState(nextTickCount-tickCount);
-				tickCount = nextTickCount;
-				drawGui();
-				SwapBuffers (window.hDC);
-			}
 		}
 	}
 

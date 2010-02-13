@@ -3,7 +3,7 @@
 
 void ReshapeGL(int width, int height);
 void initializeOpenGLGuiState();
-void UpdateGuiState(unsigned int deltaMilliSeconds);
+void UpdateGuiState();
 void drawGui();
 
 #endif

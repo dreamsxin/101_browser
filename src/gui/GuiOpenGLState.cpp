@@ -39,7 +39,7 @@ void initializeOpenGLGuiState()
 	glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);			// Set Perspective Calculations To Most Accurate
 }
 
-void UpdateGuiState(unsigned int deltaMilliSeconds)
+void UpdateGuiState()
 {
 }
 
