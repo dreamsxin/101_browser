@@ -1,0 +1,16 @@
+Name: 101_browser
+Copyright: Copyright (c) 2009-2010 Wolfgang Keller (still considering which Open Source Licence to use)
+Version: current head revision ;-)
+Author: Wolfgang Keller
+Email: wolfgangkeller@gmail.com
+Website: http://github.com/nubok/101_browser
+System requirements:
+    Operation system: Windows XP/Server 2003/Vista/Server 2008/7 (only tested under XP, but the other ones should work)
+There is *no* proper Linux port (sorry for the inconvenience, I'm working on it)
+There is *no* Mac port (and *none* is planned at the moment; if Apple is willing to donate a Mac, I'll think about reconsidering)
+    For building: Visual Studio 2008
+Description: A small web browser (or more precise: a small yet-to-become web browser)
+Building: For Windows use the 101_browser.sln file in the root folder. For the experimental Linux port, install cmake and type (without the "$ ").
+$ cmake .
+$ make
+
