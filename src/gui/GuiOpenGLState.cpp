@@ -26,10 +26,10 @@ void ReshapeGL (int width, int height)									// Reshape The Window When It's M
 void initializeOpenGLGuiState()
 {
 	glClearColor(
-		cWindowBackgroundColor.r, 
-		cWindowBackgroundColor.g, 
-		cWindowBackgroundColor.b,
-		cWindowBackgroundColor.a);
+		Gui::Components::Defaults::cWindowBackgroundColor.r, 
+		Gui::Components::Defaults::cWindowBackgroundColor.g, 
+		Gui::Components::Defaults::cWindowBackgroundColor.b,
+		Gui::Components::Defaults::cWindowBackgroundColor.a);
 
 	glClearDepth (1.0f);										// Depth Buffer Setup
 	glDepthFunc (GL_LEQUAL);									// The Type Of Depth Testing (Less Or Equal)
@@ -48,14 +48,16 @@ void drawGui()
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer
 	glLoadIdentity();											// Reset The Modelview Matrix
 
-	drawTextBox(20, 20, 
-		currentWidth-2*20, cTextBoxHeight, 
-		cTextBoxBorderSize, 
+	Gui::Components::drawTextBox(20, 20, 
+		currentWidth-2*20, 
+		Gui::Components::Defaults::cTextBoxHeight, 
+		Gui::Components::Defaults::cTextBoxBorderSize, 
 		currentHeight);
 
-	drawCheckBox(20, 80, 
-		cCheckBoxWidth, cCheckBoxHeight, 
-		cCheckBoxBorderSize,
+	Gui::Components::drawCheckBox(20, 80, 
+		Gui::Components::Defaults::cCheckBoxWidth, 
+		Gui::Components::Defaults::cCheckBoxHeight, 
+		Gui::Components::Defaults::cCheckBoxBorderSize,
 		currentHeight);
 
 	glFlush();													// Flush The GL Rendering Pipeline
