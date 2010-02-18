@@ -6,8 +6,8 @@
 #include "gui/Vertex.h"
 #include "gui/Color.h"
 
-void createBorderVertices(const std::vector<Vertex2f>* boxVertices,
-						  std::vector<Vertex2f>* borderVertices,
+void createBorderVertices(const std::vector<Vertex2<float> >* boxVertices,
+						  std::vector<Vertex2<float> >* borderVertices,
 						  float borderWidth);
 
 /*!
@@ -20,12 +20,12 @@ void createBorderVertices(const std::vector<Vertex2f>* boxVertices,
  * left, top, width, height: properties of the component
  * currentHeight: the height of the desired viewport
  */
-void createBoxVertices(std::vector<Vertex2f>* boxVertices,
+void createBoxVertices(std::vector<Vertex2<float> >* boxVertices,
 					float left, float top, float width, float height,
 					float currentHeight);
 
-void drawVertexArray(const std::vector<Vertex2f>* vertices, Color4f colors[4]);
+void drawVertexArray(const std::vector<Vertex2<float> >* vertices, Color4f colors[4]);
 
-void drawVertexArray(const std::vector<Vertex2f>* vertices, Color4f color);
+void drawVertexArray(const std::vector<Vertex2<float> >* vertices, Color4f color);
 
 #endif

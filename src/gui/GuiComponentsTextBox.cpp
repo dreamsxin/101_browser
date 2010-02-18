@@ -11,8 +11,8 @@ namespace Gui
 		void drawTextBox(float left, float top, float width, float height, 
 			float borderSize, float currentHeight)
 		{
-			std::vector<Vertex2f> boxVertices;
-			std::vector<Vertex2f> borderVertices;
+			std::vector<Vertex2<float> > boxVertices;
+			std::vector<Vertex2<float> > borderVertices;
 			createBoxVertices(&boxVertices, left, top, width, height, currentHeight);
 			createBorderVertices(&boxVertices, &borderVertices, borderSize);
 			drawVertexArray(&boxVertices, Defaults::cTextBoxBackgroundColor);

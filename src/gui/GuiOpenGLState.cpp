@@ -16,8 +16,8 @@ void ReshapeGL (int width, int height)									// Reshape The Window When It's M
 	
 	glOrtho(0.0, width, 0.0, height, -1, 1);
 
-	currentWidth = width;
-	currentHeight = height;
+	currentWidth = (float) width;
+	currentHeight = (float) height;
 	
 	glMatrixMode (GL_MODELVIEW);										// Select The Modelview Matrix
 	glLoadIdentity ();													// Reset The Modelview Matrix
@@ -48,13 +48,13 @@ void drawGui()
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer
 	glLoadIdentity();											// Reset The Modelview Matrix
 
-	Gui::Components::drawTextBox(20, 20, 
-		currentWidth-2*20, 
+	Gui::Components::drawTextBox(20.0f, 20.0f, 
+		currentWidth-2*20.0f, 
 		Gui::Components::Defaults::cTextBoxHeight, 
 		Gui::Components::Defaults::cTextBoxBorderSize, 
 		currentHeight);
 
-	Gui::Components::drawCheckBox(20, 80, 
+	Gui::Components::drawCheckBox(20.0f, 80.0f, 
 		Gui::Components::Defaults::cCheckBoxWidth, 
 		Gui::Components::Defaults::cCheckBoxHeight, 
 		Gui::Components::Defaults::cCheckBoxBorderSize,

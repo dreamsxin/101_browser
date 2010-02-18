@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include "gui/GuiComponentsDefaults.h"
 #include "gui/GuiOpenGLState.h"
+#include "gui/Cursor.h"
 
 struct Window
 {
@@ -93,8 +94,7 @@ bool unregisterWindowClass(const Window& in_window)
 void destroyWindow(Window* in_window);
 
 bool createWindow(Window* in_window, std::wstring in_titleText, 
-				  int in_width, int in_height, BYTE in_colorBits, BYTE in_depthBits, 
-				  int nCmdShow)
+				  int in_width, int in_height, BYTE in_colorBits, BYTE in_depthBits)
 {
 	int			PixelFormat;											// Holds The Results After Searching For A Match
 	DWORD		dwExStyle = WS_EX_APPWINDOW;							// Window Extended Style
@@ -185,11 +185,14 @@ bool createWindow(Window* in_window, std::wstring in_titleText,
 		return false;													// Return False
 	}
 
-	ShowWindow (in_window->hWnd, nCmdShow);								// Make The Window Visible
-
 	ReshapeGL(in_width, in_height);
 
 	return true;
+}
+
+void showWindow(Window* in_window, int nCmdShow)
+{
+	ShowWindow (in_window->hWnd, nCmdShow);								// Make The Window Visible
 }
 
 void destroyWindow(Window* in_window)
@@ -235,14 +238,18 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 	}
 
 	// for the 2nd time (and so on) we replace nCmdShow by SW_NORMAL (for example)
-	if (!createWindow(&window, L"101 browser", 640, 480, 32, 32, SW_NORMAL /*nCmdShow*/))
+	if (!createWindow(&window, L"101 browser", 640, 480, 32, 32))
 	{
 		showErrorMessageBox(L"Could not create window!");// Quit If Window Was Not Created
 		destroyWindow(&window);
 		return 0;
 	}
 
+	Gui::createCursorImage();
+
 	initializeOpenGLGuiState();
+
+	showWindow(&window, nCmdShow); // Alternative: use SW_NORMAL instead of nCmdShow
 
 	while (runProgram)
 	{

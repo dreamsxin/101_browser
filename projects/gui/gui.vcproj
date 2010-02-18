@@ -177,6 +177,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\..\src\gui\Cursor.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\gui\Gui.cpp"
 				>
 			</File>
@@ -207,6 +211,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\gui\Cursor.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\gui\GuiComponentsBasic.h"
 				>
 			</File>
@@ -224,6 +232,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\gui\GuiOpenGLState.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\gui\Texture.h"
 				>
 			</File>
 			<File

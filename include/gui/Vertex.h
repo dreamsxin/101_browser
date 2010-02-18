@@ -1,11 +1,12 @@
 #ifndef _Vertex_h
 #define _Vertex_h
 
-struct Vertex2f
+template <typename Type> struct Vertex2
 {
-	float x, y;
+	Type x, y;
 
-	Vertex2f(float in_x, float in_y) : x(in_x), y(in_y) { }
+	Vertex2() { }
+	Vertex2(Type in_x, Type in_y) : x(in_x), y(in_y) { }
 };
 
 #endif
