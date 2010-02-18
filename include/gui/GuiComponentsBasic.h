@@ -11,18 +11,27 @@ void createBorderVertices(const std::vector<Vertex2<float> >* boxVertices,
 						  float borderWidth);
 
 /*!
- * vertices output:
- * [0]: bottom left
- * [1]: bottom right
- * [2]: top left
- * [3]: top right
- *
- * left, top, width, height: properties of the component
- * currentHeight: the height of the desired viewport
- */
+* triangleStrip: a triangle strip with non-repeating vertices
+* borderTriangleStrip: where the border gets stored
+* borderWidth: the desired width of the border
+*/
+void createBorderTriangleStrip(const std::vector<Vertex2<float> >* triangleStrip,
+							   std::vector<Vertex2<float> >* borderTriangleStrip,
+							   float borderWidth);
+
+/*!
+* vertices output:
+* [0]: bottom left
+* [1]: bottom right
+* [2]: top left
+* [3]: top right
+*
+* left, top, width, height: properties of the component
+* currentHeight: the height of the desired viewport
+*/
 void createBoxVertices(std::vector<Vertex2<float> >* boxVertices,
-					float left, float top, float width, float height,
-					float currentHeight);
+					   float left, float top, float width, float height,
+					   float currentHeight);
 
 void drawVertexArray(const std::vector<Vertex2<float> >* vertices, Color4f colors[4]);
 
