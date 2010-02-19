@@ -94,7 +94,6 @@ module html5
     NodeList getElementsByClassName(in DOMString classNames);
     NodeList getItems(in optional DOMString typeNames); // microdata 
   
-  
     // dynamic markup insertion
              attribute DOMString innerHTML;
     HTMLDocument open(in optional DOMString type, in optional DOMString replace);
@@ -402,6 +401,8 @@ module html5
              attribute DOMString media;
              attribute DOMString hreflang;
              attribute DOMString type;
+  
+             attribute DOMString text;
   
     // URL decomposition IDL attributes
              attribute DOMString protocol;
@@ -1203,6 +1204,76 @@ module html5
              attribute boolean visible;
   };
 
+  interface History {
+    readonly attribute long length;
+    void go(in optional long delta);
+    void back();
+    void forward();
+    void pushState(in any data, in DOMString title, in optional DOMString url);
+    void replaceState(in any data, in DOMString title, in optional DOMString url);
+  };
+
+  interface Location {
+    stringifier attribute DOMString href;
+    void assign(in DOMString url);
+    void replace(in DOMString url);
+    void reload();
+  
+    // URL decomposition IDL attributes 
+             attribute DOMString protocol;
+             attribute DOMString host;
+             attribute DOMString hostname;
+             attribute DOMString port;
+             attribute DOMString pathname;
+             attribute DOMString search;
+             attribute DOMString hash;
+  
+    // resolving relative URLs
+    DOMString resolveURL(in DOMString url);
+  };
+
+  interface PopStateEvent : Event {
+    readonly attribute any state;
+    void initPopStateEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in any stateArg);
+  };
+
+  interface HashChangeEvent : Event {
+    readonly attribute any oldURL;
+    readonly attribute any newURL;
+    void initHashChangeEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in DOMString oldURLArg, in DOMString newURLArg);
+  };
+
+  interface BeforeUnloadEvent : Event {
+             attribute DOMString returnValue;
+  };
+
+  interface ApplicationCache {
+  
+    // update status
+    const unsigned short UNCACHED = 0;
+    const unsigned short IDLE = 1;
+    const unsigned short CHECKING = 2;
+    const unsigned short DOWNLOADING = 3;
+    const unsigned short UPDATEREADY = 4;
+    const unsigned short OBSOLETE = 5;
+    readonly attribute unsigned short status;
+  
+    // updates
+    void update();
+    void swapCache();
+  
+    // events
+             attribute Function onchecking;
+             attribute Function onerror;
+             attribute Function onnoupdate;
+             attribute Function ondownloading;
+             attribute Function onprogress;
+             attribute Function onupdateready;
+             attribute Function oncached;
+             attribute Function onobsolete;
+  };
+  ApplicationCache implements EventTarget;
+
   [Callback=FunctionOnly, NoInterfaceObject]
   interface Function {
     any call(in any... arguments);
@@ -1248,76 +1319,6 @@ module html5
     void registerProtocolHandler(in DOMString scheme, in DOMString url, in DOMString title);
     void registerContentHandler(in DOMString mimeType, in DOMString url, in DOMString title);
     void yieldForStorageUpdates();
-  };
-
-  interface ApplicationCache {
-  
-    // update status
-    const unsigned short UNCACHED = 0;
-    const unsigned short IDLE = 1;
-    const unsigned short CHECKING = 2;
-    const unsigned short DOWNLOADING = 3;
-    const unsigned short UPDATEREADY = 4;
-    const unsigned short OBSOLETE = 5;
-    readonly attribute unsigned short status;
-  
-    // updates
-    void update();
-    void swapCache();
-  
-    // events
-             attribute Function onchecking;
-             attribute Function onerror;
-             attribute Function onnoupdate;
-             attribute Function ondownloading;
-             attribute Function onprogress;
-             attribute Function onupdateready;
-             attribute Function oncached;
-             attribute Function onobsolete;
-  };
-  ApplicationCache implements EventTarget;
-
-  interface History {
-    readonly attribute long length;
-    void go(in optional long delta);
-    void back();
-    void forward();
-    void pushState(in any data, in DOMString title, in optional DOMString url);
-    void replaceState(in any data, in DOMString title, in optional DOMString url);
-  };
-
-  interface Location {
-    stringifier readonly attribute DOMString href;
-    void assign(in DOMString url);
-    void replace(in DOMString url);
-    void reload();
-  
-    // URL decomposition IDL attributes 
-             attribute DOMString protocol;
-             attribute DOMString host;
-             attribute DOMString hostname;
-             attribute DOMString port;
-             attribute DOMString pathname;
-             attribute DOMString search;
-             attribute DOMString hash;
-  
-    // resolving relative URLs
-    DOMString resolveURL(in DOMString url);
-  };
-
-  interface PopStateEvent : Event {
-    readonly attribute any state;
-    void initPopStateEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in any stateArg);
-  };
-
-  interface HashChangeEvent : Event {
-    readonly attribute any oldURL;
-    readonly attribute any newURL;
-    void initHashChangeEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in DOMString oldURLArg, in DOMString newURLArg);
-  };
-
-  interface BeforeUnloadEvent : Event {
-             attribute DOMString returnValue;
   };
 
   interface Selection {
@@ -1522,7 +1523,7 @@ module html5
   };
 
   interface HTMLDirectoryElement : HTMLElement {
-             attribute DOMString compact;
+             attribute boolean compact;
   };
 
   [Supplemental]
@@ -1532,7 +1533,7 @@ module html5
 
   [Supplemental]
   interface HTMLDListElement {
-             attribute DOMString compact;
+             attribute boolean compact;
   };
 
   [Supplemental]
@@ -1616,7 +1617,7 @@ module html5
 
   [Supplemental]
   interface HTMLMenuElement {
-             attribute DOMString compact;
+             attribute boolean compact;
   };
 
   [Supplemental]
@@ -1640,7 +1641,7 @@ module html5
 
   [Supplemental]
   interface HTMLOListElement {
-             attribute DOMString compact;
+             attribute boolean compact;
              attribute DOMString type;
   };
 
@@ -1711,7 +1712,7 @@ module html5
 
   [Supplemental]
   interface HTMLUListElement {
-             attribute DOMString compact;
+             attribute boolean compact;
              attribute DOMString type;
   };
 
