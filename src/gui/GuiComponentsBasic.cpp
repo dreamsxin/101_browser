@@ -11,39 +11,41 @@ void createBorderTriangleStrip(const std::vector<Vertex2<float> >* triangleStrip
 {
 	TriangleStripBorderConstIteratorState<Vertex2<float> > state = 
 		triangleStripBorderConstIteratorState_create(triangleStrip);
-	Iterator<const Vertex2<float>, TriangleStripBorderConstIteratorState<Vertex2<float> > > it =
+	DoubleIterator<const Vertex2<float>, TriangleStripBorderConstIteratorState<Vertex2<float> > > it =
 		triangleStripBorderConstIterator_create<Vertex2<float> >();
 
 	// This is a hack. Todo: write a sensitive iterator interface.
 	if (triangleStrip->size()>=3)
 	{
 		Vertex2<float> first = *(*it.mpfGet)(&state);
-		Vertex2<float> last = state.mVector->at(state.mVector->size()-1);
+		Vertex2<float> last = state.mpVector->at(state.mpVector->size()-1);
 
 		Vertex2<float> vertexBundle[3];
 		vertexBundle[1] = last;
 
-		assert(!(*it.mpfEnd)(&state));
 		vertexBundle[2] = *(*it.mpfGet)(&state);
 
-		while (!(*it.mpfEnd)(&state))
+		while (true)
 		{
 			vertexBundle[0] = vertexBundle[1];
 			vertexBundle[1] = vertexBundle[2];
 
-			(*it.mpfNext)(&state);
+			if ((*it.mpfIterateNext)(&state)==IterateResultEndToStart)
+				break;
 
-			if (!(*it.mpfEnd)(&state))
+			/*if (!(*it.mpfEnd)(&state))
 			{
 				vertexBundle[2] = *(*it.mpfGet)(&state);
 			}
 			else
 			{
 				vertexBundle[2] = first;
-			}
+			}*/
 
 			// create vertices for strip
 			// TODO
+
+
 		}
 	}
 }
