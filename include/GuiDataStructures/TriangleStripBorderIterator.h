@@ -72,6 +72,9 @@ template <typename Type, typename IteratorState> IterateResult triangleStripBord
 			}
 			else
 			{
+				// Since the other conditions in the if/else if part are
+				// wrong and we have in_pIts->mCurrentPosition<in_pIts->mpVector->size()
+				// we get in_pIts->mCurrentPosition == in_pIts->mpVector->size()-1
 				assert(in_pIts->mCurrentPosition == in_pIts->mpVector->size()-1);
 
 				in_pIts->mCurrentPosition-=1;
@@ -88,6 +91,7 @@ template <typename Type, typename IteratorState> IterateResult triangleStripBord
 			assert(in_pIts->mCurrentPosition>=2);
 
 			in_pIts->mCurrentPosition-=2;
+
 			if (in_pIts->mCurrentPosition==0)
 				return IterateResultEndToStart;
 			else
@@ -125,6 +129,9 @@ template <typename Type, typename IteratorState> IterateResult triangleStripBord
 				in_pIts->mCurrentPosition+=1;
 			else
 			{
+				// Since the other conditions in the if/else if part are
+				// wrong and we have in_pIts->mCurrentPosition<in_pIts->mpVector->size()
+				// we get in_pIts->mCurrentPosition == in_pIts->mpVector->size()-1
 				assert(in_pIts->mCurrentPosition == in_pIts->mpVector->size()-1);
 
 				// As we have checked above we have in_pIts->mCurrentPosition!=0. 
