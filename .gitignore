@@ -12,6 +12,7 @@
 *.res
 *.aps
 *.exp
+*~
 testfiles/fonts/*.ttf
 testfiles/fonts/*.TTF
 testfiles/fonts/*.fon
