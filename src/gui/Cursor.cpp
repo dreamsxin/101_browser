@@ -1,9 +1,10 @@
 #include "gui/Cursor.h"
+#include "gui/Texture.h"
 #include <cassert>
 
 namespace Gui
 {
-	bool createCursorImage()
+	bool createCursorImage(HDC hDC)
 	{
 		HCURSOR hCursor;
 		ICONINFO iconInfo;
@@ -24,25 +25,91 @@ namespace Gui
 		Cursor cursor = { Vertex2<DWORD>(iconInfo.xHotspot, iconInfo.yHotspot) };
 
 		BITMAP maskBitmap;
+		bool isColorIcon = iconInfo.hbmColor;
 		BITMAP colorBitmap;
 
 		if (!GetObject(iconInfo.hbmMask, sizeof(BITMAP), &maskBitmap))
 		{
 			DeleteObject(iconInfo.hbmMask);
-			DeleteObject(iconInfo.hbmColor);
+			if (isColorIcon)
+				DeleteObject(iconInfo.hbmColor);
 			return false;
 		}
-		if (!GetObject(iconInfo.hbmColor, sizeof(BITMAP), &colorBitmap))
+
+		if (isColorIcon)
+		{
+			if (!GetObject(iconInfo.hbmColor, sizeof(BITMAP), &colorBitmap))
+			{
+				DeleteObject(iconInfo.hbmMask);
+#if 0
+				// not necessary here since we tested this above
+				if (isColorIcon)
+#endif
+					DeleteObject(iconInfo.hbmColor);
+				return false;
+			}
+		}
+
+		/*
+		 * According to 
+		 * http://msdn.microsoft.com/en-us/library/ms648052(VS.85).aspx
+		 * If this structure defines a black and white icon, 
+		 * this bitmask is formatted so that the upper half is 
+		 * the icon AND bitmask and the lower half is the icon 
+		 * XOR bitmask. Under this condition, the height should 
+		 * be an even multiple of two. If this structure defines 
+		 * a color icon, this mask only defines the AND bitmask 
+		 * of the icon.
+		 */
+
+		Texture andMap, xorMap;
+
+		assert(maskBitmap.bmPlanes == 1);
+		assert(maskBitmap.bmBitsPixel == 1);
+
+		andMap.width = maskBitmap.bmWidth;
+		andMap.colorMode = ColorModeRGBA;
+
+		if (!isColorIcon)
+		{
+			assert(maskBitmap.bmHeight%2 == 0);
+			andMap.height = maskBitmap.bmHeight/2;
+		}
+		else
+		{
+			andMap.height=maskBitmap.bmHeight;
+		}
+
+		allocateTextureMemory(&andMap);
+
+		if (andMap.data == NULL)
 		{
 			DeleteObject(iconInfo.hbmMask);
-			DeleteObject(iconInfo.hbmColor);
-			return false;
+			if (isColorIcon)
+				DeleteObject(iconInfo.hbmColor);
 		}
 
-		// ...
+		BITMAPINFOHEADER bih;
+		bih.biSize = sizeof (BITMAPINFOHEADER);
+		bih.biWidth = andMap.width;
+		bih.biHeight = andMap.height;
+		bih.biPlanes = 1;
+		bih.biBitCount = 8*colorModePixelBytesCount(andMap.colorMode);
+		bih.biCompression = BI_RGB;
+		bih.biSizeImage = 0;
+		bih.biXPelsPerMeter = 0;
+		bih.biYPelsPerMeter = 0;
+		bih.biClrUsed = 0;
+		bih.biClrImportant = 0;
+
+		GetDIBits(hDC, iconInfo.hbmMask, 
+			0, andMap.height, 
+			andMap.data, (BITMAPINFO*) &bih, 
+			DIB_RGB_COLORS);
 
 		DeleteObject(iconInfo.hbmMask);
-		DeleteObject(iconInfo.hbmColor);
+		if (isColorIcon)
+			DeleteObject(iconInfo.hbmColor);
 
 		return true;
 	}

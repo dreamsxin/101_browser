@@ -200,6 +200,10 @@
 				RelativePath="..\..\src\gui\GuiOpenGLState.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\src\gui\Texture.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
