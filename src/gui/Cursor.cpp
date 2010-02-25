@@ -1,15 +1,23 @@
 #include "gui/Cursor.h"
 #include "gui/Texture.h"
 #include <cassert>
+#if 0
+// for creating a BMP file for testing purposes
+#include <cstdio>
+#endif
 
 namespace Gui
 {
-	bool createCursorImage(HDC hDC)
+	bool createCursorImage()
 	{
 		HCURSOR hCursor;
 		ICONINFO iconInfo;
+		HDC hDC = CreateCompatibleDC(NULL);
 
-		if (!(hCursor = LoadCursor(NULL, IDC_ARROW)))
+		if (!(hCursor = LoadCursor(NULL, 
+			IDC_ARROW
+			//IDC_CROSS
+			)))
 		{
 			return false;
 		}
@@ -97,6 +105,8 @@ namespace Gui
 		bih.biWidth = andMap.width;
 		// setting this value to a negative one the texture gets 
 		// mirrored vertically - this is how OpenGL wishes
+		// Note: remove the minus sign if you want to create a BMP file
+		// of the cursor for testing purposes
 		bih.biHeight = -maskBitmap.bmHeight;
 		bih.biPlanes = 1;
 		bih.biBitCount = 8*colorModePixelBytesCount(andMap.colorMode);
@@ -129,6 +139,28 @@ namespace Gui
 					DeleteObject(iconInfo.hbmColor);
 			}
 		}
+
+#if 0
+		// Write the result to a BMP file for testing
+		BITMAPFILEHEADER bmfHeader;
+		bmfHeader.bfType = 0x4D42;
+		bmfHeader.bfSize = textureBytesCount(&andMap) + textureBytesCount(&xorMap)
+			+ sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+		bmfHeader.bfReserved1 = 0;
+		bmfHeader.bfReserved2 = 0;
+		bmfHeader.bfOffBits = (DWORD)sizeof(BITMAPFILEHEADER) + (DWORD)sizeof(BITMAPINFOHEADER);
+
+		FILE* cursorBmpFile = fopen("cursor.bmp", "w+b");
+		if (cursorBmpFile)
+		{
+			fwrite(&bmfHeader, sizeof(BITMAPFILEHEADER), 1, cursorBmpFile);
+			bih.biSizeImage *= 2;
+			fwrite(&bih, sizeof(BITMAPINFOHEADER), 1, cursorBmpFile);
+			fwrite(andMap.data, textureBytesCount(&andMap), 1, cursorBmpFile);
+			fwrite(xorMap.data, textureBytesCount(&xorMap), 1, cursorBmpFile);
+			fclose(cursorBmpFile);
+		}
+#endif
 
 		DeleteObject(iconInfo.hbmMask);
 		if (isColorIcon)

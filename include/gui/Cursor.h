@@ -12,7 +12,7 @@ namespace Gui
 
 	};
 
-	bool createCursorImage(HDC hDC);
+	bool createCursorImage();
 }
 
 #endif
