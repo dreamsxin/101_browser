@@ -61,19 +61,22 @@ namespace Gui
 		 * a color icon, this mask only defines the AND bitmask 
 		 * of the icon.
 		 */
-
 		Texture andMap, xorMap;
 
 		assert(maskBitmap.bmPlanes == 1);
 		assert(maskBitmap.bmBitsPixel == 1);
 
-		andMap.width = maskBitmap.bmWidth;
 		andMap.colorMode = ColorModeRGBA;
+		andMap.width = maskBitmap.bmWidth;
 
 		if (!isColorIcon)
 		{
 			assert(maskBitmap.bmHeight%2 == 0);
 			andMap.height = maskBitmap.bmHeight/2;
+			xorMap.colorMode = ColorModeRGBA;
+			xorMap.width = maskBitmap.bmWidth;
+			xorMap.height = maskBitmap.bmHeight/2;
+			allocateTextureMemory(&xorMap);
 		}
 		else
 		{
@@ -92,7 +95,9 @@ namespace Gui
 		BITMAPINFOHEADER bih;
 		bih.biSize = sizeof (BITMAPINFOHEADER);
 		bih.biWidth = andMap.width;
-		bih.biHeight = andMap.height;
+		// setting this value to a negative one the texture gets 
+		// mirrored vertically - this is how OpenGL wishes
+		bih.biHeight = -maskBitmap.bmHeight;
 		bih.biPlanes = 1;
 		bih.biBitCount = 8*colorModePixelBytesCount(andMap.colorMode);
 		bih.biCompression = BI_RGB;
@@ -101,11 +106,29 @@ namespace Gui
 		bih.biYPelsPerMeter = 0;
 		bih.biClrUsed = 0;
 		bih.biClrImportant = 0;
-
-		GetDIBits(hDC, iconInfo.hbmMask, 
+		
+		if (!GetDIBits(hDC, iconInfo.hbmMask, 
 			0, andMap.height, 
 			andMap.data, (BITMAPINFO*) &bih, 
-			DIB_RGB_COLORS);
+			DIB_RGB_COLORS))
+		{
+			DeleteObject(iconInfo.hbmMask);
+			if (isColorIcon)
+				DeleteObject(iconInfo.hbmColor);
+		}
+
+		if (!isColorIcon)
+		{
+			if (!GetDIBits(hDC, iconInfo.hbmMask, 
+				andMap.height, xorMap.height, 
+				xorMap.data, (BITMAPINFO*) &bih, 
+				DIB_RGB_COLORS))
+			{
+				DeleteObject(iconInfo.hbmMask);
+				if (isColorIcon)
+					DeleteObject(iconInfo.hbmColor);
+			}
+		}
 
 		DeleteObject(iconInfo.hbmMask);
 		if (isColorIcon)
