@@ -1,6 +1,7 @@
 #ifndef _Texture_h
 #define _Texture_h
 
+// for NULL
 #include <cstdlib>
 
 enum ColorMode
@@ -24,5 +25,7 @@ size_t textureLineBytesCount(const Texture* in_pTexture);
 size_t textureBytesCount(const Texture* in_pTexture);
 
 void allocateTextureMemory(Texture* in_pTexture);
+
+void generateOpenGLTexture();
 
 #endif

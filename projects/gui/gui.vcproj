@@ -201,6 +201,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\gui\OpenGLTextureManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\gui\Texture.cpp"
 				>
 			</File>
@@ -236,6 +240,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\gui\GuiOpenGLState.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\gui\OpenGLTextureManager.h"
 				>
 			</File>
 			<File
