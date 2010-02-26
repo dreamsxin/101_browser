@@ -25,6 +25,7 @@ size_t textureLineBytesCount(const Texture* in_pTexture);
 size_t textureBytesCount(const Texture* in_pTexture);
 
 void allocateTextureMemory(Texture* in_pTexture);
+void freeTexture(Texture* in_pTexture);
 
 void generateOpenGLTexture();
 

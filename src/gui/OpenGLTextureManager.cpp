@@ -14,7 +14,7 @@ GLenum colorModeTextureFormat(ColorMode colorMode)
 	}
 }
 
-GLuint generateOpenGLTexture(Texture* in_pTexture)
+GLuint createOpenGLTexture(const Texture* in_pTexture)
 {
 	GLuint textureID;
 	glGenTextures(1, &textureID);

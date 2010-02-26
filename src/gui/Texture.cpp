@@ -27,3 +27,9 @@ void allocateTextureMemory(Texture* in_pTexture)
 {
 	in_pTexture->data = (unsigned char*) malloc(textureBytesCount(in_pTexture));
 }
+
+void freeTexture(Texture* in_pTexture)
+{
+	free(in_pTexture->data);
+	*in_pTexture = Texture();
+}
