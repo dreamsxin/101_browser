@@ -193,15 +193,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\gui\GuiComponentsCursor.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\gui\GuiComponentsTextBox.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\src\gui\GuiOpenGLState.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\gui\OpenGLTextureManager.cpp"
 				>
 			</File>
 			<File
@@ -231,6 +231,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\gui\GuiComponentsCursor.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\gui\GuiComponentsDefaults.h"
 				>
 			</File>
@@ -240,10 +244,6 @@
 			</File>
 			<File
 				RelativePath="..\..\include\gui\GuiOpenGLState.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\gui\OpenGLTextureManager.h"
 				>
 			</File>
 			<File

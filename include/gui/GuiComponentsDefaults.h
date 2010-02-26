@@ -13,7 +13,6 @@ namespace Gui
 
 			const Color4f cColorWhite = {1.0f, 1.0f, 1.0f, 1.0f}; // (255, 255, 255)
 
-
 			const Color4f cWindowBackgroundColor = {
 				236*cColorByteToFloat, 
 				233*cColorByteToFloat, 

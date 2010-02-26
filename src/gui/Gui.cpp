@@ -4,7 +4,6 @@
 #include "gui/GuiComponentsDefaults.h"
 #include "gui/GuiOpenGLState.h"
 #include "gui/Cursor.h"
-#include "gui/OpenGLTextureManager.h"
 
 struct Window
 {
@@ -256,11 +255,11 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 		exit(1);
 	}
 
-	GLuint andMapID = createOpenGLTexture(&cursor.andMap);
-	GLuint xorMapID = createOpenGLTexture(&cursor.xorMap);
+	createOpenGLTexture(&cursor.andMap);
+	createOpenGLTexture(&cursor.xorMap);
 
-	freeTexture(&cursor.andMap);
-	freeTexture(&cursor.xorMap);
+	freeTextureMemory(&cursor.andMap);
+	freeTextureMemory(&cursor.xorMap);
 
 	showWindow(&window, nCmdShow); // Alternative: use SW_NORMAL instead of nCmdShow
 
