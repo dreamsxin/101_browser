@@ -245,7 +245,12 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 		return 0;
 	}
 
-	Gui::createCursorImage();
+	Gui::Cursor cursor;
+
+	if (!Gui::createCursor(&cursor))
+	{
+		exit(1);
+	}
 
 	initializeOpenGLGuiState();
 

@@ -8,7 +8,7 @@
 
 namespace Gui
 {
-	bool createCursorImage()
+	bool createCursor(Cursor* in_pCursor)
 	{
 		HCURSOR hCursor;
 		ICONINFO iconInfo;
@@ -30,10 +30,8 @@ namespace Gui
 		// This means we really got a cursor and not an icon
 		assert(iconInfo.fIcon == FALSE);
 
-		Cursor cursor = { Vertex2<DWORD>(iconInfo.xHotspot, iconInfo.yHotspot) };
-
 		BITMAP maskBitmap;
-		bool isColorIcon = iconInfo.hbmColor;
+		bool isColorIcon = (iconInfo.hbmColor != NULL);
 		BITMAP colorBitmap;
 
 		if (!GetObject(iconInfo.hbmMask, sizeof(BITMAP), &maskBitmap))
@@ -109,7 +107,8 @@ namespace Gui
 		// of the cursor for testing purposes
 		bih.biHeight = -maskBitmap.bmHeight;
 		bih.biPlanes = 1;
-		bih.biBitCount = 8*colorModePixelBytesCount(andMap.colorMode);
+		// a byte has 8 bits, so we do <<3, which multiplies by 8
+		bih.biBitCount = colorModePixelBytesCount(andMap.colorMode)<<3;
 		bih.biCompression = BI_RGB;
 		bih.biSizeImage = 0;
 		bih.biXPelsPerMeter = 0;
@@ -161,6 +160,12 @@ namespace Gui
 			fclose(cursorBmpFile);
 		}
 #endif
+
+		in_pCursor->hotspot  = Vertex2<DWORD>(iconInfo.xHotspot, iconInfo.yHotspot);
+		in_pCursor->colored  = isColorIcon;
+		in_pCursor->andMap   = andMap;
+		in_pCursor->xorMap   = !isColorIcon ? xorMap : Texture();
+		in_pCursor->colorMap = Texture();
 
 		DeleteObject(iconInfo.hbmMask);
 		if (isColorIcon)
