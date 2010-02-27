@@ -149,7 +149,6 @@ namespace Gui
 			}
 		}
 
-		
 #if 0
 		Texture out=Texture();
 		out.width = bih.biWidth;
@@ -165,7 +164,7 @@ namespace Gui
 		// Write the result to a BMP file for testing
 		BITMAPFILEHEADER bmfHeader;
 		bmfHeader.bfType = 0x4D42;
-		bmfHeader.bfSize = //textureBytesCount(&andMap)
+		bmfHeader.bfSize = textureBytesCount(&out)
 			+ sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
 		bmfHeader.bfReserved1 = 0;
 		bmfHeader.bfReserved2 = 0;
