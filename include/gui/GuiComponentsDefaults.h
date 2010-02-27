@@ -11,40 +11,40 @@ namespace Gui
 		{
 			const float cColorByteToFloat = 1.0f/255.0f;
 
-			const Color4f cColorWhite = {1.0f, 1.0f, 1.0f, 1.0f}; // (255, 255, 255)
+			const Color4<float> cColorWhite = {1.0f, 1.0f, 1.0f, 1.0f}; // (255, 255, 255)
 
-			const Color4f cWindowBackgroundColor = {
+			const Color4<float> cWindowBackgroundColor = {
 				236*cColorByteToFloat, 
 				233*cColorByteToFloat, 
 				216*cColorByteToFloat, 1.0f
 			};
 
-			const Color4f cCheckBoxTopLeftBackgroundColor = {
+			const Color4<float> cCheckBoxTopLeftBackgroundColor = {
 				220*cColorByteToFloat, 
 				220*cColorByteToFloat, 
 				215*cColorByteToFloat, 1.0f
 			};
-			const Color4f cCheckBoxTopRightBackgroundColor = {
+			const Color4<float> cCheckBoxTopRightBackgroundColor = {
 				241*cColorByteToFloat, 
 				241*cColorByteToFloat, 
 				239*cColorByteToFloat, 1.0f
 			};
-			const Color4f cCheckBoxBottomLeftBackgroundColor = cCheckBoxTopRightBackgroundColor;
-			const Color4f cCheckBoxBottomRightBackgroundColor = cColorWhite;
-			const Color4f cCheckBoxBorderColor = {
+			const Color4<float> cCheckBoxBottomLeftBackgroundColor = cCheckBoxTopRightBackgroundColor;
+			const Color4<float> cCheckBoxBottomRightBackgroundColor = cColorWhite;
+			const Color4<float> cCheckBoxBorderColor = {
 				28*cColorByteToFloat, 
 				81*cColorByteToFloat, 
 				128*cColorByteToFloat, 1.0f
 			};
-			const Color4f cCheckBoxHookColor = {
+			const Color4<float> cCheckBoxHookColor = {
 				33*cColorByteToFloat, 
 				161*cColorByteToFloat, 
 				33*cColorByteToFloat, 1.0f
 			};
 
 
-			const Color4f cTextBoxBackgroundColor = cColorWhite;
-			const Color4f cTextBoxBorderColor = {
+			const Color4<float> cTextBoxBackgroundColor = cColorWhite;
+			const Color4<float> cTextBoxBorderColor = {
 				127*cColorByteToFloat, 
 				157*cColorByteToFloat, 
 				185*cColorByteToFloat, 1.0f

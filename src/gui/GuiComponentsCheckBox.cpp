@@ -11,7 +11,7 @@ namespace Gui
 		void drawCheckBox(float left, float top, float width, float height, 
 			float borderSize, float currentHeight)
 		{
-			Color4f colors[4]={
+			Color4<float> colors[4]={
 				Defaults::cCheckBoxBottomLeftBackgroundColor,
 				Defaults::cCheckBoxBottomRightBackgroundColor,
 				Defaults::cCheckBoxTopLeftBackgroundColor, 

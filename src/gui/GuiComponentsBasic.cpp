@@ -121,7 +121,7 @@ void createBoxVertices(std::vector<Vertex2<float> >* boxVertices,
 	boxVertices->push_back(Vertex2<float>(left+width, currentHeight-top)); // top right
 }
 
-void drawVertexArray(const std::vector<Vertex2<float> >* vertices, Color4f colors[4])
+void drawVertexArray(const std::vector<Vertex2<float> >* vertices, Color4<float> colors[4])
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);	
@@ -134,7 +134,7 @@ void drawVertexArray(const std::vector<Vertex2<float> >* vertices, Color4f color
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-void drawVertexArray(const std::vector<Vertex2<float> >* vertices, Color4f color)
+void drawVertexArray(const std::vector<Vertex2<float> >* vertices, Color4<float> color)
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glColor4fv(&color.r);

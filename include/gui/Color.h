@@ -1,9 +1,9 @@
 #ifndef _Color_h
 #define _Color_h
 
-struct Color4f
+template <typename Type> struct Color4
 {
-	float r, g, b, a;
+	Type r, g, b, a;
 };
 
 #endif

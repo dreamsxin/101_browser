@@ -205,6 +205,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\srce\gui\MultiMouse.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\gui\Texture.cpp"
 				>
 			</File>
@@ -244,6 +248,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\gui\GuiOpenGLState.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\gui\MultiMouse.h"
 				>
 			</File>
 			<File

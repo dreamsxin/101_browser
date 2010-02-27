@@ -33,8 +33,8 @@ void createBoxVertices(std::vector<Vertex2<float> >* boxVertices,
 					   float left, float top, float width, float height,
 					   float currentHeight);
 
-void drawVertexArray(const std::vector<Vertex2<float> >* vertices, Color4f colors[4]);
+void drawVertexArray(const std::vector<Vertex2<float> >* vertices, Color4<float> colors[4]);
 
-void drawVertexArray(const std::vector<Vertex2<float> >* vertices, Color4f color);
+void drawVertexArray(const std::vector<Vertex2<float> >* vertices, Color4<float> color);
 
 #endif
