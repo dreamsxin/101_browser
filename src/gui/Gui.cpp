@@ -20,6 +20,7 @@ struct Window
 
 bool runProgram = true;
 FILE* log = NULL;
+Gui::Cursor cursor;
 
 LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -246,8 +247,6 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 	}
 
 	initializeOpenGLGuiState();
-
-	Gui::Cursor cursor;
 
 	if (!Gui::createCursor(&cursor))
 	{

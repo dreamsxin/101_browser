@@ -8,9 +8,10 @@ namespace Gui
 	namespace Components
 	{
 		/*!
-		 * Draws a cursor that has its hotspot in position (left, top)
+		 * Draws a cursor that has its hotspot in pixel position (left, top)
 		 */
-		void drawCursor(float left, float top, const Cursor* cursor);
+		void drawCursor(float left, float top, float currentHeight, 
+			const Cursor* in_pCursor);
 	}
 }
 

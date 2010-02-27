@@ -96,6 +96,7 @@ namespace Gui
 			DeleteObject(iconInfo.hbmMask);
 			if (isColorIcon)
 				DeleteObject(iconInfo.hbmColor);
+			return false;
 		}
 
 		BITMAPINFOHEADER bih;
@@ -103,9 +104,10 @@ namespace Gui
 		bih.biWidth = andMap.width;
 		// setting this value to a negative one the texture gets 
 		// mirrored vertically - this is how OpenGL wishes
+		// Do we really need that?
 		// Note: remove the minus sign if you want to create a BMP file
 		// of the cursor for testing purposes
-		bih.biHeight = -maskBitmap.bmHeight;
+		bih.biHeight = maskBitmap.bmHeight;
 		bih.biPlanes = 1;
 		// a byte has 8 bits, so we do <<3, which multiplies by 8
 		bih.biBitCount = colorModePixelBytesCount(andMap.colorMode)<<3;
@@ -115,48 +117,86 @@ namespace Gui
 		bih.biYPelsPerMeter = 0;
 		bih.biClrUsed = 0;
 		bih.biClrImportant = 0;
-		
-		if (!GetDIBits(hDC, iconInfo.hbmMask, 
-			0, andMap.height, 
+
+		if (GetDIBits(hDC, iconInfo.hbmMask, 
+			// if we have no color icon: xorMap.height=0
+			// otherwise it has a sensible value
+			// so we can shorten
+			// !isColorIcon ? xorMap.height : 0
+			// to xorMap.height
+			xorMap.height, andMap.height,
 			andMap.data, (BITMAPINFO*) &bih, 
-			DIB_RGB_COLORS))
+			DIB_RGB_COLORS)!=andMap.height)
 		{
 			DeleteObject(iconInfo.hbmMask);
 			if (isColorIcon)
 				DeleteObject(iconInfo.hbmColor);
+			return false;
 		}
 
+		
 		if (!isColorIcon)
 		{
-			if (!GetDIBits(hDC, iconInfo.hbmMask, 
-				andMap.height, xorMap.height, 
+			if (GetDIBits(hDC, iconInfo.hbmMask, 
+				0, xorMap.height, 
 				xorMap.data, (BITMAPINFO*) &bih, 
-				DIB_RGB_COLORS))
+				DIB_RGB_COLORS)!=xorMap.height)
 			{
 				DeleteObject(iconInfo.hbmMask);
 				if (isColorIcon)
 					DeleteObject(iconInfo.hbmColor);
+				return false;
 			}
 		}
 
+		
 #if 0
+		Texture out=Texture();
+		out.width = bih.biWidth;
+		out.height = bih.biHeight-16;
+		out.colorMode = ColorModeRGBA;
+		allocateTextureMemory(&out);
+		GetDIBits(hDC, iconInfo.hbmMask, 
+			0, out.height, 
+			out.data, (BITMAPINFO*) &bih, 
+			DIB_RGB_COLORS);
+		bih.biHeight -= 16;
+		
 		// Write the result to a BMP file for testing
 		BITMAPFILEHEADER bmfHeader;
 		bmfHeader.bfType = 0x4D42;
-		bmfHeader.bfSize = textureBytesCount(&andMap) + textureBytesCount(&xorMap)
+		bmfHeader.bfSize = //textureBytesCount(&andMap)
 			+ sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
 		bmfHeader.bfReserved1 = 0;
 		bmfHeader.bfReserved2 = 0;
 		bmfHeader.bfOffBits = (DWORD)sizeof(BITMAPFILEHEADER) + (DWORD)sizeof(BITMAPINFOHEADER);
 
-		FILE* cursorBmpFile = fopen("cursor.bmp", "w+b");
+		FILE* cursorBmpFile;
+		cursorBmpFile = fopen("cursor.bmp", "w+b");
+		fwrite(&bmfHeader, sizeof(BITMAPFILEHEADER), 1, cursorBmpFile);
+		fwrite(&bih, sizeof(BITMAPINFOHEADER), 1, cursorBmpFile);
+		fwrite(out.data, textureBytesCount(&out), 1, cursorBmpFile);
+			
+		fclose(cursorBmpFile);
+		
+
+		cursorBmpFile = fopen("cursor_and.bmp", "w+b");
 		if (cursorBmpFile)
 		{
 			fwrite(&bmfHeader, sizeof(BITMAPFILEHEADER), 1, cursorBmpFile);
-			bih.biSizeImage *= 2;
 			fwrite(&bih, sizeof(BITMAPINFOHEADER), 1, cursorBmpFile);
 			fwrite(andMap.data, textureBytesCount(&andMap), 1, cursorBmpFile);
-			fwrite(xorMap.data, textureBytesCount(&xorMap), 1, cursorBmpFile);
+			
+			fclose(cursorBmpFile);
+		}
+
+		cursorBmpFile = fopen("cursor_xor.bmp", "w+b");
+		if (cursorBmpFile)
+		{
+			fwrite(&bmfHeader, sizeof(BITMAPFILEHEADER), 1, cursorBmpFile);
+			fwrite(&bih, sizeof(BITMAPINFOHEADER), 1, cursorBmpFile);
+			fwrite(xorMap.data, textureBytesCount(&andMap), 1, cursorBmpFile);
+			
 			fclose(cursorBmpFile);
 		}
 #endif
