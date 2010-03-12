@@ -3,7 +3,7 @@
 
 #include <windows.h>
 #include <gl/gl.h>
-#include <vector>
+#include <cassert>
 
 void createBorderTriangleStrip(const std::vector<Vertex2<float> >* triangleStrip,
 							   std::vector<Vertex2<float> >* borderTriangleStrip,
@@ -14,91 +14,73 @@ void createBorderTriangleStrip(const std::vector<Vertex2<float> >* triangleStrip
 	DoubleIterator<const Vertex2<float>, TriangleStripBorderConstIteratorState<Vertex2<float> > > it =
 		triangleStripBorderConstIterator_create<Vertex2<float> >();
 
-	// This is a hack. Todo: write a sensitive iterator interface.
 	if (triangleStrip->size()>=3)
 	{
-		Vertex2<float> first = *(*it.mpfGet)(&state);
-		Vertex2<float> last = state.mpVector->at(state.mpVector->size()-1);
+		IterateResult itRes;
+		
+		itRes = (*it.mpfIteratePrev)(&state);
+		assert(itRes == IterateResultOverBoundary);
 
-		Vertex2<float> vertexBundle[3];
-		vertexBundle[1] = last;
+		Vertex2<float> prevVertex = *(*it.mpfGet)(&state);
 
-		vertexBundle[2] = *(*it.mpfGet)(&state);
+		itRes = it.mpfIterateNext(&state);
+		assert(itRes == IterateResultOverBoundary);
+
+		Vertex2<float> currVertex = *(*it.mpfGet)(&state);
+
+		itRes = it.mpfIterateNext(&state);
+		assert(itRes == IterateResultOK);
+
+		Vertex2<float> nextVertex = *(*it.mpfGet)(&state);
+
+		bool breakAfterSecondNextIteration = false;
+		bool breakAfterNextIteration = false;
 
 		while (true)
 		{
-			vertexBundle[0] = vertexBundle[1];
-			vertexBundle[1] = vertexBundle[2];
+			Vector2<float> prevToCurrVect = currVertex - prevVertex;
+			Vector2<float> currToNextVect = nextVertex - currVertex;
 
-			if ((*it.mpfIterateNext)(&state)==IterateResultEndToStart)
+			normalize(&prevToCurrVect);
+			normalize(&currToNextVect);
+
+			Vector2<float> direction = prevToCurrVect+currToNextVect;
+			normalize(&direction);
+
+			Vector2<float> rightFromDirection = Vector2<float>(
+				direction.y, 
+				-direction.x);
+
+			float scaleFactor = 
+				-borderWidth/(currToNextVect.x*rightFromDirection.x+
+				currToNextVect.y*rightFromDirection.y);
+
+			borderTriangleStrip->push_back(currVertex);
+			borderTriangleStrip->push_back(currVertex+rightFromDirection*scaleFactor);
+			
+			// If this was set in the previous iteration we shall break
+			if (breakAfterNextIteration)
 				break;
+			
+			// else we iterate
+			itRes = (*it.mpfIterateNext)(&state);
 
-			/*if (!(*it.mpfEnd)(&state))
+			if (breakAfterSecondNextIteration)
 			{
-				vertexBundle[2] = *(*it.mpfGet)(&state);
+				breakAfterNextIteration = true;
 			}
-			else
-			{
-				vertexBundle[2] = first;
-			}*/
 
-			// create vertices for strip
-			// TODO
+			// if this is true we do exactly one additional iteration
+			if (itRes == IterateResultOverBoundary)
+				breakAfterSecondNextIteration = true;
 
-
+			prevVertex = currVertex;
+			currVertex = nextVertex;
+			nextVertex = *(*it.mpfGet)(&state);
 		}
 	}
 }
 
-void createBorderVertices(const std::vector<Vertex2<float> >* boxVertices,
-						  std::vector<Vertex2<float> >* borderVertices,
-						  float borderWidth)
-{
-	/*
-	 * Layout of vertices:
-	 * 2-3
-	 * |\|
-	 * 0-1
-	 * 
-	 * Layout of borderVertices:
-	 * 
-	 * 7--------5
-	 * |\      /|
-	 * | 6----4 |
-	 * | |    | |
-	 * |0,8---2 |
-	 * |/      \|
-	 * 1,9------3
-	 */
-	// 0
-	borderVertices->push_back(
-		Vertex2<float>(boxVertices->at(0).x, boxVertices->at(0).y));
-	// 1
-	borderVertices->push_back(
-		Vertex2<float>(boxVertices->at(0).x-borderWidth, boxVertices->at(0).y-borderWidth));
-	// 2
-	borderVertices->push_back(
-		Vertex2<float>(boxVertices->at(1).x, boxVertices->at(1).y));
-	// 3
-	borderVertices->push_back(
-		Vertex2<float>(boxVertices->at(1).x+borderWidth, boxVertices->at(1).y-borderWidth));
-	// 4
-	borderVertices->push_back(
-		Vertex2<float>(boxVertices->at(3).x, boxVertices->at(3).y));
-	// 5
-	borderVertices->push_back(
-		Vertex2<float>(boxVertices->at(3).x+borderWidth, boxVertices->at(3).y+borderWidth));
-	// 6
-	borderVertices->push_back(
-		Vertex2<float>(boxVertices->at(2).x, boxVertices->at(2).y));
-	// 7
-	borderVertices->push_back(
-		Vertex2<float>(boxVertices->at(2).x-borderWidth, boxVertices->at(2).y+borderWidth));
-	// 8
-	borderVertices->push_back(borderVertices->at(0));
-	// 9
-	borderVertices->push_back(borderVertices->at(1));
-}
 /*!
  * vertices output:
  * [0]: bottom left

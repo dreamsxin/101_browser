@@ -48,9 +48,9 @@ template <typename Type, typename IteratorState> IterateResult triangleStripBord
 		switch (in_pIts->mpVector->size())
 		{
 		case 0:
-			return IterateResultEndToEnd;
+			return IterateResultToInvalidState;
 		case 1:
-			return IterateResultEndToStart;
+			return IterateResultOverBoundary;
 		default:
 			in_pIts->mCurrentPosition++;
 			return IterateResultOK;
@@ -79,7 +79,7 @@ template <typename Type, typename IteratorState> IterateResult triangleStripBord
 
 				in_pIts->mCurrentPosition-=1;
 				if (in_pIts->mCurrentPosition==0)
-					return IterateResultEndToStart;
+					return IterateResultOverBoundary;
 				else
 					return IterateResultOK;
 			}
@@ -93,7 +93,7 @@ template <typename Type, typename IteratorState> IterateResult triangleStripBord
 			in_pIts->mCurrentPosition-=2;
 
 			if (in_pIts->mCurrentPosition==0)
-				return IterateResultEndToStart;
+				return IterateResultOverBoundary;
 			else
 				return IterateResultOK;
 		}
@@ -108,15 +108,15 @@ template <typename Type, typename IteratorState> IterateResult triangleStripBord
 		switch (in_pIts->mpVector->size())
 		{
 		case 0:
-			return IterateResultEndToEnd;
+			return IterateResultToInvalidState;
 		case 1:
-			return IterateResultEndToStart;
+			return IterateResultOverBoundary;
 		case 2:
 			in_pIts->mCurrentPosition = 1;
-			return IterateResultEndToStart;
+			return IterateResultOverBoundary;
 		default:
 			in_pIts->mCurrentPosition = 2;
-			return IterateResultEndToStart;
+			return IterateResultOverBoundary;
 		}
 	}
 	else

@@ -25,6 +25,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Html5Reader", "projects\Htm
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiDataStructures", "projects\GuiDataStructures\GuiDataStructures.vcproj", "{0403DAC4-7C0F-41E5-9405-86A4DC16FBBA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JpegDecoder", "projects\JpegDecoder\JpegDecoder.vcproj", "{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -279,6 +281,26 @@ Global
 		{0403DAC4-7C0F-41E5-9405-86A4DC16FBBA}.LIB Release|Win32.Build.0 = Release|Win32
 		{0403DAC4-7C0F-41E5-9405-86A4DC16FBBA}.Release|Win32.ActiveCfg = Release|Win32
 		{0403DAC4-7C0F-41E5-9405-86A4DC16FBBA}.Release|Win32.Build.0 = Release|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.Debug|Win32.Build.0 = Debug|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.DLL ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.DLL ASM Debug|Win32.Build.0 = Debug|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.DLL ASM Release|Win32.ActiveCfg = Release|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.DLL ASM Release|Win32.Build.0 = Release|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.DLL Debug|Win32.ActiveCfg = Debug|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.DLL Debug|Win32.Build.0 = Debug|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.DLL Release|Win32.ActiveCfg = Release|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.DLL Release|Win32.Build.0 = Release|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.LIB ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.LIB ASM Debug|Win32.Build.0 = Debug|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.LIB ASM Release|Win32.ActiveCfg = Release|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.LIB ASM Release|Win32.Build.0 = Release|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.LIB Debug|Win32.ActiveCfg = Debug|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.LIB Debug|Win32.Build.0 = Debug|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.LIB Release|Win32.ActiveCfg = Release|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.LIB Release|Win32.Build.0 = Release|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.Release|Win32.ActiveCfg = Release|Win32
+		{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

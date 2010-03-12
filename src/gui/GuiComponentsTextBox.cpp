@@ -12,11 +12,11 @@ namespace Gui
 			float borderSize, float currentHeight)
 		{
 			std::vector<Vertex2<float> > boxVertices;
-			std::vector<Vertex2<float> > borderVertices;
+			std::vector<Vertex2<float> > borderTriangleStrip;
 			createBoxVertices(&boxVertices, left, top, width, height, currentHeight);
-			createBorderVertices(&boxVertices, &borderVertices, borderSize);
+			createBorderTriangleStrip(&boxVertices, &borderTriangleStrip, borderSize);
 			drawVertexArray(&boxVertices, Defaults::cTextBoxBackgroundColor);
-			drawVertexArray(&borderVertices, Defaults::cTextBoxBorderColor);
+			drawVertexArray(&borderTriangleStrip, Defaults::cTextBoxBorderColor);
 		}
 	}
 }

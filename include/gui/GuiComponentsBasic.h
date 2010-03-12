@@ -6,10 +6,6 @@
 #include "gui/Vertex.h"
 #include "gui/Color.h"
 
-void createBorderVertices(const std::vector<Vertex2<float> >* boxVertices,
-						  std::vector<Vertex2<float> >* borderVertices,
-						  float borderWidth);
-
 /*!
 * triangleStrip: a triangle strip with non-repeating vertices
 * borderTriangleStrip: where the border gets stored

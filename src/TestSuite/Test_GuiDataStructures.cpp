@@ -11,7 +11,7 @@ void runIteratorForward(TriangleStripBorderIteratorState<unsigned int>* in_pItSt
 
 	if ((*in_interface.mpfGet)(in_pItState) == NULL)
 	{
-		test((*in_interface.mpfIterateNext)(in_pItState) == IterateResultEndToEnd);
+		test((*in_interface.mpfIterateNext)(in_pItState) == IterateResultToInvalidState);
 		return;
 	}
 
@@ -24,7 +24,7 @@ void runIteratorForward(TriangleStripBorderIteratorState<unsigned int>* in_pItSt
 	}
 	while (itRes == IterateResultOK);
 
-	test(itRes == IterateResultEndToStart);
+	test(itRes == IterateResultOverBoundary);
 }
 
 void runIteratorBackward(TriangleStripBorderIteratorState<unsigned int>* in_pItState, 
@@ -35,13 +35,13 @@ void runIteratorBackward(TriangleStripBorderIteratorState<unsigned int>* in_pItS
 
 	IterateResult itRes = in_interface.mpfIteratePrev(in_pItState);
 
-	if (itRes == IterateResultEndToEnd)
+	if (itRes == IterateResultToInvalidState)
 	{
 		test(in_interface.mpfGet(in_pItState)==NULL);
 		return;
 	}
 
-	test(itRes == IterateResultEndToStart);
+	test(itRes == IterateResultOverBoundary);
 
 	do
 	{
@@ -50,7 +50,7 @@ void runIteratorBackward(TriangleStripBorderIteratorState<unsigned int>* in_pItS
 	}
 	while (itRes == IterateResultOK);
 
-	test(itRes == IterateResultEndToStart);
+	test(itRes == IterateResultOverBoundary);
 }
 
 bool compareVectors(const vector<unsigned int>* in_pV, const vector<unsigned int>* in_pW)
