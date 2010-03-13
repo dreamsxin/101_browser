@@ -3,8 +3,8 @@
 
 using namespace std;
 
-void runIteratorForward(TriangleStripBorderIteratorState<unsigned int>* in_pItState, 
-				 DoubleIterator<unsigned int, TriangleStripBorderIteratorState<unsigned int> > in_interface,
+void runIteratorForward(TriangleStripBorderIterator<unsigned int>::IteratorState* in_pItState, 
+				 DoubleIterator<unsigned int, TriangleStripBorderIterator<unsigned int>::IteratorState> in_interface,
 				 vector<unsigned int>* in_out_pResult)
 {
 	*in_out_pResult=vector<unsigned int>();
@@ -27,8 +27,8 @@ void runIteratorForward(TriangleStripBorderIteratorState<unsigned int>* in_pItSt
 	test(itRes == IterateResultOverBoundary);
 }
 
-void runIteratorBackward(TriangleStripBorderIteratorState<unsigned int>* in_pItState, 
-				 DoubleIterator<unsigned int, TriangleStripBorderIteratorState<unsigned int> > in_interface,
+void runIteratorBackward(TriangleStripBorderIterator<unsigned int>::IteratorState* in_pItState, 
+						 DoubleIterator<unsigned int, TriangleStripBorderIterator<unsigned int>::IteratorState > in_interface,
 				 vector<unsigned int>* in_out_pResult)
 {
 	*in_out_pResult=vector<unsigned int>();
@@ -79,9 +79,9 @@ void revertVector(vector<unsigned int>* in_pV)
 void testGuiDataStructures()
 {
 	vector<unsigned int> v, w, result;
-	TriangleStripBorderIteratorState<unsigned int> itState;
-	DoubleIterator<unsigned int, TriangleStripBorderIteratorState<unsigned int>> itInterface = 
-		triangleStripBorderIterator_create<unsigned int>();
+	TriangleStripBorderIterator<unsigned int>::IteratorState itState;
+	DoubleIterator<unsigned int, TriangleStripBorderIterator<unsigned int>::IteratorState> 
+		itInterface = triangleStripBorderIterator_create<unsigned int>();
 
 	// Testing correct behaviour for small datasets
 

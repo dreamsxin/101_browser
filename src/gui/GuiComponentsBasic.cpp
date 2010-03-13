@@ -9,9 +9,9 @@ void createBorderTriangleStrip(const std::vector<Vertex2<float> >* triangleStrip
 							   std::vector<Vertex2<float> >* borderTriangleStrip,
 							   float borderWidth)
 {
-	TriangleStripBorderConstIteratorState<Vertex2<float> > state = 
+	TriangleStripBorderIterator<Vertex2<float> >::ConstIteratorState state = 
 		triangleStripBorderConstIteratorState_create(triangleStrip);
-	DoubleIterator<const Vertex2<float>, TriangleStripBorderConstIteratorState<Vertex2<float> > > it =
+	DoubleIterator<const Vertex2<float>, TriangleStripBorderIterator<Vertex2<float> >::ConstIteratorState> it =
 		triangleStripBorderConstIterator_create<Vertex2<float> >();
 
 	if (triangleStrip->size()>=3)
