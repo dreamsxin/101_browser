@@ -71,4 +71,30 @@ template <typename Type, typename IteratorState> IterateResult outerBorderIterat
 	}
 }
 
+template <typename Type> DoubleIterator<Type, typename OuterBorderIterator<Type>::IteratorState>
+outerBorderIterator_create()
+{
+	DoubleIterator<Type, OuterBorderIterator<Type>::IteratorState> out_iter = 
+	{
+		&positionIterator_get,
+		&outerBorderIterator_next<Type, OuterBorderIterator<Type>::IteratorState>,
+		&outerBorderIterator_prev<Type, OuterBorderIterator<Type>::IteratorState>
+	};
+
+	return out_iter;
+}
+
+template <typename Type> DoubleIterator<const Type, typename OuterBorderIterator<Type>::ConstIteratorState>
+outerBorderIteratorConstIterator_create()
+{
+	DoubleIterator<const Type, OuterBorderIterator<Type>::ConstIteratorState> out_iter = 
+	{
+		&positionIterator_get,
+		&outerBorderIterator_next<Type, OuterBorderIterator<Type>::ConstIteratorState>,
+		&outerBorderIterator_prev<Type, OuterBorderIterator<Type>::ConstIteratorState>
+	};
+
+	return out_iter;
+}
+
 #endif

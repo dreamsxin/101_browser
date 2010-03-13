@@ -12,6 +12,7 @@ namespace Gui
 			const float cColorByteToFloat = 1.0f/255.0f;
 
 			const Color4<float> cColorWhite = {1.0f, 1.0f, 1.0f, 1.0f}; // (255, 255, 255)
+			const Color4<float> cColorRed = {1.0f, 0.0f, 0.0f, 1.0f}; // (255, 255, 255)
 
 			const Color4<float> cWindowBackgroundColor = {
 				236*cColorByteToFloat, 

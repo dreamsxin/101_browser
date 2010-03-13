@@ -12,7 +12,8 @@ namespace Gui
 		{
 			std::vector<Vertex2<float> > boxVertices;
 			createBoxVertices(&boxVertices, 
-				left-in_pCursor->hotspot.x, top-in_pCursor->hotspot.y,
+				(float) (left-in_pCursor->hotspot.x), 
+				(float) (top-in_pCursor->hotspot.y),
 				in_pCursor->andMap.width, in_pCursor->andMap.height, currentHeight);
 			Vertex2<float> textureUV[4]=
 			{

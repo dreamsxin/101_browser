@@ -1,6 +1,4 @@
 #include "gui/GuiComponentsBasic.h"
-#include "GuiDataStructures/TriangleStripBorderIterator.h"
-#include "GuiDataStructures/OuterBorderIterator.h"
 
 #include <windows.h>
 #include <gl/gl.h>
@@ -10,7 +8,8 @@ void createStraightBorder(Vertex2<float> prevVertex,
 						  Vertex2<float> currVertex,
 						  Vertex2<float> nextVertex,
 						  std::vector<Vertex2<float> >* pBorderTriangleStrip,
-						  float borderWidth)
+						  float borderWidth, 
+						  size_t)
 {
 	Vector2<float> prevToCurrVect = currVertex - prevVertex;
 	Vector2<float> currToNextVect = nextVertex - currVertex;
@@ -21,9 +20,7 @@ void createStraightBorder(Vertex2<float> prevVertex,
 	Vector2<float> direction = prevToCurrVect+currToNextVect;
 	normalize(&direction);
 
-	Vector2<float> rightFromDirection = Vector2<float>(
-		direction.y, 
-		-direction.x);
+	Vector2<float> rightFromDirection = normal(direction);
 
 	float scaleFactor = 
 		-borderWidth/(currToNextVect.x*rightFromDirection.x+
@@ -33,62 +30,51 @@ void createStraightBorder(Vertex2<float> prevVertex,
 	pBorderTriangleStrip->push_back(currVertex+rightFromDirection*scaleFactor);
 }
 
-void createBorderTriangleStrip(const std::vector<Vertex2<float> >* triangleStrip,
-							   std::vector<Vertex2<float> >* pBorderTriangleStrip,
-							   float borderWidth)
+void createRoundBorder(Vertex2<float> prevVertex, 
+					   Vertex2<float> currVertex,
+					   Vertex2<float> nextVertex,
+					   std::vector<Vertex2<float> >* pBorderTriangleStrip,
+					   float borderWidth, 
+					   size_t curveSegmentsCount)
 {
-	TriangleStripBorderIterator<Vertex2<float> >::ConstIteratorState state = 
-		triangleStripBorderConstIteratorState_create(triangleStrip);
-	DoubleIterator<const Vertex2<float>, TriangleStripBorderIterator<Vertex2<float> >::ConstIteratorState> it =
-		triangleStripBorderConstIterator_create<Vertex2<float> >();
+	assert(curveSegmentsCount>=1);
 
-	if (triangleStrip->size()>=2)
+	Vector2<float> prevToCurrVect = currVertex - prevVertex;
+	Vector2<float> currToNextVect = nextVertex - currVertex;
+
+	normalize(&prevToCurrVect);
+	normalize(&currToNextVect);
+
+	Vector2<float> prevToCurrNormal = normal(prevToCurrVect);
+	Vector2<float> currToNextNormal = normal(currToNextVect);
+	
+	/* 
+	 * The orthogonal matrix that rotates (1, 0) to prevToCurrNormal is
+	 *
+	 * | prevToCurrNormal.x prevToCurrVect.x |
+	 * | prevToCurrNormal.y prevToCurrVect.y |
+	 *
+	 * Since this is an orthogonal matrix the inverse one is this one transposed
+	 */
+	Matrix22<float> orth = Matrix22<float>(prevToCurrNormal.x, prevToCurrNormal.y,
+		prevToCurrVect.x, prevToCurrVect.y).transpose();
+
+	Vector2<float> angleVector = orth * currToNextNormal;
+	// The order has to be y, x -- see declaration of atan2f
+	float angle = atan2f(angleVector.y, angleVector.x);
+	
+	for (size_t i=0; i<=curveSegmentsCount; i++)
 	{
-		IterateResult itRes;
+		float currentAngle = i*angle/curveSegmentsCount;
 
-		itRes = (*it.mpfIteratePrev)(&state);
-		assert(itRes == IterateResultOverBoundary);
+		Matrix22<float> currentRotation = Matrix22<float>(
+			cosf(currentAngle), sinf(currentAngle),
+			-sinf(currentAngle), cosf(currentAngle));
 
-		Vertex2<float> prevVertex = *(*it.mpfGet)(&state);
+		Vector2<float> movement = currentRotation*prevToCurrNormal*borderWidth;
 
-		itRes = it.mpfIterateNext(&state);
-		assert(itRes == IterateResultOverBoundary);
-
-		Vertex2<float> currVertex = *(*it.mpfGet)(&state);
-
-		itRes = it.mpfIterateNext(&state);
-		assert(itRes == IterateResultOK);
-
-		Vertex2<float> nextVertex = *(*it.mpfGet)(&state);
-
-		bool breakAfterSecondNextIteration = false;
-		bool breakAfterNextIteration = false;
-
-		while (true)
-		{
-			createStraightBorder(prevVertex, currVertex, nextVertex, 
-				pBorderTriangleStrip, borderWidth);
-
-			// If this was set in the previous iteration we shall break
-			if (breakAfterNextIteration)
-				break;
-
-			// else we iterate
-			itRes = (*it.mpfIterateNext)(&state);
-
-			if (breakAfterSecondNextIteration)
-			{
-				breakAfterNextIteration = true;
-			}
-
-			// if this is true we do exactly one additional iteration
-			if (itRes == IterateResultOverBoundary)
-				breakAfterSecondNextIteration = true;
-
-			prevVertex = currVertex;
-			currVertex = nextVertex;
-			nextVertex = *(*it.mpfGet)(&state);
-		}
+		pBorderTriangleStrip->push_back(currVertex);
+		pBorderTriangleStrip->push_back(currVertex+movement);
 	}
 }
 
@@ -133,7 +119,7 @@ void drawVertexArray(const std::vector<Vertex2<float> >* vertices, Color4<float>
 	glColor4fv(&color.r);
 
 	glVertexPointer(2, GL_FLOAT, 0, &vertices->at(0));
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices->size());
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, (GLsizei) vertices->size());
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
