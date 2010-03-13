@@ -1,5 +1,6 @@
 #include "gui/GuiComponentsBasic.h"
 #include "GuiDataStructures/TriangleStripBorderIterator.h"
+#include "GuiDataStructures/OuterBorderIterator.h"
 
 #include <windows.h>
 #include <gl/gl.h>

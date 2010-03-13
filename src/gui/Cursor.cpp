@@ -177,7 +177,6 @@ namespace Gui
 		fwrite(out.data, textureBytesCount(&out), 1, cursorBmpFile);
 			
 		fclose(cursorBmpFile);
-		
 
 		cursorBmpFile = fopen("cursor_and.bmp", "w+b");
 		if (cursorBmpFile)
