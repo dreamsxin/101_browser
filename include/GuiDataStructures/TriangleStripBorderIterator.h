@@ -26,15 +26,6 @@ triangleStripBorderConstIteratorState_create(const std::vector<Type>* in_pVector
 	return out_state;
 }
 
-template <typename Type, typename IteratorState> Type* triangleStripBorderIterator_get(
-	const IteratorState* in_pIts)
-{
-	if (in_pIts->mCurrentPosition < in_pIts->mpVector->size())
-		return &(in_pIts->mpVector->at(in_pIts->mCurrentPosition));
-	else
-		return NULL;
-}
-
 template <typename Type, typename IteratorState> IterateResult triangleStripBorderIterator_next(
 	IteratorState* in_pIts)
 {
@@ -159,7 +150,7 @@ triangleStripBorderIterator_create()
 {
 	DoubleIterator<Type, TriangleStripBorderIterator<Type>::IteratorState> out_iter = 
 	{
-		&triangleStripBorderIterator_get,
+		&positionIterator_get,
 		&triangleStripBorderIterator_next<Type, TriangleStripBorderIterator<Type>::IteratorState>,
 		&triangleStripBorderIterator_prev<Type, TriangleStripBorderIterator<Type>::IteratorState>
 	};
@@ -172,7 +163,7 @@ triangleStripBorderConstIterator_create()
 {
 	DoubleIterator<const Type, TriangleStripBorderIterator<Type>::ConstIteratorState> out_iter = 
 	{
-		&triangleStripBorderIterator_get,
+		&positionIterator_get,
 		&triangleStripBorderIterator_next<Type, TriangleStripBorderIterator<Type>::ConstIteratorState>,
 		&triangleStripBorderIterator_prev<Type, TriangleStripBorderIterator<Type>::ConstIteratorState>
 	};

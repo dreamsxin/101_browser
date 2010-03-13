@@ -110,7 +110,7 @@ namespace Gui
 		bih.biHeight = maskBitmap.bmHeight;
 		bih.biPlanes = 1;
 		// a byte has 8 bits, so we do <<3, which multiplies by 8
-		bih.biBitCount = colorModePixelBytesCount(andMap.colorMode)<<3;
+		bih.biBitCount = (WORD) colorModePixelBytesCount(andMap.colorMode)<<3;
 		bih.biCompression = BI_RGB;
 		bih.biSizeImage = 0;
 		bih.biXPelsPerMeter = 0;

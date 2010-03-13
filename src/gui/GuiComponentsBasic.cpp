@@ -14,7 +14,7 @@ void createBorderTriangleStrip(const std::vector<Vertex2<float> >* triangleStrip
 	DoubleIterator<const Vertex2<float>, TriangleStripBorderIterator<Vertex2<float> >::ConstIteratorState> it =
 		triangleStripBorderConstIterator_create<Vertex2<float> >();
 
-	if (triangleStrip->size()>=3)
+	if (triangleStrip->size()>=2)
 	{
 		IterateResult itRes;
 		
