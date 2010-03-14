@@ -13,14 +13,14 @@ public class TreeOptimizer {
 		BooleanTree<ArrayList<Boolean>> tree=new BooleanTree<ArrayList<Boolean>>();
 		
 		int bestApproximation = 0;
-		long maximumIterations = 0x1FF;
+		long maximumIterations = -1;
 		long currentIteration = 0;
 		
 		while (true) {
 			Iterator<ArrayList<Boolean>> varIt = variables.iterator();
 			Iterator<Boolean> valIt = values.iterator();
 			
-			System.out.println("Tree = "+tree.toString());
+			//System.out.println("Tree = "+tree.toString());
 			
 			int approximationCorrectness = 0;
 			
@@ -30,7 +30,7 @@ public class TreeOptimizer {
 				}
 			}
 			
-			if (approximationCorrectness>=bestApproximation) {
+			if (approximationCorrectness>bestApproximation) {
 				bestApproximation = approximationCorrectness;
 				System.out.println(approximationCorrectness);
 				System.out.println(tree);

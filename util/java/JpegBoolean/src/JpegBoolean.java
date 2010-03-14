@@ -130,6 +130,10 @@ public class JpegBoolean {
     		System.out.println(z.byteTo6BitString(i)+":\t"+z.byteTo6BitString(currentZigZagByte));
     	}
     	
-    	TreeOptimizer.optimizeTree(variableValues, functionValues.get(0));
+    	for (int i=5; i>=0; i--)
+    	{
+    		System.out.println("Computing bit "+i);
+    		TreeOptimizer.optimizeTree(variableValues, functionValues.get(i));
+    	}
     }
 }

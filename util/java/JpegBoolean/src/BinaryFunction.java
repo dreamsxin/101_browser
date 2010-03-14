@@ -8,5 +8,5 @@
 
 
 public enum BinaryFunction {
-    AND, OR, XOR
+    NOT, AND, OR, XOR
 }
