@@ -7,18 +7,7 @@
  */
 
 
-public interface TreeNode<State> {
+public interface TreeNode<State> extends Incrementable, Resetable {
     public boolean computeValue(State s);
     
-    /**
-     * Tries to increment the subtree with root this.
-     * @return true if sucessful
-     *         false otherwise
-     */
-    public boolean increment();
-    
-    /**
-     * Resets the subtree to the original value
-     */
-    public void reset();
 }
