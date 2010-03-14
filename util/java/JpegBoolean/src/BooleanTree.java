@@ -11,8 +11,7 @@ public class BooleanTree<L extends List<Boolean>> implements TreeNode<L> {
 	TreeNode<L> root;
 
     public BooleanTree() {
-    	root = new NotTreeNode();
-    	((NotTreeNode) root).child = new LeafTreeNode(6);
+    	root = new LeafTreeNode(6);
     }
     
 	/**
@@ -26,7 +25,12 @@ public class BooleanTree<L extends List<Boolean>> implements TreeNode<L> {
 		if (root.increment())
 			return true;
 		
+		return incrementTree(root);
+	}
+	
+	public static <L extends List<Boolean>> boolean incrementTree(TreeNode<L> node) {
 		// TODO we have to restructure the tree
+		
 		return false;
 	}
 

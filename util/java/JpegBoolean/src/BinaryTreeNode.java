@@ -11,6 +11,14 @@ public class BinaryTreeNode<State> implements TreeNode<State> {
 	public BinaryFunction function;
 	public TreeNode<State> child0, child1;
 	
+	BinaryTreeNode(int childrenCount, int variablesCount) {
+		if (childrenCount == 0) {
+			child0 = new LeafTreeNode(variablesCount);
+		} else {
+			child0 = new NotTreeNode(childrenCount-1, variablesCount);
+		}
+		child1 = new LeafTreeNode(variablesCount);
+	}
 
     public boolean computeValue(State s) {
     	return combineChildren(child0.computeValue(s), child1.computeValue(s));

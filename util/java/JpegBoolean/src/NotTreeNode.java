@@ -9,6 +9,15 @@
 
 public class NotTreeNode<State> implements TreeNode<State> {
 	public TreeNode<State> child;
+	
+	NotTreeNode(int childrenCount, int variablesCount) {
+		if (childrenCount == 0) {
+			child = new LeafTreeNode(variablesCount);
+		} else {
+			child = new NotTreeNode(childrenCount-1, variablesCount);
+		}
+		
+	}
     
     public boolean computeValue(State s)
     {
