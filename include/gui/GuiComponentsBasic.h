@@ -28,67 +28,62 @@ void createRoundBorder(Vertex2<float> prevVertex,
 * borderWidth: the desired width of the border
 */
 inline void createBorderTriangleStrip(
-	const std::vector<Vertex2<float> >* triangleStrip,
-	std::vector<Vertex2<float> >* pBorderTriangleStrip,
-	void (*borderCreatingFunction)(Vertex2<float>, 
-	Vertex2<float>, Vertex2<float>, 
-	std::vector<Vertex2<float> >*, 
-	float, size_t),
-	float borderWidth,
-	size_t curveSegmentsCount)
+									  DoubleIteratorInstance<const Vertex2<float>, 
+									  typename TriangleStripBorderIterator<Vertex2<float>>::ConstIteratorState> itInstance,
+									  std::vector<Vertex2<float> >* pBorderTriangleStrip,
+									  void (*borderCreatingFunction)(Vertex2<float>, 
+									  Vertex2<float>, Vertex2<float>, 
+									  std::vector<Vertex2<float> >*, 
+									  float, size_t),
+									  float borderWidth,
+									  size_t curveSegmentsCount)
 {
-	TriangleStripBorderIterator<Vertex2<float> >::ConstIteratorState state = 
-		triangleStripBorderConstIteratorState_create(triangleStrip);
-	DoubleIterator<const Vertex2<float>, TriangleStripBorderIterator<Vertex2<float> >::ConstIteratorState> it =
-		triangleStripBorderConstIterator_create<Vertex2<float> >();
+	assert(itInstance.state.mpVector->size()>=2);
 
-	if (state.mpVector->size()>=2)
+	IterateResult itRes;
+
+	itRes = (*itInstance.iterator.mpfIteratePrev)(&itInstance.state);
+	assert(itRes == IterateResultOverBoundary);
+
+	Vertex2<float> prevVertex = *(*itInstance.iterator.mpfGet)(&itInstance.state);
+
+	itRes = itInstance.iterator.mpfIterateNext(&itInstance.state);
+	assert(itRes == IterateResultOverBoundary);
+
+	Vertex2<float> currVertex = *(*itInstance.iterator.mpfGet)(&itInstance.state);
+
+	itRes = itInstance.iterator.mpfIterateNext(&itInstance.state);
+	assert(itRes == IterateResultOK);
+
+	Vertex2<float> nextVertex = *(*itInstance.iterator.mpfGet)(&itInstance.state);
+
+	bool breakAfterSecondNextIteration = false;
+	bool breakAfterNextIteration = false;
+
+	while (true)
 	{
-		IterateResult itRes;
+		(*borderCreatingFunction)(prevVertex, currVertex, nextVertex, 
+			pBorderTriangleStrip, borderWidth, curveSegmentsCount);
 
-		itRes = (*it.mpfIteratePrev)(&state);
-		assert(itRes == IterateResultOverBoundary);
+		// If this was set in the previous iteration we shall break
+		if (breakAfterNextIteration)
+			break;
 
-		Vertex2<float> prevVertex = *(*it.mpfGet)(&state);
+		// else we iterate
+		itRes = (*itInstance.iterator.mpfIterateNext)(&itInstance.state);
 
-		itRes = it.mpfIterateNext(&state);
-		assert(itRes == IterateResultOverBoundary);
-
-		Vertex2<float> currVertex = *(*it.mpfGet)(&state);
-
-		itRes = it.mpfIterateNext(&state);
-		assert(itRes == IterateResultOK);
-
-		Vertex2<float> nextVertex = *(*it.mpfGet)(&state);
-
-		bool breakAfterSecondNextIteration = false;
-		bool breakAfterNextIteration = false;
-
-		while (true)
+		if (breakAfterSecondNextIteration)
 		{
-			(*borderCreatingFunction)(prevVertex, currVertex, nextVertex, 
-				pBorderTriangleStrip, borderWidth, curveSegmentsCount);
-
-			// If this was set in the previous iteration we shall break
-			if (breakAfterNextIteration)
-				break;
-
-			// else we iterate
-			itRes = (*it.mpfIterateNext)(&state);
-
-			if (breakAfterSecondNextIteration)
-			{
-				breakAfterNextIteration = true;
-			}
-
-			// if this is true we do exactly one additional iteration
-			if (itRes == IterateResultOverBoundary)
-				breakAfterSecondNextIteration = true;
-
-			prevVertex = currVertex;
-			currVertex = nextVertex;
-			nextVertex = *(*it.mpfGet)(&state);
+			breakAfterNextIteration = true;
 		}
+
+		// if this is true we do exactly one additional iteration
+		if (itRes == IterateResultOverBoundary)
+			breakAfterSecondNextIteration = true;
+
+		prevVertex = currVertex;
+		currVertex = nextVertex;
+		nextVertex = *(*itInstance.iterator.mpfGet)(&itInstance.state);
 	}
 }
 

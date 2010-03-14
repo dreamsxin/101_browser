@@ -61,4 +61,10 @@ template <typename Type, typename IteratorState> struct DoubleIterator
 	IterateResult (*mpfIteratePrev)(IteratorState*);
 };
 
+template <typename Type, typename IteratorState> struct DoubleIteratorInstance
+{
+	IteratorState state;
+	DoubleIterator<Type, IteratorState> iterator;
+};
+
 #endif
