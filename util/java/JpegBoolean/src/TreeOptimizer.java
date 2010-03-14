@@ -23,10 +23,19 @@ public class TreeOptimizer {
 			//System.out.println("Tree = "+tree.toString());
 			
 			int approximationCorrectness = 0;
+			int computed = 0;
 			
 			while (varIt.hasNext() && valIt.hasNext()) {
 				if (tree.computeValue(varIt.next()) == valIt.next()) {
 					approximationCorrectness++;
+				}
+				
+				computed++;
+				
+				if (computed-approximationCorrectness>64-bestApproximation)
+				{
+					approximationCorrectness=0;
+					break;
 				}
 			}
 			
