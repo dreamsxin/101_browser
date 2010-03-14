@@ -5,23 +5,23 @@
  * @author Wolfgang Keller
  * @version 1.00 2010/3/14
  */
+import java.util.*;
 
-
-public class NotTreeNode<State> implements TreeNode<State> {
-	public TreeNode<State> child;
+public class NotTreeNode<L extends List<Boolean>> implements TreeNode<L> {
+	public TreeNode<L> child;
 	
 	NotTreeNode(int childrenCount, int variablesCount) {
 		if (childrenCount == 0) {
-			child = new LeafTreeNode(variablesCount);
+			child = new LeafTreeNode<L>(variablesCount);
 		} else {
-			child = new NotTreeNode(childrenCount-1, variablesCount);
+			child = new NotTreeNode<L>(childrenCount-1, variablesCount);
 		}
 		
 	}
     
-    public boolean computeValue(State s)
+    public boolean computeValue(L list)
     {
-    	return !child.computeValue(s);
+    	return !child.computeValue(list);
     }
 
 	/**
@@ -53,5 +53,9 @@ public class NotTreeNode<State> implements TreeNode<State> {
 	 */
 	public int size() {
 		return 1+child.size();
+	}
+	
+	public String toString() {
+		return "!"+child.toString();
 	}
 }

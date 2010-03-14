@@ -5,23 +5,25 @@
  * @author Wolfgang Keller
  * @version 1.00 2010/3/2
  */
+import java.util.*;
 
-
-public class BinaryTreeNode<State> implements TreeNode<State> {
+public class BinaryTreeNode<L extends List<Boolean>> implements TreeNode<L> {
 	public BinaryFunction function;
-	public TreeNode<State> child0, child1;
+	public TreeNode<L> child0, child1;
 	
 	BinaryTreeNode(int childrenCount, int variablesCount) {
+		function = BinaryFunction.AND;
+		
 		if (childrenCount == 0) {
-			child0 = new LeafTreeNode(variablesCount);
+			child0 = new LeafTreeNode<L>(variablesCount);
 		} else {
-			child0 = new NotTreeNode(childrenCount-1, variablesCount);
+			child0 = new NotTreeNode<L>(childrenCount-1, variablesCount);
 		}
-		child1 = new LeafTreeNode(variablesCount);
+		child1 = new LeafTreeNode<L>(variablesCount);
 	}
 
-    public boolean computeValue(State s) {
-    	return combineChildren(child0.computeValue(s), child1.computeValue(s));
+    public boolean computeValue(L list) {
+    	return combineChildren(child0.computeValue(list), child1.computeValue(list));
     }
     
     public boolean combineChildren(boolean b0, boolean b1) {
@@ -91,5 +93,27 @@ public class BinaryTreeNode<State> implements TreeNode<State> {
 	 */
 	public int size() {
 		return 1+child0.size()+child1.size();
+	}
+	
+	public String toString() {
+		StringBuilder b = new StringBuilder();
+		b.append("(");
+		b.append(child0.toString());
+		b.append(")");
+		switch (function) {
+			case AND:
+				b.append(" && ");
+				break;
+			case OR:
+				b.append(" || ");
+				break;
+			case XOR:
+				b.append(" ^ ");
+				break;
+		}
+		b.append("(");
+		b.append(child1.toString());
+		b.append(")");
+		return b.toString();
 	}
 }

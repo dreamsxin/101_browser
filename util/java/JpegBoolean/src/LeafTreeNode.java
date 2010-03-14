@@ -64,5 +64,7 @@ public class LeafTreeNode<L extends List<Boolean>> implements TreeNode<L> {
 		return 0;
 	}
     
-    
+    public String toString() {
+    	return "x"+current;
+    }
 }

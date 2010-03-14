@@ -129,5 +129,7 @@ public class JpegBoolean {
     		
     		System.out.println(z.byteTo6BitString(i)+":\t"+z.byteTo6BitString(currentZigZagByte));
     	}
+    	
+    	TreeOptimizer.optimizeTree(variableValues, functionValues.get(0));
     }
 }
