@@ -34,4 +34,15 @@ public class NotTreeNode<State> implements TreeNode<State> {
 	public void reset() {
 		child.reset();
 	}
+
+	/**
+	 * Method size
+	 *
+	 *
+	 * @return
+	 *
+	 */
+	public int size() {
+		return 1+child.size();
+	}
 }

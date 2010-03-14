@@ -73,4 +73,15 @@ public class BinaryTreeNode<State> implements TreeNode<State> {
 		child0.reset();
 		child1.reset();
 	}
+
+	/**
+	 * Method size
+	 *
+	 *
+	 * @return
+	 *
+	 */
+	public int size() {
+		return 1+child0.size()+child1.size();
+	}
 }

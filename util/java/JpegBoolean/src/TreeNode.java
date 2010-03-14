@@ -9,5 +9,5 @@
 
 public interface TreeNode<State> extends Incrementable, Resetable {
     public boolean computeValue(State s);
-    
+    public int size();
 }

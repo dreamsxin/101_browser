@@ -7,8 +7,13 @@
  */
 import java.util.*;
 
-public class TreeLeaf<L extends List<Boolean>> implements TreeNode<L> {
+public class LeafTreeNode<L extends List<Boolean>> implements TreeNode<L> {
 	int current, max;
+	
+	LeafTreeNode(int max) {
+		this.current = 0;
+		this.max = max;
+	}
 
 	/**
 	 * Method computeValue
@@ -31,8 +36,7 @@ public class TreeLeaf<L extends List<Boolean>> implements TreeNode<L> {
 	 *
 	 */
 	public boolean increment() {
-		if (current+1<max)
-		{
+		if (current+1<max) {
 			current++;
 			return true;
 		}
@@ -47,6 +51,17 @@ public class TreeLeaf<L extends List<Boolean>> implements TreeNode<L> {
 	 */
 	public void reset() {
 		current = 0;
+	}
+
+	/**
+	 * Method size
+	 *
+	 *
+	 * @return
+	 *
+	 */
+	public int size() {
+		return 0;
 	}
     
     
