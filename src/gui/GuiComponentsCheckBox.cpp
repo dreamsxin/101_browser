@@ -19,18 +19,24 @@ namespace Gui
 			};
 
 			std::vector<Vertex2<float> > boxVertices;
-			std::vector<Vertex2<float> > borderTriangleStrip;
 			createBoxVertices(&boxVertices, left, top, width, height, currentHeight);
-			createBorderTriangleStrip(&boxVertices, &borderTriangleStrip, 
+
+			std::vector<Vertex2<float> > borderTriangleStrip;
+			createBorderTriangleStrip(
+				triangleStripBorderConstIteratorInstance_create(&boxVertices), 
+				&borderTriangleStrip, 
 				&createStraightBorder, borderSize, 12345);
+
 			std::vector<Vertex2<float> > coloredBorder;
-			createBorderTriangleStrip(&borderTriangleStrip, &coloredBorder, 
-				&createRoundBorder, 4, 4);
+			createBorderTriangleStrip(
+				outerBorderConstIteratorInstance_create(&borderTriangleStrip), 
+				&coloredBorder, 
+				&createRoundBorder, 16, 8);
 			drawVertexArray(&boxVertices, colors);
 			drawVertexArray(&borderTriangleStrip, Defaults::cCheckBoxBorderColor);
 			// Before we reactivate this line we have to use an iterator using only
 			// the outer contour
-#if 0
+#if 1
 			drawVertexArray(&coloredBorder, Defaults::cColorRed);
 #endif
 		}

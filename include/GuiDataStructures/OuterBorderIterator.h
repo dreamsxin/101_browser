@@ -35,12 +35,13 @@ outerBorderConstIteratorState_create(const std::vector<Type>* in_pVector)
 template <typename Type, typename IteratorState> IterateResult outerBorderIterator_next(
 	IteratorState* in_pIts)
 {
+	assert(in_pIts->mpVector->size()>=4);
 	assert(in_pIts->mpVector->size()%2==0);
 	assert(in_pIts->mCurrentPosition%2==1);
 	in_pIts->mCurrentPosition+=2;
 	assert(in_pIts->mCurrentPosition%2==1);
 
-	if (in_pIts->mCurrentPosition>=in_pIts->mpVector->size())
+	if (in_pIts->mCurrentPosition>=in_pIts->mpVector->size()-2)
 	{
 		in_pIts->mCurrentPosition = 1;
 		return IterateResultOverBoundary;
@@ -54,6 +55,7 @@ template <typename Type, typename IteratorState> IterateResult outerBorderIterat
 template <typename Type, typename IteratorState> IterateResult outerBorderIterator_prev(
 	IteratorState* in_pIts)
 {
+	assert(in_pIts->mpVector->size()>=4);
 	assert(in_pIts->mpVector->size()%2==0);
 	assert(in_pIts->mCurrentPosition%2==1);
 
@@ -66,7 +68,7 @@ template <typename Type, typename IteratorState> IterateResult outerBorderIterat
 	}
 	else
 	{
-		in_pIts->mCurrentPosition = in_pIts->mpVector->size()-1;
+		in_pIts->mCurrentPosition = in_pIts->mpVector->size()-3;
 		return IterateResultOverBoundary;
 	}
 }
@@ -85,7 +87,7 @@ outerBorderIterator_create()
 }
 
 template <typename Type> DoubleIterator<const Type, typename OuterBorderIterator<Type>::ConstIteratorState>
-outerBorderIteratorConstIterator_create()
+outerBorderConstIterator_create()
 {
 	DoubleIterator<const Type, OuterBorderIterator<Type>::ConstIteratorState> out_iter = 
 	{
@@ -95,6 +97,15 @@ outerBorderIteratorConstIterator_create()
 	};
 
 	return out_iter;
+}
+
+template <typename Type> DoubleIteratorInstance<const Type, typename OuterBorderIterator<Type>::ConstIteratorState>
+outerBorderConstIteratorInstance_create(const std::vector<Type>* in_pVector)
+{
+	DoubleIteratorInstance<const Type, OuterBorderIterator<Type>::ConstIteratorState>
+		inst = {outerBorderConstIteratorState_create(in_pVector), outerBorderConstIterator_create<Type>()};
+
+	return inst;
 }
 
 #endif

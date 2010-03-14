@@ -28,7 +28,8 @@ void createRoundBorder(Vertex2<float> prevVertex,
 * borderWidth: the desired width of the border
 */
 inline void createBorderTriangleStrip(
-	const std::vector<Vertex2<float> >* triangleStrip,
+	DoubleIteratorInstance<const Vertex2<float>, typename TriangleStripBorderIterator<Vertex2<float>>::ConstIteratorState> 
+	itInstance,
 	std::vector<Vertex2<float> >* pBorderTriangleStrip,
 	void (*borderCreatingFunction)(Vertex2<float>, 
 	Vertex2<float>, Vertex2<float>, 
@@ -37,29 +38,24 @@ inline void createBorderTriangleStrip(
 	float borderWidth,
 	size_t curveSegmentsCount)
 {
-	TriangleStripBorderIterator<Vertex2<float> >::ConstIteratorState state = 
-		triangleStripBorderConstIteratorState_create(triangleStrip);
-	DoubleIterator<const Vertex2<float>, TriangleStripBorderIterator<Vertex2<float> >::ConstIteratorState> it =
-		triangleStripBorderConstIterator_create<Vertex2<float> >();
-
-	if (state.mpVector->size()>=2)
+	if (itInstance.state.mpVector->size()>=2)
 	{
 		IterateResult itRes;
 
-		itRes = (*it.mpfIteratePrev)(&state);
+		itRes = (*itInstance.iterator.mpfIteratePrev)(&itInstance.state);
 		assert(itRes == IterateResultOverBoundary);
 
-		Vertex2<float> prevVertex = *(*it.mpfGet)(&state);
+		Vertex2<float> prevVertex = *(*itInstance.iterator.mpfGet)(&itInstance.state);
 
-		itRes = it.mpfIterateNext(&state);
+		itRes = itInstance.iterator.mpfIterateNext(&itInstance.state);
 		assert(itRes == IterateResultOverBoundary);
 
-		Vertex2<float> currVertex = *(*it.mpfGet)(&state);
+		Vertex2<float> currVertex = *(*itInstance.iterator.mpfGet)(&itInstance.state);
 
-		itRes = it.mpfIterateNext(&state);
+		itRes = itInstance.iterator.mpfIterateNext(&itInstance.state);
 		assert(itRes == IterateResultOK);
 
-		Vertex2<float> nextVertex = *(*it.mpfGet)(&state);
+		Vertex2<float> nextVertex = *(*itInstance.iterator.mpfGet)(&itInstance.state);
 
 		bool breakAfterSecondNextIteration = false;
 		bool breakAfterNextIteration = false;
@@ -74,7 +70,7 @@ inline void createBorderTriangleStrip(
 				break;
 
 			// else we iterate
-			itRes = (*it.mpfIterateNext)(&state);
+			itRes = (*itInstance.iterator.mpfIterateNext)(&itInstance.state);
 
 			if (breakAfterSecondNextIteration)
 			{
@@ -87,7 +83,7 @@ inline void createBorderTriangleStrip(
 
 			prevVertex = currVertex;
 			currVertex = nextVertex;
-			nextVertex = *(*it.mpfGet)(&state);
+			nextVertex = *(*itInstance.iterator.mpfGet)(&itInstance.state);
 		}
 	}
 }
