@@ -32,7 +32,7 @@ public class TreeOptimizer {
 				
 				computed++;
 				
-				if (computed-approximationCorrectness>64-bestApproximation)
+				if (computed-approximationCorrectness>16-bestApproximation)
 				{
 					approximationCorrectness=0;
 					break;
@@ -45,7 +45,7 @@ public class TreeOptimizer {
 				System.out.println(tree);
 			}
 			
-			if (approximationCorrectness==64) {
+			if (approximationCorrectness==16) {
 				break;
 			}
 			

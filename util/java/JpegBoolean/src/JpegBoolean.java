@@ -21,28 +21,28 @@ public class JpegBoolean {
 	}
 	
 	byte pointToByteRowCol(Point p) {
-		return (byte) ((p.row<<3)+p.col);
+		return (byte) ((p.row<<2)+p.col);
 	}
 	
 	byte pointToByteColRow(Point p) {
-		return (byte) ((p.col<<3)+p.row);
+		return (byte) ((p.col<<2)+p.row);
 	}
 	
 	String byteTo6BitString(byte b)
 	{
-		StringBuilder builder=new StringBuilder(6);
-		for (int i=0; i<6; i++)
+		StringBuilder builder=new StringBuilder(4);
+		for (int i=0; i<4; i++)
 		{
-			builder.append((b & (1<<(5-i)))!=0 ? "1"  : "0");
+			builder.append((b & (1<<(3-i)))!=0 ? "1"  : "0");
 		}
 		
 		return builder.toString();
 	}
 	
-	ArrayList<Boolean> byteTo6Bits(byte b)
+	ArrayList<Boolean> byteTo4Bits(byte b)
 	{
-		ArrayList<Boolean> out=new ArrayList<Boolean>(6);
-		for (int i=0; i<6; i++)
+		ArrayList<Boolean> out=new ArrayList<Boolean>(4);
+		for (int i=0; i<4; i++)
 		{
 			out.add((b & (1<<i))!=0);
 		}
@@ -52,7 +52,7 @@ public class JpegBoolean {
 	public Point[] createZigZag() {
 		int currentDiag = 0;
 		int currentPos = 0;
-		Point[] zigZagPos=new Point[64];
+		Point[] zigZagPos=new Point[16];
 		
 		byte currentRow = 0;
 		byte currentCol = 0;
@@ -62,7 +62,7 @@ public class JpegBoolean {
 			
 			currentPos++;
 			
-			if ((currentRow == 7 && currentCol==7))
+			if ((currentRow == 3 && currentCol==3))
 				break;
 			
 			if (currentDiag % 2 == 0) {
@@ -71,7 +71,7 @@ public class JpegBoolean {
 					currentCol++;
 					currentDiag++;
 				}
-				else if (currentCol == 7)
+				else if (currentCol == 3)
 				{
 					currentRow++;
 					currentDiag++;
@@ -82,7 +82,7 @@ public class JpegBoolean {
 				}
 			}
 			else {
-				if (currentRow == 7)
+				if (currentRow == 3)
 				{
 					currentCol++;
 					currentDiag++;
@@ -107,22 +107,22 @@ public class JpegBoolean {
     	Point[] zigzagPoints = z.createZigZag();
     	
     	ArrayList<ArrayList<Boolean>> variableValues=new ArrayList<ArrayList<Boolean>>();
-    	// contains 6 lists of function values
+    	// contains 4 lists of function values
     	ArrayList<ArrayList<Boolean>> functionValues=new ArrayList<ArrayList<Boolean>>();
     	
-    	for (byte i=0; i<6; i++)
+    	for (byte i=0; i<4; i++)
     	{
     		functionValues.add(new ArrayList<Boolean>());
     	}
     	
     	for (byte i=0; i<zigzagPoints.length; i++)
     	{
-    		variableValues.add(z.byteTo6Bits(i));
+    		variableValues.add(z.byteTo4Bits(i));
     		
     		byte currentZigZagByte = z.pointToByteRowCol(zigzagPoints[i]);
-    		ArrayList<Boolean> currentValue = z.byteTo6Bits(currentZigZagByte);
+    		ArrayList<Boolean> currentValue = z.byteTo4Bits(currentZigZagByte);
     		
-    		for (byte j=0; j<6; j++)
+    		for (byte j=0; j<4; j++)
     		{
     			functionValues.get(j).add(currentValue.get(j));
     		}
@@ -130,7 +130,7 @@ public class JpegBoolean {
     		System.out.println(z.byteTo6BitString(i)+":\t"+z.byteTo6BitString(currentZigZagByte));
     	}
     	
-    	for (int i=5; i>=0; i--)
+    	for (int i=3; i>=0; i--)
     	{
     		System.out.println("Computing bit "+i);
     		TreeOptimizer.optimizeTree(variableValues, functionValues.get(i));

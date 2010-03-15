@@ -9,6 +9,6 @@
 import java.util.*;
 
 public class TreeUtil {
-	public static final int VARIABLES_COUNT = 6;
+	public static final int VARIABLES_COUNT = 4;
     
 }
