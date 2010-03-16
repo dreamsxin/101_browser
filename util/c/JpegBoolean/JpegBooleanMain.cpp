@@ -210,7 +210,7 @@ vector<vector<bool> > indexToRowColValues;
 vector<vector<bool> > rowColToIndexValues;
 vector<ThreadInit> threadInit;
 vector<pthread_t> threadIDs;
-size_t bestApproximation = 0;
+vector<size_t> bestApproximationValue;
 size_t desiredChildrenCount = 0;
 
 void createValues()
@@ -376,19 +376,43 @@ int main(int argc, char** argv)
 		}
 	}
 
-	for (vector<ThreadInit>::iterator i=threadInit.begin(); i!=threadInit.end(); i++)
+	// 2 variants of each function
+	for (size_t i=0; i!=2*functionsCount; i++)
 	{
-		pthread_t id;
-		int res = pthread_create(&id, NULL, workerThread, &(*i));
-		threadIDs.push_back(id);
+		bestApproximationValue.push_back(0);
 	}
 
-	void* status;
+	// Begin loop
+	threadIDs = vector<pthread_t>();
+
+	for (size_t index=0; index<2*functionsCount; index++)
+	{
+		if (!bestApproximationValue.at(index)!=squareCount)
+		{
+			for (size_t currentThreadIndex=0; currentThreadIndex<4; currentThreadIndex++)
+			{
+				pthread_t id;
+				int res = pthread_create(&id, NULL, workerThread, &threadInit.at(4*index+currentThreadIndex));
+
+				if (res!=0)
+				{
+					fprintf(stderr, "Thread could not be created\n");
+					exit(2);
+				}
+
+				threadIDs.push_back(id);
+			}
+		}
+	}
 
 	for (vector<pthread_t>::iterator i=threadIDs.begin(); i!=threadIDs.end(); i++)
 	{
+		void* status;
 		pthread_join((*i), &status);
 	}
+
+	desiredChildrenCount++;
+	// end loop
 
 	pthread_attr_destroy(&attr);
 	return 0;
