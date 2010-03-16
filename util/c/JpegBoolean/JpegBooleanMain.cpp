@@ -2,7 +2,26 @@
 #include <cstdlib>
 #include <cstring>
 #include <vector>
+#include "pthread.h"
 using namespace std;
+
+enum FunctionType
+{
+	FunctionTypeNot,
+	FunctionTypeXor,
+	FunctionTypeAnd,
+	FunctionTypeOr
+};
+
+struct ThreadInit
+{
+	// tells whether to use indexToRowColValues or rowColToIndexValues
+	bool rowColToIndex;
+	size_t functionNumber;
+	FunctionType functionAtRoot;
+};
+
+pthread_mutex_t printMutex = PTHREAD_MUTEX_INITIALIZER;
 
 size_t bitsCount;
 size_t sideLength;
@@ -13,6 +32,9 @@ size_t termsOffset;
 vector<vector<bool> > variableValues;
 vector<vector<bool> > indexToRowColValues;
 vector<vector<bool> > rowColToIndexValues;
+vector<ThreadInit> threadInit;
+vector<pthread_t> threadIDs;
+size_t bestApproximation = 0;
 
 void createValues()
 {
@@ -84,6 +106,35 @@ void createValues()
 	}
 }
 
+void* workerThread(void* threadid)
+{
+	size_t currentApproximation = 0;
+	ThreadInit* pInit = (ThreadInit*) threadid;
+
+	pthread_mutex_lock(&printMutex);
+	printf("%s\t", pInit->rowColToIndex ? "RowCol to Index" : "Index to RowCol");
+	printf("Function: %u\tRoot: ", pInit->functionNumber);
+	switch (pInit->functionAtRoot)
+	{
+	case FunctionTypeNot:
+		printf("Not");
+		break;
+	case FunctionTypeXor:
+		printf("Xor");
+		break;
+	case FunctionTypeAnd:
+		printf("And");
+		break;
+	case FunctionTypeOr:
+		printf("Or");
+		break;
+	}
+	printf("\n");
+	pthread_mutex_unlock(&printMutex);
+
+	return NULL;
+}
+
 int main(int argc, char** argv)
 {
 	if (argc==1)
@@ -137,4 +188,40 @@ int main(int argc, char** argv)
 
 		printf("\n");
 	}
+
+	printf("\n\n\n\n\n");
+
+	pthread_attr_t attr;
+	pthread_attr_init(&attr);
+	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+
+	// Initialize thread init
+	for (size_t useRowColToIndex=0; useRowColToIndex<2; useRowColToIndex++)
+	{
+		for (size_t functionNumber=0; functionNumber<functionsCount; functionNumber++)
+		{
+			for (size_t functionAtRoot=0; functionAtRoot<FunctionTypeOr+1; functionAtRoot++)
+			{
+				ThreadInit init={useRowColToIndex!=0, functionNumber, (FunctionType) functionAtRoot};
+				threadInit.push_back(init);
+			}
+		}
+	}
+
+	for (vector<ThreadInit>::iterator i=threadInit.begin(); i!=threadInit.end(); i++)
+	{
+		pthread_t id;
+		int res = pthread_create(&id, NULL, workerThread, &(*i));
+		threadIDs.push_back(id);
+	}
+
+	void* status;
+
+	for (vector<pthread_t>::iterator i=threadIDs.begin(); i!=threadIDs.end(); i++)
+	{
+		pthread_join((*i), &status);
+	}
+
+	pthread_attr_destroy(&attr);
+	return 0;
 }
