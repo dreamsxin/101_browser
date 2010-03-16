@@ -43,6 +43,12 @@ struct ThreadInit
 	}
 };
 
+// number of functions for one of en- or decoding
+size_t functionsCount;
+// this is the same as functionsCount - but this can't be 
+// assumed in general, so it is a separate variable
+size_t variablesCount;
+
 class TreeNode
 {
 public:
@@ -53,6 +59,7 @@ public:
 
 	virtual bool computeValue(const vector<bool>* variables) = 0;
 	virtual void print() = 0;
+	virtual bool increment() = 0;
 };
 
 class LeafTreeNode : public TreeNode
@@ -71,6 +78,17 @@ public:
 	virtual void print()
 	{
 		printf("x%u", variableNumber);
+	}
+
+	virtual bool increment()
+	{
+		if (variableNumber+1<variablesCount)
+		{
+			variableNumber++;
+			return true;
+		}
+		else
+			return false;
 	}
 };
 
@@ -173,15 +191,19 @@ public:
 				printf(")");
 		}
 	}
+
+	virtual bool increment()
+	{
+		// TODO: Write increment code
+		return true;
+	}
 };
 
 pthread_mutex_t printMutex = PTHREAD_MUTEX_INITIALIZER;
 
 size_t bitsCount;
-size_t sideLength;
 size_t squareCount;
-// number of functions for one of en- or decoding
-size_t functionsCount;
+size_t sideLength;
 size_t termsOffset;
 vector<vector<bool> > variableValues;
 vector<vector<bool> > indexToRowColValues;
@@ -292,6 +314,7 @@ int main(int argc, char** argv)
 	sideLength = 1<<bitsCount;
 	squareCount = sideLength*sideLength;
 	functionsCount = 2*bitsCount;
+	variablesCount = functionsCount;
 	termsOffset = squareCount*functionsCount;
 
 	createValues();
