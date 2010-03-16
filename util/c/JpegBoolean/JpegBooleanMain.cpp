@@ -405,10 +405,19 @@ int main(int argc, char** argv)
 		}
 	}
 
-	for (vector<pthread_t>::iterator i=threadIDs.begin(); i!=threadIDs.end(); i++)
+	size_t threadIndex = 0;
+
+	for (size_t index=0; index<2*functionsCount; index++)
 	{
-		void* status;
-		pthread_join((*i), &status);
+		if (!bestApproximationValue.at(index)!=squareCount)
+		{
+			void* status;
+
+			for (size_t currentThreadIndex=0; currentThreadIndex<4; currentThreadIndex++)
+			{
+				pthread_join(threadIDs.at(threadIndex++), &status);
+			}
+		}
 	}
 
 	desiredChildrenCount++;
