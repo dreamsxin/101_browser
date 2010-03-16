@@ -19,6 +19,160 @@ struct ThreadInit
 	bool rowColToIndex;
 	size_t functionNumber;
 	FunctionType functionAtRoot;
+
+	void print()
+	{
+		printf("%s\t", rowColToIndex ? "RowCol to Index" : "Index to RowCol");
+		printf("Function: %u\tRoot: ", functionNumber);
+		switch (functionAtRoot)
+		{
+		case FunctionTypeNot:
+			printf("Not");
+			break;
+		case FunctionTypeXor:
+			printf("Xor");
+			break;
+		case FunctionTypeAnd:
+			printf("And");
+			break;
+		case FunctionTypeOr:
+			printf("Or");
+			break;
+		}
+		printf("\n");
+	}
+};
+
+class TreeNode
+{
+public:
+	bool isLeaf;
+
+	TreeNode(bool in_isLeaf) : isLeaf(in_isLeaf) { }
+	virtual ~TreeNode() { }
+
+	virtual bool computeValue(const vector<bool>* variables) = 0;
+	virtual void print() = 0;
+};
+
+class LeafTreeNode : public TreeNode
+{
+public:
+	size_t variableNumber;
+
+	LeafTreeNode(size_t in_variableNumber) 
+		: TreeNode(true), variableNumber(in_variableNumber) { }
+
+	virtual bool computeValue(const vector<bool>* variables)
+	{
+		return variables->at(variableNumber);
+	}
+
+	virtual void print()
+	{
+		printf("x%u", variableNumber);
+	}
+};
+
+class FunctionTreeNode : public TreeNode
+{
+public:
+	FunctionType functionType;
+	TreeNode *child0, *child1;
+
+	FunctionTreeNode(FunctionType in_functionType, size_t in_childrenCount) 
+		: TreeNode(false), functionType(in_functionType), child0(NULL), child1(NULL)
+	{
+		if (in_childrenCount==0)
+		{
+			child0 = new LeafTreeNode(0);
+		}
+		else
+		{
+			child0 = new FunctionTreeNode(FunctionTypeNot, in_childrenCount-1);
+		}
+
+		if (functionType != FunctionTypeNot)
+		{
+			child1 = new LeafTreeNode(0);
+		}
+	}
+
+	virtual ~FunctionTreeNode()
+	{
+		delete child0;
+		child0 = NULL;
+		if (child1 != NULL)
+			delete child1;
+		child1 = NULL;
+	}
+
+	virtual bool computeValue(const vector<bool>* variables)
+	{
+		switch (functionType)
+		{
+		case FunctionTypeNot:
+			return !child0->computeValue(variables);
+		case FunctionTypeXor:
+			return child0->computeValue(variables) ^ child1->computeValue(variables);
+		case FunctionTypeAnd:
+			return child0->computeValue(variables) && child1->computeValue(variables);
+		case FunctionTypeOr:
+			return child0->computeValue(variables) || child1->computeValue(variables);
+		}
+
+		// should never happen
+		return false;
+	}
+
+	virtual void print()
+	{
+		if (functionType == FunctionTypeNot) {
+			printf("!");
+			child0->print();
+		}
+		else
+		{
+			bool parantheses;
+
+			parantheses = true;
+			if (child0->isLeaf)
+				parantheses = false;
+			else if (((FunctionTreeNode*) child0)->functionType == FunctionTypeNot)
+				parantheses = false;
+
+			if (parantheses)
+				printf("(");
+			child0->print();
+			if (parantheses)
+				printf(")");
+
+			switch (functionType)
+			{
+			case FunctionTypeXor:
+				printf(" ^ ");
+				break;
+			case FunctionTypeAnd:
+				printf(" && ");
+				break;
+			case FunctionTypeOr:
+				printf(" || ");
+				break;
+			}
+
+			parantheses = true;
+			if (child1->isLeaf)
+				parantheses = false;
+			else if (((FunctionTreeNode*) child1)->functionType == FunctionTypeNot)
+				parantheses = false;
+
+			if (parantheses)
+				printf("(");
+			child1->print();
+			if (parantheses)
+				printf(")");
+		}
+	}
 };
 
 pthread_mutex_t printMutex = PTHREAD_MUTEX_INITIALIZER;
@@ -35,6 +189,7 @@ vector<vector<bool> > rowColToIndexValues;
 vector<ThreadInit> threadInit;
 vector<pthread_t> threadIDs;
 size_t bestApproximation = 0;
+size_t desiredChildrenCount = 0;
 
 void createValues()
 {
@@ -112,23 +267,13 @@ void* workerThread(void* threadid)
 	ThreadInit* pInit = (ThreadInit*) threadid;
 
 	pthread_mutex_lock(&printMutex);
-	printf("%s\t", pInit->rowColToIndex ? "RowCol to Index" : "Index to RowCol");
-	printf("Function: %u\tRoot: ", pInit->functionNumber);
-	switch (pInit->functionAtRoot)
-	{
-	case FunctionTypeNot:
-		printf("Not");
-		break;
-	case FunctionTypeXor:
-		printf("Xor");
-		break;
-	case FunctionTypeAnd:
-		printf("And");
-		break;
-	case FunctionTypeOr:
-		printf("Or");
-		break;
-	}
+	pInit->print();
+	pthread_mutex_unlock(&printMutex);
+
+	FunctionTreeNode root = FunctionTreeNode(pInit->functionAtRoot, desiredChildrenCount);
+
+	pthread_mutex_lock(&printMutex);
+	root.print();
 	printf("\n");
 	pthread_mutex_unlock(&printMutex);
 
