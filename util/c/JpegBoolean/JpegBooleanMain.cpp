@@ -37,11 +37,11 @@ void createValues()
 
 		for (size_t i=0; i<bitsCount; i++)
 		{
-			indexToRowColValues.at(currentPos).push_back(currentRow & (1<<i) ? true : false);
+			indexToRowColValues.at(currentPos).push_back(currentCol & (1<<i) ? true : false);
 		}
 		for (size_t i=0; i<bitsCount; i++)
 		{
-			indexToRowColValues.at(currentPos).push_back(currentCol & (1<<i) ? true : false);
+			indexToRowColValues.at(currentPos).push_back(currentRow & (1<<i) ? true : false);
 		}
 
 		for (size_t i=0; i<functionsCount; i++)
@@ -111,13 +111,9 @@ int main(int argc, char** argv)
 
 		printf("\t");
 
-		for (size_t currentFunction=0; currentFunction<bitsCount; currentFunction++)
+		for (size_t currentFunction=0; currentFunction<functionsCount; currentFunction++)
 		{
-			printf("%c", indexToRowColValues.at(currentPos).at(bitsCount-1-currentFunction) ? '1' : '0');
-		}
-		for (size_t currentFunction=0; currentFunction<bitsCount; currentFunction++)
-		{
-			printf("%c", indexToRowColValues.at(currentPos).at(2*bitsCount-1-currentFunction) ? '1' : '0');
+			printf("%c", indexToRowColValues.at(currentPos).at(functionsCount-1-currentFunction) ? '1' : '0');
 		}
 
 		printf("\n");
