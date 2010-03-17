@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <vector>
+#include <cassert>
 #include "pthread.h"
 using namespace std;
 
@@ -43,11 +44,18 @@ struct ThreadInit
 	}
 };
 
+
 // number of functions for one of en- or decoding
 size_t functionsCount;
 // this is the same as functionsCount - but this can't be 
 // assumed in general, so it is a separate variable
 size_t variablesCount;
+
+size_t getThreadGroupNumber(ThreadInit threadInit)
+{
+	return (threadInit.rowColToIndex ? functionsCount : 0) + threadInit.functionNumber;
+}
+
 
 class TreeNode
 {
@@ -210,7 +218,12 @@ vector<vector<bool> > indexToRowColValues;
 vector<vector<bool> > rowColToIndexValues;
 vector<ThreadInit> threadInit;
 vector<pthread_t> threadIDs;
-vector<size_t> bestApproximationValue;
+
+// per thread group (4 threads per thread group)
+vector<bool> isThreadGroupFinished;
+vector<size_t> bestApproximationValues;
+vector<pthread_mutex_t> bestApproximationValueMutexes;
+
 size_t desiredChildrenCount = 0;
 
 void createValues()
@@ -376,10 +389,13 @@ int main(int argc, char** argv)
 		}
 	}
 
-	// 2 variants of each function
+	// Initialize thread groups
+	// 2 variants of each function - that is where 2*functionsCount comes from
 	for (size_t i=0; i!=2*functionsCount; i++)
 	{
-		bestApproximationValue.push_back(0);
+		isThreadGroupFinished.push_back(false);
+		bestApproximationValues.push_back(0);
+		bestApproximationValueMutexes.push_back(PTHREAD_MUTEX_INITIALIZER);
 	}
 
 	// Begin loop
@@ -387,11 +403,19 @@ int main(int argc, char** argv)
 
 	for (size_t index=0; index<2*functionsCount; index++)
 	{
-		if (!bestApproximationValue.at(index)!=squareCount)
+		if (!isThreadGroupFinished.at(index))
 		{
 			for (size_t currentThreadIndex=0; currentThreadIndex<4; currentThreadIndex++)
 			{
 				pthread_t id;
+
+#if 0
+				pthread_mutex_lock(&printMutex);
+				printf("Index = %u\tThreadGroupNumber = %u\n", index, getThreadGroupNumber(threadInit.at(4*index+currentThreadIndex)));
+				pthread_mutex_unlock(&printMutex);
+#endif
+
+				assert(index == getThreadGroupNumber(threadInit.at(4*index+currentThreadIndex)));
 				int res = pthread_create(&id, NULL, workerThread, &threadInit.at(4*index+currentThreadIndex));
 
 				if (res!=0)
@@ -409,7 +433,7 @@ int main(int argc, char** argv)
 
 	for (size_t index=0; index<2*functionsCount; index++)
 	{
-		if (!bestApproximationValue.at(index)!=squareCount)
+		if (!isThreadGroupFinished.at(index))
 		{
 			void* status;
 
