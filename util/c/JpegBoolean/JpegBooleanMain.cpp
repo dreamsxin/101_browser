@@ -65,7 +65,7 @@ public:
 
 	virtual bool computeValue(const vector<bool>* variables) = 0;
 	virtual void print() = 0;
-	virtual bool increment() = 0;
+	virtual bool increment(bool isRoot) = 0;
 };
 
 class LeafTreeNode : public TreeNode
@@ -86,7 +86,7 @@ public:
 		printf("x%u", variableNumber);
 	}
 
-	virtual bool increment()
+	virtual bool increment(bool isRoot)
 	{
 		if (variableNumber+1<varCount)
 		{
@@ -198,10 +198,9 @@ public:
 		}
 	}
 
-	virtual bool increment()
+	virtual bool increment(bool isRoot)
 	{
-		// TODO: Write increment code
-		return true;
+		return child0->increment(false);
 	}
 };
 
@@ -315,7 +314,7 @@ void* workerThread(void* threadid)
 	pthread_mutex_lock(&printMutex);
 	printf("Starting ");
 	pInit->print();
-	printf("\n");
+	printf(" with children count %u\n", desiredChildrenCount);
 	pthread_mutex_unlock(&printMutex);
 
 	size_t threadGroupNumber = getThreadGroupNumber(*pInit);
@@ -323,36 +322,41 @@ void* workerThread(void* threadid)
 
 	FunctionTreeNode root = FunctionTreeNode(pInit->functionAtRoot, desiredChildrenCount);
 
-	// Begin loop
-	size_t currentApproximationQuality = 0;
-
-	for (size_t currentVarIdx=0; currentVarIdx<variableValuesCount; currentVarIdx++)
+	while (true)
 	{
-		bool val = root.computeValue(&variableValues.at(currentVarIdx));
-		if (val == functionValues.at(currentVarIdx).at(pInit->functionNumber))
-			currentApproximationQuality++;
-	}
+		size_t currentApproximationQuality = 0;
 
-	pthread_mutex_lock(&bestApproximationValueMutexes.at(threadGroupNumber));
-	size_t approximationQuality = bestApproximationValues.at(threadGroupNumber);
-	if (currentApproximationQuality>approximationQuality)
-	{
-		bestApproximationValues.at(threadGroupNumber) = currentApproximationQuality;
-		pthread_mutex_lock(&printMutex);
-		printf("Better Approximation by ");
-		pInit->print();
-		printf("\tApproximation quality: %u with\n", currentApproximationQuality);
-		root.print();
-		printf("\n");
-		pthread_mutex_unlock(&printMutex);
-	}
-	pthread_mutex_unlock(&bestApproximationValueMutexes.at(threadGroupNumber));
-	if (approximationQuality == variableValuesCount)
-	{
-		pthread_exit(NULL);
-	}
+		for (size_t currentVarIdx=0; currentVarIdx<variableValuesCount; currentVarIdx++)
+		{
+			bool val = root.computeValue(&variableValues.at(currentVarIdx));
+			if (val == functionValues.at(currentVarIdx).at(pInit->functionNumber))
+				currentApproximationQuality++;
+		}
 
-	// end loop
+		pthread_mutex_lock(&bestApproximationValueMutexes.at(threadGroupNumber));
+		size_t approximationQuality = bestApproximationValues.at(threadGroupNumber);
+		if (currentApproximationQuality>approximationQuality)
+		{
+			bestApproximationValues.at(threadGroupNumber) = currentApproximationQuality;
+			pthread_mutex_lock(&printMutex);
+			printf("Better Approximation by ");
+			pInit->print();
+			printf("\tApproximation quality: %u with\n", currentApproximationQuality);
+			root.print();
+			printf("\n");
+			pthread_mutex_unlock(&printMutex);
+		}
+		pthread_mutex_unlock(&bestApproximationValueMutexes.at(threadGroupNumber));
+		if (approximationQuality == variableValuesCount)
+		{
+			pthread_exit(NULL);
+		}
+
+		if (root.increment(true))
+			continue;
+		else
+			pthread_exit(NULL);
+	}
 
 	return NULL;
 }
@@ -423,60 +427,74 @@ int main(int argc, char** argv)
 
 	desiredChildrenCount = 0;
 
-	// Begin loop
-	threadIDs = vector<pthread_t>();
-
-	for (size_t index=0; index<funcCount; index++)
+	while (true)
 	{
-		if (!isThreadGroupFinished.at(index))
+		threadIDs = vector<pthread_t>();
+
+		for (size_t index=0; index<funcCount; index++)
 		{
-			for (size_t currentThreadIndex=0; currentThreadIndex<4; currentThreadIndex++)
+			if (!isThreadGroupFinished.at(index))
 			{
-				pthread_t id;
-
-				assert(index == getThreadGroupNumber(threadInit.at(4*index+currentThreadIndex)));
-				int res = pthread_create(&id, NULL, workerThread, &threadInit.at(4*index+currentThreadIndex));
-
-				if (res!=0)
+				for (size_t currentThreadIndex=0; currentThreadIndex<4; currentThreadIndex++)
 				{
-					fprintf(stderr, "Error: Thread could not be created\n");
-					exit(2);
+					pthread_t id;
+
+					assert(index == getThreadGroupNumber(threadInit.at(4*index+currentThreadIndex)));
+					int res = pthread_create(&id, NULL, workerThread, &threadInit.at(4*index+currentThreadIndex));
+
+					if (res!=0)
+					{
+						fprintf(stderr, "Error: Thread could not be created\n");
+						exit(2);
+					}
+
+					threadIDs.push_back(id);
 				}
-
-				threadIDs.push_back(id);
 			}
 		}
-	}
 
-	size_t threadIndex = 0;
+		size_t threadIndex = 0;
 
-	for (size_t index=0; index<funcCount; index++)
-	{
-		if (!isThreadGroupFinished.at(index))
+		for (size_t index=0; index<funcCount; index++)
 		{
-			void* status;
-
-			for (size_t currentThreadIndex=0; currentThreadIndex<4; currentThreadIndex++)
+			if (!isThreadGroupFinished.at(index))
 			{
-				pthread_join(threadIDs.at(threadIndex++), &status);
+				void* status;
+
+				for (size_t currentThreadIndex=0; currentThreadIndex<4; currentThreadIndex++)
+				{
+					pthread_join(threadIDs.at(threadIndex++), &status);
+				}
+			}
+
+			// we would not need to lock this mutex since only this thread can access
+			// it at the current time - but it does not mind...
+			pthread_mutex_lock(&bestApproximationValueMutexes.at(index));
+			if (bestApproximationValues.at(index)==variableValuesCount)
+			{
+				isThreadGroupFinished.at(index) = true;
+				pthread_mutex_lock(&printMutex);
+				printf("Thread group %u finished.\n", index);
+				pthread_mutex_unlock(&printMutex);
+			}
+			pthread_mutex_unlock(&bestApproximationValueMutexes.at(index));
+		}
+
+		bool allThreadsFinished = true;
+
+		for (size_t index=0; index<funcCount; index++)
+		{
+			if (!isThreadGroupFinished.at(index))
+			{
+				allThreadsFinished = false;
 			}
 		}
 
-		// we would not need to lock this mutex since only this thread can access
-		// it at the current time - but it does not mind...
-		pthread_mutex_lock(&bestApproximationValueMutexes.at(index));
-		if (bestApproximationValues.at(index)==variableValuesCount)
-		{
-			isThreadGroupFinished.at(index) = true;
-			pthread_mutex_lock(&printMutex);
-			printf("Thread group %u finished.\n", index);
-			pthread_mutex_unlock(&printMutex);
-		}
-		pthread_mutex_unlock(&bestApproximationValueMutexes.at(index));
+		if (!allThreadsFinished)
+			desiredChildrenCount++;
+		else
+			break;
 	}
-
-	desiredChildrenCount++;
-	// end loop
 
 	pthread_attr_destroy(&attr);
 	return 0;
