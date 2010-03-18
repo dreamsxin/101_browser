@@ -16,14 +16,11 @@ enum FunctionType
 
 struct ThreadInit
 {
-	// tells whether to use indexToRowColValues or rowColToIndexValues
-	bool rowColToIndex;
 	size_t functionNumber;
 	FunctionType functionAtRoot;
 
 	void print()
 	{
-		printf("%s\t", rowColToIndex ? "RowCol to Index" : "Index to RowCol");
 		printf("Function: %u\tRoot: ", functionNumber);
 		switch (functionAtRoot)
 		{
@@ -40,22 +37,23 @@ struct ThreadInit
 			printf("Or");
 			break;
 		}
-		printf("\n");
 	}
 };
 
-
-// number of functions for one of en- or decoding
-size_t functionsCount;
-// this is the same as functionsCount - but this can't be 
-// assumed in general, so it is a separate variable
-size_t variablesCount;
+// the number of variable
+size_t varCount;
+// the number of functions using these variables
+size_t funcCount;
 
 size_t getThreadGroupNumber(ThreadInit threadInit)
 {
-	return (threadInit.rowColToIndex ? functionsCount : 0) + threadInit.functionNumber;
+	return threadInit.functionNumber;
 }
 
+size_t getThreadNumber(ThreadInit threadInit)
+{
+	return 4*getThreadGroupNumber(threadInit)+threadInit.functionAtRoot;
+}
 
 class TreeNode
 {
@@ -90,7 +88,7 @@ public:
 
 	virtual bool increment()
 	{
-		if (variableNumber+1<variablesCount)
+		if (variableNumber+1<varCount)
 		{
 			variableNumber++;
 			return true;
@@ -210,12 +208,12 @@ public:
 pthread_mutex_t printMutex = PTHREAD_MUTEX_INITIALIZER;
 
 size_t bitsCount;
-size_t squareCount;
-size_t sideLength;
-size_t termsOffset;
 vector<vector<bool> > variableValues;
-vector<vector<bool> > indexToRowColValues;
-vector<vector<bool> > rowColToIndexValues;
+size_t variableValuesCount;
+// at the moment: 
+// first half: index to row, col values
+// second half: row, col values to index
+vector<vector<bool> > functionValues;
 vector<ThreadInit> threadInit;
 vector<pthread_t> threadIDs;
 
@@ -224,7 +222,7 @@ vector<bool> isThreadGroupFinished;
 vector<size_t> bestApproximationValues;
 vector<pthread_mutex_t> bestApproximationValueMutexes;
 
-size_t desiredChildrenCount = 0;
+size_t desiredChildrenCount;
 
 void createValues()
 {
@@ -233,16 +231,19 @@ void createValues()
 	size_t currentRow = 0;
 	size_t currentCol = 0;
 
-	for (size_t currentPos=0; currentPos<squareCount; currentPos++)
+	vector<vector<bool> > indexToRowColValues, rowColToIndexValues;
+
+	for (size_t currentPos=0; currentPos<variableValuesCount; currentPos++)
 	{
+		variableValues.push_back(vector<bool>());
+		functionValues.push_back(vector<bool>());
 		indexToRowColValues.push_back(vector<bool>());
 		rowColToIndexValues.push_back(vector<bool>());
-		variableValues.push_back(vector<bool>());
 	}
 
-	for (size_t currentPos=0; currentPos<squareCount; currentPos++)
+	for (size_t currentPos=0; currentPos<variableValuesCount; currentPos++)
 	{
-		for (size_t i=0; i<functionsCount; i++)
+		for (size_t i=0; i<varCount; i++)
 		{
 			variableValues.at(currentPos).push_back(currentPos & (1<<i) ? true : false);
 		}
@@ -256,9 +257,9 @@ void createValues()
 			indexToRowColValues.at(currentPos).push_back(currentRow & (1<<i) ? true : false);
 		}
 
-		for (size_t i=0; i<functionsCount; i++)
+		for (size_t i=0; i<varCount; i++)
 		{
-			rowColToIndexValues.at(currentRow*sideLength+currentCol).push_back(currentPos & (1<<i) ? true : false);
+			rowColToIndexValues.at(currentRow*(1<<bitsCount)+currentCol).push_back(currentPos & (1<<i) ? true : false);
 		}
 
 		if (currentDiag % 2 == 0) {
@@ -267,7 +268,7 @@ void createValues()
 				currentCol++;
 				currentDiag++;
 			}
-			else if (currentCol == sideLength-1)
+			else if (currentCol == (1<<bitsCount)-1)
 			{
 				currentRow++;
 				currentDiag++;
@@ -278,7 +279,7 @@ void createValues()
 			}
 		}
 		else {
-			if (currentRow == sideLength-1)
+			if (currentRow == (1<<bitsCount)-1)
 			{
 				currentCol++;
 				currentDiag++;
@@ -294,6 +295,16 @@ void createValues()
 			}
 		}
 	}
+
+	for (size_t currentPos=0; currentPos<variableValuesCount; currentPos++)
+	{
+		functionValues.at(currentPos).insert(functionValues.at(currentPos).end(), 
+			indexToRowColValues.at(currentPos).begin(), 
+			indexToRowColValues.at(currentPos).end());
+		functionValues.at(currentPos).insert(functionValues.at(currentPos).end(), 
+			rowColToIndexValues.at(currentPos).begin(), 
+			rowColToIndexValues.at(currentPos).end());
+	}
 }
 
 void* workerThread(void* threadid)
@@ -302,15 +313,46 @@ void* workerThread(void* threadid)
 	ThreadInit* pInit = (ThreadInit*) threadid;
 
 	pthread_mutex_lock(&printMutex);
+	printf("Starting ");
 	pInit->print();
+	printf("\n");
 	pthread_mutex_unlock(&printMutex);
+
+	size_t threadGroupNumber = getThreadGroupNumber(*pInit);
+	size_t threadNumber = getThreadNumber(*pInit);
 
 	FunctionTreeNode root = FunctionTreeNode(pInit->functionAtRoot, desiredChildrenCount);
 
-	pthread_mutex_lock(&printMutex);
-	root.print();
-	printf("\n");
-	pthread_mutex_unlock(&printMutex);
+	// Begin loop
+	size_t currentApproximationQuality = 0;
+
+	for (size_t currentVarIdx=0; currentVarIdx<variableValuesCount; currentVarIdx++)
+	{
+		bool val = root.computeValue(&variableValues.at(currentVarIdx));
+		if (val == functionValues.at(currentVarIdx).at(pInit->functionNumber))
+			currentApproximationQuality++;
+	}
+
+	pthread_mutex_lock(&bestApproximationValueMutexes.at(threadGroupNumber));
+	size_t approximationQuality = bestApproximationValues.at(threadGroupNumber);
+	if (currentApproximationQuality>approximationQuality)
+	{
+		bestApproximationValues.at(threadGroupNumber) = currentApproximationQuality;
+		pthread_mutex_lock(&printMutex);
+		printf("Better Approximation by ");
+		pInit->print();
+		printf("\tApproximation quality: %u with\n", currentApproximationQuality);
+		root.print();
+		printf("\n");
+		pthread_mutex_unlock(&printMutex);
+	}
+	pthread_mutex_unlock(&bestApproximationValueMutexes.at(threadGroupNumber));
+	if (approximationQuality == variableValuesCount)
+	{
+		pthread_exit(NULL);
+	}
+
+	// end loop
 
 	return NULL;
 }
@@ -324,47 +366,31 @@ int main(int argc, char** argv)
 	}
 
 	bitsCount = atoi(argv[1]);
-	sideLength = 1<<bitsCount;
-	squareCount = sideLength*sideLength;
-	functionsCount = 2*bitsCount;
-	variablesCount = functionsCount;
-	termsOffset = squareCount*functionsCount;
+	varCount = 2*bitsCount;
+	variableValuesCount = 1<<varCount;
+	funcCount = 4*bitsCount;
 
 	createValues();
 
-	printf("Index to Row, Col\n\n");
-
-	for (size_t currentPos=0; currentPos<squareCount; currentPos++)
+	for (size_t currentPos=0; currentPos<variableValuesCount; currentPos++)
 	{
-		for (size_t currentFunction=0; currentFunction<functionsCount; currentFunction++)
+		for (size_t currentVar=0; currentVar<varCount; currentVar++)
 		{
-			printf("%c", variableValues.at(currentPos).at(functionsCount-1-currentFunction) ? '1' : '0');
+			printf("%c", variableValues.at(currentPos).at(varCount-1-currentVar) ? '1' : '0');
 		}
 
 		printf("\t");
 
-		for (size_t currentFunction=0; currentFunction<functionsCount; currentFunction++)
+		for (size_t currentFunction=0; currentFunction<funcCount/2; currentFunction++)
 		{
-			printf("%c", indexToRowColValues.at(currentPos).at(functionsCount-1-currentFunction) ? '1' : '0');
-		}
-
-		printf("\n");
-	}
-
-	printf("\n\n\n\n\nRow, Col to Index\n\n");
-
-	for (size_t currentPos=0; currentPos<squareCount; currentPos++)
-	{
-		for (size_t currentFunction=0; currentFunction<functionsCount; currentFunction++)
-		{
-			printf("%c", variableValues.at(currentPos).at(functionsCount-1-currentFunction) ? '1' : '0');
+			printf("%c", functionValues.at(currentPos).at(funcCount/2-1-currentFunction) ? '1' : '0');
 		}
 
 		printf("\t");
 
-		for (size_t currentFunction=0; currentFunction<functionsCount; currentFunction++)
+		for (size_t currentFunction=0; currentFunction<funcCount/2; currentFunction++)
 		{
-			printf("%c", rowColToIndexValues.at(currentPos).at(functionsCount-1-currentFunction) ? '1' : '0');
+			printf("%c", functionValues.at(currentPos).at(funcCount-1-currentFunction) ? '1' : '0');
 		}
 
 		printf("\n");
@@ -377,31 +403,30 @@ int main(int argc, char** argv)
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
 	// Initialize thread init
-	for (size_t useRowColToIndex=0; useRowColToIndex<2; useRowColToIndex++)
+	for (size_t functionNumber=0; functionNumber<funcCount; functionNumber++)
 	{
-		for (size_t functionNumber=0; functionNumber<functionsCount; functionNumber++)
+		for (size_t functionAtRoot=0; functionAtRoot<FunctionTypeOr+1; functionAtRoot++)
 		{
-			for (size_t functionAtRoot=0; functionAtRoot<FunctionTypeOr+1; functionAtRoot++)
-			{
-				ThreadInit init={useRowColToIndex!=0, functionNumber, (FunctionType) functionAtRoot};
-				threadInit.push_back(init);
-			}
+			ThreadInit init={functionNumber, (FunctionType) functionAtRoot};
+			threadInit.push_back(init);
 		}
 	}
 
 	// Initialize thread groups
 	// 2 variants of each function - that is where 2*functionsCount comes from
-	for (size_t i=0; i!=2*functionsCount; i++)
+	for (size_t i=0; i!=funcCount; i++)
 	{
 		isThreadGroupFinished.push_back(false);
 		bestApproximationValues.push_back(0);
 		bestApproximationValueMutexes.push_back(PTHREAD_MUTEX_INITIALIZER);
 	}
 
+	desiredChildrenCount = 0;
+
 	// Begin loop
 	threadIDs = vector<pthread_t>();
 
-	for (size_t index=0; index<2*functionsCount; index++)
+	for (size_t index=0; index<funcCount; index++)
 	{
 		if (!isThreadGroupFinished.at(index))
 		{
@@ -409,18 +434,12 @@ int main(int argc, char** argv)
 			{
 				pthread_t id;
 
-#if 0
-				pthread_mutex_lock(&printMutex);
-				printf("Index = %u\tThreadGroupNumber = %u\n", index, getThreadGroupNumber(threadInit.at(4*index+currentThreadIndex)));
-				pthread_mutex_unlock(&printMutex);
-#endif
-
 				assert(index == getThreadGroupNumber(threadInit.at(4*index+currentThreadIndex)));
 				int res = pthread_create(&id, NULL, workerThread, &threadInit.at(4*index+currentThreadIndex));
 
 				if (res!=0)
 				{
-					fprintf(stderr, "Thread could not be created\n");
+					fprintf(stderr, "Error: Thread could not be created\n");
 					exit(2);
 				}
 
@@ -431,7 +450,7 @@ int main(int argc, char** argv)
 
 	size_t threadIndex = 0;
 
-	for (size_t index=0; index<2*functionsCount; index++)
+	for (size_t index=0; index<funcCount; index++)
 	{
 		if (!isThreadGroupFinished.at(index))
 		{
@@ -442,6 +461,18 @@ int main(int argc, char** argv)
 				pthread_join(threadIDs.at(threadIndex++), &status);
 			}
 		}
+
+		// we would not need to lock this mutex since only this thread can access
+		// it at the current time - but it does not mind...
+		pthread_mutex_lock(&bestApproximationValueMutexes.at(index));
+		if (bestApproximationValues.at(index)==variableValuesCount)
+		{
+			isThreadGroupFinished.at(index) = true;
+			pthread_mutex_lock(&printMutex);
+			printf("Thread group %u finished.\n", index);
+			pthread_mutex_unlock(&printMutex);
+		}
+		pthread_mutex_unlock(&bestApproximationValueMutexes.at(index));
 	}
 
 	desiredChildrenCount++;
