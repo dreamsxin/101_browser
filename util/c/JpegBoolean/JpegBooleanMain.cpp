@@ -1,9 +1,8 @@
 #include <cstdio>
 #include <cstdlib>
-#include <cstring>
 #include <vector>
 #include <cassert>
-#include "pthread.h"
+#include <pthread.h>
 using namespace std;
 
 enum FunctionType
@@ -65,7 +64,9 @@ public:
 
 	virtual bool computeValue(const vector<bool>* variables) = 0;
 	virtual void print() = 0;
+	virtual void reset() = 0;
 	virtual bool increment(bool isRoot) = 0;
+	virtual size_t size() = 0;
 };
 
 class LeafTreeNode : public TreeNode
@@ -73,8 +74,8 @@ class LeafTreeNode : public TreeNode
 public:
 	size_t variableNumber;
 
-	LeafTreeNode(size_t in_variableNumber) 
-		: TreeNode(true), variableNumber(in_variableNumber) { }
+	LeafTreeNode() 
+		: TreeNode(true), variableNumber(0) { }
 
 	virtual bool computeValue(const vector<bool>* variables)
 	{
@@ -86,6 +87,11 @@ public:
 		printf("x%u", variableNumber);
 	}
 
+	virtual void reset()
+	{
+		variableNumber = 0;
+	}
+
 	virtual bool increment(bool isRoot)
 	{
 		if (variableNumber+1<varCount)
@@ -95,6 +101,11 @@ public:
 		}
 		else
 			return false;
+	}
+
+	virtual size_t size()
+	{
+		return 0;
 	}
 };
 
@@ -109,7 +120,7 @@ public:
 	{
 		if (in_childrenCount==0)
 		{
-			child0 = new LeafTreeNode(0);
+			child0 = new LeafTreeNode();
 		}
 		else
 		{
@@ -118,7 +129,7 @@ public:
 
 		if (functionType != FunctionTypeNot)
 		{
-			child1 = new LeafTreeNode(0);
+			child1 = new LeafTreeNode();
 		}
 	}
 
@@ -198,9 +209,100 @@ public:
 		}
 	}
 
+	virtual void reset()
+	{
+		int oldSize = size();
+
+		functionType = FunctionTypeNot;
+		assert(child0 != NULL);
+		delete child0;
+		child0 = NULL;
+
+		if (oldSize == 1) {
+			child0 = new LeafTreeNode();
+		} else {
+			child0 = new FunctionTreeNode(FunctionTypeNot, oldSize-2);
+		}
+		
+		if (child1 != NULL)
+		{
+			delete child1;
+			child1 = NULL;
+		}
+
+		assert(child1 == NULL);
+	}
+
 	virtual bool increment(bool isRoot)
 	{
-		return child0->increment(false);
+		assert(child0 != NULL);
+		if (child0->increment(false))
+			return true;
+		if (child1 != NULL && child1->increment(false))
+		{
+			child0->reset();
+			return true;
+		}
+		if (functionType != FunctionTypeOr && !isRoot)
+		{
+			FunctionType funcTypeBak = functionType;
+			reset();
+			assert(child1 == NULL);
+			child1 = new LeafTreeNode();
+
+			if (funcTypeBak == FunctionTypeNot)
+			{
+				functionType = FunctionTypeXor;
+			}
+			else if (funcTypeBak == FunctionTypeXor)
+			{
+				functionType = FunctionTypeAnd;
+			}
+			else if (funcTypeBak == FunctionTypeAnd)
+			{
+				functionType = FunctionTypeOr;
+			}
+
+			return true;
+		}
+		if (child0->size() != 0 && (!isRoot || (isRoot && functionType != FunctionTypeNot)))
+		{
+			size_t child0size = child0->size();
+			assert(functionType != FunctionTypeNot);
+			assert(child1 != NULL);
+			size_t child1size = child1->size();
+			if (child0size == 1)
+			{
+				delete child0;
+				child0 = new LeafTreeNode();
+			}
+			else
+			{
+				child0 = new FunctionTreeNode(FunctionTypeNot, child0size-2);
+			}
+
+			assert(child1 != NULL);
+			delete child1;
+			child1 = new FunctionTreeNode(FunctionTypeNot, child1size);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	virtual size_t size()
+	{
+		assert(child0 != NULL);
+		size_t out_size = 1+child0->size();
+
+		if (functionType != FunctionTypeNot)
+		{
+			assert(child1 != NULL);
+			out_size += child1->size();
+		}
+
+		return out_size;
 	}
 };
 
@@ -417,12 +519,15 @@ int main(int argc, char** argv)
 	}
 
 	// Initialize thread groups
-	// 2 variants of each function - that is where 2*functionsCount comes from
-	for (size_t i=0; i!=funcCount; i++)
+	for (size_t i=0; i<funcCount; i++)
 	{
 		isThreadGroupFinished.push_back(false);
 		bestApproximationValues.push_back(0);
-		bestApproximationValueMutexes.push_back(PTHREAD_MUTEX_INITIALIZER);
+		pthread_mutex_t mtx;
+		bestApproximationValueMutexes.push_back(mtx);
+		pthread_mutex_init(
+			&bestApproximationValueMutexes.at(bestApproximationValueMutexes.size()-1), 
+			NULL);
 	}
 
 	desiredChildrenCount = 0;
@@ -494,6 +599,15 @@ int main(int argc, char** argv)
 			desiredChildrenCount++;
 		else
 			break;
+	}
+
+	for (size_t i=0; i<funcCount; i++)
+	{
+		isThreadGroupFinished.push_back(false);
+		bestApproximationValues.push_back(0);
+		pthread_mutex_t mtx;
+		bestApproximationValueMutexes.push_back(mtx);
+		pthread_mutex_destroy(&bestApproximationValueMutexes.at(i));
 	}
 
 	pthread_attr_destroy(&attr);
