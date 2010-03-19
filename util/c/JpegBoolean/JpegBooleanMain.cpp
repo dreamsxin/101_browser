@@ -417,6 +417,7 @@ void* workerThread(void* threadid)
 	printf("Starting ");
 	pInit->print();
 	printf(" with children count %u\n", desiredChildrenCount);
+	fflush(stdout);
 	pthread_mutex_unlock(&printMutex);
 
 	size_t threadGroupNumber = getThreadGroupNumber(*pInit);
@@ -446,6 +447,7 @@ void* workerThread(void* threadid)
 			printf("\tApproximation quality: %u with\n", currentApproximationQuality);
 			root.print();
 			printf("\n");
+			fflush(stdout);
 			pthread_mutex_unlock(&printMutex);
 		}
 		pthread_mutex_unlock(&bestApproximationValueMutexes.at(threadGroupNumber));
@@ -580,6 +582,7 @@ int main(int argc, char** argv)
 				isThreadGroupFinished.at(index) = true;
 				pthread_mutex_lock(&printMutex);
 				printf("Thread group %u finished.\n", index);
+				fflush(stdout);
 				pthread_mutex_unlock(&printMutex);
 			}
 			pthread_mutex_unlock(&bestApproximationValueMutexes.at(index));
