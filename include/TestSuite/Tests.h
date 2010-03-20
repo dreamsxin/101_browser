@@ -3,6 +3,7 @@
 
 void testBasicDataStructures();
 void testBasicDataStructuresTree();
-void testGuiDataStructures();
+void testTriangleStripBorderIterator();
+void testOuterBorderIterator();
 
 #endif
