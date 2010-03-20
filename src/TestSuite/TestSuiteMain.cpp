@@ -5,7 +5,8 @@ int main()
 {
 	testBasicDataStructures();
 	testBasicDataStructuresTree();
-	testGuiDataStructures();
+	testTriangleStripBorderIterator();
+	testOuterBorderIterator();
 
 	return 0;
 }
