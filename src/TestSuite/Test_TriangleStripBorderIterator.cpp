@@ -1,82 +1,10 @@
 #include "GuiDataStructures/TriangleStripBorderIterator.h"
 #include "TestSuite/TestSuite.h"
+#include "TestSuite/IteratorTestUtil.h"
 
 using namespace std;
 
-void runIteratorForward(TriangleStripBorderIterator<unsigned int>::IteratorState* in_pItState, 
-				 DoubleIterator<unsigned int, TriangleStripBorderIterator<unsigned int>::IteratorState> in_interface,
-				 vector<unsigned int>* in_out_pResult)
-{
-	*in_out_pResult=vector<unsigned int>();
-
-	if ((*in_interface.mpfGet)(in_pItState) == NULL)
-	{
-		test((*in_interface.mpfIterateNext)(in_pItState) == IterateResultToInvalidState);
-		return;
-	}
-
-	IterateResult itRes;
-
-	do
-	{
-		in_out_pResult->push_back(*(*in_interface.mpfGet)(in_pItState));
-		itRes = (*in_interface.mpfIterateNext)(in_pItState);
-	}
-	while (itRes == IterateResultOK);
-
-	test(itRes == IterateResultOverBoundary);
-}
-
-void runIteratorBackward(TriangleStripBorderIterator<unsigned int>::IteratorState* in_pItState, 
-						 DoubleIterator<unsigned int, TriangleStripBorderIterator<unsigned int>::IteratorState > in_interface,
-				 vector<unsigned int>* in_out_pResult)
-{
-	*in_out_pResult=vector<unsigned int>();
-
-	IterateResult itRes = in_interface.mpfIteratePrev(in_pItState);
-
-	if (itRes == IterateResultToInvalidState)
-	{
-		test(in_interface.mpfGet(in_pItState)==NULL);
-		return;
-	}
-
-	test(itRes == IterateResultOverBoundary);
-
-	do
-	{
-		in_out_pResult->push_back(*(*in_interface.mpfGet)(in_pItState));
-		itRes = (*in_interface.mpfIteratePrev)(in_pItState);
-	}
-	while (itRes == IterateResultOK);
-
-	test(itRes == IterateResultOverBoundary);
-}
-
-bool compareVectors(const vector<unsigned int>* in_pV, const vector<unsigned int>* in_pW)
-{
-	test(in_pV->size()==in_pW->size());
-
-	vector<unsigned int>::const_iterator i, j;
-
-	for (i=in_pV->begin(), j=in_pW->begin(); i!=in_pV->end() && j!=in_pW->end(); i++, j++)
-	{
-		if (*i!=*j)
-			return false;
-	}
-
-	return true;
-}
-
-void revertVector(vector<unsigned int>* in_pV)
-{
-	for (size_t i=0; i<in_pV->size()/2; i++)
-	{
-		std::swap(in_pV->at(i), in_pV->at(in_pV->size()-1-i));
-	}
-}
-
-void testGuiDataStructures()
+void testTriangleStripBorderIterator()
 {
 	vector<unsigned int> v, w, result;
 	TriangleStripBorderIterator<unsigned int>::IteratorState itState;
@@ -86,9 +14,7 @@ void testGuiDataStructures()
 	// Testing correct behaviour for small datasets
 
 	v=vector<unsigned int>();
-	// Prepare v if necessary
 	w=vector<unsigned int>();
-	// Prepare w if necessary
 	itState = triangleStripBorderIteratorState_create(&v);
 	runIteratorForward(&itState, itInterface, &result);
 	test(compareVectors(&result, &w));
