@@ -173,6 +173,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\..\src\TestSuite\IteratorTestUtil.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\TestSuite\Test_BasicDataStructures.cpp"
 				>
 			</File>
@@ -181,7 +185,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\TestSuite\Test_GuiDataStructures.cpp"
+				RelativePath="..\..\src\TestSuite\Test_OuterBorderIterator.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\TestSuite\Test_TriangleStripBorderIterator.cpp"
 				>
 			</File>
 			<File
@@ -198,6 +206,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\..\include\TestSuite\IteratorTestUtil.h"
+				>
+			</File>
 			<File
 				RelativePath="..\..\include\TestSuite\Tests.h"
 				>

@@ -34,3 +34,8 @@ log.txt
 cursor*.bmp
 *.jpg
 *.JPG
+*.class
+*.jcp
+*.jcu
+*.jcw
+src_*.txt
