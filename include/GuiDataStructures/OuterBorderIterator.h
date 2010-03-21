@@ -15,7 +15,7 @@ public:
 template <typename Type> typename OuterBorderIterator<Type>::IteratorState
 outerBorderIteratorState_create(std::vector<Type>* in_pVector)
 {
-	assert(in_pVector->size()>=2);
+	assert(in_pVector->size()>=4 || in_pVector->size()==0);
 	assert(in_pVector->size()%2==0);
 
 	OuterBorderIterator<Type>::IteratorState out_state = {in_pVector, 1};
@@ -25,7 +25,7 @@ outerBorderIteratorState_create(std::vector<Type>* in_pVector)
 template <typename Type> typename OuterBorderIterator<Type>::ConstIteratorState
 outerBorderConstIteratorState_create(const std::vector<Type>* in_pVector)
 {
-	assert(in_pVector->size()>=2);
+	assert(in_pVector->size()>=4 || in_pVector->size()==0);
 	assert(in_pVector->size()%2==0);
 
 	OuterBorderIterator<Type>::ConstIteratorState out_state = {in_pVector, 1};
@@ -35,16 +35,24 @@ outerBorderConstIteratorState_create(const std::vector<Type>* in_pVector)
 template <typename Type, typename IteratorState> IterateResult outerBorderIterator_next(
 	IteratorState* in_pIts)
 {
-	assert(in_pIts->mpVector->size()>=4);
+	assert(in_pIts->mpVector->size()>=4 || in_pIts->mpVector->size()==0);
 	assert(in_pIts->mpVector->size()%2==0);
 	assert(in_pIts->mCurrentPosition%2==1);
 	in_pIts->mCurrentPosition+=2;
 	assert(in_pIts->mCurrentPosition%2==1);
 
-	if (in_pIts->mCurrentPosition>=in_pIts->mpVector->size()-2)
+	if (in_pIts->mCurrentPosition+2>=in_pIts->mpVector->size())
 	{
 		in_pIts->mCurrentPosition = 1;
-		return IterateResultOverBoundary;
+
+		if (in_pIts->mpVector->size()==0)
+		{
+			return IterateResultToInvalidState;
+		}
+		else
+		{
+			return IterateResultOverBoundary;
+		}
 	}
 	else
 	{
@@ -55,7 +63,7 @@ template <typename Type, typename IteratorState> IterateResult outerBorderIterat
 template <typename Type, typename IteratorState> IterateResult outerBorderIterator_prev(
 	IteratorState* in_pIts)
 {
-	assert(in_pIts->mpVector->size()>=4);
+	assert(in_pIts->mpVector->size()>=4 || in_pIts->mpVector->size()==0);
 	assert(in_pIts->mpVector->size()%2==0);
 	assert(in_pIts->mCurrentPosition%2==1);
 
@@ -68,8 +76,16 @@ template <typename Type, typename IteratorState> IterateResult outerBorderIterat
 	}
 	else
 	{
-		in_pIts->mCurrentPosition = in_pIts->mpVector->size()-3;
-		return IterateResultOverBoundary;
+		if (in_pIts->mpVector->size() == 0)
+		{
+			assert(in_pIts->mCurrentPosition == 1);
+			return IterateResultToInvalidState;
+		}
+		else
+		{
+			in_pIts->mCurrentPosition = in_pIts->mpVector->size()-3;
+			return IterateResultOverBoundary;
+		}
 	}
 }
 

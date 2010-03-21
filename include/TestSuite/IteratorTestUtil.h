@@ -60,4 +60,21 @@ bool compareVectors(const std::vector<unsigned int>* in_pV,
 					const std::vector<unsigned int>* in_pW);
 void reverseVector(std::vector<unsigned int>* in_pV);
 
+template <typename IteratorState> void testIterator(
+	std::vector<unsigned int>& v, 
+	std::vector<unsigned int>& w,
+	IteratorState (*in_pItCreate)(std::vector<unsigned int>*),
+	DoubleIterator<unsigned int, IteratorState>& itInterface
+	)
+{
+	std::vector<unsigned int> result;
+	IteratorState itState = (*in_pItCreate)(&v);
+	runIteratorForward(&itState, itInterface, &result);
+	test(compareVectors(&result, &w));
+	itState = (*in_pItCreate)(&v);
+	reverseVector(&w);
+	runIteratorBackward(&itState, itInterface, &result);
+	test(compareVectors(&result, &w));
+}
+
 #endif
