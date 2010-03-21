@@ -19,7 +19,7 @@ void testTriangleStripBorderIterator()
 	runIteratorForward(&itState, itInterface, &result);
 	test(compareVectors(&result, &w));
 	itState = triangleStripBorderIteratorState_create(&v);
-	revertVector(&w);
+	reverseVector(&w);
 	runIteratorBackward(&itState, itInterface, &result);
 	test(compareVectors(&result, &w));
 
@@ -31,7 +31,7 @@ void testTriangleStripBorderIterator()
 	runIteratorForward(&itState, itInterface, &result);
 	test(compareVectors(&result, &w));
 	itState = triangleStripBorderIteratorState_create(&v);
-	revertVector(&w);
+	reverseVector(&w);
 	runIteratorBackward(&itState, itInterface, &result);
 	test(compareVectors(&result, &w));
 
@@ -45,7 +45,7 @@ void testTriangleStripBorderIterator()
 	runIteratorForward(&itState, itInterface, &result);
 	test(compareVectors(&result, &w));
 	itState = triangleStripBorderIteratorState_create(&v);
-	revertVector(&w);
+	reverseVector(&w);
 	runIteratorBackward(&itState, itInterface, &result);
 	test(compareVectors(&result, &w));
 
@@ -61,7 +61,7 @@ void testTriangleStripBorderIterator()
 	runIteratorForward(&itState, itInterface, &result);
 	test(compareVectors(&result, &w));
 	itState = triangleStripBorderIteratorState_create(&v);
-	revertVector(&w);
+	reverseVector(&w);
 	runIteratorBackward(&itState, itInterface, &result);
 	test(compareVectors(&result, &w));
 
@@ -81,7 +81,7 @@ void testTriangleStripBorderIterator()
 	runIteratorForward(&itState, itInterface, &result);
 	test(compareVectors(&result, &w));
 	itState = triangleStripBorderIteratorState_create(&v);
-	revertVector(&w);
+	reverseVector(&w);
 	runIteratorBackward(&itState, itInterface, &result);
 	test(compareVectors(&result, &w));
 
@@ -101,7 +101,7 @@ void testTriangleStripBorderIterator()
 	runIteratorForward(&itState, itInterface, &result);
 	test(compareVectors(&result, &w));
 	itState = triangleStripBorderIteratorState_create(&v);
-	revertVector(&w);
+	reverseVector(&w);
 	runIteratorBackward(&itState, itInterface, &result);
 	test(compareVectors(&result, &w));
 }

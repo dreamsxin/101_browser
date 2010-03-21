@@ -18,7 +18,7 @@ bool compareVectors(const vector<unsigned int>* in_pV, const vector<unsigned int
 	return true;
 }
 
-void revertVector(vector<unsigned int>* in_pV)
+void reverseVector(vector<unsigned int>* in_pV)
 {
 	for (size_t i=0; i<in_pV->size()/2; i++)
 	{

@@ -58,6 +58,6 @@ void runIteratorBackward(IteratorState* in_pItState,
 
 bool compareVectors(const std::vector<unsigned int>* in_pV, 
 					const std::vector<unsigned int>* in_pW);
-void revertVector(std::vector<unsigned int>* in_pV);
+void reverseVector(std::vector<unsigned int>* in_pV);
 
 #endif
