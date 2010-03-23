@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "gui/Vertex.h"
-#include "gui/Color.h"
+#include "GraphicsDataStructures/Color.h"
 #include "GuiDataStructures/TriangleStripBorderIterator.h"
 #include "GuiDataStructures/OuterBorderIterator.h"
 

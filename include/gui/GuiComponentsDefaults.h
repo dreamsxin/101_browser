@@ -1,7 +1,7 @@
 #ifndef _GuiComponentsDefaults_h
 #define _GuiComponentsDefaults_h
 
-#include "gui/Color.h"
+#include "GraphicsDataStructures/Color.h"
 
 namespace Gui
 {

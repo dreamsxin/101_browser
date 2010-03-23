@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="gui"
-	ProjectGUID="{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}"
-	RootNamespace="gui"
+	Name="GifDecoder"
+	ProjectGUID="{19451F5D-23C9-46B9-B608-0C2D22B5483F}"
+	RootNamespace="GifDecoder"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -42,13 +42,12 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
-				WarningLevel="4"
-				Detect64BitPortabilityProblems="true"
+				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -62,10 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -118,12 +116,11 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="../../include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -137,10 +134,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -177,39 +173,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\src\gui\Cursor.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\gui\Gui.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\gui\GuiComponentsBasic.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\gui\GuiComponentsCheckBox.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\gui\GuiComponentsCursor.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\gui\GuiComponentsTextBox.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\gui\GuiOpenGLState.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\gui\MultiMouse.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\gui\Texture.cpp"
+				RelativePath="..\..\src\GifDecoder\GifDecoderMain.cpp"
 				>
 			</File>
 		</Filter>
@@ -218,46 +182,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="..\..\include\gui\Cursor.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\gui\GuiComponentsBasic.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\gui\GuiComponentsCheckBox.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\gui\GuiComponentsCursor.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\gui\GuiComponentsDefaults.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\gui\GuiComponentsTextBox.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\gui\GuiOpenGLState.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\gui\MultiMouse.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\gui\Texture.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\gui\Vertex.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
