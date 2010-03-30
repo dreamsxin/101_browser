@@ -10,6 +10,7 @@ void Decoder_setup()
 
 }
 
+// E.2.1 Control procedure for decoding compressed image data
 void Decode_image(FILE* jpegFile)
 {
 	unsigned char currentMarker;
@@ -52,6 +53,7 @@ void Decode_image(FILE* jpegFile)
 	return Decode_frame(jpegFile, currentMarker, restartIntervalFound ? &restartInterval : NULL);
 }
 
+// E.2.2 Control procedure for decoding a frame
 void Decode_frame(FILE* jpegFile, unsigned char currentMarker, RestartInterval* in_pri)
 {
 	// TODO: Replace by "Interpret frame header"
@@ -96,6 +98,7 @@ void Decode_frame(FILE* jpegFile, unsigned char currentMarker, RestartInterval* 
 	// TODO: further markers can occur before EOI
 }
 
+// E.2.3 Control procedure for decoding a scan
 void Decode_scan(FILE* jpegFile, RestartInterval in_ri)
 {
 	defaultMarkerInterpreter(jpegFile, SOS_MARKER);
@@ -106,18 +109,18 @@ void Decode_scan(FILE* jpegFile, RestartInterval in_ri)
 	Decode_restart_interval(jpegFile, in_ri);
 }
 
+// E.2.4 Control procedure for decoding a restart interval
 void Decode_restart_interval(FILE* jpegFile, RestartInterval in_ri)
 {
 	Reset_decoder();
 
-	// a 32 bit variable can't overflow here since in_ri.Ri has 16 bits
-
 	boost::uint16_t currentMCUIndex = 0;
-Decode_restart_interval_loop_begin:
-	currentMCUIndex++;
-	Decode_MCU();
-	if (currentMCUIndex != in_ri.Ri)
-		goto Decode_restart_interval_loop_begin;
+
+	do
+	{
+		currentMCUIndex++;
+		Decode_MCU();
+	} while (currentMCUIndex != in_ri.Ri);
 }
 
 void Reset_decoder()
@@ -125,6 +128,7 @@ void Reset_decoder()
 
 }
 
+// E.2.5 Control procedure for decoding a minimum coded unit (MCU)
 void Decode_MCU()
 {
 	size_t N = 0;
