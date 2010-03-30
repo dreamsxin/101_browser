@@ -10,7 +10,7 @@ int main()
 
 	char mode[] = "rb";
 
-	FILE* jpegFile;
+	FILE* jpegFile = NULL;
 
 #ifdef _MSC_VER
 	errno_t openResult = fopen_s(&jpegFile, filename, mode);
