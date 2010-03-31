@@ -101,7 +101,8 @@ void Decode_frame(FILE* jpegFile, unsigned char currentMarker, RestartInterval* 
 // E.2.3 Control procedure for decoding a scan
 void Decode_scan(FILE* jpegFile, RestartInterval in_ri)
 {
-	defaultMarkerInterpreter(jpegFile, SOS_MARKER);
+	ScanHeader sh;
+	readScanHeader(jpegFile, &sh);
 
 	size_t m = 0;
 
