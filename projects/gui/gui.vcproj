@@ -193,11 +193,23 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\gui\GuiComponentsCursor.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\gui\GuiComponentsTextBox.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\src\gui\GuiOpenGLState.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\gui\MultiMouse.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\gui\Texture.cpp"
 				>
 			</File>
 		</Filter>
@@ -206,10 +218,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="..\..\include\gui\Color.h"
-				>
-			</File>
 			<File
 				RelativePath="..\..\include\gui\Cursor.h"
 				>
@@ -223,6 +231,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\gui\GuiComponentsCursor.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\gui\GuiComponentsDefaults.h"
 				>
 			</File>
@@ -232,6 +244,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\gui\GuiOpenGLState.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\gui\MultiMouse.h"
 				>
 			</File>
 			<File

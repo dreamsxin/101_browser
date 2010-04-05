@@ -395,7 +395,9 @@ module html5
   interface HTMLAnchorElement : HTMLElement {
     stringifier attribute DOMString href;
              attribute DOMString target;
+  
              attribute DOMString ping;
+  
              attribute DOMString rel;
     readonly attribute DOMTokenList relList;
              attribute DOMString media;
@@ -515,7 +517,7 @@ module html5
     const unsigned short NETWORK_LOADING = 2;
     const unsigned short NETWORK_NO_SOURCE = 3;
     readonly attribute unsigned short networkState;
-             attribute boolean autobuffer;
+             attribute DOMString preload;
     readonly attribute TimeRanges buffered;
     void load();
     DOMString canPlayType(in DOMString type);
@@ -697,7 +699,9 @@ module html5
              attribute DOMString shape;
     stringifier attribute DOMString href;
              attribute DOMString target;
+  
              attribute DOMString ping;
+  
              attribute DOMString rel;
     readonly attribute DOMTokenList relList;
              attribute DOMString media;
@@ -1081,6 +1085,44 @@ module html5
     File stop();
   };
 
+  [NoInterfaceObject]
+  interface AbstractPeer {
+    void sendText(in DOMString text);
+    attribute Function ontext; // receiving
+  
+    void sendBitmap(in HTMLImageElement image);
+    attribute Function onbitmap; // receiving
+  
+    void sendFile(in File file);
+    attribute Function onfile; // receiving
+  
+    attribute Stream localStream; // video/audio to send
+    readonly attribute Stream remoteStream; // video/audio from remote peer
+    attribute Function onstreamchange; // when the remote peer changes whether the video is being sent or not
+  
+    attribute Function onconnect;
+    attribute Function onerror;
+    attribute Function ondisconnect;
+  };
+  
+  [Constructor(in DOMString serverConfiguration)]
+  interface PeerToPeerServer : AbstractPeer {
+    void getClientConfiguration(in PeerToPeerConfigurationCallback callback);
+  
+    void close(); // disconnects and stops listening
+  };
+  
+  [Constructor]
+  interface PeerToPeerClient : AbstractPeer {
+    void addConfiguration(in DOMString configuration);
+    void close(); // disconnects
+  };
+  
+  [Callback=FunctionOnly, NoInterfaceObject]
+  interface PeerToPeerConfigurationCallback {
+    void handleEvent(in PeerToPeerServer server, in DOMString configuration);
+  };
+
   [OverrideBuiltins, ReplaceableNamedProperties] 
   interface Window {
     // the current browsing context
@@ -1241,6 +1283,11 @@ module html5
     readonly attribute any oldURL;
     readonly attribute any newURL;
     void initHashChangeEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in DOMString oldURLArg, in DOMString newURLArg);
+  };
+
+  interface PageTransitionEvent : Event {
+    readonly attribute any persisted;
+    void initPageTransitionEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in any persistedArg);
   };
 
   interface BeforeUnloadEvent : Event {

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="GuiDataStructures"
-	ProjectGUID="{0403DAC4-7C0F-41E5-9405-86A4DC16FBBA}"
-	RootNamespace="GuiDataStructures"
+	Name="GraphicsDataStructures"
+	ProjectGUID="{AE3F0D3B-2A9B-4D2A-97AD-E6B526C43604}"
+	RootNamespace="GraphicsDataStructures"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -155,15 +155,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\include\GuiDataStructures\OuterBorderIterator.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\GuiDataStructures\PositionIteratorState.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\GuiDataStructures\TriangleStripBorderIterator.h"
+				RelativePath="..\..\include\GraphicsDataStructures\Color.h"
 				>
 			</File>
 		</Filter>

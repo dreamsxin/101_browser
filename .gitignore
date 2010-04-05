@@ -32,3 +32,11 @@ CMakeFiles
 CMakeCache.txt
 cmake_install.cmake
 log.txt
+cursor*.bmp
+*.jpg
+*.JPG
+*.class
+*.jcp
+*.jcu
+*.jcw
+src_*.txt

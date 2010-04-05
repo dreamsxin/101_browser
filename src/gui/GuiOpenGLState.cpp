@@ -2,6 +2,7 @@
 #include "gui/GuiComponentsDefaults.h"
 #include "gui/GuiComponentsCheckBox.h"
 #include "gui/GuiComponentsTextBox.h"
+#include "gui/GuiComponentsCursor.h"
 
 #include <windows.h>
 #include <gl/gl.h>
@@ -59,6 +60,12 @@ void drawGui()
 		Gui::Components::Defaults::cCheckBoxHeight, 
 		Gui::Components::Defaults::cCheckBoxBorderSize,
 		currentHeight);
+
+	extern Gui::Cursor cursor;
+
+	Gui::Components::drawCursor(20.0f, 120.0f, currentHeight, 
+		&cursor);
+
 
 	glFlush();													// Flush The GL Rendering Pipeline
 }

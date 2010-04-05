@@ -19,14 +19,15 @@ struct Window
 };
 
 bool runProgram = true;
-FILE* log = NULL;
+FILE* logFile = NULL;
+Gui::Cursor cursor;
 
 LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	Window* window = (Window*) GetWindowLongPtr(hWnd, GWL_USERDATA);
 
-	fprintf(log, "%u\treceived %x\n", GetTickCount(), uMsg);
-	fflush(log);
+	fprintf(logFile, "%u\treceived %x\n", GetTickCount(), uMsg);
+	fflush(logFile);
 
 	switch (uMsg)
 	{
@@ -60,8 +61,8 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		ValidateRect(window->hWnd, NULL);
 		return 0;
 	default:
-		fprintf(log, "Did not handle\n");
-		fflush(log);
+		fprintf(logFile, "Did not handle\n");
+		fflush(logFile);
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
 	
@@ -226,7 +227,7 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 					LPSTR,		// lpCmdLine,		// Command Line Parameters
 					int			nCmdShow)			// Window Show State
 {
-	log = fopen("log.txt", "w+");
+	logFile = fopen("log.txt", "w+");
 
 	Window window(hInstance);
 	window.windowClassName = L"101_window_class";
@@ -245,9 +246,19 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 		return 0;
 	}
 
-	Gui::createCursorImage();
-
 	initializeOpenGLGuiState();
+
+	if (!Gui::createCursor(&cursor))
+	{
+		// TODO Add some cleanup code and show error message
+		exit(1);
+	}
+
+	createOpenGLTexture(&cursor.andMap);
+	createOpenGLTexture(&cursor.xorMap);
+
+	freeTextureMemory(&cursor.andMap);
+	freeTextureMemory(&cursor.xorMap);
 
 	showWindow(&window, nCmdShow); // Alternative: use SW_NORMAL instead of nCmdShow
 

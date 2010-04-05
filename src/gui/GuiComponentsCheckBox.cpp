@@ -11,18 +11,34 @@ namespace Gui
 		void drawCheckBox(float left, float top, float width, float height, 
 			float borderSize, float currentHeight)
 		{
-			Color4f colors[4]={
+			Color4<float> colors[4]={
 				Defaults::cCheckBoxBottomLeftBackgroundColor,
 				Defaults::cCheckBoxBottomRightBackgroundColor,
 				Defaults::cCheckBoxTopLeftBackgroundColor, 
 				Defaults::cCheckBoxTopRightBackgroundColor
 			};
+
 			std::vector<Vertex2<float> > boxVertices;
-			std::vector<Vertex2<float> > borderVertices;
 			createBoxVertices(&boxVertices, left, top, width, height, currentHeight);
-			createBorderVertices(&boxVertices, &borderVertices, borderSize);
+
+			std::vector<Vertex2<float> > borderTriangleStrip;
+			createBorderTriangleStrip(
+				triangleStripBorderConstIteratorInstance_create(&boxVertices), 
+				&borderTriangleStrip, 
+				&createStraightBorder, borderSize, 12345);
+
+			std::vector<Vertex2<float> > coloredBorder;
+			createBorderTriangleStrip(
+				outerBorderConstIteratorInstance_create(&borderTriangleStrip), 
+				&coloredBorder, 
+				&createRoundBorder, 16, 8);
 			drawVertexArray(&boxVertices, colors);
-			drawVertexArray(&borderVertices, Defaults::cCheckBoxBorderColor);
+			drawVertexArray(&borderTriangleStrip, Defaults::cCheckBoxBorderColor);
+			// Before we reactivate this line we have to use an iterator using only
+			// the outer contour
+#if 1
+			drawVertexArray(&coloredBorder, Defaults::cColorRed);
+#endif
 		}
 	}
 }

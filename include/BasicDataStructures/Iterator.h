@@ -15,7 +15,7 @@ enum IterateResult
 	 * valid - of course, but you probably don't want to continue
 	 * iterating)
 	 */
-	IterateResultEndToStart,
+	IterateResultOverBoundary,
 	/*!
 	 * is returned if either the current state is invalid (then the
 	 * next state has to be invalid, too!) or we get to an invalid
@@ -25,7 +25,7 @@ enum IterateResult
 	 * when we go backward (in case of a DoubleIterator it MUST return
 	 * to the valid state if such existed before).
 	 */
-	IterateResultEndToEnd
+	IterateResultToInvalidState
 };
 
 template <typename Type, typename IteratorState> struct SingleIterator
@@ -59,6 +59,12 @@ template <typename Type, typename IteratorState> struct DoubleIterator
 	 * Iterates backward
 	 */
 	IterateResult (*mpfIteratePrev)(IteratorState*);
+};
+
+template <typename Type, typename IteratorState> struct DoubleIteratorInstance
+{
+	IteratorState state;
+	DoubleIterator<Type, IteratorState> iterator;
 };
 
 #endif
