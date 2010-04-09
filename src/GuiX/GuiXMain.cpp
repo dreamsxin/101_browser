@@ -22,11 +22,14 @@ struct OZO_Window
 	GLXContext context;
 };
 
+void cleanup(const OZO_Display* pDisplay);
+
 void initDisplay(OZO_Display* pDisplay, const char* displayName)
 {
 	if ((pDisplay->display = XOpenDisplay(displayName)) == NULL)
 	{
 		fprintf(stderr, "Could not open display\n");
+		cleanup(pDisplay);
 		exit(1);
 	}
 
@@ -74,6 +77,7 @@ void createWindow(const OZO_Display* pDisplay, OZO_Window* pWindow, const char* 
 	if (pWindow->FBConfig == NULL)
 	{
 		fprintf(stderr, "glXChooseFBConfig failed\n");
+		cleanup(pDisplay);
 		exit(1);
 	}
 	XVisualInfo * visualInfo = glXGetVisualFromFBConfig(pDisplay->display, *(pWindow->FBConfig));
@@ -125,6 +129,7 @@ void createWindow(const OZO_Display* pDisplay, OZO_Window* pWindow, const char* 
 	if (!pWindow->context)
 	{
 		fprintf(stderr, "Could not create context\n");
+		cleanup(pDisplay);
 		exit(1);
 	}
 
@@ -177,6 +182,15 @@ void createWindow(const OZO_Display* pDisplay, OZO_Window* pWindow, const char* 
 	XFree(visualInfo);
 }
 
+void cleanup(const OZO_Display* pDisplay)
+{
+	if (pDisplay->display != NULL)
+	{
+		XSetCloseDownMode(pDisplay->display, DestroyAll);
+		XCloseDisplay(pDisplay->display);
+	}
+}
+
 int main(int argc, char** argv)
 {
 	OZO_Display ozodisplay;
@@ -187,6 +201,8 @@ int main(int argc, char** argv)
 
 	OZO_Window window;
 	createWindow(&ozodisplay, &window, "101 browser");
+
+	cleanup(&ozodisplay);
 
 	return 0;
 }
