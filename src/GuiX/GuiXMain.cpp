@@ -211,6 +211,32 @@ void cleanup(const OZO_Display* pDisplay, const OZO_Window* pWindow)
 	}
 }
 
+void mainLoop(OZO_Display* pDisplay)
+{
+	bool done = false;
+
+	while (!done)
+	{	
+		while (XPending(pDisplay->display))
+		{
+			XEvent event;
+			XNextEvent(pDisplay->display, &event);
+
+			switch(event.type)
+			{
+			case KeyPress:
+				if (XLookupKeysym(&event.xkey, 0) == XK_Escape)
+				{
+					done = true;
+                    		}
+				break;
+			default:
+				break;
+			}
+		}
+	}
+}
+
 int main(int argc, char** argv)
 {
 	OZO_Display ozodisplay;
@@ -225,6 +251,8 @@ int main(int argc, char** argv)
 	assert(resultPointer == &ozowindow); // This should always be the case but we test it nevertheless
 
 	createWindow(&ozodisplay, &ozowindow, "101 browser");
+
+	mainLoop(&ozodisplay);
 
 	cleanup(&ozodisplay, &ozowindow);
 
