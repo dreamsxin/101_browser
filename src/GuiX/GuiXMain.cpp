@@ -19,6 +19,7 @@ struct OZO_Window
 {
 	GLXFBConfig* FBConfig;
 	Window handle;
+	GLXContext context;
 };
 
 void initDisplay(OZO_Display* pDisplay, const char* displayName)
@@ -61,7 +62,13 @@ GLXFBConfig* chooseFBConfig(const OZO_Display* pDisplay)
 	return fbconfigArray;
 }
 
-void createWindow(const OZO_Display* pDisplay, OZO_Window* pWindow)
+GLXContext createContext(const OZO_Display* pDisplay, const OZO_Window* pWindow)
+{
+	// this should probably not be used with OpenGL >= 3.x
+	return glXCreateNewContext(pDisplay->display, *(pWindow->FBConfig), GLX_RGBA_TYPE, NULL, True);
+}
+
+void createWindow(const OZO_Display* pDisplay, OZO_Window* pWindow, const char* title)
 {
 	pWindow->FBConfig = chooseFBConfig(pDisplay);
 	if (pWindow->FBConfig == NULL)
@@ -111,7 +118,63 @@ void createWindow(const OZO_Display* pDisplay, OZO_Window* pWindow)
 		InputOutput,          // class
 		visualInfo->visual,
 		mask,                 // which values are defined in winAttr
-		&winAttr);            
+		&winAttr);
+
+	pWindow->context = createContext(pDisplay, pWindow);
+
+	if (!pWindow->context)
+	{
+		fprintf(stderr, "Could not create context\n");
+		exit(1);
+	}
+
+	bool positionUse = false;
+	bool sizeUse = true;
+	
+	XSizeHints sizeHints;
+	sizeHints.flags = 0;
+    	if (positionUse)
+        	sizeHints.flags |= USPosition;
+    	if (sizeUse)
+        	sizeHints.flags |= USSize;
+	sizeHints.x = x;
+	sizeHints.y = y;
+	sizeHints.width = width;
+	sizeHints.height = height;
+
+	XWMHints wmHints;
+	wmHints.flags = StateHint;
+	wmHints.initial_state = NormalState;
+
+	XTextProperty textProperty;
+
+	XStringListToTextProperty((char **) &title, 1, &textProperty);
+	XSetWMProperties(
+		pDisplay->display,
+		pWindow->handle,
+		&textProperty,     // window name
+		&textProperty,     // icon name
+		0,                 // char **argv
+		0,                 // int argc
+		&sizeHints,
+       		&wmHints,
+		NULL               // XClassHint *class_hints
+	);
+	XFree(textProperty.value);
+
+	Atom deleteWindow = XInternAtom(pDisplay->display, "WM_DELETE_WINDOW", True);
+	XSetWMProtocols(pDisplay->display, pWindow->handle, &deleteWindow, 1);
+
+	glXMakeContextCurrent(
+		pDisplay->display,
+		pWindow->handle,    // GLX drawable to render into
+		pWindow->handle,    // GLX drawable to read from
+		pWindow->context
+	);
+
+	XMapWindow(pDisplay->display, pWindow->handle);
+
+	XFree(visualInfo);
 }
 
 int main(int argc, char** argv)
@@ -123,7 +186,8 @@ int main(int argc, char** argv)
 	initDisplay(&ozodisplay, NULL);
 
 	OZO_Window window;
-	createWindow(&ozodisplay, &window);
+	createWindow(&ozodisplay, &window, "101 browser");
 
 	return 0;
 }
+
