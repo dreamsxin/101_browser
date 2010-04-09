@@ -40,3 +40,5 @@ cursor*.bmp
 *.jcu
 *.jcw
 src_*.txt
+src/GuiX/GuiX
+
