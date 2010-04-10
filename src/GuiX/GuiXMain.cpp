@@ -22,7 +22,12 @@ struct OZO_Window
 	GLXContext context;
 };
 
-void cleanup(const OZO_Display* pDisplay, const OZO_Window* pWindow);
+struct OZO_Atoms
+{
+	Atom deleteWindow;
+};
+
+void cleanup(OZO_Display* pDisplay, OZO_Window* pWindow);
 
 void initDisplay(OZO_Display* pDisplay, const char* displayName)
 {
@@ -71,7 +76,7 @@ GLXContext createContext(const OZO_Display* pDisplay, const OZO_Window* pWindow)
 	return glXCreateNewContext(pDisplay->display, *(pWindow->FBConfig), GLX_RGBA_TYPE, NULL, True);
 }
 
-void createWindow(const OZO_Display* pDisplay, OZO_Window* pWindow, const char* title)
+void createWindow(OZO_Display* pDisplay, OZO_Window* pWindow, const char* title, OZO_Atoms* pAtoms)
 {
 	pWindow->FBConfig = chooseFBConfig(pDisplay);
 	if (pWindow->FBConfig == NULL)
@@ -167,8 +172,8 @@ void createWindow(const OZO_Display* pDisplay, OZO_Window* pWindow, const char* 
 	);
 	XFree(textProperty.value);
 
-	Atom deleteWindow = XInternAtom(pDisplay->display, "WM_DELETE_WINDOW", True);
-	XSetWMProtocols(pDisplay->display, pWindow->handle, &deleteWindow, 1);
+	pAtoms->deleteWindow = XInternAtom(pDisplay->display, "WM_DELETE_WINDOW", True);
+	XSetWMProtocols(pDisplay->display, pWindow->handle, &pAtoms->deleteWindow, 1);
 
 	glXMakeContextCurrent(
 		pDisplay->display,
@@ -182,23 +187,26 @@ void createWindow(const OZO_Display* pDisplay, OZO_Window* pWindow, const char* 
 	XFree(visualInfo);
 }
 
-void cleanup(const OZO_Display* pDisplay, const OZO_Window* pWindow)
+void cleanup(OZO_Display* pDisplay, OZO_Window* pWindow)
 {
 	if (pWindow)
 	{
 		if (pWindow->context)
 		{
-			glXDestroyContext(pDisplay->display, pWindow->context );
+			glXDestroyContext(pDisplay->display, pWindow->context);
+			memset(&pWindow->context, sizeof(pWindow->context), 0);
 		}
 
 		if (pWindow->FBConfig)
 		{
 			XFree(pWindow->FBConfig);
+			memset(&pWindow->FBConfig, sizeof(pWindow->FBConfig), 0);
 		}
 
 		if (pWindow->handle)
 		{
 			XDestroyWindow(pDisplay->display, pWindow->handle);
+			memset(&pWindow->handle, sizeof(pWindow->handle), 0);
 		}
 	}
 
@@ -208,10 +216,27 @@ void cleanup(const OZO_Display* pDisplay, const OZO_Window* pWindow)
 	{
 		XSetCloseDownMode(pDisplay->display, DestroyAll);
 		XCloseDisplay(pDisplay->display);
+		memset(&pDisplay->display, sizeof(pDisplay->display), 0);
 	}
 }
 
-void mainLoop(OZO_Display* pDisplay)
+void printEvent(int type)
+{
+	switch(type)
+	{
+	case KeyPress:
+		printf("KeyPress\n");
+		break;
+	case ClientMessage:
+		printf("ClientMessage\n");
+		break;
+	default:
+		printf("Unknown event with value %u\n", type);
+		break;
+	}
+}
+
+void mainLoop(OZO_Display* pDisplay, OZO_Atoms* pAtoms)
 {
 	bool done = false;
 
@@ -222,6 +247,8 @@ void mainLoop(OZO_Display* pDisplay)
 			XEvent event;
 			XNextEvent(pDisplay->display, &event);
 
+			printEvent(event.type);
+
 			switch(event.type)
 			{
 			case KeyPress:
@@ -229,6 +256,12 @@ void mainLoop(OZO_Display* pDisplay)
 				{
 					done = true;
                     		}
+				break;
+			case ClientMessage:
+				if((Atom) event.xclient.data.l[0] == pAtoms->deleteWindow)
+				{
+					done = true;
+				}
 				break;
 			default:
 				break;
@@ -240,19 +273,19 @@ void mainLoop(OZO_Display* pDisplay)
 int main(int argc, char** argv)
 {
 	OZO_Display ozodisplay;
-	void* resultPointer;
-	resultPointer = memset(&ozodisplay, sizeof(ozodisplay), NULL);
-	assert(resultPointer == &ozodisplay); // This should always be the case but we test it nevertheless
+	memset(&ozodisplay, sizeof(ozodisplay), NULL);
 
 	initDisplay(&ozodisplay, NULL);
 
 	OZO_Window ozowindow;
-	resultPointer = memset(&ozowindow, sizeof(ozowindow), NULL);
-	assert(resultPointer == &ozowindow); // This should always be the case but we test it nevertheless
+	memset(&ozowindow, sizeof(ozowindow), NULL);
 
-	createWindow(&ozodisplay, &ozowindow, "101 browser");
+	OZO_Atoms ozoatoms;
+	memset(&ozoatoms, sizeof(ozoatoms), NULL);
 
-	mainLoop(&ozodisplay);
+	createWindow(&ozodisplay, &ozowindow, "101 browser", &ozoatoms);
+
+	mainLoop(&ozodisplay, &ozoatoms);
 
 	cleanup(&ozodisplay, &ozowindow);
 
