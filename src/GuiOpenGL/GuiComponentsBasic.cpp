@@ -1,7 +1,9 @@
-#include "gui/GuiComponentsBasic.h"
+#include "GuiOpenGL/GuiComponentsBasic.h"
 
+#ifdef _WIN32
 #include <windows.h>
-#include <gl/gl.h>
+#endif
+#include <GL/gl.h>
 #include <cassert>
 
 void createStraightBorder(Vertex2<float> prevVertex, 

@@ -53,7 +53,7 @@ void createOpenGLTexture(Texture* in_pTexture)
 {
 	glGenTextures(1, &in_pTexture->textureID);
 	glBindTexture(GL_TEXTURE_2D, in_pTexture->textureID);
-	glTexImage2D(GL_TEXTURE_2D,                           // type of texture
+	glTexImage2D(GL_TEXTURE_2D,	                          // type of texture
 		0,                                                // the texture level
 		colorModePixelBytesCount(in_pTexture->colorMode), // number of bytes per pixel
 		in_pTexture->width,                               // width
@@ -69,3 +69,4 @@ void createOpenGLTexture(Texture* in_pTexture)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,     GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,     GL_CLAMP_TO_EDGE);
 }
+

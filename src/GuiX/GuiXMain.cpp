@@ -1,4 +1,3 @@
-/* Xlib.h is the default header that is included and has the core functionallity */
 #include <X11/Xlib.h>
 #include <GL/glx.h>
 #include <cstdio>
@@ -6,6 +5,9 @@
 #include <cstring>
 #include <cassert>
 #include <vector>
+
+#include "GuiOpenGL/GuiOpenGLState.h"
+
 using namespace std;
 
 struct OZO_Display
@@ -55,6 +57,9 @@ GLXFBConfig* chooseFBConfig(const OZO_Display* pDisplay)
 	attributes.push_back(GLX_BLUE_SIZE);
 	attributes.push_back(1);
 
+	attributes.push_back(GLX_DEPTH_SIZE);
+	attributes.push_back(1);
+
 	attributes.push_back(GLX_DOUBLEBUFFER);
 	attributes.push_back(True);
 
@@ -76,7 +81,8 @@ GLXContext createContext(const OZO_Display* pDisplay, const OZO_Window* pWindow)
 	return glXCreateNewContext(pDisplay->display, *(pWindow->FBConfig), GLX_RGBA_TYPE, NULL, True);
 }
 
-void createWindow(OZO_Display* pDisplay, OZO_Window* pWindow, const char* title, OZO_Atoms* pAtoms)
+void createWindow(OZO_Display* pDisplay, OZO_Window* pWindow, const char* title, OZO_Atoms* pAtoms, 
+unsigned int width, unsigned int height)
 {
 	pWindow->FBConfig = chooseFBConfig(pDisplay);
 	if (pWindow->FBConfig == NULL)
@@ -109,8 +115,6 @@ void createWindow(OZO_Display* pDisplay, OZO_Window* pWindow, const char* title,
 
 	int x = -1;
 	int y = -1;
-	int width = 640;
-	int height = 480;
 
 	pWindow->handle = XCreateWindow(
 		pDisplay->display,
@@ -121,7 +125,7 @@ void createWindow(OZO_Display* pDisplay, OZO_Window* pWindow, const char* title,
 		 * In future we could perhaps use that?
 		 */
 		pDisplay->rootWindow, // parent window
-		x, y, width, height,
+		x, y, (unsigned int) width, (unsigned int) height,
 		0,                    // border width
 		visualInfo->depth,    // depth
 		InputOutput,          // class
@@ -236,7 +240,14 @@ void printEvent(int type)
 	}
 }
 
-void mainLoop(OZO_Display* pDisplay, OZO_Atoms* pAtoms)
+void draw(const OZO_Display* pDisplay, const OZO_Window* pWindow)
+{
+	UpdateGuiState();
+	drawGui();
+	glXSwapBuffers(pDisplay->display, pWindow->handle);
+}
+
+void mainLoop(OZO_Display* pDisplay, const OZO_Window* pWindow, OZO_Atoms* pAtoms, int *currentWidth, int *currentHeight)
 {
 	bool done = false;
 
@@ -263,10 +274,32 @@ void mainLoop(OZO_Display* pDisplay, OZO_Atoms* pAtoms)
 					done = true;
 				}
 				break;
+			case CreateNotify:
+        		case ConfigureNotify:
+			{
+				int newWidth, newHeight;
+				if (event.type == CreateNotify) {
+					newWidth = event.xcreatewindow.width;
+					newHeight = event.xcreatewindow.height;
+                		} else {
+					assert(event.type == ConfigureNotify);
+					newWidth = event.xconfigure.width;
+					newHeight = event.xconfigure.height;
+				}
+
+				if ((*currentWidth != newWidth) || (*currentHeight != newHeight))
+				{
+					*currentWidth = newWidth;
+					*currentHeight = newHeight;
+					ReshapeGL(newWidth, newHeight);
+				}
+			}
 			default:
 				break;
 			}
 		}
+
+		draw(pDisplay, pWindow);
 	}
 }
 
@@ -283,9 +316,15 @@ int main(int argc, char** argv)
 	OZO_Atoms ozoatoms;
 	memset(&ozoatoms, sizeof(ozoatoms), NULL);
 
-	createWindow(&ozodisplay, &ozowindow, "101 browser", &ozoatoms);
+	int width = 640;
+	int height = 480;
 
-	mainLoop(&ozodisplay, &ozoatoms);
+	createWindow(&ozodisplay, &ozowindow, "101 browser", &ozoatoms, width, height);
+
+	ReshapeGL(width, height);
+	initializeOpenGLGuiState();
+
+	mainLoop(&ozodisplay, &ozowindow, &ozoatoms, &width, &height);
 
 	cleanup(&ozodisplay, &ozowindow);
 

@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 project(101_browser)
+if (${CMAKE_C_COMPILER_ID} MATCHES GNU)
+	set( CMAKE_CXX_FLAGS "-Wall" )
+endif (${CMAKE_C_COMPILER_ID} MATCHES GNU)
 add_subdirectory(src)
-
