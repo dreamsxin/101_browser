@@ -164,7 +164,7 @@ void createWindow(OZO_Display* pDisplay, OZO_Window* pWindow, const char* title,
 		pWindow->handle,
 		&textProperty,     // window name
 		&textProperty,     // icon name
-		0,                 // char **argv
+		NULL,              // char **argv
 		0,                 // int argc
 		&sizeHints,
        		&wmHints,
