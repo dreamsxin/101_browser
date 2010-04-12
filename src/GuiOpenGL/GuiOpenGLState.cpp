@@ -1,11 +1,15 @@
-#include "gui/GuiOpenGLState.h"
-#include "gui/GuiComponentsDefaults.h"
-#include "gui/GuiComponentsCheckBox.h"
-#include "gui/GuiComponentsTextBox.h"
+#include "GuiOpenGL/GuiOpenGLState.h"
+#include "GuiOpenGL/GuiComponentsDefaults.h"
+#include "GuiOpenGL/GuiComponentsCheckBox.h"
+#include "GuiOpenGL/GuiComponentsTextBox.h"
+#ifdef _WIN32
 #include "gui/GuiComponentsCursor.h"
+#endif
 
+#ifdef _WIN32
 #include <windows.h>
-#include <gl/gl.h>
+#endif
+#include <GL/gl.h>
 
 float currentWidth, currentHeight;
 
@@ -61,11 +65,13 @@ void drawGui()
 		Gui::Components::Defaults::cCheckBoxBorderSize,
 		currentHeight);
 
+#ifdef _WIN32
 	extern Gui::Cursor cursor;
 
 	Gui::Components::drawCursor(20.0f, 120.0f, currentHeight, 
 		&cursor);
-
+#endif
 
 	glFlush();													// Flush The GL Rendering Pipeline
 }
+

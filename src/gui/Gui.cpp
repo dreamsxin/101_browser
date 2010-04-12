@@ -53,11 +53,11 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_PAINT:
 		// I know many say should not put OpenGL code into this
-		// handler - but what should be done
+		// handler - but what should be done else
 		// for drawing the window *while* resizing, moving etc.
 		UpdateGuiState();
 		drawGui();
-		SwapBuffers (window->hDC);
+		SwapBuffers(window->hDC);
 		ValidateRect(window->hWnd, NULL);
 		return 0;
 	default:

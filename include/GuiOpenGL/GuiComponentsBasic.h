@@ -29,7 +29,7 @@ void createRoundBorder(Vertex2<float> prevVertex,
 */
 inline void createBorderTriangleStrip(
 									  DoubleIteratorInstance<const Vertex2<float>, 
-									  typename TriangleStripBorderIterator<Vertex2<float>>::ConstIteratorState> itInstance,
+									  TriangleStripBorderIterator<Vertex2<float> >::ConstIteratorState> itInstance,
 									  std::vector<Vertex2<float> >* pBorderTriangleStrip,
 									  void (*borderCreatingFunction)(Vertex2<float>, 
 									  Vertex2<float>, Vertex2<float>, 

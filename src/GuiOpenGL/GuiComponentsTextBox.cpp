@@ -1,8 +1,8 @@
 #include <vector>
 
-#include "gui/GuiComponentsTextBox.h"
-#include "gui/GuiComponentsBasic.h"
-#include "gui/GuiComponentsDefaults.h"
+#include "GuiOpenGL/GuiComponentsTextBox.h"
+#include "GuiOpenGL/GuiComponentsBasic.h"
+#include "GuiOpenGL/GuiComponentsDefaults.h"
 
 namespace Gui
 {

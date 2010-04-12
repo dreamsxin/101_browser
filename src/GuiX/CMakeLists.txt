@@ -1,4 +1,4 @@
-include_directories(../include)
+include_directories(../../include)
 link_libraries(X11 GL GLU)
-add_executable (GuiX GuiXMain.cpp)
+add_executable (GuiX GuiXMain.cpp ../GuiOpenGL/GuiComponentsBasic.cpp ../GuiOpenGL/GuiComponentsCheckBox.cpp ../GuiOpenGL/GuiComponentsTextBox.cpp ../GuiOpenGL/GuiOpenGLState.cpp)
 
