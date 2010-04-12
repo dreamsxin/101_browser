@@ -12,6 +12,7 @@
 *.res
 *.aps
 *.exp
+*~
 testfiles/fonts/*.ttf
 testfiles/fonts/*.TTF
 testfiles/fonts/*.fon
@@ -39,3 +40,5 @@ cursor*.bmp
 *.jcu
 *.jcw
 src_*.txt
+src/GuiX/GuiX
+
