@@ -13,18 +13,18 @@
 
 float currentWidth, currentHeight;
 
-void ReshapeGL (int width, int height)									// Reshape The Window When It's Moved Or Resized
+void ReshapeGL(int width, int height)									// Reshape The Window When It's Moved Or Resized
 {
-	glViewport (0, 0, (GLsizei)(width), (GLsizei)(height));				// Reset The Current Viewport
-	glMatrixMode (GL_PROJECTION);										// Select The Projection Matrix
-	glLoadIdentity ();													// Reset The Projection Matrix
+	glViewport(0, 0, (GLsizei)(width), (GLsizei)(height));				// Reset The Current Viewport
+	glMatrixMode(GL_PROJECTION);										// Select The Projection Matrix
+	glLoadIdentity();													// Reset The Projection Matrix
 	
 	glOrtho(0.0, width, 0.0, height, -1, 1);
 
 	currentWidth = (float) width;
 	currentHeight = (float) height;
 	
-	glMatrixMode (GL_MODELVIEW);										// Select The Modelview Matrix
+	glMatrixMode(GL_MODELVIEW);										// Select The Modelview Matrix
 	glLoadIdentity ();													// Reset The Modelview Matrix
 }
 
@@ -38,10 +38,10 @@ void initializeOpenGLGuiState()
 
 	glClearDepth (1.0f);										// Depth Buffer Setup
 	glDepthFunc (GL_LEQUAL);									// The Type Of Depth Testing (Less Or Equal)
-	glEnable (GL_DEPTH_TEST);									// Enable Depth Testing
+	glEnable(GL_DEPTH_TEST);									// Enable Depth Testing
 	glEnable(GL_CULL_FACE);
 	glShadeModel (GL_SMOOTH);									// Select Smooth Shading
-	glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);			// Set Perspective Calculations To Most Accurate
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);			// Set Perspective Calculations To Most Accurate
 }
 
 void UpdateGuiState()

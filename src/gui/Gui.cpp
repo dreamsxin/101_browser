@@ -1,8 +1,8 @@
 #include <windows.h>
 #include <string>
 #include <cstdlib>
-#include "gui/GuiComponentsDefaults.h"
-#include "gui/GuiOpenGLState.h"
+#include "GuiOpenGL/GuiComponentsDefaults.h"
+#include "GuiOpenGL/GuiOpenGLState.h"
 #include "gui/Cursor.h"
 
 struct Window
