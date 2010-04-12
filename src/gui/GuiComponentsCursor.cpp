@@ -1,6 +1,6 @@
 #include "gui/GuiComponentsCursor.h"
-#include "gui/GuiComponentsBasic.h"
-#include "gui/GuiComponentsDefaults.h"
+#include "GuiOpenGL/GuiComponentsBasic.h"
+#include "GuiOpenGL/GuiComponentsDefaults.h"
 #include "GL/glext.h"
 
 namespace Gui

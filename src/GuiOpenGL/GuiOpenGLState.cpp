@@ -55,14 +55,14 @@ void drawGui()
 
 	Gui::Components::drawTextBox(20.0f, 20.0f, 
 		currentWidth-2*20.0f, 
-		Gui::Components::Defaults::cTextBoxHeight, 
-		Gui::Components::Defaults::cTextBoxBorderSize, 
+		(float) Gui::Components::Defaults::cTextBoxHeight, 
+		(float) Gui::Components::Defaults::cTextBoxBorderSize, 
 		currentHeight);
 
 	Gui::Components::drawCheckBox(20.0f, 80.0f, 
-		Gui::Components::Defaults::cCheckBoxWidth, 
-		Gui::Components::Defaults::cCheckBoxHeight, 
-		Gui::Components::Defaults::cCheckBoxBorderSize,
+		(float) Gui::Components::Defaults::cCheckBoxWidth, 
+		(float) Gui::Components::Defaults::cCheckBoxHeight, 
+		(float) Gui::Components::Defaults::cCheckBoxBorderSize,
 		currentHeight);
 
 #ifdef _WIN32

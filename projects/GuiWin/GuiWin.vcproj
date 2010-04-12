@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="gui"
-	ProjectGUID="{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}"
-	RootNamespace="gui"
+	Name="GuiWin"
+	ProjectGUID="{64A360E3-664D-4B8E-A7B3-E8B27437305D}"
+	RootNamespace="GuiWin"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -47,8 +47,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
-				WarningLevel="4"
-				Detect64BitPortabilityProblems="true"
+				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -62,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib"
+				AdditionalDependencies="OpenGL32.Lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -123,7 +122,6 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -137,7 +135,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib"
+				AdditionalDependencies="OpenGL32.Lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -185,11 +183,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\gui\GuiComponentsBasic.cpp"
+				RelativePath="..\..\src\GuiOpenGL\GuiComponentsBasic.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\gui\GuiComponentsCheckBox.cpp"
+				RelativePath="..\..\src\GuiOpenGL\GuiComponentsCheckBox.cpp"
 				>
 			</File>
 			<File
@@ -197,11 +195,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\gui\GuiComponentsTextBox.cpp"
+				RelativePath="..\..\src\GuiOpenGL\GuiComponentsTextBox.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\gui\GuiOpenGLState.cpp"
+				RelativePath="..\..\src\GuiOpenGL\GuiOpenGLState.cpp"
 				>
 			</File>
 			<File
@@ -223,11 +221,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\gui\GuiComponentsBasic.h"
+				RelativePath="..\..\include\GuiOpenGL\GuiComponentsBasic.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\gui\GuiComponentsCheckBox.h"
+				RelativePath="..\..\include\GuiOpenGL\GuiComponentsCheckBox.h"
 				>
 			</File>
 			<File
@@ -235,15 +233,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\gui\GuiComponentsDefaults.h"
+				RelativePath="..\..\include\GuiOpenGL\GuiComponentsDefaults.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\gui\GuiComponentsTextBox.h"
+				RelativePath="..\..\include\GuiOpenGL\GuiComponentsTextBox.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\gui\GuiOpenGLState.h"
+				RelativePath="..\..\include\GuiOpenGL\GuiOpenGLState.h"
 				>
 			</File>
 			<File

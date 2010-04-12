@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "compiler_backend", "projects\compiler_backend\compiler_backend.vcproj", "{0FCA25E9-C3FB-4BA8-BB7D-CE55DB3135AD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gui", "projects\gui\gui.vcproj", "{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "font_server", "projects\font_server\font_server.vcproj", "{E6D6C259-034B-4045-804D-6DB07D7D897D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BasicDataStructures", "projects\BasicDataStructures\BasicDataStructures.vcproj", "{E97BF0CC-EB71-43A2-B4BA-8CB5F1E11214}"
@@ -30,6 +28,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GifDecoder", "projects\GifDecoder\GifDecoder.vcproj", "{19451F5D-23C9-46B9-B608-0C2D22B5483F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsDataStructures", "projects\GraphicsDataStructures\GraphicsDataStructures.vcproj", "{AE3F0D3B-2A9B-4D2A-97AD-E6B526C43604}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiWin", "projects\GuiWin\GuiWin.vcproj", "{64A360E3-664D-4B8E-A7B3-E8B27437305D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,26 +65,6 @@ Global
 		{0FCA25E9-C3FB-4BA8-BB7D-CE55DB3135AD}.LIB Release|Win32.Build.0 = Release|Win32
 		{0FCA25E9-C3FB-4BA8-BB7D-CE55DB3135AD}.Release|Win32.ActiveCfg = Release|Win32
 		{0FCA25E9-C3FB-4BA8-BB7D-CE55DB3135AD}.Release|Win32.Build.0 = Release|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.Debug|Win32.ActiveCfg = Debug|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.Debug|Win32.Build.0 = Debug|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.DLL ASM Debug|Win32.ActiveCfg = Debug|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.DLL ASM Debug|Win32.Build.0 = Debug|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.DLL ASM Release|Win32.ActiveCfg = Release|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.DLL ASM Release|Win32.Build.0 = Release|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.DLL Debug|Win32.ActiveCfg = Debug|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.DLL Debug|Win32.Build.0 = Debug|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.DLL Release|Win32.ActiveCfg = Release|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.DLL Release|Win32.Build.0 = Release|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.LIB ASM Debug|Win32.ActiveCfg = Debug|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.LIB ASM Debug|Win32.Build.0 = Debug|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.LIB ASM Release|Win32.ActiveCfg = Release|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.LIB ASM Release|Win32.Build.0 = Release|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.LIB Debug|Win32.ActiveCfg = Debug|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.LIB Debug|Win32.Build.0 = Debug|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.LIB Release|Win32.ActiveCfg = Release|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.LIB Release|Win32.Build.0 = Release|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.Release|Win32.ActiveCfg = Release|Win32
-		{7D4C8AFE-EDF5-4E3A-9B8C-5BF8C25B5218}.Release|Win32.Build.0 = Release|Win32
 		{E6D6C259-034B-4045-804D-6DB07D7D897D}.Debug|Win32.ActiveCfg = Debug|Win32
 		{E6D6C259-034B-4045-804D-6DB07D7D897D}.Debug|Win32.Build.0 = Debug|Win32
 		{E6D6C259-034B-4045-804D-6DB07D7D897D}.DLL ASM Debug|Win32.ActiveCfg = Debug|Win32
@@ -345,6 +325,26 @@ Global
 		{AE3F0D3B-2A9B-4D2A-97AD-E6B526C43604}.LIB Release|Win32.Build.0 = Release|Win32
 		{AE3F0D3B-2A9B-4D2A-97AD-E6B526C43604}.Release|Win32.ActiveCfg = Release|Win32
 		{AE3F0D3B-2A9B-4D2A-97AD-E6B526C43604}.Release|Win32.Build.0 = Release|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.Debug|Win32.Build.0 = Debug|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.DLL ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.DLL ASM Debug|Win32.Build.0 = Debug|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.DLL ASM Release|Win32.ActiveCfg = Release|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.DLL ASM Release|Win32.Build.0 = Release|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.DLL Debug|Win32.ActiveCfg = Debug|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.DLL Debug|Win32.Build.0 = Debug|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.DLL Release|Win32.ActiveCfg = Release|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.DLL Release|Win32.Build.0 = Release|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.LIB ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.LIB ASM Debug|Win32.Build.0 = Debug|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.LIB ASM Release|Win32.ActiveCfg = Release|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.LIB ASM Release|Win32.Build.0 = Release|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.LIB Debug|Win32.ActiveCfg = Debug|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.LIB Debug|Win32.Build.0 = Debug|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.LIB Release|Win32.ActiveCfg = Release|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.LIB Release|Win32.Build.0 = Release|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.Release|Win32.ActiveCfg = Release|Win32
+		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
