@@ -1,5 +1,19 @@
 #include <X11/Xlib.h>
+#include <xcb/xcb.h>
+
+/*
+ * the extern "C" is a workaround for http://bugs.freedesktop.org/show_bug.cgi?id=22252
+ *
+ * I will remove it soon
+ */
+extern "C"
+{
+#include <X11/Xlib-xcb.h> /* for XGetXCBConnection */
+}
+
+#include <GL/gl.h>
 #include <GL/glx.h>
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -13,6 +27,7 @@ using namespace std;
 struct OZO_Display
 {
 	Display* display;
+	xcb_connection_t *connection;
 	int screen;
 	Window rootWindow;
 };
@@ -35,13 +50,22 @@ void initDisplay(OZO_Display* pDisplay, const char* displayName)
 {
 	if ((pDisplay->display = XOpenDisplay(displayName)) == NULL)
 	{
-		fprintf(stderr, "Could not open display\n");
+		fprintf(stderr, "Can't open display\n");
 		cleanup(pDisplay, NULL);
 		exit(1);
 	}
 
 	pDisplay->screen = DefaultScreen(pDisplay->display);
 	pDisplay->rootWindow = RootWindow(pDisplay->display, pDisplay->screen);
+
+	pDisplay->connection = XGetXCBConnection(pDisplay->display);
+
+	if (!pDisplay->connection)
+	{
+		fprintf(stderr, "Can't get xcb connection from display\n");
+		cleanup(pDisplay, NULL);
+		exit(1);
+	}
 }
 
 GLXFBConfig* chooseFBConfig(const OZO_Display* pDisplay)
