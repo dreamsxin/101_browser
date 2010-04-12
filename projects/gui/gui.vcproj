@@ -247,6 +247,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\GuiWin\GuiWin.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\gui\MultiMouse.h"
 				>
 			</File>
