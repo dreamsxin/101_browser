@@ -103,6 +103,7 @@ module html5
     void writeln(in DOMString... text);
   
     // user interaction
+    readonly attribute WindowProxy defaultView;
     Selection getSelection();
     readonly attribute Element activeElement;
     boolean hasFocus();
@@ -369,8 +370,6 @@ module html5
 
   interface HTMLHRElement : HTMLElement {};
 
-  interface HTMLBRElement : HTMLElement {};
-
   interface HTMLPreElement : HTMLElement {};
 
   interface HTMLQuoteElement : HTMLElement {
@@ -423,6 +422,8 @@ module html5
   };
 
   interface HTMLSpanElement : HTMLElement {};
+
+  interface HTMLBRElement : HTMLElement {};
 
   interface HTMLModElement : HTMLElement {
              attribute DOMString cite;
@@ -853,7 +854,7 @@ module html5
              attribute DOMString defaultValue;
              attribute DOMString value;
              attribute Date valueAsDate;
-             attribute float valueAsNumber;
+             attribute double valueAsNumber;
     readonly attribute HTMLOptionElement selectedOption;
              attribute DOMString width;
   
@@ -1086,7 +1087,8 @@ module html5
   };
 
   [NoInterfaceObject]
-  interface AbstractPeer {
+  [Constructor(in DOMString serverConfiguration)]
+  interface ConnectionPeer {
     void sendText(in DOMString text);
     attribute Function ontext; // receiving
   
@@ -1096,31 +1098,24 @@ module html5
     void sendFile(in File file);
     attribute Function onfile; // receiving
   
-    attribute Stream localStream; // video/audio to send
-    readonly attribute Stream remoteStream; // video/audio from remote peer
-    attribute Function onstreamchange; // when the remote peer changes whether the video is being sent or not
+    void addStream(in Stream stream);
+    void removeStream(in Stream stream);
+    readonly attribute Stream[] localStreams;
+    readonly attribute Stream[] remoteStreams;
+    attribute Function onstream; // receiving
+  
+    void getLocalConfiguration(in ConnectionPeerConfigurationCallback callback); // maybe this should be in the constructor
+    void addRemoteConfiguration(in DOMString configuration);
+    void close(); // disconnects and stops listening
   
     attribute Function onconnect;
     attribute Function onerror;
     attribute Function ondisconnect;
   };
   
-  [Constructor(in DOMString serverConfiguration)]
-  interface PeerToPeerServer : AbstractPeer {
-    void getClientConfiguration(in PeerToPeerConfigurationCallback callback);
-  
-    void close(); // disconnects and stops listening
-  };
-  
-  [Constructor]
-  interface PeerToPeerClient : AbstractPeer {
-    void addConfiguration(in DOMString configuration);
-    void close(); // disconnects
-  };
-  
   [Callback=FunctionOnly, NoInterfaceObject]
-  interface PeerToPeerConfigurationCallback {
-    void handleEvent(in PeerToPeerServer server, in DOMString configuration);
+  interface ConnectionPeerConfigurationCallback {
+    void handleEvent(in ConnectionPeer server, in DOMString configuration);
   };
 
   [OverrideBuiltins, ReplaceableNamedProperties] 
@@ -1128,6 +1123,7 @@ module html5
     // the current browsing context
     readonly attribute WindowProxy window;
     readonly attribute WindowProxy self;
+    readonly attribute Document document;
              attribute DOMString name;
     [PutForwards=href] readonly attribute Location location;
     readonly attribute History history;
@@ -1166,8 +1162,7 @@ module html5
     any showModalDialog(in DOMString url, in optional any argument);
   
     // cross-document messaging
-    void postMessage(in any message, in DOMString targetOrigin);
-    void postMessage(in any message, in MessagePortArray ports, in DOMString targetOrigin);
+    void postMessage(in any message, in DOMString targetOrigin, in optional MessagePortArray ports);
   
     // event handler IDL attributes
              attribute Function onabort;
@@ -1390,7 +1385,7 @@ module html5
   interface DragEvent : MouseEvent {
     readonly attribute DataTransfer dataTransfer;
   
-    void initDragEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in AbstractView viewArg, in long detailArg, in long screenXArg, in long screenYArg, in long clientXArg, in long clientYArg, in boolean ctrlKeyArg, in boolean altKeyArg, in boolean shiftKeyArg, in boolean metaKeyArg, in unsigned short buttonArg, in EventTarget relatedTargetArg, in DataTransfer dataTransferArg);
+    void initDragEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in any dummyArg, in long detailArg, in long screenXArg, in long screenYArg, in long clientXArg, in long clientYArg, in boolean ctrlKeyArg, in boolean altKeyArg, in boolean shiftKeyArg, in boolean metaKeyArg, in unsigned short buttonArg, in EventTarget relatedTargetArg, in DataTransfer dataTransferArg);
   };
 
   interface DataTransfer {
