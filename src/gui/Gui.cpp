@@ -49,6 +49,7 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			case SIZE_RESTORED:
 			case SIZE_MAXIMIZED:
 				ReshapeGL(LOWORD(lParam), HIWORD(lParam));
+				return 0;
 		}
 		break;
 	case WM_PAINT:
@@ -60,13 +61,11 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		SwapBuffers(window->hDC);
 		ValidateRect(window->hWnd, NULL);
 		return 0;
-	default:
-		fprintf(logFile, "Did not handle\n");
-		fflush(logFile);
-		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
 	
-	
+	fprintf(logFile, "Did not handle\n");
+	fflush(logFile);
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
 bool registerWindowClass(const Window& in_window)

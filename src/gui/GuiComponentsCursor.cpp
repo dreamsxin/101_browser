@@ -14,7 +14,9 @@ namespace Gui
 			createBoxVertices(&boxVertices, 
 				(float) (left-in_pCursor->hotspot.x), 
 				(float) (top-in_pCursor->hotspot.y),
-				in_pCursor->andMap.width, in_pCursor->andMap.height, currentHeight);
+				(float) (in_pCursor->andMap.width), 
+				(float) (in_pCursor->andMap.height), 
+				currentHeight);
 			Vertex2<float> textureUV[4]=
 			{
 				Vertex2<float>(0.0f, 0.0f),

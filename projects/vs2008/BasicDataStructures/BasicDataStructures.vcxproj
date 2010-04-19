@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E97BF0CC-EB71-43A2-B4BA-8CB5F1E11214}</ProjectGuid>
+    <RootNamespace>BasicDataStructures</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../../../include;..\..\..\include\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(SolutionDir)\lib\BasicDataStructures\$(Configuration)\$(ProjectName).lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>../../../include;..\..\..\include\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(SolutionDir)\lib\BasicDataStructures\$(Configuration)\$(ProjectName).lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\BasicDataStructures\Stream\BigEndianBitLittleEndianByteBitReadStream.cpp" />
+    <ClCompile Include="..\..\..\src\BasicDataStructures\Stream\FileReadStream.cpp" />
+    <ClCompile Include="..\..\..\src\BasicDataStructures\Stream\ZReadStream.cpp" />
+    <ClCompile Include="..\..\..\src\BasicDataStructures\Parser\ParserUnicodeEncodings.cpp" />
+    <ClCompile Include="..\..\..\src\BasicDataStructures\Parser\StringParser.cpp" />
+    <ClCompile Include="..\..\..\src\BasicDataStructures\Parser\UnionParser.cpp" />
+    <ClCompile Include="..\..\..\src\BasicDataStructures\Parser\UntilCharacterParser.cpp" />
+    <ClCompile Include="..\..\..\src\BasicDataStructures\VirtualMachine\VirtualMachineContext.cpp" />
+    <ClCompile Include="..\..\..\src\BasicDataStructures\BigNumber\BigInteger.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Collections.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Comparator.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\HigherOrderFunctions.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Interval.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Iterator.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Maybe.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Permuter.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Unicode.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\AVLTree.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\AVLTreeClasses.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\AVLTreeRotate.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\BinaryTree.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\BinaryTreeClasses.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\BinaryTreeHelper.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\BinaryTreeImpl.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Stream\BasicOpenStream.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Stream\BasicReadStream.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Stream\BasicWriteStream.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Stream\BigEndianBitLittleEndianByteBitReadStream.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Stream\FileReadStream.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Stream\RevertibleReadStream.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Stream\ZReadStream.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Parser\AbstractParser.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Parser\ParserDataStructures.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Parser\ParserUnicodeEncodings.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Parser\StringParser.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Parser\UnionParser.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Parser\UntilCharacterParser.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Util\MemoryManager.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Util\SingleChain.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\VirtualMachine\InstructionContext.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\VirtualMachine\VirtualMachineContext.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\BigNumber\BigInteger.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

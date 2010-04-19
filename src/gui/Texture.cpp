@@ -12,6 +12,8 @@ size_t colorModePixelBytesCount(ColorMode colorMode)
 		return 3;
 	case ColorModeRGBA:
 		return 4;
+	default:
+		return 0;
 	}
 }
 
@@ -46,6 +48,8 @@ GLenum colorModeTextureFormat(ColorMode colorMode)
 		return GL_RGB;
 	case ColorModeRGBA:
 		return GL_RGBA;
+	default:
+		return 0;
 	}
 }
 

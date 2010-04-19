@@ -12,6 +12,13 @@
 *.res
 *.aps
 *.exp
+*.ipch
+*.opensdf
+*.sdf
+*.tlog
+*.lastbuildstate
+*.log
+*_manifest.rc
 *~
 testfiles/fonts/*.ttf
 testfiles/fonts/*.TTF
@@ -41,4 +48,3 @@ cursor*.bmp
 *.jcw
 src_*.txt
 src/GuiX/GuiX
-

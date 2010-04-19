@@ -1,0 +1,66 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiWin", "projects\vs2010\GuiWin\GuiWin.vcxproj", "{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "projects\vs2010\zlib\zlib.vcxproj", "{0039884E-1AF1-4FFD-B864-7A386353C88F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		DLL ASM Debug|Win32 = DLL ASM Debug|Win32
+		DLL ASM Release|Win32 = DLL ASM Release|Win32
+		DLL Debug|Win32 = DLL Debug|Win32
+		DLL Release|Win32 = DLL Release|Win32
+		LIB ASM Debug|Win32 = LIB ASM Debug|Win32
+		LIB ASM Release|Win32 = LIB ASM Release|Win32
+		LIB Debug|Win32 = LIB Debug|Win32
+		LIB Release|Win32 = LIB Release|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.Debug|Win32.Build.0 = Debug|Win32
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.DLL ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.DLL ASM Debug|Win32.Build.0 = Debug|Win32
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.DLL ASM Release|Win32.ActiveCfg = Release|Win32
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.DLL ASM Release|Win32.Build.0 = Release|Win32
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.DLL Debug|Win32.ActiveCfg = Debug|Win32
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.DLL Debug|Win32.Build.0 = Debug|Win32
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.DLL Release|Win32.ActiveCfg = Release|Win32
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.DLL Release|Win32.Build.0 = Release|Win32
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.LIB ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.LIB ASM Debug|Win32.Build.0 = Debug|Win32
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.LIB ASM Release|Win32.ActiveCfg = Release|Win32
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.LIB ASM Release|Win32.Build.0 = Release|Win32
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.LIB Debug|Win32.ActiveCfg = Debug|Win32
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.LIB Debug|Win32.Build.0 = Debug|Win32
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.LIB Release|Win32.ActiveCfg = Release|Win32
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.LIB Release|Win32.Build.0 = Release|Win32
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.Release|Win32.ActiveCfg = Release|Win32
+		{4DF22B7B-CB08-4140-806B-DA76A3AA3E8D}.Release|Win32.Build.0 = Release|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.Debug|Win32.ActiveCfg = LIB ASM Debug|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.Debug|Win32.Build.0 = LIB ASM Debug|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.DLL ASM Debug|Win32.ActiveCfg = DLL ASM Debug|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.DLL ASM Debug|Win32.Build.0 = DLL ASM Debug|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.DLL ASM Release|Win32.ActiveCfg = DLL ASM Release|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.DLL ASM Release|Win32.Build.0 = DLL ASM Release|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.DLL Debug|Win32.ActiveCfg = DLL Debug|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.DLL Release|Win32.ActiveCfg = DLL Release|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.DLL Release|Win32.Build.0 = DLL Release|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.LIB ASM Debug|Win32.ActiveCfg = LIB ASM Debug|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.LIB ASM Debug|Win32.Build.0 = LIB ASM Debug|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.LIB ASM Release|Win32.ActiveCfg = LIB ASM Release|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.LIB ASM Release|Win32.Build.0 = LIB ASM Release|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.LIB Debug|Win32.ActiveCfg = LIB Debug|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.LIB Debug|Win32.Build.0 = LIB Debug|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.LIB Release|Win32.ActiveCfg = LIB Release|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.LIB Release|Win32.Build.0 = LIB Release|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.Release|Win32.ActiveCfg = LIB ASM Release|Win32
+		{0039884E-1AF1-4FFD-B864-7A386353C88F}.Release|Win32.Build.0 = LIB ASM Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
