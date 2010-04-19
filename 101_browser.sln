@@ -31,6 +31,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsDataStructures", "p
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiWin", "projects\GuiWin\GuiWin.vcproj", "{64A360E3-664D-4B8E-A7B3-E8B27437305D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConnectionServerWin", "projects\ConnectionServerWin\ConnectionServerWin.vcproj", "{06F86720-803C-434E-B58A-620F088C08FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -345,6 +347,26 @@ Global
 		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.LIB Release|Win32.Build.0 = Release|Win32
 		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.Release|Win32.ActiveCfg = Release|Win32
 		{64A360E3-664D-4B8E-A7B3-E8B27437305D}.Release|Win32.Build.0 = Release|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.Debug|Win32.Build.0 = Debug|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.DLL ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.DLL ASM Debug|Win32.Build.0 = Debug|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.DLL ASM Release|Win32.ActiveCfg = Release|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.DLL ASM Release|Win32.Build.0 = Release|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.DLL Debug|Win32.ActiveCfg = Debug|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.DLL Debug|Win32.Build.0 = Debug|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.DLL Release|Win32.ActiveCfg = Release|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.DLL Release|Win32.Build.0 = Release|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.LIB ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.LIB ASM Debug|Win32.Build.0 = Debug|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.LIB ASM Release|Win32.ActiveCfg = Release|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.LIB ASM Release|Win32.Build.0 = Release|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.LIB Debug|Win32.ActiveCfg = Debug|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.LIB Debug|Win32.Build.0 = Debug|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.LIB Release|Win32.ActiveCfg = Release|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.LIB Release|Win32.Build.0 = Release|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.Release|Win32.ActiveCfg = Release|Win32
+		{06F86720-803C-434E-B58A-620F088C08FB}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -25,7 +25,7 @@ void ReshapeGL(int width, int height)									// Reshape The Window When It's Mo
 	currentHeight = (float) height;
 	
 	glMatrixMode(GL_MODELVIEW);										// Select The Modelview Matrix
-	glLoadIdentity ();													// Reset The Modelview Matrix
+	glLoadIdentity ();         										// Reset The Modelview Matrix
 }
 
 void initializeOpenGLGuiState()
