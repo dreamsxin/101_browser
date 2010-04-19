@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="TestSuite"
-	ProjectGUID="{509A97A0-019B-478F-BA5F-EF10C9D17E90}"
-	RootNamespace="TestSuite"
+	Name="JpegDecoder"
+	ProjectGUID="{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}"
+	RootNamespace="JpegDecoder"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -41,13 +41,13 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../include"
+				AdditionalIncludeDirectories="..\..\..\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
-				WarningLevel="4"
+				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -115,7 +115,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../../include"
+				AdditionalIncludeDirectories="..\..\..\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -173,31 +173,19 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\src\TestSuite\IteratorTestUtil.cpp"
+				RelativePath="..\..\..\src\JpegDecoder\JpegDecoder.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\TestSuite\Test_BasicDataStructures.cpp"
+				RelativePath="..\..\..\src\JpegDecoder\JpegDecoderMain.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\TestSuite\Test_BasicDataStructures_Tree.cpp"
+				RelativePath="..\..\..\src\JpegDecoder\JpegDecoderUtil.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\TestSuite\Test_OuterBorderIterator.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\TestSuite\Test_TriangleStripBorderIterator.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\TestSuite\TestSuiteMain.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\TestSuite\TestSuiteTest.cpp"
+				RelativePath="..\..\..\src\JpegDecoder\JpegSegments.cpp"
 				>
 			</File>
 		</Filter>
@@ -207,15 +195,19 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\include\TestSuite\IteratorTestUtil.h"
+				RelativePath="..\..\..\include\JpegDecoder\JpegDecoder.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\TestSuite\Tests.h"
+				RelativePath="..\..\..\include\JpegDecoder\JpegDecoderMarkers.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\TestSuite\TestSuite.h"
+				RelativePath="..\..\..\include\JpegDecoder\JpegDecoderUtil.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\JpegDecoder\JpegSegments.h"
 				>
 			</File>
 		</Filter>

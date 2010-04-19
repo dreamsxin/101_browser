@@ -1,37 +1,37 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "compiler_backend", "projects\compiler_backend\compiler_backend.vcproj", "{0FCA25E9-C3FB-4BA8-BB7D-CE55DB3135AD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "compiler_backend", "projects\vs2008\compiler_backend\compiler_backend.vcproj", "{0FCA25E9-C3FB-4BA8-BB7D-CE55DB3135AD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "font_server", "projects\font_server\font_server.vcproj", "{E6D6C259-034B-4045-804D-6DB07D7D897D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "font_server", "projects\vs2008\font_server\font_server.vcproj", "{E6D6C259-034B-4045-804D-6DB07D7D897D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BasicDataStructures", "projects\BasicDataStructures\BasicDataStructures.vcproj", "{E97BF0CC-EB71-43A2-B4BA-8CB5F1E11214}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BasicDataStructures", "projects\vs2008\BasicDataStructures\BasicDataStructures.vcproj", "{E97BF0CC-EB71-43A2-B4BA-8CB5F1E11214}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestSuite", "projects\TestSuite\TestSuite.vcproj", "{509A97A0-019B-478F-BA5F-EF10C9D17E90}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestSuite", "projects\vs2008\TestSuite\TestSuite.vcproj", "{509A97A0-019B-478F-BA5F-EF10C9D17E90}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SwfReader", "projects\SwfReader\SwfReader.vcproj", "{C2708EA1-55D1-4BFE-9F16-61BCC6AE2117}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SwfReader", "projects\vs2008\SwfReader\SwfReader.vcproj", "{C2708EA1-55D1-4BFE-9F16-61BCC6AE2117}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "projects\zlib\zlib.vcproj", "{0039884E-1AF1-4FFD-B864-7A386353C88F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "projects\vs2008\zlib\zlib.vcproj", "{0039884E-1AF1-4FFD-B864-7A386353C88F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PdfReader", "projects\PdfReader\PdfReader.vcproj", "{1D1D826D-C7FA-4BB3-A1CE-33BFE622B3C5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PdfReader", "projects\vs2008\PdfReader\PdfReader.vcproj", "{1D1D826D-C7FA-4BB3-A1CE-33BFE622B3C5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XmlReader", "projects\XmlReader\XmlReader.vcproj", "{733736C2-83AC-4AE1-A6A3-8DAF4393573E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XmlReader", "projects\vs2008\XmlReader\XmlReader.vcproj", "{733736C2-83AC-4AE1-A6A3-8DAF4393573E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VirtualMachine", "projects\VirtualMachine\VirtualMachine.vcproj", "{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VirtualMachine", "projects\vs2008\VirtualMachine\VirtualMachine.vcproj", "{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Html5Reader", "projects\Html5Reader\Html5Reader.vcproj", "{5CD1AAF7-719B-42D8-B3EE-3781F720DA5F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Html5Reader", "projects\vs2008\Html5Reader\Html5Reader.vcproj", "{5CD1AAF7-719B-42D8-B3EE-3781F720DA5F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiDataStructures", "projects\GuiDataStructures\GuiDataStructures.vcproj", "{0403DAC4-7C0F-41E5-9405-86A4DC16FBBA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiDataStructures", "projects\vs2008\GuiDataStructures\GuiDataStructures.vcproj", "{0403DAC4-7C0F-41E5-9405-86A4DC16FBBA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JpegDecoder", "projects\JpegDecoder\JpegDecoder.vcproj", "{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JpegDecoder", "projects\vs2008\JpegDecoder\JpegDecoder.vcproj", "{3F318E85-97BA-4075-B94B-4EAFCB0AB63A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GifDecoder", "projects\GifDecoder\GifDecoder.vcproj", "{19451F5D-23C9-46B9-B608-0C2D22B5483F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GifDecoder", "projects\vs2008\GifDecoder\GifDecoder.vcproj", "{19451F5D-23C9-46B9-B608-0C2D22B5483F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsDataStructures", "projects\GraphicsDataStructures\GraphicsDataStructures.vcproj", "{AE3F0D3B-2A9B-4D2A-97AD-E6B526C43604}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsDataStructures", "projects\vs2008\GraphicsDataStructures\GraphicsDataStructures.vcproj", "{AE3F0D3B-2A9B-4D2A-97AD-E6B526C43604}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiWin", "projects\GuiWin\GuiWin.vcproj", "{64A360E3-664D-4B8E-A7B3-E8B27437305D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiWin", "projects\vs2008\GuiWin\GuiWin.vcproj", "{64A360E3-664D-4B8E-A7B3-E8B27437305D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConnectionServerWin", "projects\ConnectionServerWin\ConnectionServerWin.vcproj", "{06F86720-803C-434E-B58A-620F088C08FB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConnectionServerWin", "projects\vs2008\ConnectionServerWin\ConnectionServerWin.vcproj", "{06F86720-803C-434E-B58A-620F088C08FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

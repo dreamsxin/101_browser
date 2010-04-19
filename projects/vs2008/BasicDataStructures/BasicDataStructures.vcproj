@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../include;..\..\include\zlib"
+				AdditionalIncludeDirectories="../../../include;..\..\..\include\zlib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -106,7 +106,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../../include;..\..\include\zlib"
+				AdditionalIncludeDirectories="../../../include;..\..\..\include\zlib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -156,15 +156,15 @@
 				Name="Stream"
 				>
 				<File
-					RelativePath="..\..\src\BasicDataStructures\Stream\BigEndianBitLittleEndianByteBitReadStream.cpp"
+					RelativePath="..\..\..\src\BasicDataStructures\Stream\BigEndianBitLittleEndianByteBitReadStream.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\BasicDataStructures\Stream\FileReadStream.cpp"
+					RelativePath="..\..\..\src\BasicDataStructures\Stream\FileReadStream.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\BasicDataStructures\Stream\ZReadStream.cpp"
+					RelativePath="..\..\..\src\BasicDataStructures\Stream\ZReadStream.cpp"
 					>
 				</File>
 			</Filter>
@@ -172,19 +172,19 @@
 				Name="Parser"
 				>
 				<File
-					RelativePath="..\..\src\BasicDataStructures\Parser\ParserUnicodeEncodings.cpp"
+					RelativePath="..\..\..\src\BasicDataStructures\Parser\ParserUnicodeEncodings.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\BasicDataStructures\Parser\StringParser.cpp"
+					RelativePath="..\..\..\src\BasicDataStructures\Parser\StringParser.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\BasicDataStructures\Parser\UnionParser.cpp"
+					RelativePath="..\..\..\src\BasicDataStructures\Parser\UnionParser.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\BasicDataStructures\Parser\UntilCharacterParser.cpp"
+					RelativePath="..\..\..\src\BasicDataStructures\Parser\UntilCharacterParser.cpp"
 					>
 				</File>
 			</Filter>
@@ -192,7 +192,7 @@
 				Name="VirtualMachine"
 				>
 				<File
-					RelativePath="..\..\src\BasicDataStructures\VirtualMachine\VirtualMachineContext.cpp"
+					RelativePath="..\..\..\src\BasicDataStructures\VirtualMachine\VirtualMachineContext.cpp"
 					>
 				</File>
 			</Filter>
@@ -200,7 +200,7 @@
 				Name="BigNumber"
 				>
 				<File
-					RelativePath="..\..\src\BasicDataStructures\BigNumber\BigInteger.cpp"
+					RelativePath="..\..\..\src\BasicDataStructures\BigNumber\BigInteger.cpp"
 					>
 				</File>
 			</Filter>
@@ -211,66 +211,66 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\include\BasicDataStructures\Collections.h"
+				RelativePath="..\..\..\include\BasicDataStructures\Collections.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\BasicDataStructures\Comparator.h"
+				RelativePath="..\..\..\include\BasicDataStructures\Comparator.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\BasicDataStructures\HigherOrderFunctions.h"
+				RelativePath="..\..\..\include\BasicDataStructures\HigherOrderFunctions.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\BasicDataStructures\Interval.h"
+				RelativePath="..\..\..\include\BasicDataStructures\Interval.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\BasicDataStructures\Iterator.h"
+				RelativePath="..\..\..\include\BasicDataStructures\Iterator.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\BasicDataStructures\Maybe.h"
+				RelativePath="..\..\..\include\BasicDataStructures\Maybe.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\BasicDataStructures\Permuter.h"
+				RelativePath="..\..\..\include\BasicDataStructures\Permuter.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\BasicDataStructures\Unicode.h"
+				RelativePath="..\..\..\include\BasicDataStructures\Unicode.h"
 				>
 			</File>
 			<Filter
 				Name="Tree"
 				>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Tree\AVLTree.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Tree\AVLTree.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Tree\AVLTreeClasses.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Tree\AVLTreeClasses.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Tree\AVLTreeRotate.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Tree\AVLTreeRotate.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Tree\BinaryTree.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Tree\BinaryTree.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Tree\BinaryTreeClasses.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Tree\BinaryTreeClasses.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Tree\BinaryTreeHelper.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Tree\BinaryTreeHelper.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Tree\BinaryTreeImpl.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Tree\BinaryTreeImpl.h"
 					>
 				</File>
 			</Filter>
@@ -278,31 +278,31 @@
 				Name="Stream"
 				>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Stream\BasicOpenStream.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Stream\BasicOpenStream.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Stream\BasicReadStream.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Stream\BasicReadStream.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Stream\BasicWriteStream.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Stream\BasicWriteStream.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Stream\BigEndianBitLittleEndianByteBitReadStream.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Stream\BigEndianBitLittleEndianByteBitReadStream.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Stream\FileReadStream.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Stream\FileReadStream.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Stream\RevertibleReadStream.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Stream\RevertibleReadStream.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Stream\ZReadStream.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Stream\ZReadStream.h"
 					>
 				</File>
 			</Filter>
@@ -310,27 +310,27 @@
 				Name="Parser"
 				>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Parser\AbstractParser.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Parser\AbstractParser.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Parser\ParserDataStructures.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Parser\ParserDataStructures.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Parser\ParserUnicodeEncodings.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Parser\ParserUnicodeEncodings.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Parser\StringParser.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Parser\StringParser.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Parser\UnionParser.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Parser\UnionParser.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Parser\UntilCharacterParser.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Parser\UntilCharacterParser.h"
 					>
 				</File>
 			</Filter>
@@ -338,11 +338,11 @@
 				Name="Util"
 				>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Util\MemoryManager.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Util\MemoryManager.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\Util\SingleChain.h"
+					RelativePath="..\..\..\include\BasicDataStructures\Util\SingleChain.h"
 					>
 				</File>
 			</Filter>
@@ -350,11 +350,11 @@
 				Name="VirtualMachine"
 				>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\VirtualMachine\InstructionContext.h"
+					RelativePath="..\..\..\include\BasicDataStructures\VirtualMachine\InstructionContext.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\VirtualMachine\VirtualMachineContext.h"
+					RelativePath="..\..\..\include\BasicDataStructures\VirtualMachine\VirtualMachineContext.h"
 					>
 				</File>
 			</Filter>
@@ -362,7 +362,7 @@
 				Name="BigNumber"
 				>
 				<File
-					RelativePath="..\..\include\BasicDataStructures\BigNumber\BigInteger.h"
+					RelativePath="..\..\..\include\BasicDataStructures\BigNumber\BigInteger.h"
 					>
 				</File>
 			</Filter>

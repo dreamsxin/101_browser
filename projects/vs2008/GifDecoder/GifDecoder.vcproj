@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="Html5Reader"
-	ProjectGUID="{5CD1AAF7-719B-42D8-B3EE-3781F720DA5F}"
-	RootNamespace="Html5Reader"
+	Name="GifDecoder"
+	ProjectGUID="{19451F5D-23C9-46B9-B608-0C2D22B5483F}"
+	RootNamespace="GifDecoder"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../include"
+				AdditionalIncludeDirectories="../../../include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -115,7 +115,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../../include"
+				AdditionalIncludeDirectories="../../../include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -173,7 +173,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\src\Html5Reader\Html5ReaderMain.cpp"
+				RelativePath="..\..\..\src\GifDecoder\GifDecoderMain.cpp"
 				>
 			</File>
 		</Filter>
@@ -182,14 +182,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="..\..\include\Html5Reader\2_3.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\Html5Reader\2_4_1.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

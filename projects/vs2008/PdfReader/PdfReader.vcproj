@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="XmlReader"
-	ProjectGUID="{733736C2-83AC-4AE1-A6A3-8DAF4393573E}"
-	RootNamespace="XmlReader"
+	Name="PdfReader"
+	ProjectGUID="{1D1D826D-C7FA-4BB3-A1CE-33BFE622B3C5}"
+	RootNamespace="PdfReader"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../include"
+				AdditionalIncludeDirectories="..\..\..\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="BasicDataStructures.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\lib\BasicDataStructures\Debug"
+				AdditionalLibraryDirectories="..\..\..\lib\BasicDataStructures\Debug"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -117,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../../include"
+				AdditionalIncludeDirectories="..\..\..\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -138,7 +138,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="BasicDataStructures.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\lib\BasicDataStructures\Release"
+				AdditionalLibraryDirectories="..\..\..\lib\BasicDataStructures\Release\"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -169,10 +169,6 @@
 		</Configuration>
 	</Configurations>
 	<References>
-		<ProjectReference
-			ReferencedProjectIdentifier="{E97BF0CC-EB71-43A2-B4BA-8CB5F1E11214}"
-			RelativePathToProject=".\projects\BasicDataStructures\BasicDataStructures.vcproj"
-		/>
 	</References>
 	<Files>
 		<Filter
@@ -181,7 +177,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\src\XmlReader\XmlReaderMain.cpp"
+				RelativePath="..\..\..\src\PdfReader\PdfReaderMain.cpp"
 				>
 			</File>
 		</Filter>
@@ -190,10 +186,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="..\..\include\XmlReader\XmlDefinition.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
