@@ -1596,11 +1596,6 @@ module html5
   };
 
   [Supplemental]
-  interface HTMLHeadElement {
-             attribute DOMString profile;
-  };
-
-  [Supplemental]
   interface HTMLHRElement {
              attribute DOMString align;
              attribute DOMString color;
