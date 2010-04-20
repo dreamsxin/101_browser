@@ -28,7 +28,10 @@ struct OZO_Display
 {
 	Display* display;
 	xcb_connection_t *connection;
-	int screen;
+
+	int defaultScreen;
+	xcb_screen_t *screen;
+
 	Window rootWindow;
 };
 
@@ -55,8 +58,8 @@ void initDisplay(OZO_Display* pDisplay, const char* displayName)
 		exit(1);
 	}
 
-	pDisplay->screen = DefaultScreen(pDisplay->display);
-	pDisplay->rootWindow = RootWindow(pDisplay->display, pDisplay->screen);
+	pDisplay->defaultScreen = DefaultScreen(pDisplay->display);
+	pDisplay->rootWindow = RootWindow(pDisplay->display, pDisplay->defaultScreen);
 
 	pDisplay->connection = XGetXCBConnection(pDisplay->display);
 
@@ -66,6 +69,12 @@ void initDisplay(OZO_Display* pDisplay, const char* displayName)
 		cleanup(pDisplay, NULL);
 		exit(1);
 	}
+
+	//XSetEventQueueOwner(pDisplay->display, XCBOwnsEventQueue);
+
+	xcb_screen_iterator_t screen_iter = xcb_setup_roots_iterator(xcb_get_setup(pDisplay->connection));
+        for(int screen_num = pDisplay->defaultScreen; screen_iter.rem && screen_num > 0; --screen_num, xcb_screen_next(&screen_iter));
+        pDisplay->screen = screen_iter.data;
 }
 
 GLXFBConfig* chooseFBConfig(const OZO_Display* pDisplay)
@@ -92,7 +101,7 @@ GLXFBConfig* chooseFBConfig(const OZO_Display* pDisplay)
 	GLXFBConfig * fbconfigArray;  /*  Array of FBConfigs  */
         int fbconfigArraySize;        /*  Number of FBConfigs in the array  */
 	fbconfigArray = glXChooseFBConfig(pDisplay->display,
-		pDisplay->screen,
+		pDisplay->defaultScreen,
 		&attributes.at(0),
 		&fbconfigArraySize );
 		
