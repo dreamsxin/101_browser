@@ -19,6 +19,7 @@
 *.lastbuildstate
 *.log
 ResolveAssemblyReference.cache
+*.unsuccessfulbuild
 *_manifest.rc
 *~
 testfiles/fonts/*.ttf

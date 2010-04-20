@@ -115,7 +115,7 @@ void Decode_restart_interval(FILE* jpegFile, RestartInterval in_ri)
 {
 	Reset_decoder();
 
-	boost::uint16_t currentMCUIndex = 0;
+	uint16_t currentMCUIndex = 0;
 
 	do
 	{

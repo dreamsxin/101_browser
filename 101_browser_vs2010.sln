@@ -25,6 +25,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XmlReader", "projects\vs201
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BasicDataStructures", "projects\vs2010\BasicDataStructures\BasicDataStructures.vcxproj", "{5418215D-EE32-42B5-B2F2-59F6EC623F10}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JpegDecoder", "projects\vs2010\JpegDecoder\JpegDecoder.vcxproj", "{028E6FB4-1A3D-4045-A65B-B00D06FE8864}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -279,6 +281,26 @@ Global
 		{5418215D-EE32-42B5-B2F2-59F6EC623F10}.LIB Release|Win32.Build.0 = Release|Win32
 		{5418215D-EE32-42B5-B2F2-59F6EC623F10}.Release|Win32.ActiveCfg = Release|Win32
 		{5418215D-EE32-42B5-B2F2-59F6EC623F10}.Release|Win32.Build.0 = Release|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.Debug|Win32.ActiveCfg = Debug|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.Debug|Win32.Build.0 = Debug|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.DLL ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.DLL ASM Debug|Win32.Build.0 = Debug|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.DLL ASM Release|Win32.ActiveCfg = Release|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.DLL ASM Release|Win32.Build.0 = Release|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.DLL Debug|Win32.ActiveCfg = Debug|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.DLL Debug|Win32.Build.0 = Debug|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.DLL Release|Win32.ActiveCfg = Release|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.DLL Release|Win32.Build.0 = Release|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.LIB ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.LIB ASM Debug|Win32.Build.0 = Debug|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.LIB ASM Release|Win32.ActiveCfg = Release|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.LIB ASM Release|Win32.Build.0 = Release|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.LIB Debug|Win32.ActiveCfg = Debug|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.LIB Debug|Win32.Build.0 = Debug|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.LIB Release|Win32.ActiveCfg = Release|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.LIB Release|Win32.Build.0 = Release|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.Release|Win32.ActiveCfg = Release|Win32
+		{028E6FB4-1A3D-4045-A65B-B00D06FE8864}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
