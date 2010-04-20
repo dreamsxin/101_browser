@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\BigNumber">
+      <UniqueIdentifier>{463eedbd-18f2-4102-a664-29297cdc4dcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Parser">
+      <UniqueIdentifier>{fb4ae5f8-3711-4be5-8c99-6ea74f83538d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Stream">
+      <UniqueIdentifier>{8c6392be-ec79-4063-8fdf-27f89e4b66b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Tree">
+      <UniqueIdentifier>{482d248c-b4e9-4e99-9f7c-7f5a780e01cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Util">
+      <UniqueIdentifier>{8c7147c6-1433-41f4-a605-319304d149b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\VirtualMachine">
+      <UniqueIdentifier>{0d72d1b1-a8ee-411e-b19c-829300fcb687}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\BigNumber">
+      <UniqueIdentifier>{3ad4a25a-fbee-4318-abdd-9d1ff0681b80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Parser">
+      <UniqueIdentifier>{abe2178b-9f86-4969-a575-ac1f85136439}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Stream">
+      <UniqueIdentifier>{e95a30c6-4f48-4599-b883-64b885cd1b4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\VirtualMachine">
+      <UniqueIdentifier>{0e985a6d-c2ed-4ff1-ab77-f4162d570dd2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Iterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Unicode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Maybe.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\HigherOrderFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Permuter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Collections.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Comparator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Interval.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\BigNumber\BigInteger.h">
+      <Filter>Header Files\BigNumber</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Parser\UnionParser.h">
+      <Filter>Header Files\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Parser\StringParser.h">
+      <Filter>Header Files\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Parser\UntilCharacterParser.h">
+      <Filter>Header Files\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Parser\ParserDataStructures.h">
+      <Filter>Header Files\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Parser\AbstractParser.h">
+      <Filter>Header Files\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Parser\ParserUnicodeEncodings.h">
+      <Filter>Header Files\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Stream\BasicOpenStream.h">
+      <Filter>Header Files\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Stream\BasicReadStream.h">
+      <Filter>Header Files\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Stream\BasicWriteStream.h">
+      <Filter>Header Files\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Stream\BigEndianBitLittleEndianByteBitReadStream.h">
+      <Filter>Header Files\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Stream\FileReadStream.h">
+      <Filter>Header Files\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Stream\RevertibleReadStream.h">
+      <Filter>Header Files\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Stream\ZReadStream.h">
+      <Filter>Header Files\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\AVLTreeRotate.h">
+      <Filter>Header Files\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\AVLTree.h">
+      <Filter>Header Files\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\BinaryTree.h">
+      <Filter>Header Files\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\AVLTreeClasses.h">
+      <Filter>Header Files\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\BinaryTreeClasses.h">
+      <Filter>Header Files\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\BinaryTreeImpl.h">
+      <Filter>Header Files\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\BinaryTreeHelper.h">
+      <Filter>Header Files\Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Util\SingleChain.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Util\MemoryManager.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\VirtualMachine\InstructionContext.h">
+      <Filter>Header Files\VirtualMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\VirtualMachine\VirtualMachineContext.h">
+      <Filter>Header Files\VirtualMachine</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\BasicDataStructures\BigNumber\BigInteger.cpp">
+      <Filter>Source Files\BigNumber</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\BasicDataStructures\Parser\UnionParser.cpp">
+      <Filter>Source Files\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\BasicDataStructures\Parser\StringParser.cpp">
+      <Filter>Source Files\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\BasicDataStructures\Parser\UntilCharacterParser.cpp">
+      <Filter>Source Files\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\BasicDataStructures\Parser\ParserUnicodeEncodings.cpp">
+      <Filter>Source Files\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\BasicDataStructures\Stream\BigEndianBitLittleEndianByteBitReadStream.cpp">
+      <Filter>Source Files\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\BasicDataStructures\Stream\FileReadStream.cpp">
+      <Filter>Source Files\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\BasicDataStructures\Stream\ZReadStream.cpp">
+      <Filter>Source Files\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\BasicDataStructures\VirtualMachine\VirtualMachineContext.cpp">
+      <Filter>Source Files\VirtualMachine</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

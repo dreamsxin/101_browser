@@ -12,6 +12,15 @@
 *.res
 *.aps
 *.exp
+*.ipch
+*.opensdf
+*.sdf
+*.tlog
+*.lastbuildstate
+*.log
+ResolveAssemblyReference.cache
+*.unsuccessfulbuild
+*_manifest.rc
 *~
 testfiles/fonts/*.ttf
 testfiles/fonts/*.TTF
@@ -39,6 +48,6 @@ cursor*.bmp
 *.jcp
 *.jcu
 *.jcw
+*.orig
 src_*.txt
 src/GuiX/GuiX
-

@@ -1,3 +1,5 @@
+set PATH=c:\cygwin\bin;%PATH%
+
 wget http://www.whatwg.org/specs/web-apps/current-work/ -O html5.html
 java -cp htmlparser-1.2.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_html5_idl.xslt --input-html=html5.html --output-xml=../data/idl/temp_.idl
 sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/html5.idl
@@ -28,6 +30,11 @@ java -cp htmlparser-1.2.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --templat
 sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/geolocation.idl
 
 
+wget http://www.w3.org/TR/xproc/ -O xproc.html
+java -cp htmlparser-1.2.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_xproc_grammar.xslt --input-html=xproc.html --output-xml=../data/idl/temp_.idl
+sed -e '1d' -e "s/&lt;/</" -e "s/&lt;/</" -e "s/&gt;/>/" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/web_grammar/xproc.txt
+
+
 rm ../data/idl/temp_.idl
 rm html5.html
 rm webworkers.html
@@ -35,3 +42,4 @@ rm websockets.html
 rm webdatabase.html
 rm webstorage.html
 rm geolocation.html
+rm xproc.html
