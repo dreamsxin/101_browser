@@ -1,7 +1,7 @@
 #ifndef _FontServer_h
 #define _FontServer_h
 
-#include "font_server/DynamicMemory.h"
+#include "FontServer/DynamicMemory.h"
 #include <vector>
 
 // Pack structures to 1-byte boundaries
