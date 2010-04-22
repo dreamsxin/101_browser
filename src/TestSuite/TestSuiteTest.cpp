@@ -1,4 +1,5 @@
 #include <cwchar>
+#include <cstdio>
 #include <cstdlib>
 
 #include "TestSuite/TestSuite.h"
@@ -7,9 +8,7 @@ unsigned long testNr=0;
 bool verbose = false;
 bool exitOnFailure = true;
 
-#define test(_Expression) (void)( ((!!(_Expression)) && (testPassed(_CRT_WIDE(#_Expression), _CRT_WIDE(__FILE__), __LINE__), 1)) || (testFailed(_CRT_WIDE(#_Expression), _CRT_WIDE(__FILE__), __LINE__), 0) )
-
-void testPassed(const wchar_t * _Message, const wchar_t *_File, unsigned int _Line)
+void testPassed(const wchar_t *_Message, const wchar_t *_File, unsigned int _Line)
 {
 	extern unsigned long testNr;
 	extern bool verbose;
@@ -20,7 +19,7 @@ void testPassed(const wchar_t * _Message, const wchar_t *_File, unsigned int _Li
 	testNr++;
 }
 
-void testFailed(const wchar_t * _Message, const wchar_t *_File, unsigned int _Line)
+void testFailed(const wchar_t *_Message, const wchar_t *_File, unsigned int _Line)
 {
 	extern unsigned long testNr;
 	extern bool exitOnFailure;
@@ -30,3 +29,4 @@ void testFailed(const wchar_t * _Message, const wchar_t *_File, unsigned int _Li
 	if (exitOnFailure)
 		exit(-1);
 }
+

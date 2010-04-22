@@ -99,12 +99,12 @@ const Type* BinaryTree<Type, NodePropertyType>::get(
 {
 	BinaryTreeNode<Type, NodePropertyType>* actNode=root();
 
-	Type* out_result = NULL;
+	Type* out_getResult = NULL;
 
 	if (actNode==NULL)
 		return NULL;
 
-	terminate = false;
+	bool terminate = false;
 
 	while (!terminate)
 	{
@@ -114,7 +114,7 @@ const Type* BinaryTree<Type, NodePropertyType>::get(
 		{
 		case Equal:
 		case ContainedIn:
-			out_result = actNode->datum();
+			out_getResult = actNode->datum();
 			// the missing break ist correct
 		case Contains:
 		case NotComparableLess:
@@ -131,7 +131,7 @@ const Type* BinaryTree<Type, NodePropertyType>::get(
 		}
 	}
 
-	return out_findResult;
+	return out_getResult;
 }
 
 #endif
