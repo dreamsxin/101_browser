@@ -50,6 +50,10 @@ cursor*.bmp
 *.jcw
 *.orig
 src_*.txt
-src/GuiX/GuiX
-src/TestSuite/TestSuite
+bin/*
+*.o
+*.gcno
+*.gcda
+*.gcov
+.sconsign.dblite
 
