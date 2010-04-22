@@ -51,3 +51,5 @@ cursor*.bmp
 *.orig
 src_*.txt
 src/GuiX/GuiX
+src/TestSuite/TestSuite
+
