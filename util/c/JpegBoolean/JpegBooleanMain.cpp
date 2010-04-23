@@ -173,7 +173,10 @@ public:
 			parantheses = true;
 			if (child0->isLeaf)
 				parantheses = false;
-			else if (((FunctionTreeNode*) child0)->functionType == FunctionTypeNot)
+			else if (((FunctionTreeNode*) child0)->functionType == FunctionTypeNot && 
+				((FunctionTreeNode*) child0)->child0->isLeaf)
+				// We could consider more cases where no parantheses are
+				// necessary, but I'm lazy...
 				parantheses = false;
 
 			if (parantheses)
@@ -198,7 +201,10 @@ public:
 			parantheses = true;
 			if (child1->isLeaf)
 				parantheses = false;
-			else if (((FunctionTreeNode*) child1)->functionType == FunctionTypeNot)
+			else if (((FunctionTreeNode*) child1)->functionType == FunctionTypeNot &&
+				// We could consider more cases where no parantheses are
+				// necessary, but I'm lazy...
+				((FunctionTreeNode*) child0)->child0->isLeaf)
 				parantheses = false;
 
 			if (parantheses)
@@ -271,9 +277,11 @@ public:
 			assert(functionType != FunctionTypeNot);
 			assert(child1 != NULL);
 			size_t child1size = child1->size();
+
+			delete child0;
+
 			if (child0size == 1)
 			{
-				delete child0;
 				child0 = new LeafTreeNode();
 			}
 			else
