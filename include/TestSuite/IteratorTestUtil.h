@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "BasicDataStructures/Iterator.h"
+#include "TestSuite/TestSuite.h"
 
 template <typename IteratorState> 
 void runIteratorForward(IteratorState* in_pItState, 
@@ -34,7 +35,7 @@ void runIteratorBackward(IteratorState* in_pItState,
 						 DoubleIterator<unsigned int, IteratorState> in_interface,
 						 std::vector<unsigned int>* in_out_pResult)
 {
-	*in_out_pResult=vector<unsigned int>();
+	*in_out_pResult=std::vector<unsigned int>();
 
 	IterateResult itRes = in_interface.mpfIteratePrev(in_pItState);
 
@@ -58,6 +59,23 @@ void runIteratorBackward(IteratorState* in_pItState,
 
 bool compareVectors(const std::vector<unsigned int>* in_pV, 
 					const std::vector<unsigned int>* in_pW);
-void revertVector(std::vector<unsigned int>* in_pV);
+void reverseVector(std::vector<unsigned int>* in_pV);
+
+template <typename IteratorState> void testIterator(
+	std::vector<unsigned int>& v, 
+	std::vector<unsigned int>& w,
+	IteratorState (*in_pItCreate)(std::vector<unsigned int>*),
+	DoubleIterator<unsigned int, IteratorState>& itInterface
+	)
+{
+	std::vector<unsigned int> result;
+	IteratorState itState = (*in_pItCreate)(&v);
+	runIteratorForward(&itState, itInterface, &result);
+	test(compareVectors(&result, &w));
+	itState = (*in_pItCreate)(&v);
+	reverseVector(&w);
+	runIteratorBackward(&itState, itInterface, &result);
+	test(compareVectors(&result, &w));
+}
 
 #endif

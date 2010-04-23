@@ -15,14 +15,14 @@ public:
 template <typename Type> typename TriangleStripBorderIterator<Type>::IteratorState
 triangleStripBorderIteratorState_create(std::vector<Type>* in_pVector)
 {
-	TriangleStripBorderIterator<Type>::IteratorState out_state = {in_pVector, 0};
+	typename TriangleStripBorderIterator<Type>::IteratorState out_state = {in_pVector, 0};
 	return out_state;
 }
 
 template <typename Type> typename TriangleStripBorderIterator<Type>::ConstIteratorState
 triangleStripBorderConstIteratorState_create(const std::vector<Type>* in_pVector)
 {
-	TriangleStripBorderIterator<Type>::ConstIteratorState out_state = {in_pVector, 0};
+	typename TriangleStripBorderIterator<Type>::ConstIteratorState out_state = {in_pVector, 0};
 	return out_state;
 }
 
@@ -148,11 +148,11 @@ template <typename Type, typename IteratorState> IterateResult triangleStripBord
 template <typename Type> DoubleIterator<Type, typename TriangleStripBorderIterator<Type>::IteratorState>
 triangleStripBorderIterator_create()
 {
-	DoubleIterator<Type, TriangleStripBorderIterator<Type>::IteratorState> out_iter = 
+	DoubleIterator<Type, typename TriangleStripBorderIterator<Type>::IteratorState> out_iter = 
 	{
 		&positionIterator_get,
-		&triangleStripBorderIterator_next<Type, TriangleStripBorderIterator<Type>::IteratorState>,
-		&triangleStripBorderIterator_prev<Type, TriangleStripBorderIterator<Type>::IteratorState>
+		&triangleStripBorderIterator_next<Type, typename TriangleStripBorderIterator<Type>::IteratorState>,
+		&triangleStripBorderIterator_prev<Type, typename TriangleStripBorderIterator<Type>::IteratorState>
 	};
 
 	return out_iter;
@@ -161,11 +161,11 @@ triangleStripBorderIterator_create()
 template <typename Type> DoubleIterator<const Type, typename TriangleStripBorderIterator<Type>::ConstIteratorState>
 triangleStripBorderConstIterator_create()
 {
-	DoubleIterator<const Type, TriangleStripBorderIterator<Type>::ConstIteratorState> out_iter = 
+	DoubleIterator<const Type, typename TriangleStripBorderIterator<Type>::ConstIteratorState> out_iter = 
 	{
 		&positionIterator_get,
-		&triangleStripBorderIterator_next<Type, TriangleStripBorderIterator<Type>::ConstIteratorState>,
-		&triangleStripBorderIterator_prev<Type, TriangleStripBorderIterator<Type>::ConstIteratorState>
+		&triangleStripBorderIterator_next<Type, typename TriangleStripBorderIterator<Type>::ConstIteratorState>,
+		&triangleStripBorderIterator_prev<Type, typename TriangleStripBorderIterator<Type>::ConstIteratorState>
 	};
 
 	return out_iter;
@@ -174,7 +174,7 @@ triangleStripBorderConstIterator_create()
 template <typename Type> DoubleIteratorInstance<const Type, typename TriangleStripBorderIterator<Type>::ConstIteratorState>
 triangleStripBorderConstIteratorInstance_create(const std::vector<Type>* in_pVector)
 {
-	DoubleIteratorInstance<const Type, TriangleStripBorderIterator<Type>::ConstIteratorState>
+	DoubleIteratorInstance<const Type, typename TriangleStripBorderIterator<Type>::ConstIteratorState>
 		inst = {triangleStripBorderConstIteratorState_create(in_pVector), triangleStripBorderConstIterator_create<Type>()};
 
 	return inst;

@@ -12,6 +12,16 @@
 *.res
 *.aps
 *.exp
+*.ipch
+*.opensdf
+*.sdf
+*.tlog
+*.lastbuildstate
+*.log
+ResolveAssemblyReference.cache
+*.unsuccessfulbuild
+*_manifest.rc
+*~
 testfiles/fonts/*.ttf
 testfiles/fonts/*.TTF
 testfiles/fonts/*.fon
@@ -34,4 +44,11 @@ log.txt
 cursor*.bmp
 *.jpg
 *.JPG
+*.coverage
+bin/*
+*.o
+*.gcno
+*.gcda
+*.gcov
+.sconsign.dblite
 

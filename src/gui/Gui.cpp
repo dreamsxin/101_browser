@@ -1,8 +1,8 @@
 #include <windows.h>
 #include <string>
 #include <cstdlib>
-#include "gui/GuiComponentsDefaults.h"
-#include "gui/GuiOpenGLState.h"
+#include "GuiOpenGL/GuiComponentsDefaults.h"
+#include "GuiOpenGL/GuiOpenGLState.h"
 #include "gui/Cursor.h"
 
 struct Window
@@ -49,24 +49,23 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			case SIZE_RESTORED:
 			case SIZE_MAXIMIZED:
 				ReshapeGL(LOWORD(lParam), HIWORD(lParam));
+				return 0;
 		}
 		break;
 	case WM_PAINT:
 		// I know many say should not put OpenGL code into this
-		// handler - but what should be done
+		// handler - but what should be done else
 		// for drawing the window *while* resizing, moving etc.
 		UpdateGuiState();
 		drawGui();
-		SwapBuffers (window->hDC);
+		SwapBuffers(window->hDC);
 		ValidateRect(window->hWnd, NULL);
 		return 0;
-	default:
-		fprintf(logFile, "Did not handle\n");
-		fflush(logFile);
-		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
 	
-	
+	fprintf(logFile, "Did not handle\n");
+	fflush(logFile);
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
 bool registerWindowClass(const Window& in_window)

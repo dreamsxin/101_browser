@@ -7,18 +7,25 @@ module websockets
     // ready state
     const unsigned short CONNECTING = 0;
     const unsigned short OPEN = 1;
-    const unsigned short CLOSED = 2;
+    const unsigned short CLOSING = 2;
+    const unsigned short CLOSED = 3;
     readonly attribute unsigned short readyState;
     readonly attribute unsigned long bufferedAmount;
   
     // networking
              attribute Function onopen;
              attribute Function onmessage;
+             attribute Function onerror;
              attribute Function onclose;
     boolean send(in DOMString data);
     void close();
   };
   WebSocket implements EventTarget;
+
+  interface CloseEvent : Event {
+    readonly attribute boolean wasClean;
+    void initCloseEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in boolean wasCleanArg);
+  };
 
 
 };
