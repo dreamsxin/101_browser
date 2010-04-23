@@ -617,13 +617,17 @@ int main(int argc, char** argv)
 			pthread_mutex_lock(&bestApproximationValueMutexes.at(index));
 			if (bestApproximationValues.at(index)==variableValuesCount)
 			{
+				pthread_mutex_unlock(&bestApproximationValueMutexes.at(index));
 				isThreadGroupFinished.at(index) = true;
 				pthread_mutex_lock(&printMutex);
 				printf("Thread group %u finished.\n", index);
 				fflush(stdout);
 				pthread_mutex_unlock(&printMutex);
 			}
-			pthread_mutex_unlock(&bestApproximationValueMutexes.at(index));
+			else
+			{
+				pthread_mutex_unlock(&bestApproximationValueMutexes.at(index));
+			}
 		}
 
 		bool allThreadsFinished = true;
