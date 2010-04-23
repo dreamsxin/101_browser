@@ -50,6 +50,11 @@ cursor*.bmp
 *.jcw
 *.orig
 src_*.txt
-src/GuiX/GuiX
 *.coverage
+bin/*
+*.o
+*.gcno
+*.gcda
+*.gcov
+.sconsign.dblite
 
