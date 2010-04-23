@@ -498,8 +498,13 @@ int main(int argc, char** argv)
 	}
 
 	bitsCount = atoi(argv[1]);
+	// 2: since we have both row AND col with bitsCount bits
 	varCount = 2*bitsCount;
 	variableValuesCount = 1<<varCount;
+	// 4 comes from
+	// 2: since we have both row AND col with bitsCount bits
+	// *
+	// 2: for both directions ((row, col) -> index, index -> (row, col))
 	funcCount = 4*bitsCount;
 
 	createValues();
