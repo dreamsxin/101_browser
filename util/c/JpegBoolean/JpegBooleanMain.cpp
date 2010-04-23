@@ -545,6 +545,15 @@ int main(int argc, char** argv)
 
 	desiredChildrenCount = 0;
 
+	// Begin hack:
+	if (bitsCount == 2)
+	{
+		desiredChildrenCount = 6;
+		isThreadGroupFinished.at(1) = true;
+		isThreadGroupFinished.at(7) = true;
+	}
+	// End hack
+
 	while (true)
 	{
 		threadIDs = vector<pthread_t>();
@@ -617,10 +626,6 @@ int main(int argc, char** argv)
 
 	for (size_t i=0; i<funcCount; i++)
 	{
-		isThreadGroupFinished.push_back(false);
-		bestApproximationValues.push_back(0);
-		pthread_mutex_t mtx;
-		bestApproximationValueMutexes.push_back(mtx);
 		pthread_mutex_destroy(&bestApproximationValueMutexes.at(i));
 	}
 
