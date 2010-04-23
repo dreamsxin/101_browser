@@ -279,6 +279,7 @@ public:
 			size_t child1size = child1->size();
 
 			delete child0;
+			child0 = NULL;
 
 			if (child0size == 1)
 			{
