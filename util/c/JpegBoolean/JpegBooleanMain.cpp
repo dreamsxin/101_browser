@@ -570,6 +570,10 @@ int main(int argc, char** argv)
 		isThreadGroupFinished.at(1) = true;
 		isThreadGroupFinished.at(7) = true;
 	}
+	else if (bitsCount == 3)
+	{
+		desiredChildrenCount = 4;
+	}
 	// End hack
 
 	while (true)
