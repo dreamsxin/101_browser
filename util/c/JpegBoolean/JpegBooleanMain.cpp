@@ -432,25 +432,36 @@ void* workerThread(void* threadid)
 		for (size_t currentVarIdx=0; currentVarIdx<variableValuesCount; currentVarIdx++)
 		{
 			bool val = root.computeValue(&variableValues.at(currentVarIdx));
-			if (val == functionValues.at(currentVarIdx).at(pInit->functionNumber))
+			if (val != functionValues.at(currentVarIdx).at(pInit->functionNumber))
+				break;
+			else
 				currentApproximationQuality++;
 		}
 
 		pthread_mutex_lock(&bestApproximationValueMutexes.at(threadGroupNumber));
 		size_t approximationQuality = bestApproximationValues.at(threadGroupNumber);
+
 		if (currentApproximationQuality>approximationQuality)
 		{
 			bestApproximationValues.at(threadGroupNumber) = currentApproximationQuality;
+			pthread_mutex_unlock(&bestApproximationValueMutexes.at(threadGroupNumber));
+
 			pthread_mutex_lock(&printMutex);
-			printf("Better Approximation by ");
-			pInit->print();
-			printf("\tApproximation quality: %u with\n", currentApproximationQuality);
-			root.print();
-			printf("\n");
-			fflush(stdout);
+			{
+				printf("Better Approximation by ");
+				pInit->print();
+				printf("\tApproximation quality: %u with\n", currentApproximationQuality);
+				root.print();
+				printf("\n");
+				fflush(stdout);
+			}
 			pthread_mutex_unlock(&printMutex);
 		}
-		pthread_mutex_unlock(&bestApproximationValueMutexes.at(threadGroupNumber));
+		else
+		{
+			pthread_mutex_unlock(&bestApproximationValueMutexes.at(threadGroupNumber));
+		}
+
 		if (approximationQuality == variableValuesCount)
 		{
 			pthread_exit(NULL);
