@@ -5,12 +5,14 @@
 #include "TestSuite/TestSuite.h"
 #include "TestSuite/IteratorTestUtil.h"
 
-inline void testOuterBorderIterator()
+template <typename IteratorStateType, typename IteratorType> void testOuterBorderIterator(
+	IteratorType (*in_pfIterator_create)()
+	)
 {
 	std::vector<unsigned int> v, w, result;
-	OuterBorderIterator<unsigned int>::IteratorState itState;
-	DoubleIterator<unsigned int, OuterBorderIterator<unsigned int>::IteratorState> 
-		itInterface = outerBorderIterator_create<unsigned int>();
+	IteratorStateType itState;
+	
+	IteratorType itInterface = (*in_pfIterator_create)();
 
 	v=std::vector<unsigned int>();
 	w=std::vector<unsigned int>();
