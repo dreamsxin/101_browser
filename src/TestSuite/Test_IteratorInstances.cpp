@@ -5,9 +5,8 @@
 void testIteratorInstances()
 {
 	std::vector<unsigned int> vect;
-	vect.push_back(0);
-	vect.push_back(1);
-	vect.push_back(2);
+	for (unsigned int i=0; i<6; i++)
+		vect.push_back(i);
 
 	DoubleIteratorInstance<unsigned int, TriangleStripBorderIterator<unsigned int>::IteratorState> 
 		tsbiInstance = triangleStripBorderIteratorInstance_create<unsigned int>(&vect);
@@ -16,9 +15,8 @@ void testIteratorInstances()
 		obiInstance = outerBorderIteratorInstance_create<unsigned int>(&vect);
 
 	std::vector<const unsigned int> constVect;
-	constVect.push_back(0);
-	constVect.push_back(1);
-	constVect.push_back(2);
+	for (unsigned int i=0; i<6; i++)
+		constVect.push_back(i);
 
 	DoubleIteratorInstance<const unsigned int, TriangleStripBorderIterator<const unsigned int>::ConstIteratorState> 
 		tsbciInstance = triangleStripBorderConstIteratorInstance_create(&constVect);
