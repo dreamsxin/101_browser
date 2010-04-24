@@ -18,16 +18,17 @@ namespace Gui
 				Defaults::cCheckBoxTopRightBackgroundColor
 			};
 
-			std::vector<Vertex2<float> > boxVertices;
+			std::vector<const Vertex2<float> > boxVertices;
 			createBoxVertices(&boxVertices, left, top, width, height, currentHeight);
 
-			std::vector<Vertex2<float> > borderTriangleStrip;
+			std::vector<const Vertex2<float> > borderTriangleStrip;
 			createBorderTriangleStrip(
 				triangleStripBorderConstIteratorInstance_create(&boxVertices), 
 				&borderTriangleStrip, 
 				&createStraightBorder, borderSize, 12345);
 
-			std::vector<Vertex2<float> > coloredBorder;
+			std::vector<const Vertex2<float> > coloredBorder;
+			
 			createBorderTriangleStrip(
 				outerBorderConstIteratorInstance_create(&borderTriangleStrip), 
 				&coloredBorder, 
