@@ -1,7 +1,17 @@
 #ifndef _JpegSegments
 #define _JpegSegments
 
+/*
+ * Visual Studio 2010 is the first version to 
+ * contains cstdint. In the versions before we
+ * have to use boost
+ */
+#if defined(_MSC_VER) && (_MSC_VER<=1500)
+#include "boost/cstdint.hpp"
+using namespace boost; // This is a hack - you should not use this in header files
+#else
 #include <cstdint>
+#endif
 #include <cstdio>
 #include <vector>
 #include "JpegDecoder/JpegDecoderUtil.h"
