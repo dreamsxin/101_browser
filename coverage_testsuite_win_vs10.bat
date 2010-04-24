@@ -1,3 +1,4 @@
+del testsuite.coverage
 vsinstr Debug\TestSuite.exe /COVERAGE
 Start VSPerfMon.exe /COVERAGE /OUTPUT:testsuite
 PAUSE
