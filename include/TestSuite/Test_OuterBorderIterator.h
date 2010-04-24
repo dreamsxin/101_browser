@@ -5,8 +5,8 @@
 #include "TestSuite/TestSuite.h"
 #include "TestSuite/IteratorTestUtil.h"
 
-template <
-typename UnsignedIntType, 
+template 
+<typename UnsignedIntType, 
 /*
  * this is only for declaration of in_pfIteratorState_create
  * it has either to be 
@@ -15,17 +15,17 @@ typename UnsignedIntType,
  * std::vector<unsigned int>
  */
 typename VectorType, 
-typename IteratorStateType, 
-typename IteratorType> 
-void testOuterBorderIterator(
-	IteratorStateType (*in_pfIteratorState_create)(VectorType* in_pVector),
-	IteratorType (*in_pfIterator_create)()
-	)
+typename IteratorStateType> 
+void testOuterBorderIterator
+(
+ IteratorStateType (*in_pfIteratorState_create)(VectorType*),
+ DoubleIterator<UnsignedIntType, IteratorStateType> (*in_pfIterator_create)()
+)
 {
 	std::vector<UnsignedIntType> v, w, result;
 	IteratorStateType itState;
 	
-	IteratorType itInterface = (*in_pfIterator_create)();
+	DoubleIterator<UnsignedIntType, IteratorStateType> itInterface = (*in_pfIterator_create)();
 
 	v=std::vector<UnsignedIntType>();
 	w=std::vector<UnsignedIntType>();

@@ -187,10 +187,6 @@
 				>
 			</File>
 			<File
-				RelativePath="$(SolutionDir)src\TestSuite\Test_TriangleStripBorderIterator.cpp"
-				>
-			</File>
-			<File
 				RelativePath="$(SolutionDir)src\TestSuite\TestSuiteMain.cpp"
 				>
 			</File>
@@ -210,6 +206,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TestSuite\Test_OuterBorderIterator.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TestSuite\Test_TriangleStripBorderIterator.h"
 				>
 			</File>
 			<File

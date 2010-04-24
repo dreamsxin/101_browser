@@ -158,10 +158,10 @@ triangleStripBorderIterator_create()
 	return out_iter;
 }
 
-template <typename Type> DoubleIterator<const Type, typename TriangleStripBorderIterator<Type>::ConstIteratorState>
+template <typename Type> DoubleIterator<Type, typename TriangleStripBorderIterator<Type>::ConstIteratorState>
 triangleStripBorderConstIterator_create()
 {
-	DoubleIterator<const Type, typename TriangleStripBorderIterator<Type>::ConstIteratorState> out_iter = 
+	DoubleIterator<Type, typename TriangleStripBorderIterator<Type>::ConstIteratorState> out_iter = 
 	{
 		&positionIterator_get,
 		&triangleStripBorderIterator_next<Type, typename TriangleStripBorderIterator<Type>::ConstIteratorState>,
