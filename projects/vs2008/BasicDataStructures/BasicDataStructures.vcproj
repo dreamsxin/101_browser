@@ -366,6 +366,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Memory"
+				>
+				<File
+					RelativePath="..\..\..\include\BasicDataStructures\Memory\SafeMemoryManagement.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"

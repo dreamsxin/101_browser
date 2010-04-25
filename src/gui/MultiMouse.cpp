@@ -1,3 +1,4 @@
+#include "BasicDataStructures/Memory/SafeMemoryManagement.h"
 #include "gui/MultiMouse.h"
 #include "GuiWin/GuiWin.h"
 #include <windows.h>
@@ -28,9 +29,7 @@ namespace Gui
 				exit(1);
 			}
 
-
-
-			free(pRawInputDeviceList);
+			safe_free(&pRawInputDeviceList);
 		}
 	}
 }
