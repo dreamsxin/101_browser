@@ -16,8 +16,19 @@
 1111    1111    1111
 
 
-
+Better Approximation by Function: 0     Root: Xor       Approximation quality: 16 with
+(((x2 ^ x0) && x1) || (x3 ^ x2)) ^ ((x3 && x2) || x0)
 Better Approximation by Function: 1     Root: Or        Approximation quality: 16 with
 (((x3 || x1) || x0) && x2) || ((x3 && x1) && x0)
+Better Approximation by Function: 2     Root: Xor       Approximation quality: 16 with
+(((x1 ^ x0) && x3) || (x2 ^ x1)) ^ ((x2 || x1) && x0)
+Better Approximation by Function: 3     Root: Or        Approximation quality: 16 with
+((((x1 && x0) ^ x3) || x2) ^ x2) || ((x1 || x0) && x3)
+Better Approximation by Function: 4     Root: Xor       Approximation quality: 16 with
+(((x1 ^ x0) && x2) || (x3 ^ x1)) ^ ((x3 && x1) || x0)
+Better Approximation by Function: 5     Root: Xor       Approximation quality: 16 with
+(((x2 ^ x0) && x1) || (x3 ^ x2)) ^ ((x3 || x2) && x0)
+Better Approximation by Function: 6     Root: Or        Approximation quality: 16 with
+((((x2 && x0) || x3) || x1) ^ x3) || ((x2 || x0) && x1)
 Better Approximation by Function: 7     Root: Or        Approximation quality: 16 with
 (((x2 || x1) || x0) && x3) || ((x2 && x1) && x0)
