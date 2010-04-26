@@ -115,19 +115,6 @@ outerBorderConstIterator_create()
 	return out_iter;
 }
 
-template <typename Type> DoubleIteratorInstance<const Type, typename OuterBorderIterator<Type>::IteratorState>
-outerBorderIteratorInstance_create(const std::vector<Type>* in_pVector)
-{
-	DoubleIteratorInstance<const Type, typename OuterBorderIterator<Type>::IteratorState>
-		inst = 
-	{
-		outerBorderIteratorState_create(in_pVector), 
-		outerBorderIterator_create<Type>()
-	};
-
-	return inst;
-}
-
 template <typename Type> DoubleIteratorInstance<const Type, typename OuterBorderIterator<const Type>::ConstIteratorState>
 outerBorderConstIteratorInstance_create(const std::vector<Type>* in_pVector)
 {

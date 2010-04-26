@@ -15,6 +15,7 @@ int main()
 		&triangleStripBorderIterator_create<unsigned int>
 		);
 
+#if 1
 	testTriangleStripBorderIterator
 		<const unsigned int, 
 		const std::vector<const unsigned int>,
@@ -23,6 +24,7 @@ int main()
 		&triangleStripBorderConstIteratorState_create<const unsigned int>, 
 		&triangleStripBorderConstIterator_create<const unsigned int>
 		);
+#endif
 
 	testOuterBorderIterator
 		<unsigned int,
