@@ -105,7 +105,7 @@ outerBorderIterator_create()
 template <typename Type> DoubleIterator<Type, typename OuterBorderIterator<Type>::ConstIteratorState>
 outerBorderConstIterator_create()
 {
-	DoubleIterator<Type, typename OuterBorderIterator<Type>::ConstIteratorState> out_iter = 
+	DoubleIterator<const Type, typename OuterBorderIterator<Type>::ConstIteratorState> out_iter = 
 	{
 		&positionIterator_get,
 		&outerBorderIterator_next<Type, typename OuterBorderIterator<Type>::ConstIteratorState>,
