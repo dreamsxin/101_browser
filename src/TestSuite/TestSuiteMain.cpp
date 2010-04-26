@@ -6,8 +6,6 @@ int main()
 	testBasicDataStructures();
 	testBasicDataStructuresTree();
 
-	testIteratorInstances();
-
 	testTriangleStripBorderIterator
 		<unsigned int, 
 		std::vector<unsigned int>,

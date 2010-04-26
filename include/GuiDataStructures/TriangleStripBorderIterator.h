@@ -171,8 +171,8 @@ triangleStripBorderConstIterator_create()
 	return out_iter;
 }
 
-template <typename Type> DoubleIteratorInstance<Type, typename TriangleStripBorderIterator<Type>::IteratorState>
-triangleStripBorderIteratorInstance_create(std::vector<Type>* in_pVector)
+template <typename Type> DoubleIteratorInstance<const Type, typename TriangleStripBorderIterator<Type>::IteratorState>
+triangleStripBorderIteratorInstance_create(const std::vector<Type>* in_pVector)
 {
 	DoubleIteratorInstance<Type, typename TriangleStripBorderIterator<Type>::IteratorState>
 		inst = 

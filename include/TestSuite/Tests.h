@@ -6,6 +6,5 @@
 
 void testBasicDataStructures();
 void testBasicDataStructuresTree();
-void testIteratorInstances();
 
 #endif

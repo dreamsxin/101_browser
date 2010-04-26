@@ -187,10 +187,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TestSuite\Test_IteratorInstances.cpp"
-				>
-			</File>
-			<File
 				RelativePath="$(SolutionDir)src\TestSuite\TestSuiteMain.cpp"
 				>
 			</File>
