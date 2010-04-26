@@ -10,7 +10,7 @@ namespace Gui
 		void drawCursor(float left, float top, float currentHeight, 
 			const Cursor* in_pCursor)
 		{
-			std::vector<const Vertex2<float> > boxVertices;
+			std::vector<Vertex2<float> > boxVertices;
 			createBoxVertices(&boxVertices, 
 				(float) (left-in_pCursor->hotspot.x), 
 				(float) (top-in_pCursor->hotspot.y),

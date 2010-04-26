@@ -9,7 +9,7 @@
 void createStraightBorder(Vertex2<float> prevVertex, 
 						  Vertex2<float> currVertex,
 						  Vertex2<float> nextVertex,
-						  std::vector<const Vertex2<float> >* pBorderTriangleStrip,
+						  std::vector<Vertex2<float> >* pBorderTriangleStrip,
 						  float borderWidth, 
 						  size_t)
 {
@@ -35,7 +35,7 @@ void createStraightBorder(Vertex2<float> prevVertex,
 void createRoundBorder(Vertex2<float> prevVertex, 
 					   Vertex2<float> currVertex,
 					   Vertex2<float> nextVertex,
-					   std::vector<const Vertex2<float> >* pBorderTriangleStrip,
+					   std::vector<Vertex2<float> >* pBorderTriangleStrip,
 					   float borderWidth, 
 					   size_t curveSegmentsCount)
 {
@@ -87,7 +87,7 @@ void createRoundBorder(Vertex2<float> prevVertex,
 * [2]: top left
 * [3]: top right
 */
-void createBoxVertices(std::vector<const Vertex2<float> >* boxVertices,
+void createBoxVertices(std::vector<Vertex2<float> >* boxVertices,
 					   float left, float top, float width, float height,
 					   float currentHeight)
 {
@@ -102,7 +102,7 @@ void createBoxVertices(std::vector<const Vertex2<float> >* boxVertices,
 	boxVertices->push_back(Vertex2<float>(left+width, currentHeight-top)); // top right
 }
 
-void drawVertexArray(const std::vector<const Vertex2<float> >* vertices, Color4<float> colors[4])
+void drawVertexArray(const std::vector<Vertex2<float> >* vertices, Color4<float> colors[4])
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);	
@@ -115,7 +115,7 @@ void drawVertexArray(const std::vector<const Vertex2<float> >* vertices, Color4<
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-void drawVertexArray(const std::vector<const Vertex2<float> >* vertices, Color4<float> color)
+void drawVertexArray(const std::vector<Vertex2<float> >* vertices, Color4<float> color)
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glColor4fv(&color.r);

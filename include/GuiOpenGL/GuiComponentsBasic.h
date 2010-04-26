@@ -11,14 +11,14 @@
 void createStraightBorder(Vertex2<float> prevVertex, 
 						  Vertex2<float> currVertex,
 						  Vertex2<float> nextVertex,
-						  std::vector<const Vertex2<float> >* pBorderTriangleStrip,
+						  std::vector<Vertex2<float> >* pBorderTriangleStrip,
 						  float borderWidth, 
 						  size_t);
 
 void createRoundBorder(Vertex2<float> prevVertex, 
 					   Vertex2<float> currVertex,
 					   Vertex2<float> nextVertex,
-					   std::vector<const Vertex2<float> >* pBorderTriangleStrip,
+					   std::vector<Vertex2<float> >* pBorderTriangleStrip,
 					   float borderWidth, 
 					   size_t curveSegmentsCount);
 
@@ -29,11 +29,11 @@ void createRoundBorder(Vertex2<float> prevVertex,
 */
 inline void createBorderTriangleStrip(
 									  DoubleIteratorInstance<const Vertex2<float>, 
-									  TriangleStripBorderIterator<const Vertex2<float> >::ConstIteratorState> itInstance,
-									  std::vector<const Vertex2<float> >* pBorderTriangleStrip,
+									  TriangleStripBorderIterator<Vertex2<float> >::ConstIteratorState> itInstance,
+									  std::vector<Vertex2<float> >* pBorderTriangleStrip,
 									  void (*borderCreatingFunction)(Vertex2<float>, 
 									  Vertex2<float>, Vertex2<float>, 
-									  std::vector<const Vertex2<float> >*, 
+									  std::vector<Vertex2<float> >*, 
 									  float, size_t),
 									  float borderWidth,
 									  size_t curveSegmentsCount)
@@ -97,12 +97,12 @@ inline void createBorderTriangleStrip(
 * left, top, width, height: properties of the component
 * currentHeight: the height of the desired viewport
 */
-void createBoxVertices(std::vector<const Vertex2<float> >* boxVertices,
+void createBoxVertices(std::vector<Vertex2<float> >* boxVertices,
 					   float left, float top, float width, float height,
 					   float currentHeight);
 
-void drawVertexArray(const std::vector<const Vertex2<float> >* vertices, Color4<float> colors[4]);
+void drawVertexArray(const std::vector<Vertex2<float> >* vertices, Color4<float> colors[4]);
 
-void drawVertexArray(const std::vector<const Vertex2<float> >* vertices, Color4<float> color);
+void drawVertexArray(const std::vector<Vertex2<float> >* vertices, Color4<float> color);
 
 #endif

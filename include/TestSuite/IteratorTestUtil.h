@@ -5,12 +5,12 @@
 #include "BasicDataStructures/Iterator.h"
 #include "TestSuite/TestSuite.h"
 
-template <typename IteratorState, typename UnsignedIntType> 
+template <typename IteratorState> 
 void runIteratorForward(IteratorState* in_pItState, 
-						DoubleIterator<UnsignedIntType, IteratorState> in_interface,
-						std::vector<UnsignedIntType>* in_out_pResult)
+						DoubleIterator<unsigned int, IteratorState> in_interface,
+						std::vector<unsigned int>* in_out_pResult)
 {
-	*in_out_pResult=std::vector<UnsignedIntType>();
+	*in_out_pResult=std::vector<unsigned int>();
 
 	if ((*in_interface.mpfGet)(in_pItState) == NULL)
 	{
@@ -30,12 +30,12 @@ void runIteratorForward(IteratorState* in_pItState,
 	test(itRes == IterateResultOverBoundary);
 }
 
-template <typename IteratorState, typename UnsignedIntType> 
+template <typename IteratorState> 
 void runIteratorBackward(IteratorState* in_pItState, 
-						 DoubleIterator<UnsignedIntType, IteratorState> in_interface,
-						 std::vector<UnsignedIntType>* in_out_pResult)
+						 DoubleIterator<unsigned int, IteratorState> in_interface,
+						 std::vector<unsigned int>* in_out_pResult)
 {
-	*in_out_pResult=std::vector<UnsignedIntType>();
+	*in_out_pResult=std::vector<unsigned int>();
 
 	IterateResult itRes = in_interface.mpfIteratePrev(in_pItState);
 
@@ -57,44 +57,18 @@ void runIteratorBackward(IteratorState* in_pItState,
 	test(itRes == IterateResultOverBoundary);
 }
 
-template <typename UnsignedIntType>
-bool compareVectors(
-					const std::vector<UnsignedIntType>* in_pV, 
-					const std::vector<UnsignedIntType>* in_pW)
-{
-	test(in_pV->size()==in_pW->size());
+bool compareVectors(const std::vector<unsigned int>* in_pV, 
+					const std::vector<unsigned int>* in_pW);
+void reverseVector(std::vector<unsigned int>* in_pV);
 
-	std::vector<UnsignedIntType>::const_iterator i, j;
-
-	for (i=in_pV->begin(), j=in_pW->begin(); i!=in_pV->end() && j!=in_pW->end(); i++, j++)
-	{
-		if (*i!=*j)
-			return false;
-	}
-
-	return true;
-}
-
-template <typename UnsignedIntType>
-void reverseVector(std::vector<UnsignedIntType>* in_pV)
-{
-	for (size_t i=0; i<in_pV->size()/2; i++)
-	{
-		std::swap(in_pV->at(i), in_pV->at(in_pV->size()-1-i));
-	}
-}
-
-template <typename UnsignedIntType, 
-typename VectorType, 
-typename IteratorState> 
-void testIterator(
-	std::vector<UnsignedIntType>& v, 
-	std::vector<UnsignedIntType>& w,
-	IteratorState (*in_pItCreate)(VectorType*),
-	DoubleIterator<UnsignedIntType, IteratorState>& itInterface
+template <typename IteratorState> void testIterator(
+	std::vector<unsigned int>& v, 
+	std::vector<unsigned int>& w,
+	IteratorState (*in_pItCreate)(std::vector<unsigned int>*),
+	DoubleIterator<unsigned int, IteratorState>& itInterface
 	)
 {
-	std::vector<UnsignedIntType> result;
+	std::vector<unsigned int> result;
 	IteratorState itState = (*in_pItCreate)(&v);
 	runIteratorForward(&itState, itInterface, &result);
 	test(compareVectors(&result, &w));
