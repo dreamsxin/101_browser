@@ -4,6 +4,7 @@
 #include "SwfReader/SwfStructure.h"
 #include <cstdlib>
 #include <cstring>
+#include "BasicDataStructures/Memory/SafeMemoryManagement.h"
 
 using namespace std;
 
@@ -95,13 +96,13 @@ int main(int argc, char** argv)
 
 	for (list<Tag>::iterator i=swfFile.tags.begin(); i!=swfFile.tags.end(); )
 	{
-		delete[] (i->tagContent);
+		safe_delete_array(&i->tagContent);
 		i=swfFile.tags.erase(i);
 	}
 
 	if (compressed)
 	{
-		delete streamToContinue;
+		safe_delete(&streamToContinue);
 	}
 
 	stream.close();

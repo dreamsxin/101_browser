@@ -9,20 +9,12 @@ template <typename Type> class TriangleStripBorderIterator
 {
 public:
 	typedef PositionIteratorState<Type> IteratorState;
-	typedef PositionConstIteratorState<Type> ConstIteratorState;
 };
 
 template <typename Type> typename TriangleStripBorderIterator<Type>::IteratorState
 triangleStripBorderIteratorState_create(std::vector<Type>* in_pVector)
 {
 	typename TriangleStripBorderIterator<Type>::IteratorState out_state = {in_pVector, 0};
-	return out_state;
-}
-
-template <typename Type> typename TriangleStripBorderIterator<Type>::ConstIteratorState
-triangleStripBorderConstIteratorState_create(const std::vector<Type>* in_pVector)
-{
-	typename TriangleStripBorderIterator<Type>::ConstIteratorState out_state = {in_pVector, 0};
 	return out_state;
 }
 
@@ -158,24 +150,11 @@ triangleStripBorderIterator_create()
 	return out_iter;
 }
 
-template <typename Type> DoubleIterator<const Type, typename TriangleStripBorderIterator<Type>::ConstIteratorState>
-triangleStripBorderConstIterator_create()
+template <typename Type> DoubleIteratorInstance<Type, typename TriangleStripBorderIterator<Type>::IteratorState>
+triangleStripBorderIteratorInstance_create(std::vector<Type>* in_pVector)
 {
-	DoubleIterator<const Type, typename TriangleStripBorderIterator<Type>::ConstIteratorState> out_iter = 
-	{
-		&positionIterator_get,
-		&triangleStripBorderIterator_next<Type, typename TriangleStripBorderIterator<Type>::ConstIteratorState>,
-		&triangleStripBorderIterator_prev<Type, typename TriangleStripBorderIterator<Type>::ConstIteratorState>
-	};
-
-	return out_iter;
-}
-
-template <typename Type> DoubleIteratorInstance<const Type, typename TriangleStripBorderIterator<Type>::ConstIteratorState>
-triangleStripBorderConstIteratorInstance_create(const std::vector<Type>* in_pVector)
-{
-	DoubleIteratorInstance<const Type, typename TriangleStripBorderIterator<Type>::ConstIteratorState>
-		inst = {triangleStripBorderConstIteratorState_create(in_pVector), triangleStripBorderConstIterator_create<Type>()};
+	DoubleIteratorInstance<Type, typename TriangleStripBorderIterator<Type>::IteratorState>
+		inst = {triangleStripBorderIteratorState_create(in_pVector), triangleStripBorderIterator_create<Type>()};
 
 	return inst;
 }

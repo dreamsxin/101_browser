@@ -28,8 +28,8 @@ void createRoundBorder(Vertex2<float> prevVertex,
 * borderWidth: the desired width of the border
 */
 inline void createBorderTriangleStrip(
-									  DoubleIteratorInstance<const Vertex2<float>, 
-									  TriangleStripBorderIterator<Vertex2<float> >::ConstIteratorState> itInstance,
+									  DoubleIteratorInstance<Vertex2<float>, 
+									  TriangleStripBorderIterator<Vertex2<float> >::IteratorState> itInstance,
 									  std::vector<Vertex2<float> >* pBorderTriangleStrip,
 									  void (*borderCreatingFunction)(Vertex2<float>, 
 									  Vertex2<float>, Vertex2<float>, 

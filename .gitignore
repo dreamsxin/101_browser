@@ -50,6 +50,7 @@ cursor*.bmp
 *.jcw
 *.orig
 src_*.txt
+*.coverage
 bin/*
 *.o
 *.gcno

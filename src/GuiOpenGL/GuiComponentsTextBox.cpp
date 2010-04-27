@@ -15,7 +15,7 @@ namespace Gui
 			std::vector<Vertex2<float> > borderTriangleStrip;
 			createBoxVertices(&boxVertices, left, top, width, height, currentHeight);
 			createBorderTriangleStrip(
-				triangleStripBorderConstIteratorInstance_create(&boxVertices),
+				triangleStripBorderIteratorInstance_create(&boxVertices),
 				&borderTriangleStrip, 
 				&createStraightBorder, borderSize, 12345);
 			drawVertexArray(&boxVertices, Defaults::cTextBoxBackgroundColor);

@@ -5,5 +5,6 @@ void testBasicDataStructures();
 void testBasicDataStructuresTree();
 void testTriangleStripBorderIterator();
 void testOuterBorderIterator();
+void testIteratorInstances();
 
 #endif
