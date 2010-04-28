@@ -1078,7 +1078,7 @@ module html5
   };
 
   interface Stream {
-    readonly attribute DOMString URL;
+    readonly attribute DOMString url;
     StreamRecorder record();
   };
 
