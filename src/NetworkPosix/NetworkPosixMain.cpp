@@ -88,7 +88,6 @@ int main(int argc, char **argv)
 		printf("%s", buffer);
 	}
 
-end:
 	close(serverSocket);
 	return 0;
 }
