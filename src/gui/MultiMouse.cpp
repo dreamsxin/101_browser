@@ -2,6 +2,7 @@
 #include "gui/MultiMouse.h"
 #include "GuiWin/GuiWin.h"
 #include <tchar.h>
+#include <hidusage.h>
 #include <cassert>
 #include <list>
 using namespace std;
@@ -147,8 +148,8 @@ namespace Gui
 			}
 
 			RAWINPUTDEVICE rawInputDevice;
-			rawInputDevice.usUsagePage = 0x1;
-			rawInputDevice.usUsage = 0x2;
+			rawInputDevice.usUsagePage = HID_USAGE_PAGE_GENERIC;
+			rawInputDevice.usUsage = HID_USAGE_GENERIC_MOUSE;
 			rawInputDevice.dwFlags = 0;
 			rawInputDevice.hwndTarget = 0;
 

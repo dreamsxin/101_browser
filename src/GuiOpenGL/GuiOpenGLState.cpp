@@ -19,7 +19,7 @@ void ReshapeGL(int width, int height)									// Reshape The Window When It's Mo
 	glViewport(0, 0, (GLsizei)(width), (GLsizei)(height));				// Reset The Current Viewport
 	glMatrixMode(GL_PROJECTION);										// Select The Projection Matrix
 	glLoadIdentity();													// Reset The Projection Matrix
-	
+
 	glOrtho(0.0, width, 0.0, height, -1, 1);
 
 	currentWidth = (float) width;
@@ -73,15 +73,16 @@ void drawGui(
 #ifdef _WIN32
 	extern Gui::Cursor cursor;
 
-	assert(in_pRawMice != NULL);
-
-	for (size_t currentCursorIndex = 0; currentCursorIndex < in_pRawMice->size; 
-		currentCursorIndex++)
+	if (in_pRawMice != NULL)
 	{
-		Gui::Components::drawCursor(
-			in_pRawMice->data[currentCursorIndex].x, 
-			in_pRawMice->data[currentCursorIndex].y, 
-			currentHeight, &cursor);
+		for (size_t currentCursorIndex = 0; currentCursorIndex < in_pRawMice->size; 
+			currentCursorIndex++)
+		{
+			Gui::Components::drawCursor(
+				in_pRawMice->data[currentCursorIndex].x, 
+				in_pRawMice->data[currentCursorIndex].y, 
+				currentHeight, &cursor);
+		}
 	}
 #endif
 
