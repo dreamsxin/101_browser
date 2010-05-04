@@ -20,6 +20,12 @@ namespace Gui
 				216*cColorByteToFloat, 1.0f
 			};
 
+			const Color4<float> cWindowTitleBarColor = {
+				0*cColorByteToFloat,
+				84*cColorByteToFloat,
+				227*cColorByteToFloat, 1.0f
+			};
+
 			const Color4<float> cCheckBoxTopLeftBackgroundColor = {
 				220*cColorByteToFloat, 
 				220*cColorByteToFloat, 
