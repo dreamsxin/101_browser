@@ -63,6 +63,8 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		SwapBuffers(window->hDC);
 		ValidateRect(window->hWnd, NULL);
 		return 0;
+	case WM_INPUT:
+		return 0;
 	}
 	
 	fprintf(logFile, "Did not handle\n");

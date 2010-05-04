@@ -146,6 +146,18 @@ namespace Gui
 				currentPos++;
 			}
 
+			RAWINPUTDEVICE rawInputDevice;
+			rawInputDevice.usUsagePage = 0x1;
+			rawInputDevice.usUsage = 0x2;
+			rawInputDevice.dwFlags = 0;
+			rawInputDevice.hwndTarget = 0;
+
+			if (RegisterRawInputDevices(&rawInputDevice, 1, sizeof(rawInputDevice)) != TRUE)
+			{
+				showErrorMessageBox(L"RegisterRawInputDevices()");
+				exit(1);
+			}
+
 			return out_rawMiceArray;
 		}
 	}
