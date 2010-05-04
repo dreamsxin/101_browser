@@ -14,9 +14,10 @@ struct Window
 	HWND		hWnd;		    // Holds Our Window Handle
 	HDC			hDC;		    // Private GDI Device Context
 	HGLRC		hGLRC;		    // Permanent Rendering Context
+	ArrayBlock<Gui::Mouse::RawMouse>* pRawMice;
 
 	Window(HINSTANCE in_hInstance) 
-		: hInstance(in_hInstance), hWnd(0), hDC(0), hGLRC(0)
+		: hInstance(in_hInstance), hWnd(0), hDC(0), hGLRC(0), pRawMice(NULL)
 	{ }
 };
 
@@ -59,11 +60,12 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// handler - but what should be done else
 		// for drawing the window *while* resizing, moving etc.
 		UpdateGuiState();
-		drawGui();
+		drawGui(window->pRawMice);
 		SwapBuffers(window->hDC);
 		ValidateRect(window->hWnd, NULL);
 		return 0;
 	case WM_INPUT:
+
 		return 0;
 	}
 	
@@ -264,6 +266,7 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 	freeTextureMemory(&cursor.xorMap);
 
 	ArrayBlock<Gui::Mouse::RawMouse> miceArray = Gui::Mouse::initMultiMouse();
+	window.pRawMice = &miceArray;
 
 	for (size_t currentMouseIndex = 0; currentMouseIndex < miceArray.size; currentMouseIndex++)
 	{
