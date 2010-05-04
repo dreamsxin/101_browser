@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <string>
 #include <cstdlib>
+#include <tchar.h>
 #include "GuiOpenGL/GuiComponentsDefaults.h"
 #include "GuiOpenGL/GuiOpenGLState.h"
 #include "gui/MultiMouse.h"
@@ -260,9 +261,15 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 	freeTextureMemory(&cursor.andMap);
 	freeTextureMemory(&cursor.xorMap);
 
-	showWindow(&window, nCmdShow); // Alternative: use SW_NORMAL instead of nCmdShow
 	ArrayBlock<Gui::Mouse::RawMouse> miceArray = Gui::Mouse::initMultiMouse();
 
+	for (size_t currentMouseIndex = 0; currentMouseIndex < miceArray.size; currentMouseIndex++)
+	{
+		_ftprintf(logFile, _T("%s\n"), miceArray.data[currentMouseIndex].psName);
+	}
+
+	showWindow(&window, nCmdShow); // Alternative: use SW_NORMAL instead of nCmdShow
+	
 	while (runProgram)
 	{
 		MSG msg; // Windows Message Structure

@@ -12,6 +12,7 @@ namespace Gui
 		{
 			HANDLE deviceHandle;
 			ULONG x, y, z;
+			TCHAR* psName;
 			ArrayBlock<bool> buttonsPressed;
 		};
 
