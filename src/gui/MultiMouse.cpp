@@ -22,8 +22,8 @@ namespace Gui
 				exit(1);
 			}
 			
-			if ((pRawInputDeviceList = (PRAWINPUTDEVICELIST) 
-				malloc(sizeof(RAWINPUTDEVICELIST) * nDevices)) == NULL)
+			if ((pRawInputDeviceList = static_cast<PRAWINPUTDEVICELIST>( 
+				malloc(sizeof(RAWINPUTDEVICELIST) * nDevices))) == NULL)
 			{
 				showErrorMessageBox(L"malloc()");
 				exit(1);
@@ -51,7 +51,7 @@ namespace Gui
 						exit(1);
 					}
 
-					if ((psName = (TCHAR*) malloc(sizeof(TCHAR) * cbSize)) == NULL)
+					if ((psName = static_cast<TCHAR*>(malloc(sizeof(TCHAR) * cbSize))) == NULL)
 					{
 						showErrorMessageBox(L"malloc()");
 						exit(1);
@@ -83,7 +83,7 @@ namespace Gui
 						exit(1);
 					}
 
-					PRID_DEVICE_INFO pDeviceInfo = (PRID_DEVICE_INFO) malloc(cbSize);
+					PRID_DEVICE_INFO pDeviceInfo = static_cast<PRID_DEVICE_INFO>(malloc(cbSize));
 
 					if (!pDeviceInfo)
 					{
@@ -109,7 +109,7 @@ namespace Gui
 					currentMouse.psName = psName;
 					currentMouse.buttonsPressed.size = pDeviceInfo->mouse.dwNumberOfButtons;
 					currentMouse.buttonsPressed.data = 
-						(bool*) malloc(sizeof(bool)*currentMouse.buttonsPressed.size);
+						static_cast<bool*>(malloc(sizeof(bool)*currentMouse.buttonsPressed.size));
 
 					if (!currentMouse.buttonsPressed.data)
 					{
@@ -128,7 +128,8 @@ namespace Gui
 
 			ArrayBlock<RawMouse> out_rawMiceArray;
 			out_rawMiceArray.size = rawMiceList.size();
-			out_rawMiceArray.data = (RawMouse*) malloc(sizeof(RawMouse) * out_rawMiceArray.size);
+			out_rawMiceArray.data = static_cast<RawMouse*>(
+				malloc(sizeof(RawMouse) * out_rawMiceArray.size));
 
 			if (out_rawMiceArray.data == 0)
 			{
