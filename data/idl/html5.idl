@@ -505,6 +505,15 @@ module html5
              attribute DOMString media;
   };
 
+  interface HTMLTrackElement : HTMLElement {
+             attribute DOMString kind;
+             attribute DOMString label;
+             attribute DOMString src;
+             attribute DOMString srclang;
+  
+    readonly attribute MediaTrack track;
+  };
+
   interface HTMLMediaElement : HTMLElement {
   
     // error state
@@ -551,6 +560,58 @@ module html5
              attribute boolean controls;
              attribute float volume;
              attribute boolean muted;
+  
+    // timed tracks
+    readonly attribute MediaTrack[] tracks;
+    MutableMediaTrack addTrack(in DOMString label, in DOMString kind, in DOMString language);
+  };
+  
+  interface MediaTrack {
+    readonly attribute DOMString kind;
+    readonly attribute DOMString label;
+    readonly attribute DOMString language;
+  
+    const unsigned short TRACK_OFF = 0;
+    const unsigned short TRACK_HIDDEN = 1;
+    const unsigned short TRACK_SHOWING = 2;
+    readonly attribute unsigned short mode;
+  
+    readonly attribute MediaCueList cues;
+    readonly attribute MediaCueList activeCues;
+    readonly attribute Function onentercue;
+    readonly attribute Function onexitcue;
+  };
+  
+  interface MutableMediaTrack : MediaTrack {
+   void addCue(in MediaCue cue);
+   void removeCue(in MediaCue cue);
+  };
+  
+  interface MediaCueList {
+    readonly attribute unsigned long length;
+    getter MediaCue (in unsigned long index);
+    MediaCue getCueById(in DOMString id);
+  };
+  
+  [Constructor(in DOMString id, in float startTime, in float endTime, in DOMString settings, in DOMString text, in optional boolean pauseOnExit)]
+  interface MediaCue {
+    readonly attribute MediaTrack track;
+    readonly attribute DOMString id;
+  
+    readonly attribute float startTime;
+    readonly attribute float endTime;
+    readonly attribute boolean pauseOnExit;
+  
+    readonly attribute DOMString direction;
+    readonly attribute boolean snapToLines;
+    readonly attribute long linePosition;
+    readonly attribute long textPosition;
+    readonly attribute long size;
+    readonly attribute DOMString alignment;
+  
+    readonly attribute DOMString voice;
+    DOMString getCueAsSource();
+    DocumentFragment getCueAsHTML();
   };
 
   interface MediaError {
