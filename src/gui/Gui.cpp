@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include "GuiOpenGL/GuiComponentsDefaults.h"
 #include "GuiOpenGL/GuiOpenGLState.h"
+#include "gui/MultiMouse.h"
 #include "gui/Cursor.h"
 
 struct Window
@@ -192,7 +193,7 @@ bool createWindow(Window* in_window, std::wstring in_titleText,
 
 void showWindow(Window* in_window, int nCmdShow)
 {
-	ShowWindow (in_window->hWnd, nCmdShow);								// Make The Window Visible
+	ShowWindow(in_window->hWnd, nCmdShow);								// Make The Window Visible
 }
 
 void destroyWindow(Window* in_window)
@@ -260,6 +261,7 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 	freeTextureMemory(&cursor.xorMap);
 
 	showWindow(&window, nCmdShow); // Alternative: use SW_NORMAL instead of nCmdShow
+	Gui::Mouse::initMultiMouse();
 
 	while (runProgram)
 	{

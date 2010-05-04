@@ -1,7 +1,9 @@
 #include "BasicDataStructures/Memory/SafeMemoryManagement.h"
 #include "gui/MultiMouse.h"
 #include "GuiWin/GuiWin.h"
-#include <windows.h>
+#include <cassert>
+#include <list>
+using namespace std;
 
 namespace Gui
 {
@@ -10,26 +12,128 @@ namespace Gui
 		void initMultiMouse()
 		{
 			UINT nDevices;
+			PRAWINPUTDEVICELIST pRawInputDeviceList;
+			list<RawMouse> rawMiceList;
+
 			if (GetRawInputDeviceList(NULL, &nDevices, sizeof(RAWINPUTDEVICELIST)) != 0)
 			{
-				showErrorMessageBox(L"Unable to count raw input devices");
+				showErrorMessageBox(L"GetRawInputDeviceList() count");
 				exit(1);
 			}
-
-			PRAWINPUTDEVICELIST pRawInputDeviceList;
+			
 			if ((pRawInputDeviceList = (PRAWINPUTDEVICELIST) 
 				malloc(sizeof(RAWINPUTDEVICELIST) * nDevices)) == NULL)
 			{
+				showErrorMessageBox(L"malloc()");
 				exit(1);
 			}
 
-			if (GetRawInputDeviceList(pRawInputDeviceList, &nDevices, sizeof(RAWINPUTDEVICELIST)) == (UINT)-1)
+			if (((INT) GetRawInputDeviceList(pRawInputDeviceList, &nDevices, sizeof(RAWINPUTDEVICELIST))) < 0)
 			{
-				showErrorMessageBox(L"Unable to get raw input device list");
+				showErrorMessageBox(L"GetRawInputDeviceList() get");
 				exit(1);
+			}
+
+			for (UINT currentDeviceIndex = 0; currentDeviceIndex < nDevices; currentDeviceIndex++)
+			{
+				DWORD currentDeviceType = pRawInputDeviceList[currentDeviceIndex].dwType;
+
+				if (currentDeviceType == RIM_TYPEMOUSE)
+				{
+					UINT cbSize;
+#if 0
+					TCHAR* psName;
+
+					if (GetRawInputDeviceInfo(currentDeviceType, RIDI_DEVICENAME, NULL, &cbSize) != 0)
+					{
+						showErrorMessageBox(L"GetRawInputDeviceInfo() count");
+						exit(1);
+					}
+
+					if ((psName = (char*) malloc(sizeof(TCHAR) * cbSize)) == NULL)
+					{
+						showErrorMessageBox(L"malloc()");
+						exit(1);
+					}
+
+					if (((INT) GetRawInputDeviceInfo(currentDeviceType, RIDI_DEVICENAME, psName, &cbSize)) < 0)
+					{
+						safe_free(psName);
+						showErrorMessageBox(L"GetRawInputDeviceInfo() get");
+						exit(1);
+					}
+#endif
+
+					HANDLE hDevice = pRawInputDeviceList[currentDeviceIndex].hDevice;
+
+					if (GetRawInputDeviceInfo(hDevice, RIDI_DEVICEINFO, NULL, &cbSize) != 0)
+					{
+						showErrorMessageBox(L"GetRawInputDeviceInfo() count");
+						exit(1);
+					}
+
+					PRID_DEVICE_INFO pDeviceInfo = (PRID_DEVICE_INFO) malloc(cbSize);
+
+					if (!pDeviceInfo)
+					{
+						showErrorMessageBox(L"malloc()");
+						exit(1);
+					}
+
+					pDeviceInfo->cbSize = cbSize;
+
+					if (((INT) GetRawInputDeviceInfo(hDevice, RIDI_DEVICEINFO, pDeviceInfo, &cbSize)) < 0)
+					{
+						showErrorMessageBox(L"GetRawInputDeviceInfo() get");
+						exit(1);
+					}
+
+					assert(pDeviceInfo->dwType == RIM_TYPEMOUSE);
+
+					RawMouse currentMouse;
+					currentMouse.deviceHandle = pRawInputDeviceList[currentDeviceIndex].hDevice;
+					currentMouse.x = 0;
+					currentMouse.y = 0;
+					currentMouse.z = 0;
+					currentMouse.buttonsPressed.size = pDeviceInfo->mouse.dwNumberOfButtons;
+					currentMouse.buttonsPressed.data = 
+						(bool*) malloc(sizeof(bool)*currentMouse.buttonsPressed.size);
+
+					if (!currentMouse.buttonsPressed.data)
+					{
+						showErrorMessageBox(L"malloc()");
+						exit(1);
+					}
+
+					memset(currentMouse.buttonsPressed.data, 0, 
+						sizeof(bool)*currentMouse.buttonsPressed.size);
+
+					rawMiceList.push_back(currentMouse);
+#if 0
+					safe_free(psName);
+#endif
+				}
 			}
 
 			safe_free(&pRawInputDeviceList);
+
+			RawMouse* rawMiceArray = (RawMouse*) malloc(sizeof(RawMouse)* rawMiceList.size());
+
+			if (rawMiceArray == 0)
+			{
+				showErrorMessageBox(L"malloc()");
+				exit(1);
+			}
+
+			size_t currentPos = 0;
+
+			for (list<RawMouse>::iterator rawMouseIt = rawMiceList.begin(); 
+				rawMouseIt != rawMiceList.end(); rawMouseIt++)
+			{
+				rawMiceArray[currentPos] = *rawMouseIt;
+				currentPos++;
+			}
+
 		}
 	}
 }
