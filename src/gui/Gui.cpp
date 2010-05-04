@@ -261,7 +261,7 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 	freeTextureMemory(&cursor.xorMap);
 
 	showWindow(&window, nCmdShow); // Alternative: use SW_NORMAL instead of nCmdShow
-	Gui::Mouse::initMultiMouse();
+	ArrayBlock<Gui::Mouse::RawMouse> miceArray = Gui::Mouse::initMultiMouse();
 
 	while (runProgram)
 	{

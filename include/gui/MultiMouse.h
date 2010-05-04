@@ -15,7 +15,7 @@ namespace Gui
 			ArrayBlock<bool> buttonsPressed;
 		};
 
-		void initMultiMouse();
+		ArrayBlock<RawMouse> initMultiMouse();
 	}
 }
 

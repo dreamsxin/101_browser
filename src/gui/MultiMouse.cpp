@@ -9,7 +9,7 @@ namespace Gui
 {
 	namespace Mouse
 	{
-		void initMultiMouse()
+		ArrayBlock<RawMouse> initMultiMouse()
 		{
 			UINT nDevices;
 			PRAWINPUTDEVICELIST pRawInputDeviceList;
@@ -117,9 +117,11 @@ namespace Gui
 
 			safe_free(&pRawInputDeviceList);
 
-			RawMouse* rawMiceArray = (RawMouse*) malloc(sizeof(RawMouse)* rawMiceList.size());
+			ArrayBlock<RawMouse> out_rawMiceArray;
+			out_rawMiceArray.size = rawMiceList.size();
+			out_rawMiceArray.data = (RawMouse*) malloc(sizeof(RawMouse) * out_rawMiceArray.size);
 
-			if (rawMiceArray == 0)
+			if (out_rawMiceArray.data == 0)
 			{
 				showErrorMessageBox(L"malloc()");
 				exit(1);
@@ -130,10 +132,11 @@ namespace Gui
 			for (list<RawMouse>::iterator rawMouseIt = rawMiceList.begin(); 
 				rawMouseIt != rawMiceList.end(); rawMouseIt++)
 			{
-				rawMiceArray[currentPos] = *rawMouseIt;
+				out_rawMiceArray.data[currentPos] = *rawMouseIt;
 				currentPos++;
 			}
 
+			return out_rawMiceArray;
 		}
 	}
 }
