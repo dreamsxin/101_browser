@@ -6,6 +6,7 @@
 *.embed.manifest
 *.intermediate.manifest
 *.exe
+*.dll
 *.ilk
 *.pdb
 *.idb

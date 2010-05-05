@@ -79,8 +79,8 @@ void drawGui(
 			currentCursorIndex++)
 		{
 			Gui::Components::drawCursor(
-				in_pRawMice->data[currentCursorIndex].x, 
-				in_pRawMice->data[currentCursorIndex].y, 
+				static_cast<float>(in_pRawMice->data[currentCursorIndex].x), 
+				static_cast<float>(in_pRawMice->data[currentCursorIndex].y), 
 				currentHeight, &cursor);
 		}
 	}
