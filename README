@@ -6,13 +6,12 @@ Email: wolfgangkeller@gmail.com
 Website: http://github.com/nubok/101_browser
 System requirements:
     Operation system: Windows XP/Server 2003/Vista/Server 2008/7 (only tested under XP, but the other ones should work)
-There is *no* proper Linux port (sorry for the inconvenience, I'm working on it)
-There is *no* Mac port (and *none* is planned at the moment; if Apple is willing to donate a Mac, I'll think about reconsidering)
-    For building on Windows: Visual Studio 2008
-    For building on Linux: gcc, cmake
+    Current Linux (I'm only testing under the current Ubuntu (10.4 at the moment). Note that the Linux port is sometimes a little behind the Windows version. :-(
+There is *no* port to crApple MacOS X (and *none* is planned at the moment; if crApple is willing to donate a Mac, I'll think about reconsidering)
+    For building on Windows: Visual Studio 2008/2010 (the former is recommended). Note that under Visual Studio 2008 you additionally need to have Boost installed.
+    For building on Linux: gcc, scons
 Description: A small web browser (or more precise: a small yet-to-become web browser)
-Building: For Windows use the 101_browser.sln file in the root folder.
+Building: For Windows use the 101_browser_vs2008.sln/101_browser_vs2010.sln file in the root folder.
 For the experimental Linux port, type (without the "$ ").
-$ cmake .
-$ make
+$ scons
 
