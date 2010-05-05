@@ -511,7 +511,7 @@ module html5
              attribute DOMString src;
              attribute DOMString srclang;
   
-    readonly attribute MediaTrack track;
+    readonly attribute TimedTrack track;
   };
 
   interface HTMLMediaElement : HTMLElement {
@@ -562,40 +562,56 @@ module html5
              attribute boolean muted;
   
     // timed tracks
-    readonly attribute MediaTrack[] tracks;
-    MutableMediaTrack addTrack(in DOMString label, in DOMString kind, in DOMString language);
+    readonly attribute TimedTrack[] tracks;
+    MutableTimedTrack addTrack(in DOMString label, in DOMString kind, in DOMString language);
   };
-  
-  interface MediaTrack {
+
+  interface MediaError {
+    const unsigned short MEDIA_ERR_ABORTED = 1;
+    const unsigned short MEDIA_ERR_NETWORK = 2;
+    const unsigned short MEDIA_ERR_DECODE = 3;
+    const unsigned short MEDIA_ERR_SRC_NOT_SUPPORTED = 4;
+    readonly attribute unsigned short code;
+  };
+
+  interface TimedTrack {
     readonly attribute DOMString kind;
     readonly attribute DOMString label;
     readonly attribute DOMString language;
   
-    const unsigned short TRACK_OFF = 0;
-    const unsigned short TRACK_HIDDEN = 1;
-    const unsigned short TRACK_SHOWING = 2;
-    readonly attribute unsigned short mode;
+    const unsigned short NONE = 0;
+    const unsigned short LOADING = 1;
+    const unsigned short LOADED = 2;
+    const unsigned short ERROR = 3;
+    readonly attribute unsigned short readyState;
+    readonly attribute Function onload;
+    readonly attribute Function onerror;
   
-    readonly attribute MediaCueList cues;
-    readonly attribute MediaCueList activeCues;
+    const unsigned short OFF = 0;
+    const unsigned short HIDDEN = 1;
+    const unsigned short SHOWING = 2;
+             attribute unsigned short mode;
+  
+    readonly attribute TimedTrackCueList cues;
+    readonly attribute TimedTrackCueList activeCues;
     readonly attribute Function onentercue;
     readonly attribute Function onexitcue;
   };
   
-  interface MutableMediaTrack : MediaTrack {
-   void addCue(in MediaCue cue);
-   void removeCue(in MediaCue cue);
+  interface MutableTimedTrack : TimedTrack {
+   void addCue(in TimedTrackCue cue);
+   void removeCue(in TimedTrackCue cue);
   };
   
-  interface MediaCueList {
+  interface TimedTrackCueList {
     readonly attribute unsigned long length;
-    getter MediaCue (in unsigned long index);
-    MediaCue getCueById(in DOMString id);
+    getter TimedTrackCue (in unsigned long index);
+    TimedTrackCue getCueById(in DOMString id);
   };
   
   [Constructor(in DOMString id, in float startTime, in float endTime, in DOMString settings, in DOMString text, in optional boolean pauseOnExit)]
-  interface MediaCue {
-    readonly attribute MediaTrack track;
+  interface TimedTrackCue {
+    readonly attribute TimedTrack track;
     readonly attribute DOMString id;
   
     readonly attribute float startTime;
@@ -612,14 +628,6 @@ module html5
     readonly attribute DOMString voice;
     DOMString getCueAsSource();
     DocumentFragment getCueAsHTML();
-  };
-
-  interface MediaError {
-    const unsigned short MEDIA_ERR_ABORTED = 1;
-    const unsigned short MEDIA_ERR_NETWORK = 2;
-    const unsigned short MEDIA_ERR_DECODE = 3;
-    const unsigned short MEDIA_ERR_SRC_NOT_SUPPORTED = 4;
-    readonly attribute unsigned short code;
   };
 
   interface TimeRanges {
