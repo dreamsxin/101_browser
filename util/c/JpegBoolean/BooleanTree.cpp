@@ -1,9 +1,9 @@
 #include "BooleanTree.h"
 #include <cassert>
 
-bool LeafTreeNode::computeValue(const std::vector<bool>* variables, void*)
+bool LeafTreeNode::computeValue(const std::vector<bool>* in_pVariables)
 {
-	return variables->at(variableNumber);
+	return in_pVariables->at(variableNumber);
 }
 
 void LeafTreeNode::print()
@@ -34,18 +34,18 @@ size_t LeafTreeNode::size()
 	return 0;
 }
 
-bool FunctionTreeNode::computeValue(const std::vector<bool>* variables, void*)
+bool FunctionTreeNode::computeValue(const std::vector<bool>* in_pVariables)
 {
 	switch (functionType)
 	{
 	case FunctionTypeNot:
-		return !child0->computeValue(variables, NULL);
+		return !child0->computeValue(in_pVariables);
 	case FunctionTypeXor:
-		return child0->computeValue(variables, NULL) ^ child1->computeValue(variables, NULL);
+		return child0->computeValue(in_pVariables) ^ child1->computeValue(in_pVariables);
 	case FunctionTypeAnd:
-		return child0->computeValue(variables, NULL) && child1->computeValue(variables, NULL);
+		return child0->computeValue(in_pVariables) && child1->computeValue(in_pVariables);
 	case FunctionTypeOr:
-		return child0->computeValue(variables, NULL) || child1->computeValue(variables, NULL);
+		return child0->computeValue(in_pVariables) || child1->computeValue(in_pVariables);
 	}
 
 	// should never happen

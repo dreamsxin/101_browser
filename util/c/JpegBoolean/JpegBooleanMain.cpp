@@ -137,7 +137,7 @@ void* workerThread(void* threadid)
 
 		for (size_t currentVarIdx=0; currentVarIdx<variableValuesCount; currentVarIdx++)
 		{
-			bool val = root.computeValue(&variableValues.at(currentVarIdx), NULL);
+			bool val = root.computeValue(&variableValues.at(currentVarIdx));
 			if (val != functionValues.at(currentVarIdx).at(pInit->functionNumber))
 				break;
 			else

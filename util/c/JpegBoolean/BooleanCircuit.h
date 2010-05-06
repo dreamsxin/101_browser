@@ -4,13 +4,8 @@
 #include "BooleanStructure.h"
 #include <vector>
 
-struct SizePair
-{
-	size_t 
-}
-
 class BooleanCircuitNode : public FunctionBooleanStructure<size_t, 
-	const std::vector<BooleanCircuitNode>*>
+	const std::vector<bool>*>
 {
 public:
 	size_t child0Index, child1Index;
@@ -19,10 +14,10 @@ public:
 		: FunctionBooleanStructure(in_functionType)
 	{
 		child0Index = 0;
+		child1Index = 0;
 	}
 
-	virtual bool computeValue(const std::vector<bool>* variables, 
-		const std::vector<BooleanCircuitNode>* in_pNodes);
+	virtual bool computeValue(const std::vector<bool>* in_pValues);
 	virtual void print();
 	virtual void reset();
 	virtual bool increment(size_t in_thisNodeIndex);

@@ -3,7 +3,7 @@
 
 #include "BooleanStructure.h"
 
-class TreeNode : public BooleanStructure<bool, void*>
+class TreeNode : public BooleanStructure<bool, const std::vector<bool>*>
 {
 public:
 	bool isLeaf;
@@ -20,14 +20,14 @@ public:
 
 	LeafTreeNode() : TreeNode(true), variableNumber(0) { }
 
-	virtual bool computeValue(const std::vector<bool>* variables, void*);
+	virtual bool computeValue(const std::vector<bool>* in_pVariables);
 	virtual void print();
 	virtual void reset();
 	virtual bool increment(bool isRoot);
 	virtual size_t size();
 };
 
-class FunctionTreeNode : public TreeNode, public FunctionBooleanStructure<bool, void*>
+class FunctionTreeNode : public TreeNode, public FunctionBooleanStructure<bool, const std::vector<bool>*>
 {
 public:
 	TreeNode *child0, *child1;
@@ -61,7 +61,7 @@ public:
 		child1 = NULL;
 	}
 
-	virtual bool computeValue(const std::vector<bool>* variables, void*);
+	virtual bool computeValue(const std::vector<bool>* in_pVariables);
 	virtual void print();
 	virtual void reset();
 	virtual bool increment(bool isRoot);

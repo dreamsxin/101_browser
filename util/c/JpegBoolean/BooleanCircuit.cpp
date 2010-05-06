@@ -1,9 +1,21 @@
 #include "BooleanCircuit.h"
 
-bool BooleanCircuitNode::computeValue(const std::vector<bool>* variables, 
-									  const std::vector<BooleanCircuitNode>* in_pNodes)
+bool BooleanCircuitNode::computeValue(const std::vector<bool>* in_pValues)
 {
-	return true;
+	switch (functionType)
+	{
+	case FunctionTypeNot:
+		return !in_pValues->at(child0Index);
+	case FunctionTypeXor:
+		return in_pValues->at(child0Index) ^ in_pValues->at(child1Index);
+	case FunctionTypeAnd:
+		return in_pValues->at(child0Index) && in_pValues->at(child1Index);
+	case FunctionTypeOr:
+		return in_pValues->at(child0Index) || in_pValues->at(child1Index);
+	}
+
+	// should never happen
+	return false;
 }
 
 void BooleanCircuitNode::print()
