@@ -25,6 +25,7 @@ void BooleanCircuitNode::print()
 	{
 	case FunctionTypeNot:
 		printf("Not %u\n", child0Index);
+		break;
 	case FunctionTypeXor:
 		printf("Xor %u %u\n", child0Index, child1Index);
 		break;
@@ -44,9 +45,44 @@ void BooleanCircuitNode::reset()
 	child1Index = 0; // Not necessary, but does not harm
 }
 
-bool BooleanCircuitNode::increment(BooleanCircuitNodeIncrementPair in_incrementPair)
+bool BooleanCircuitNode::increment(BooleanCircuitNodeIncrementParameters in_parameters)
 {
-	return true;
+	extern size_t varCount;
+	size_t maxChildIndex = varCount+in_parameters.thisNodeIndex-1;
+	
+	if (child0Index < maxChildIndex)
+	{
+		child0Index++;
+		return true;
+	}
+	else if (functionType != FunctionTypeNot && child1Index < maxChildIndex)
+	{
+		child0Index = 0;
+		child1Index++;
+		return true;
+	}
+	else if (functionType != FunctionTypeOr && !in_parameters.isFinalNode)
+	{
+		if (functionType == FunctionTypeNot)
+		{
+			functionType = FunctionTypeXor;
+		}
+		else if (functionType == FunctionTypeXor)
+		{
+			functionType = FunctionTypeAnd;
+		}
+		else if (functionType == FunctionTypeAnd)
+		{
+			functionType = FunctionTypeOr;
+		}
+
+		child0Index = 0;
+		child1Index = 0;
+
+		return true;
+	}
+
+	return false;
 }
 
 
@@ -84,7 +120,26 @@ void BooleanCircuitNetwork::print()
 	}
 }
 
-bool BooleanCircuitNetwork::increment(void*)
+bool BooleanCircuitNetwork::increment()
 {
-	return true;
+	size_t currentIndex;
+
+	for (currentIndex = 0; currentIndex < nodes.size(); currentIndex++)
+	{
+		BooleanCircuitNodeIncrementParameters p;
+		p.thisNodeIndex = currentIndex;
+		p.isFinalNode = (currentIndex == (nodes.size()-1));
+
+		if (nodes.at(currentIndex).increment(p))
+		{
+			for (size_t currentIndex2 = 0; currentIndex2 < currentIndex; currentIndex2++)
+			{
+				nodes.at(currentIndex2).reset();
+			}
+
+			return true;
+		}
+	}
+
+	return false;
 }

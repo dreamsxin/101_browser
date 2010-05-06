@@ -66,11 +66,19 @@ public:
 	virtual void print();
 	virtual void reset();
 
+	/*!
+	 * This function must only be called if the node *is*
+	 * the root node
+	 */
 	inline virtual bool rootIncrement()
 	{
 		return increment(true);
 	}
 
+	/*!
+	 * This function must only be called if the node is *not*
+	 * the root node
+	 */
 	inline virtual bool increment()
 	{
 		return increment(false);

@@ -5,10 +5,10 @@
 #include <vector>
 #include <cassert>
 
-struct BooleanCircuitNodeIncrementPair
+struct BooleanCircuitNodeIncrementParameters
 {
 	size_t thisNodeIndex;
-	size_t maxNodeIndex;
+	bool isFinalNode;
 };
 
 class BooleanCircuitNode : public FunctionBooleanStructure<const std::vector<bool>*>
@@ -34,7 +34,7 @@ public:
 		assert(false);
 		return false;
 	}
-	virtual bool increment(BooleanCircuitNodeIncrementPair in_incrementPair);
+	virtual bool increment(BooleanCircuitNodeIncrementParameters in_parameters);
 };
 
 class BooleanCircuitNetwork : public FunctionBooleanStructure<const std::vector<bool>*>
@@ -69,7 +69,7 @@ public:
 	 * It does nothing. This is how it has to be.
 	 */
 	inline virtual void reset() { }
-	virtual bool increment(void*);
+	virtual bool increment();
 };
 
 #endif

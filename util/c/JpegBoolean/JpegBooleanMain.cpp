@@ -140,13 +140,6 @@ void* workerThread(void* threadid)
 
 	while (true)
 	{
-#if USE_CIRCUIT
-		pthread_mutex_lock(&printMutex);
-		printf("Current network:\n");
-		root->print();
-		fflush(stdout);
-		pthread_mutex_unlock(&printMutex);
-#endif
 		size_t currentApproximationQuality = 0;
 
 		for (size_t currentVarIdx=0; currentVarIdx<variableValuesCount; currentVarIdx++)
