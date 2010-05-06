@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include "Config.h"
 #include "BooleanTree.h"
+#include "BooleanCircuit.h"
 using namespace std;
 
 // the number of variables
@@ -129,10 +130,23 @@ void* workerThread(void* threadid)
 	size_t threadGroupNumber = getThreadGroupNumber(*pInit);
 	size_t threadNumber = getThreadNumber(*pInit);
 
+#if USE_TREE
 	FunctionTreeNode root = FunctionTreeNode(pInit->functionAtEnd, desiredChildrenCount);
+#endif
+
+#if USE_CIRCUIT
+	BooleanCircuitNetwork root = BooleanCircuitNetwork(pInit->functionAtEnd, desiredChildrenCount);
+#endif
 
 	while (true)
 	{
+#if USE_CIRCUIT
+		pthread_mutex_lock(&printMutex);
+		printf("Current network:\n");
+		root->print();
+		fflush(stdout);
+		pthread_mutex_unlock(&printMutex);
+#endif
 		size_t currentApproximationQuality = 0;
 
 		for (size_t currentVarIdx=0; currentVarIdx<variableValuesCount; currentVarIdx++)
@@ -173,7 +187,16 @@ void* workerThread(void* threadid)
 			pthread_exit(NULL);
 		}
 
-		if (root.increment(true))
+		bool dontExit = 
+#if USE_TREE
+	root.rootIncrement();
+#endif
+
+#if USE_CIRCUIT
+	root.increment();
+#endif
+
+		if (dontExit)
 			continue;
 		else
 			pthread_exit(NULL);
@@ -254,8 +277,15 @@ int main(int argc, char** argv)
 			NULL);
 	}
 
+#if USE_TREE
 	desiredChildrenCount = 0;
+#endif
 
+#if USE_CIRCUIT
+	desiredChildrenCount = 1;
+#endif
+
+#if USE_TREE
 	// Begin hack:
 	if (bitsCount == 2)
 	{
@@ -268,6 +298,7 @@ int main(int argc, char** argv)
 		desiredChildrenCount = 4;
 	}
 	// End hack
+#endif
 
 	while (true)
 	{

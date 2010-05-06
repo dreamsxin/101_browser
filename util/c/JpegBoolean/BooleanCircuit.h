@@ -3,9 +3,15 @@
 
 #include "BooleanStructure.h"
 #include <vector>
+#include <cassert>
 
-class BooleanCircuitNode : public FunctionBooleanStructure<size_t, 
-	const std::vector<bool>*>
+struct BooleanCircuitNodeIncrementPair
+{
+	size_t thisNodeIndex;
+	size_t maxNodeIndex;
+};
+
+class BooleanCircuitNode : public FunctionBooleanStructure<const std::vector<bool>*>
 {
 public:
 	size_t child0Index, child1Index;
@@ -20,36 +26,50 @@ public:
 	virtual bool computeValue(const std::vector<bool>* in_pValues);
 	virtual void print();
 	virtual void reset();
-	virtual bool increment(size_t in_thisNodeIndex);
+	/*!
+	 * This function should never be called
+	 */
+	inline virtual bool increment()
+	{
+		assert(false);
+		return false;
+	}
+	virtual bool increment(BooleanCircuitNodeIncrementPair in_incrementPair);
 };
 
-class BooleanCircuitNetwork : public FunctionBooleanStructure<size_t, void*>
+class BooleanCircuitNetwork : public FunctionBooleanStructure<const std::vector<bool>*>
 {
 public:
-	size_t nodeCount;
 	std::vector<BooleanCircuitNode> nodes;
 	std::vector<bool> values;
 
 	BooleanCircuitNetwork(FunctionType in_functionTypeAtLast, size_t in_nodeCount) 
-		: FunctionBooleanStructure(in_functionTypeAtLast), nodeCount(in_nodeCount)
+		: FunctionBooleanStructure(in_functionTypeAtLast)
 	{
 		extern size_t varCount;
 
-		nodes.reserve(nodeCount);
-		values.reserve(varCount+nodeCount);
+		nodes.reserve(in_nodeCount);
+		values.reserve(varCount+in_nodeCount);
 		
-		for (size_t i = 0; i<nodeCount-1; i++)
+		for (size_t i = 0; i<in_nodeCount-1; i++)
 		{
 			nodes.push_back(BooleanCircuitNode(FunctionTypeNot));
 		}
-
 		nodes.push_back(BooleanCircuitNode(in_functionTypeAtLast));
+
+		for (size_t i=0; i<varCount+in_nodeCount; i++)
+		{
+			values.push_back(false);
+		}
 	}
 
-	virtual bool computeValue(const std::vector<bool>* variables, void*);
+	virtual bool computeValue(const std::vector<bool>* variables);
 	virtual void print();
-	virtual void reset();
-	virtual bool increment(size_t in_nodeCount);
+	/*!
+	 * It does nothing. This is how it has to be.
+	 */
+	inline virtual void reset() { }
+	virtual bool increment(void*);
 };
 
 #endif

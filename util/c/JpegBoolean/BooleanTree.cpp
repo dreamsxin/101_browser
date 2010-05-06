@@ -16,7 +16,7 @@ void LeafTreeNode::reset()
 	variableNumber = 0;
 }
 
-bool LeafTreeNode::increment(bool isRoot)
+bool LeafTreeNode::increment()
 {
 	extern size_t varCount;
 
@@ -138,9 +138,9 @@ void FunctionTreeNode::reset()
 bool FunctionTreeNode::increment(bool isRoot)
 {
 	assert(child0 != NULL);
-	if (child0->increment(false))
+	if (child0->increment())
 		return true;
-	if (child1 != NULL && child1->increment(false))
+	if (child1 != NULL && child1->increment())
 	{
 		child0->reset();
 		return true;
