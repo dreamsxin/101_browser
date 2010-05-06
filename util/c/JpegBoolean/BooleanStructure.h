@@ -4,16 +4,17 @@
 #include "BooleanThread.h"
 #include <vector>
 
-class BooleanStructure
+template <typename IncrementType, typename ComputeType> class BooleanStructure
 {
 public:
-	virtual bool computeValue(const std::vector<bool>* variables) = 0;
+	virtual bool computeValue(const std::vector<bool>* variables, ComputeType computeType) = 0;
 	virtual void print() = 0;
 	virtual void reset() = 0;
-	virtual bool increment(bool isRoot) = 0;
+	virtual bool increment(IncrementType incrementType) = 0;
 };
 
-class FunctionBooleanStructure : public BooleanStructure
+template <typename IncrementType, typename ComputeType> class FunctionBooleanStructure 
+: public BooleanStructure<IncrementType, ComputeType>
 {
 public:
 	FunctionType functionType;

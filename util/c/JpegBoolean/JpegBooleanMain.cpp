@@ -3,6 +3,7 @@
 #include <vector>
 #include <cassert>
 #include <pthread.h>
+#include "Config.h"
 #include "BooleanTree.h"
 using namespace std;
 
@@ -136,7 +137,7 @@ void* workerThread(void* threadid)
 
 		for (size_t currentVarIdx=0; currentVarIdx<variableValuesCount; currentVarIdx++)
 		{
-			bool val = root.computeValue(&variableValues.at(currentVarIdx));
+			bool val = root.computeValue(&variableValues.at(currentVarIdx), NULL);
 			if (val != functionValues.at(currentVarIdx).at(pInit->functionNumber))
 				break;
 			else
