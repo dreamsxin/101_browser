@@ -1,9 +1,14 @@
 #include <windows.h>
 #include <string>
+#include <cassert>
 #include <cstdlib>
+#include <tchar.h>
 #include "GuiOpenGL/GuiComponentsDefaults.h"
 #include "GuiOpenGL/GuiOpenGLState.h"
+#include "gui/GuiSettings.h"
+#include "gui/MultiMouse.h"
 #include "gui/Cursor.h"
+#include "BasicDataStructures/Memory/SafeMemoryManagement.h"
 
 struct Window
 {
@@ -12,15 +17,21 @@ struct Window
 	HWND		hWnd;		    // Holds Our Window Handle
 	HDC			hDC;		    // Private GDI Device Context
 	HGLRC		hGLRC;		    // Permanent Rendering Context
+	ArrayBlock<Gui::Mouse::RawMouse>* pRawMice;
+	UINT width;
+	UINT height;
 
-	Window(HINSTANCE in_hInstance) 
-		: hInstance(in_hInstance), hWnd(0), hDC(0), hGLRC(0)
+	Window(HINSTANCE in_hInstance, UINT in_width, UINT in_height) 
+		: hInstance(in_hInstance), hWnd(0), hDC(0), hGLRC(0), pRawMice(NULL),
+		width(in_width), height(in_height)
 	{ }
 };
 
 bool runProgram = true;
 FILE* logFile = NULL;
 Gui::Cursor cursor;
+
+void showErrorMessageBox(const wchar_t* const in_message);
 
 LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -48,7 +59,24 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				return 0;
 			case SIZE_RESTORED:
 			case SIZE_MAXIMIZED:
-				ReshapeGL(LOWORD(lParam), HIWORD(lParam));
+				window->width = LOWORD(lParam);
+				window->height = HIWORD(lParam);
+
+				if (cUseRawInput)
+				{
+					assert(window->pRawMice != NULL);
+
+					for (size_t currentMouseIndex = 0; currentMouseIndex < window->pRawMice->size; 
+						currentMouseIndex++)
+					{
+						if (window->pRawMice->data[currentMouseIndex].x >= window->width)
+							window->pRawMice->data[currentMouseIndex].x = window->width - 1;
+						if (window->pRawMice->data[currentMouseIndex].y >= window->height)
+							window->pRawMice->data[currentMouseIndex].y = window->height - 1;
+					}
+				}
+
+				ReshapeGL(window->width, window->height);
 				return 0;
 		}
 		break;
@@ -57,10 +85,69 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// handler - but what should be done else
 		// for drawing the window *while* resizing, moving etc.
 		UpdateGuiState();
-		drawGui();
+		drawGui(window->pRawMice);
 		SwapBuffers(window->hDC);
 		ValidateRect(window->hWnd, NULL);
 		return 0;
+	case WM_INPUT:
+		{
+			assert(cUseRawInput);
+			assert(window->pRawMice != NULL);
+
+			UINT cbSize;
+			if (GetRawInputData((HRAWINPUT) lParam, RID_INPUT, 
+				NULL, &cbSize, sizeof(RAWINPUTHEADER)) != 0)
+			{
+				showErrorMessageBox(L"GetRawInputData() count");
+				exit(1);
+			}
+
+			RAWINPUT *pRawInput = static_cast<RAWINPUT *>(malloc(cbSize));
+
+			if (GetRawInputData((HRAWINPUT) lParam, RID_INPUT, 
+				pRawInput, &cbSize, sizeof(RAWINPUTHEADER)) != cbSize)
+			{
+				showErrorMessageBox(L"GetRawInputData() get");
+				safe_free(&pRawInput);
+				exit(1);
+			}
+
+			for (size_t currentMouseIndex = 0; currentMouseIndex < window->pRawMice->size;
+				currentMouseIndex++)
+			{
+				if (window->pRawMice->data[currentMouseIndex].deviceHandle == 
+					pRawInput->header.hDevice)
+				{
+					fprintf(logFile, "(%i, %i)\n", 
+						pRawInput->data.mouse.lLastX, pRawInput->data.mouse.lLastY);
+					fflush(logFile);
+
+					if (pRawInput->data.mouse.lLastX < 0 && 
+						-pRawInput->data.mouse.lLastX > window->pRawMice->data[currentMouseIndex].x)
+						window->pRawMice->data[currentMouseIndex].x = 0;
+					else
+						window->pRawMice->data[currentMouseIndex].x += pRawInput->data.mouse.lLastX;
+
+					if (pRawInput->data.mouse.lLastY < 0 && 
+						-pRawInput->data.mouse.lLastY > window->pRawMice->data[currentMouseIndex].y)
+						window->pRawMice->data[currentMouseIndex].x = 0;
+					else
+						window->pRawMice->data[currentMouseIndex].y += pRawInput->data.mouse.lLastY;
+
+					if (window->pRawMice->data[currentMouseIndex].x >= window->width)
+						window->pRawMice->data[currentMouseIndex].x = window->width - 1;
+					if (window->pRawMice->data[currentMouseIndex].y >= window->height)
+						window->pRawMice->data[currentMouseIndex].y = window->height - 1;
+
+					InvalidateRect(window->hWnd, NULL, FALSE);
+					break;
+				}
+			}
+
+			safe_free(&pRawInput);
+
+			return 0;
+		}
 	}
 	
 	fprintf(logFile, "Did not handle\n");
@@ -94,16 +181,16 @@ bool unregisterWindowClass(const Window& in_window)
 void destroyWindow(Window* in_window);
 
 bool createWindow(Window* in_window, std::wstring in_titleText, 
-				  int in_width, int in_height, BYTE in_colorBits, BYTE in_depthBits)
+				  BYTE in_colorBits, BYTE in_depthBits)
 {
 	int			PixelFormat;											// Holds The Results After Searching For A Match
 	DWORD		dwExStyle = WS_EX_APPWINDOW;							// Window Extended Style
 	DWORD		dwStyle = WS_OVERLAPPEDWINDOW;							// Window Style
 	RECT		windowRect;												// Grabs Rectangle Upper Left / Lower Right Values
 	windowRect.left=(long) 0;											// Set Left Value To 0
-	windowRect.right=(long) in_width;									// Set Right Value To Requested Width
+	windowRect.right=(long) in_window->width;							// Set Right Value To Requested Width
 	windowRect.top=(long) 0;											// Set Top Value To 0
-	windowRect.bottom=(long) in_height;									// Set Bottom Value To Requested Height
+	windowRect.bottom=(long) in_window->height;							// Set Bottom Value To Requested Height
 
 	AdjustWindowRectEx(&windowRect, dwStyle, FALSE, dwExStyle);			// Adjust Window To True Requested Size
 
@@ -185,14 +272,14 @@ bool createWindow(Window* in_window, std::wstring in_titleText,
 		return false;													// Return False
 	}
 
-	ReshapeGL(in_width, in_height);
+	ReshapeGL(in_window->width, in_window->height);
 
 	return true;
 }
 
 void showWindow(Window* in_window, int nCmdShow)
 {
-	ShowWindow (in_window->hWnd, nCmdShow);								// Make The Window Visible
+	ShowWindow(in_window->hWnd, nCmdShow);								// Make The Window Visible
 }
 
 void destroyWindow(Window* in_window)
@@ -228,7 +315,7 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 {
 	logFile = fopen("log.txt", "w+");
 
-	Window window(hInstance);
+	Window window(hInstance, 640, 480);
 	window.windowClassName = L"101_window_class";
 
 	if (!registerWindowClass(window))
@@ -238,7 +325,7 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 	}
 
 	// for the 2nd time (and so on) we replace nCmdShow by SW_NORMAL (for example)
-	if (!createWindow(&window, L"101 browser", 640, 480, 32, 32))
+	if (!createWindow(&window, L"101 browser", 32, 32))
 	{
 		showErrorMessageBox(L"Could not create window!");// Quit If Window Was Not Created
 		destroyWindow(&window);
@@ -247,20 +334,31 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 
 	initializeOpenGLGuiState();
 
-	if (!Gui::createCursor(&cursor))
+	if (cUseRawInput)
 	{
-		// TODO Add some cleanup code and show error message
-		exit(1);
+		if (!Gui::createCursor(&cursor))
+		{
+			// TODO Add some cleanup code and show error message
+			exit(1);
+		}
+
+		createOpenGLTexture(&cursor.andMap);
+		createOpenGLTexture(&cursor.xorMap);
+
+		freeTextureMemory(&cursor.andMap);
+		freeTextureMemory(&cursor.xorMap);
+
+		ArrayBlock<Gui::Mouse::RawMouse> miceArray = Gui::Mouse::initMultiMouse();
+		window.pRawMice = &miceArray;
+	
+		for (size_t currentMouseIndex = 0; currentMouseIndex < miceArray.size; currentMouseIndex++)
+		{
+			_ftprintf(logFile, _T("%s\n"), miceArray.data[currentMouseIndex].psName);
+		}
 	}
 
-	createOpenGLTexture(&cursor.andMap);
-	createOpenGLTexture(&cursor.xorMap);
-
-	freeTextureMemory(&cursor.andMap);
-	freeTextureMemory(&cursor.xorMap);
-
 	showWindow(&window, nCmdShow); // Alternative: use SW_NORMAL instead of nCmdShow
-
+	
 	while (runProgram)
 	{
 		MSG msg; // Windows Message Structure

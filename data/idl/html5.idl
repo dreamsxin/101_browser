@@ -505,6 +505,15 @@ module html5
              attribute DOMString media;
   };
 
+  interface HTMLTrackElement : HTMLElement {
+             attribute DOMString kind;
+             attribute DOMString label;
+             attribute DOMString src;
+             attribute DOMString srclang;
+  
+    readonly attribute TimedTrack track;
+  };
+
   interface HTMLMediaElement : HTMLElement {
   
     // error state
@@ -551,6 +560,10 @@ module html5
              attribute boolean controls;
              attribute float volume;
              attribute boolean muted;
+  
+    // timed tracks
+    readonly attribute TimedTrack[] tracks;
+    MutableTimedTrack addTrack(in DOMString label, in DOMString kind, in DOMString language);
   };
 
   interface MediaError {
@@ -559,6 +572,62 @@ module html5
     const unsigned short MEDIA_ERR_DECODE = 3;
     const unsigned short MEDIA_ERR_SRC_NOT_SUPPORTED = 4;
     readonly attribute unsigned short code;
+  };
+
+  interface TimedTrack {
+    readonly attribute DOMString kind;
+    readonly attribute DOMString label;
+    readonly attribute DOMString language;
+  
+    const unsigned short NONE = 0;
+    const unsigned short LOADING = 1;
+    const unsigned short LOADED = 2;
+    const unsigned short ERROR = 3;
+    readonly attribute unsigned short readyState;
+    readonly attribute Function onload;
+    readonly attribute Function onerror;
+  
+    const unsigned short OFF = 0;
+    const unsigned short HIDDEN = 1;
+    const unsigned short SHOWING = 2;
+             attribute unsigned short mode;
+  
+    readonly attribute TimedTrackCueList cues;
+    readonly attribute TimedTrackCueList activeCues;
+    readonly attribute Function onentercue;
+    readonly attribute Function onexitcue;
+  };
+  
+  interface MutableTimedTrack : TimedTrack {
+   void addCue(in TimedTrackCue cue);
+   void removeCue(in TimedTrackCue cue);
+  };
+  
+  interface TimedTrackCueList {
+    readonly attribute unsigned long length;
+    getter TimedTrackCue (in unsigned long index);
+    TimedTrackCue getCueById(in DOMString id);
+  };
+  
+  [Constructor(in DOMString id, in float startTime, in float endTime, in DOMString settings, in DOMString text, in optional boolean pauseOnExit)]
+  interface TimedTrackCue {
+    readonly attribute TimedTrack track;
+    readonly attribute DOMString id;
+  
+    readonly attribute float startTime;
+    readonly attribute float endTime;
+    readonly attribute boolean pauseOnExit;
+  
+    readonly attribute DOMString direction;
+    readonly attribute boolean snapToLines;
+    readonly attribute long linePosition;
+    readonly attribute long textPosition;
+    readonly attribute long size;
+    readonly attribute DOMString alignment;
+  
+    readonly attribute DOMString voice;
+    DOMString getCueAsSource();
+    DocumentFragment getCueAsHTML();
   };
 
   interface TimeRanges {
@@ -1078,7 +1147,7 @@ module html5
   };
 
   interface Stream {
-    readonly attribute DOMString URL;
+    readonly attribute DOMString url;
     StreamRecorder record();
   };
 

@@ -2,6 +2,7 @@
 #define _BinaryTreeMethods_h
 
 #include <queue>
+#include "BasicDataStructures/Memory/SafeMemoryManagement.h"
 #include "BasicDataStructures/Tree/BinaryTreeClasses.h"
 
 template <typename Type, typename NodePropertyType> void deleteBinaryTreeNodeTree(
@@ -21,7 +22,7 @@ template <typename Type, typename NodePropertyType> void deleteBinaryTreeNodeTre
 		if (actNode->right())
 			nodeQueue.push(actNode->right());
 
-		delete actNode;
+		safe_delete(&actNode);
 	}
 }
 

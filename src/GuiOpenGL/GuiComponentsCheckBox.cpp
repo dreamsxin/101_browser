@@ -23,13 +23,13 @@ namespace Gui
 
 			std::vector<Vertex2<float> > borderTriangleStrip;
 			createBorderTriangleStrip(
-				triangleStripBorderConstIteratorInstance_create(&boxVertices), 
+				triangleStripBorderIteratorInstance_create(&boxVertices), 
 				&borderTriangleStrip, 
 				&createStraightBorder, borderSize, 12345);
 
 			std::vector<Vertex2<float> > coloredBorder;
 			createBorderTriangleStrip(
-				outerBorderConstIteratorInstance_create(&borderTriangleStrip), 
+				outerBorderIteratorInstance_create(&borderTriangleStrip), 
 				&coloredBorder, 
 				&createRoundBorder, 16, 8);
 			drawVertexArray(&boxVertices, colors);

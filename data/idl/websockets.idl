@@ -2,7 +2,7 @@ module websockets
 {
   [Constructor(in DOMString url, in optional DOMString protocol)]
   interface WebSocket {
-    readonly attribute DOMString URL;
+    readonly attribute DOMString url;
   
     // ready state
     const unsigned short CONNECTING = 0;
