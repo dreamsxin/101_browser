@@ -122,21 +122,26 @@ void BooleanCircuitNetwork::print()
 
 bool BooleanCircuitNetwork::increment()
 {
-	size_t currentIndex;
-
 	size_t nodesSize = nodes.size();
 
-	for (currentIndex = 0; currentIndex < nodesSize; currentIndex++)
+	for (size_t currentIndexPlusOne = nodesSize; currentIndexPlusOne > 0; currentIndexPlusOne--)
 	{
 		BooleanCircuitNodeIncrementParameters p;
-		p.thisNodeIndex = currentIndex;
-		p.isFinalNode = (currentIndex == (nodesSize-1));
+		p.thisNodeIndex = currentIndexPlusOne-1;
+		p.isFinalNode = (currentIndexPlusOne == nodesSize);
 
-		if (nodes[currentIndex].increment(p))
+		if (nodes[currentIndexPlusOne-1].increment(p))
 		{
-			for (size_t currentIndex2 = 0; currentIndex2 < currentIndex; currentIndex2++)
+			if (currentIndexPlusOne<nodesSize)
 			{
-				nodes[currentIndex2].reset();
+				nodes[nodesSize-1].child0Index = 0;
+				nodes[nodesSize-1].child1Index = 0;
+
+				for (size_t currentIndexPlusOne2 = nodesSize-1; 
+				currentIndexPlusOne2 > currentIndexPlusOne; currentIndexPlusOne2--)
+				{
+					nodes[currentIndexPlusOne2-1].reset();
+				}
 			}
 
 			return true;
