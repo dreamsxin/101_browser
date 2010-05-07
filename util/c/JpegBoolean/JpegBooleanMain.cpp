@@ -3,7 +3,6 @@
 #include <vector>
 #include <cassert>
 #include <pthread.h>
-#include "Config.h"
 #include "BooleanTree.h"
 #include "BooleanCircuit.h"
 using namespace std;
@@ -24,6 +23,14 @@ size_t variableValuesCount;
 vector<vector<bool> > functionValues;
 vector<ThreadInit> threadInit;
 vector<pthread_t> threadIDs;
+
+enum UseModel
+{
+	UseModelTree,
+	UseModelCirc
+};
+
+UseModel useModel;
 
 // per thread group (4 threads per thread group)
 vector<bool> isThreadGroupFinished;
@@ -130,13 +137,16 @@ void* workerThread(void* threadid)
 	size_t threadGroupNumber = getThreadGroupNumber(*pInit);
 	size_t threadNumber = getThreadNumber(*pInit);
 
-#if USE_TREE
-	FunctionTreeNode root = FunctionTreeNode(pInit->functionAtEnd, desiredChildrenCount);
-#endif
+	FunctionBooleanStructure<const std::vector<bool>*>* root = NULL;
 
-#if USE_CIRCUIT
-	BooleanCircuitNetwork root = BooleanCircuitNetwork(pInit->functionAtEnd, desiredChildrenCount);
-#endif
+	if (useModel == UseModelTree)
+	{
+		root = new FunctionTreeNode(pInit->functionAtEnd, desiredChildrenCount);
+	}
+	else if (useModel == UseModelCirc)
+	{
+		root = new BooleanCircuitNetwork(pInit->functionAtEnd, desiredChildrenCount);
+	}
 
 	while (true)
 	{
@@ -144,27 +154,27 @@ void* workerThread(void* threadid)
 
 		for (size_t currentVarIdx=0; currentVarIdx<variableValuesCount; currentVarIdx++)
 		{
-			bool val = root.computeValue(&variableValues.at(currentVarIdx));
-			if (val != functionValues.at(currentVarIdx).at(pInit->functionNumber))
+			bool val = root->computeValue(&variableValues[currentVarIdx]);
+			if (val != functionValues[currentVarIdx][pInit->functionNumber])
 				break;
 			else
 				currentApproximationQuality++;
 		}
 
-		pthread_mutex_lock(&bestApproximationValueMutexes.at(threadGroupNumber));
-		size_t approximationQuality = bestApproximationValues.at(threadGroupNumber);
+		pthread_mutex_lock(&bestApproximationValueMutexes[threadGroupNumber]);
+		size_t approximationQuality = bestApproximationValues[threadGroupNumber];
 
 		if (currentApproximationQuality>approximationQuality)
 		{
 			bestApproximationValues.at(threadGroupNumber) = currentApproximationQuality;
-			pthread_mutex_unlock(&bestApproximationValueMutexes.at(threadGroupNumber));
+			pthread_mutex_unlock(&bestApproximationValueMutexes[threadGroupNumber]);
 
 			pthread_mutex_lock(&printMutex);
 			{
 				printf("Better Approximation by ");
 				pInit->print();
 				printf("\tApproximation quality: %u with\n", currentApproximationQuality);
-				root.print();
+				root->print();
 				printf("\n");
 				fflush(stdout);
 			}
@@ -172,7 +182,7 @@ void* workerThread(void* threadid)
 		}
 		else
 		{
-			pthread_mutex_unlock(&bestApproximationValueMutexes.at(threadGroupNumber));
+			pthread_mutex_unlock(&bestApproximationValueMutexes[threadGroupNumber]);
 		}
 
 		if (approximationQuality == variableValuesCount)
@@ -180,14 +190,16 @@ void* workerThread(void* threadid)
 			pthread_exit(NULL);
 		}
 
-		bool dontExit = 
-#if USE_TREE
-	root.rootIncrement();
-#endif
-
-#if USE_CIRCUIT
-	root.increment();
-#endif
+		bool dontExit;
+		
+		if (useModel == UseModelTree)
+		{
+			dontExit = ((FunctionTreeNode*) root)->rootIncrement();
+		}
+		else if (useModel == UseModelCirc)
+		{
+			dontExit = root->increment();
+		}
 
 		if (dontExit)
 			continue;
@@ -198,15 +210,31 @@ void* workerThread(void* threadid)
 	return NULL;
 }
 
+char usageString[] = "Usage: JpegBoolean circ|tree bitsCount\n";
+
 int main(int argc, char** argv)
 {
-	if (argc==1)
+	if (argc<=2)
 	{
-		fprintf(stderr, "Usage: JpegBoolean bitsCount\n");
+		fprintf(stderr, usageString);
+		exit(1);
+	}
+	else if (strcmp(argv[1], "tree") == 0)
+	{
+		useModel = UseModelTree;
+	}
+	else if (strcmp(argv[1], "circ") == 0)
+	{
+		useModel = UseModelCirc;
+	}
+	else
+	{
+		fprintf(stderr, usageString);
 		exit(1);
 	}
 
-	bitsCount = atoi(argv[1]);
+	bitsCount = atoi(argv[2]);
+
 	// 2: since we have both row AND col with bitsCount bits
 	varCount = 2*bitsCount;
 	variableValuesCount = 1<<varCount;
@@ -270,28 +298,30 @@ int main(int argc, char** argv)
 			NULL);
 	}
 
-#if USE_TREE
-	desiredChildrenCount = 0;
-#endif
-
-#if USE_CIRCUIT
-	desiredChildrenCount = 1;
-#endif
-
-#if USE_TREE
-	// Begin hack:
-	if (bitsCount == 2)
+	if (useModel == UseModelTree)
 	{
-		desiredChildrenCount = 6;
-		isThreadGroupFinished.at(1) = true;
-		isThreadGroupFinished.at(7) = true;
+		desiredChildrenCount = 0;
 	}
-	else if (bitsCount == 3)
+	else if (useModel == UseModelCirc)
 	{
-		desiredChildrenCount = 4;
+		desiredChildrenCount = 1;
 	}
-	// End hack
-#endif
+
+	if (useModel == UseModelTree)
+	{
+		// Begin hack:
+		if (bitsCount == 2)
+		{
+			desiredChildrenCount = 6;
+			isThreadGroupFinished.at(1) = true;
+			isThreadGroupFinished.at(7) = true;
+		}
+		else if (bitsCount == 3)
+		{
+			desiredChildrenCount = 4;
+		}
+		// End hack
+	}
 
 	while (true)
 	{

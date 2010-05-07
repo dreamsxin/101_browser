@@ -93,15 +93,15 @@ bool BooleanCircuitNetwork::computeValue(const std::vector<bool>* variables)
 
 	for (size_t i=0; i<varCount; i++)
 	{
-		values.at(i) = variables->at(i);
+		values[i] = (*variables)[i];
 	}
 
 	for (size_t i=0; i<nodes.size(); i++)
 	{
-		values.at(varCount+i) = nodes.at(i).computeValue(&values);
+		values[varCount+i] = nodes[i].computeValue(&values);
 	}
 
-	return values.at(varCount+nodes.size()-1);
+	return values[varCount+nodes.size()-1];
 }
 
 void BooleanCircuitNetwork::print()
@@ -124,17 +124,19 @@ bool BooleanCircuitNetwork::increment()
 {
 	size_t currentIndex;
 
-	for (currentIndex = 0; currentIndex < nodes.size(); currentIndex++)
+	size_t nodesSize = nodes.size();
+
+	for (currentIndex = 0; currentIndex < nodesSize; currentIndex++)
 	{
 		BooleanCircuitNodeIncrementParameters p;
 		p.thisNodeIndex = currentIndex;
-		p.isFinalNode = (currentIndex == (nodes.size()-1));
+		p.isFinalNode = (currentIndex == (nodesSize-1));
 
-		if (nodes.at(currentIndex).increment(p))
+		if (nodes[currentIndex].increment(p))
 		{
 			for (size_t currentIndex2 = 0; currentIndex2 < currentIndex; currentIndex2++)
 			{
-				nodes.at(currentIndex2).reset();
+				nodes[currentIndex2].reset();
 			}
 
 			return true;

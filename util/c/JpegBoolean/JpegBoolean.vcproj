@@ -210,10 +210,6 @@
 				RelativePath=".\BooleanTree.h"
 				>
 			</File>
-			<File
-				RelativePath=".\Config.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
