@@ -166,7 +166,7 @@ void* workerThread(void* threadid)
 
 		if (currentApproximationQuality>approximationQuality)
 		{
-			bestApproximationValues.at(threadGroupNumber) = currentApproximationQuality;
+			bestApproximationValues[threadGroupNumber] = currentApproximationQuality;
 			pthread_mutex_unlock(&bestApproximationValueMutexes[threadGroupNumber]);
 
 			pthread_mutex_lock(&printMutex);
@@ -307,9 +307,9 @@ int main(int argc, char** argv)
 		desiredChildrenCount = 1;
 	}
 
+	// Begin hack
 	if (useModel == UseModelTree)
 	{
-		// Begin hack:
 		if (bitsCount == 2)
 		{
 			desiredChildrenCount = 6;
@@ -320,8 +320,15 @@ int main(int argc, char** argv)
 		{
 			desiredChildrenCount = 4;
 		}
-		// End hack
 	}
+	else if (useModel == UseModelCirc)
+	{
+		if (bitsCount == 2)
+		{
+			desiredChildrenCount = 5;
+		}
+	}
+	// End hack
 
 	while (true)
 	{
