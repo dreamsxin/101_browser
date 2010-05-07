@@ -17,7 +17,7 @@ public:
 	size_t child0Index, child1Index;
 
 	BooleanCircuitNode(FunctionType in_functionType) 
-		: FunctionBooleanStructure(in_functionType)
+		: FunctionBooleanStructure<const std::vector<bool>*>(in_functionType)
 	{
 		child0Index = 0;
 		child1Index = 0;
@@ -44,7 +44,7 @@ public:
 	std::vector<bool> values;
 
 	BooleanCircuitNetwork(FunctionType in_functionTypeAtLast, size_t in_nodeCount) 
-		: FunctionBooleanStructure(in_functionTypeAtLast)
+		: FunctionBooleanStructure<const std::vector<bool>*>(in_functionTypeAtLast)
 	{
 		extern size_t varCount;
 

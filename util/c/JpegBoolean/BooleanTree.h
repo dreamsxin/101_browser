@@ -35,7 +35,7 @@ public:
 
 	FunctionTreeNode(FunctionType in_functionType, size_t in_childrenCount) 
 		: TreeNode(false), 
-		FunctionBooleanStructure(in_functionType),
+		FunctionBooleanStructure<const std::vector<bool>*>(in_functionType),
 		child0(NULL), child1(NULL)
 	{
 		if (in_childrenCount==0)
