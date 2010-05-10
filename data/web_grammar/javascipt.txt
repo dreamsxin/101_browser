@@ -1,0 +1,96 @@
+A.1 Lexical Grammar
+
+InputElementDiv :: See clause 7
+	WhiteSpace
+	LineTerminator
+	Comment
+	Token
+	DivPunctuator
+
+InputElementRegExp :: See clause 7
+	WhiteSpace
+	LineTerminator
+	Comment
+	Token
+	RegularExpressionLiteral
+
+InputElementRegExp :: See clause 7
+	WhiteSpace
+	LineTerminator
+	Comment
+	Token
+	RegularExpressionLiteral
+
+WhiteSpace :: See 7.2
+	<TAB>
+	<VT>
+	<FF>
+	<SP>
+	<NBSP>
+	<BOM>
+	<USP>
+
+LineTerminator :: See 7.3
+	<LF> 
+	<CR>
+	<LS>
+	<PS>
+
+LineTerminatorSequence :: See 7.3
+	<LF>
+	<CR> [lookahead ∈ <LF> ]
+	<LS>
+	<PS>
+	<CR>
+	<LF>
+
+Comment :: See 7.4
+	MultiLineComment
+	SingleLineComment
+
+MultiLineComment :: See 7.4
+	/* MultiLineCommentCharsopt */
+	
+MultiLineCommentChars :: See 7.4
+	MultiLineNotAsteriskChar MultiLineCommentCharsopt 
+	* PostAsteriskCommentCharsopt
+
+PostAsteriskCommentChars :: See 7.4
+	MultiLineNotForwardSlashOrAsteriskChar MultiLineCommentCharsopt
+	* PostAsteriskCommentCharsopt
+
+MultiLineNotAsteriskChar :: See 7.4
+	SourceCharacter but not asterisk *
+
+MultiLineNotForwardSlashOrAsteriskChar :: See 7.4
+	SourceCharacter but not forward-slash / or asterisk *
+
+SingleLineComment :: See 7.4
+	// SingleLineCommentCharsopt
+
+SingleLineCommentChars :: See 7.4
+	SingleLineCommentChar SingleLineCommentCharsopt
+
+SingleLineCommentChar :: See 7.4
+	SourceCharacter but not LineTerminator
+
+Token :: See 7.5
+	IdentifierName
+	Punctuator
+	NumericLiteral
+	StringLiteral
+
+Identifier :: See 7.6
+	IdentifierName but not ReservedWord
+
+IdentifierName :: See 7.6
+	IdentifierStart
+	IdentifierName IdentifierPart
+
+IdentifierStart :: See 7.6
+	UnicodeLetter
+	$
+	_
+	\ UnicodeEscapeSequence
+
+TO CONTINUE
