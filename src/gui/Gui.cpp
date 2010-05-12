@@ -123,13 +123,13 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					fflush(logFile);
 
 					if (pRawInput->data.mouse.lLastX < 0 && 
-						-pRawInput->data.mouse.lLastX > window->pRawMice->data[currentMouseIndex].x)
+						((ULONG) -pRawInput->data.mouse.lLastX) > window->pRawMice->data[currentMouseIndex].x)
 						window->pRawMice->data[currentMouseIndex].x = 0;
 					else
 						window->pRawMice->data[currentMouseIndex].x += pRawInput->data.mouse.lLastX;
 
 					if (pRawInput->data.mouse.lLastY < 0 && 
-						-pRawInput->data.mouse.lLastY > window->pRawMice->data[currentMouseIndex].y)
+						((ULONG) -pRawInput->data.mouse.lLastY) > window->pRawMice->data[currentMouseIndex].y)
 						window->pRawMice->data[currentMouseIndex].x = 0;
 					else
 						window->pRawMice->data[currentMouseIndex].y += pRawInput->data.mouse.lLastY;
