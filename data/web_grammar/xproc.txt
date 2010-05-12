@@ -652,7 +652,8 @@ string />
   content-type = string
   encoding? = string
   id? = string
-  description? = string>
+  description? = string
+  disposition? = string>
     anyElement*
 </c:body>
 
@@ -2394,7 +2395,8 @@ string />
   content-type = string
   encoding? = string
   id? = string
-  description? = string>
+  description? = string
+  disposition? = string>
     anyElement*
 </c:body>
 

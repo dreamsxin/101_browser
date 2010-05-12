@@ -564,6 +564,7 @@ module html5
     // timed tracks
     readonly attribute TimedTrack[] tracks;
     MutableTimedTrack addTrack(in DOMString label, in DOMString kind, in DOMString language);
+  
   };
 
   interface MediaError {
