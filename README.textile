@@ -1,4 +1,6 @@
-h1. 1. Basic information
+h1. 101 browser README
+
+h2. 1. Basic information
 
 |_. Property|_. Value|
 |Name|101_browser|
@@ -9,41 +11,41 @@ h1. 1. Basic information
 |Website|http://github.com/nubok/101_browser|
 |Description|A small web browser (or more precise: a small yet-to-become web browser)|
 
-h1. 2. System requirements
+h2. 2. System requirements
 
-h2. 2.1 Operation System
+h3. 2.1 Operation System
 
-h3. 2.1.1 Windows
+h4. 2.1.1 Windows
 
 Windows XP/Server 2003/Vista/Server 2008/7 (only tested under XP, but the other ones should work)
 
-h3. 2.1.2 Linux
+h4. 2.1.2 Linux
 
 Current Linux (I'm only testing under the current Ubuntu (10.4 at the moment)
 
-h3. Other Operation Systems
+h4. 2.1.3 Other Operation Systems
 
 There is *no* port to crApple MacOS X (and *none* is planned at the moment; if crApple is willing to donate a Mac, I'll think about reconsidering).
 
-h2. 2.2 Required software for building
+h3. 2.2 Required software for building
 
-h3. 2.2.1 Windows
+h4. 2.2.1 Windows
 
 Visual Studio 2008/2010 (the former is recommended since I don't do regular updates of the Visual Studio 2010 projects at the moment). 
 
 When using Visual Studio 2008 (this does *not* apply when using Visual Studio 2010): a current version of Boost
 
-h3. 2.2.2 Linux
+h4. 2.2.2 Linux
 
 g++, scons, XLib
 
-h1. 3. Building
+h2. 3. Building
 
-h2. 3.1 Windows
+h3. 3.1 Windows
 
 Use the 101_browser_vs2008.sln/101_browser_vs2010.sln file in the root folder.
 
-h2. 3.2 Linux
+h3. 3.2 Linux
 
 Type on your prompt (without the '$ '):
 
