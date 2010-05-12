@@ -5,7 +5,6 @@
 #include <tchar.h>
 #include "GuiOpenGL/GuiComponentsDefaults.h"
 #include "GuiOpenGL/GuiOpenGLState.h"
-#include "gui/GuiSettings.h"
 #include "gui/MultiMouse.h"
 #include "gui/Cursor.h"
 #include "BasicDataStructures/Memory/SafeMemoryManagement.h"
@@ -30,6 +29,7 @@ struct Window
 bool runProgram = true;
 FILE* logFile = NULL;
 Gui::Cursor cursor;
+bool multipleMice = false;
 
 void showErrorMessageBox(const wchar_t* const in_message);
 
@@ -62,21 +62,20 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				window->width = LOWORD(lParam);
 				window->height = HIWORD(lParam);
 
-				if (cUseRawInput)
-				{
-					assert(window->pRawMice != NULL);
+				assert(window->pRawMice != NULL);
 
-					for (size_t currentMouseIndex = 0; currentMouseIndex < window->pRawMice->size; 
-						currentMouseIndex++)
-					{
-						if (window->pRawMice->data[currentMouseIndex].x >= window->width)
-							window->pRawMice->data[currentMouseIndex].x = window->width - 1;
-						if (window->pRawMice->data[currentMouseIndex].y >= window->height)
-							window->pRawMice->data[currentMouseIndex].y = window->height - 1;
-					}
+				for (size_t currentMouseIndex = 0; currentMouseIndex < window->pRawMice->size; 
+					currentMouseIndex++)
+				{
+					if (window->pRawMice->data[currentMouseIndex].x >= window->width)
+						window->pRawMice->data[currentMouseIndex].x = window->width - 1;
+					if (window->pRawMice->data[currentMouseIndex].y >= window->height)
+						window->pRawMice->data[currentMouseIndex].y = window->height - 1;
 				}
 
 				ReshapeGL(window->width, window->height);
+				// A WM_PAINT will be called automatically - so there is no need for
+				// InvalidateRect(window->hWnd, NULL, FALSE);
 				return 0;
 		}
 		break;
@@ -85,13 +84,15 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// handler - but what should be done else
 		// for drawing the window *while* resizing, moving etc.
 		UpdateGuiState();
-		drawGui(window->pRawMice);
+		drawGui(multipleMice ? window->pRawMice : NULL);
 		SwapBuffers(window->hDC);
 		ValidateRect(window->hWnd, NULL);
 		return 0;
+	case WM_KEYDOWN:
+		break;
+
 	case WM_INPUT:
 		{
-			assert(cUseRawInput);
 			assert(window->pRawMice != NULL);
 
 			UINT cbSize;
@@ -360,35 +361,27 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 
 	initializeOpenGLGuiState();
 
-	if (cUseRawInput)
+	if (!Gui::createCursor(&cursor))
 	{
-		if (!Gui::createCursor(&cursor))
-		{
-			// TODO Add some cleanup code and show error message
-			exit(1);
-		}
+		// TODO Add some cleanup code and show error message
+		exit(1);
+	}
 
-		createOpenGLTexture(&cursor.andMap);
-		createOpenGLTexture(&cursor.xorMap);
+	createOpenGLTexture(&cursor.andMap);
+	createOpenGLTexture(&cursor.xorMap);
 
-		freeTextureMemory(&cursor.andMap);
-		freeTextureMemory(&cursor.xorMap);
+	freeTextureMemory(&cursor.andMap);
+	freeTextureMemory(&cursor.xorMap);
 
-		ArrayBlock<Gui::Mouse::RawMouse> miceArray = Gui::Mouse::getRawMouseArray();
-		window.pRawMice = &miceArray;
+	ArrayBlock<Gui::Mouse::RawMouse> miceArray = Gui::Mouse::getRawMouseArray();
+	window.pRawMice = &miceArray;
 
-		for (size_t currentMouseIndex = 0; currentMouseIndex < miceArray.size; currentMouseIndex++)
-		{
-			_ftprintf(logFile, _T("%s\n"), miceArray.data[currentMouseIndex].psName);
-		}
+	for (size_t currentMouseIndex = 0; currentMouseIndex < miceArray.size; currentMouseIndex++)
+	{
+		_ftprintf(logFile, _T("%s\n"), miceArray.data[currentMouseIndex].psName);
 	}
 
 	showWindow(&window, nCmdShow); // Alternative: use SW_NORMAL instead of nCmdShow
-
-	if (cUseRawInput)
-	{
-		toggleMultiMouse(true, window.hWnd);
-	}
 
 	while (runProgram)
 	{
