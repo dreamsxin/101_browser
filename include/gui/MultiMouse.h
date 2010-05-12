@@ -16,7 +16,9 @@ namespace Gui
 			ArrayBlock<bool> buttonsPressed;
 		};
 
-		ArrayBlock<RawMouse> initMultiMouse();
+		ArrayBlock<RawMouse> getRawMouseArray();
+		void registerRawMice(HWND hWnd);
+		void unregisterRawMice();
 	}
 }
 

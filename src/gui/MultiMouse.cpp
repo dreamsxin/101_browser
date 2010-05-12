@@ -11,7 +11,7 @@ namespace Gui
 {
 	namespace Mouse
 	{
-		ArrayBlock<RawMouse> initMultiMouse()
+		ArrayBlock<RawMouse> getRawMouseArray()
 		{
 			UINT nDevices;
 			PRAWINPUTDEVICELIST pRawInputDeviceList;
@@ -22,7 +22,7 @@ namespace Gui
 				showErrorMessageBox(L"GetRawInputDeviceList() count");
 				exit(1);
 			}
-			
+
 			if ((pRawInputDeviceList = static_cast<PRAWINPUTDEVICELIST>( 
 				malloc(sizeof(RAWINPUTDEVICELIST) * nDevices))) == NULL)
 			{
@@ -147,10 +147,39 @@ namespace Gui
 				currentPos++;
 			}
 
+			return out_rawMiceArray;
+		}
+
+		void registerRawMice(HWND hWnd)
+		{
+			OSVERSIONINFO osvi;
+			ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
+			osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+			GetVersionEx(&osvi);
+
+			bool isVistaOrLater = osvi.dwMajorVersion >= 6;
+
 			RAWINPUTDEVICE rawInputDevice;
 			rawInputDevice.usUsagePage = HID_USAGE_PAGE_GENERIC;
 			rawInputDevice.usUsage = HID_USAGE_GENERIC_MOUSE;
-			rawInputDevice.dwFlags = 0;
+			rawInputDevice.dwFlags = RIDEV_CAPTUREMOUSE | RIDEV_NOLEGACY | 
+				// this option works only under Windows Vista or later
+				(isVistaOrLater ? RIDEV_DEVNOTIFY : 0); 
+			rawInputDevice.hwndTarget = hWnd;
+
+			if (RegisterRawInputDevices(&rawInputDevice, 1, sizeof(rawInputDevice)) != TRUE)
+			{
+				showErrorMessageBox(L"RegisterRawInputDevices()");
+				exit(1);
+			}
+		}
+
+		void unregisterRawMice()
+		{
+			RAWINPUTDEVICE rawInputDevice;
+			rawInputDevice.usUsagePage = HID_USAGE_PAGE_GENERIC;
+			rawInputDevice.usUsage = HID_USAGE_GENERIC_MOUSE;
+			rawInputDevice.dwFlags = RIDEV_REMOVE;
 			rawInputDevice.hwndTarget = 0;
 
 			if (RegisterRawInputDevices(&rawInputDevice, 1, sizeof(rawInputDevice)) != TRUE)
@@ -158,8 +187,6 @@ namespace Gui
 				showErrorMessageBox(L"RegisterRawInputDevices()");
 				exit(1);
 			}
-
-			return out_rawMiceArray;
 		}
 	}
 }

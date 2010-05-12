@@ -245,10 +245,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\gui\GuiSettings.h"
-				>
-			</File>
-			<File
 				RelativePath="$(SolutionDir)include\GuiWin\GuiWin.h"
 				>
 			</File>
