@@ -1,7 +1,11 @@
 #ifndef _DynamicMemory_h
 #define _DynamicMemory_h
 
+#ifdef _WIN32
 #include <windows.h>
+#else
+typedef void *LPVOID;
+#endif
 #include <algorithm>
 
 class DynamicMemory
@@ -47,3 +51,4 @@ public:
 };
 
 #endif
+

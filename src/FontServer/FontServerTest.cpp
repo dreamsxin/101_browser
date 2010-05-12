@@ -3,7 +3,13 @@
 
 int main(int argc, char** argv)
 {
-	printf("%i\n", readTTF("../../../testfiles/fonts/tahoma.ttf"));
+	if (argc == 1)
+	{
+		fprintf(stderr, "Usage: FontServer fontfile.ttf\n");
+		return 0;
+	}
+
+	printf("%i\n", readTTF(argv[1]));
 
 	return 0;
 }
