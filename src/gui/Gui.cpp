@@ -9,6 +9,8 @@
 #include "gui/Cursor.h"
 #include "BasicDataStructures/Memory/SafeMemoryManagement.h"
 
+void toggleMultiMouse(bool multipleMice, HWND hWnd);
+
 struct Window
 {
 	HINSTANCE	hInstance;		// Holds The Instance Of The Application
@@ -89,7 +91,13 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		ValidateRect(window->hWnd, NULL);
 		return 0;
 	case WM_KEYDOWN:
-		break;
+		if (wParam == VK_F12)
+		{
+			multipleMice = !multipleMice;
+			toggleMultiMouse(multipleMice, window->hWnd);
+			InvalidateRect(window->hWnd, NULL, FALSE);
+		}
+		return 0;
 
 	case WM_INPUT:
 		{
