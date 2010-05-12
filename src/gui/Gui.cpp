@@ -154,6 +154,12 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			}
 
 			safe_free(&pRawInput);
+			/*
+			 * According to 
+			 * http://msdn.microsoft.com/en-us/library/ms645590(VS.85).aspx
+			 * "The application must call DefWindowProc so the system can perform the cleanup."
+			 */
+			DefWindowProc(hWnd, uMsg, wParam, lParam);
 
 			return 0;
 		}
