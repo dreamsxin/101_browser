@@ -130,7 +130,7 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 					if (pRawInput->data.mouse.lLastY < 0 && 
 						((ULONG) -pRawInput->data.mouse.lLastY) > window->pRawMice->data[currentMouseIndex].y)
-						window->pRawMice->data[currentMouseIndex].x = 0;
+						window->pRawMice->data[currentMouseIndex].y = 0;
 					else
 						window->pRawMice->data[currentMouseIndex].y += pRawInput->data.mouse.lLastY;
 
@@ -308,6 +308,32 @@ void showErrorMessageBox(const wchar_t* const in_message)
 	MessageBox(HWND_DESKTOP, in_message, L"Error", MB_OK | MB_ICONEXCLAMATION);
 }
 
+/*!
+ * toggles whether multiple mice or a single mouse is used
+ * 
+ * Parameters: 
+ * multipleMice: set to *true* if at the moment only a single
+ *               mouse is shown and you want to show multiple mice
+ *               set to *false* if at the moment multiple mice are 
+ *               shown and you only want to show a single one
+ *
+ * Note: it is important not to call the function when already the 
+ *       desired state is reached
+ */
+void toggleMultiMouse(bool multipleMice, HWND hWnd)
+{
+	if (multipleMice)
+	{
+		Gui::Mouse::registerRawMice(hWnd);
+		ShowCursor(FALSE);
+	}
+	else
+	{
+		Gui::Mouse::unregisterRawMice();
+		ShowCursor(TRUE);
+	}
+}
+
 int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 					HINSTANCE,	// hPrevInstance,	// Previous Instance
 					LPSTR,		// lpCmdLine,		// Command Line Parameters
@@ -348,9 +374,9 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 		freeTextureMemory(&cursor.andMap);
 		freeTextureMemory(&cursor.xorMap);
 
-		ArrayBlock<Gui::Mouse::RawMouse> miceArray = Gui::Mouse::initMultiMouse();
+		ArrayBlock<Gui::Mouse::RawMouse> miceArray = Gui::Mouse::getRawMouseArray();
 		window.pRawMice = &miceArray;
-	
+
 		for (size_t currentMouseIndex = 0; currentMouseIndex < miceArray.size; currentMouseIndex++)
 		{
 			_ftprintf(logFile, _T("%s\n"), miceArray.data[currentMouseIndex].psName);
@@ -358,7 +384,12 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 	}
 
 	showWindow(&window, nCmdShow); // Alternative: use SW_NORMAL instead of nCmdShow
-	
+
+	if (cUseRawInput)
+	{
+		toggleMultiMouse(true, window.hWnd);
+	}
+
 	while (runProgram)
 	{
 		MSG msg; // Windows Message Structure
