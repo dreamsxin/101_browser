@@ -19,11 +19,11 @@ Windows XP/Server 2003/Vista/Server 2008/7 (only tested under XP, but the other 
 
 h3. 2.1.2 Linux
 
-Current Linux (I'm only testing under the current Ubuntu (10.4 at the moment).
+Current Linux (I'm only testing under the current Ubuntu (10.4 at the moment)
 
 h3. Other Operation Systems
 
-There is *no* port to crApple MacOS X (and *none* is planned at the moment; if crApple is willing to donate a Mac, I'll think about reconsidering)
+There is *no* port to crApple MacOS X (and *none* is planned at the moment; if crApple is willing to donate a Mac, I'll think about reconsidering).
 
 h2. 2.2 Required software for building
 
