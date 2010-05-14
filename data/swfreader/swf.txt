@@ -1,79 +1,446 @@
+CHAPTER 3
+The Display List
+
+
+PlaceObject
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 4
+CharacterId	UI16	ID of character to place
+Depth	UI16	Depth of character
+Matrix	MATRIX	Transform matrix data
+ColorTransform (optional)	CXFORM	Color transform data
+
+
+PlaceObject2
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 26
+PlaceFlagHasClipActions	UB[1]	SWF 5 and later: has 
+		clip actions (sprite 
+		characters only)
+		Otherwise: always 0
+PlaceFlagHasClipDepth	UB[1]	Has clip depth
+PlaceFlagHasName	UB[1]	Has name
+PlaceFlagHasRatio	UB[1]	Has ratio
+PlaceFlagHasColorTransform	UB[1]	Has color transform
+PlaceFlagHasMatrix	UB[1]	Has matrix
+PlaceFlagHasCharacter	UB[1]	Places a character
+PlaceFlagMove	UB[1]	Defines a character to 
+		be moved
+Depth	UI16	Depth of character
+CharacterId	If PlaceFlagHasCharacter	ID of character to place
+	UI16
+Matrix	If PlaceFlagHasMatrix	Transform matrix data
+	MATRIX
+ColorTransform	If PlaceFlagHasColorTransform	Color transform data
+	CXFORMWITHALPHA
+Ratio	If PlaceFlagHasRatio UI16
+Name	If PlaceFlagHasName STRING	Name of character
+ClipDepth	If PlaceFlagHasClipDepth UI16	Clip depth
+		(see “Clipping layers” 
+		on page 32)
+ClipActions	If PlaceFlagHasClipActions	SWF 5 and later:
+	CLIPACTIONS	Clip Actions Data
+
+
+CLIPACTIONS
+Field	Type	Comment
+Reserved	UI16	Must be 0
+AllEventFlags	CLIPEVENTFLAGS	All events used in these clip 
+		actions
+ClipActionRecords	CLIPACTIONRECORD	Individual event handlers
+	[one or more]
+ClipActionEndFlag	If SWF version <= 5, UI16	Must be 0
+	If SWF version >= 6, UI32
+
+
+CLIPACTIONRECORD
+Field	Type	Comment
+EventFlags	CLIPEVENTFLAGS	Events to which this handler 
+		applies
+ActionRecordSize	UI32	Offset in bytes from end of this 
+		field to next 
+		CLIPACTIONRECORD (or 
+		ClipActionEndFlag)
+KeyCode	If EventFlags contain	Key code to trap (see 
+	ClipEventKeyPress: UI8	“DefineButton2” on page 226)
+	Otherwise absent
+Actions	ACTIONRECORD	Actions to perform
+	[one or more]
+
+
+PlaceObject3
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 70
+PlaceFlagHasClipActions	UB[1]	SWF 5 and later: has clip 
+		actions (sprite characters 
+		only)
+		Otherwise: always 0
+PlaceFlagHasClipDepth	UB[1]	Has clip depth
+PlaceFlagHasName	UB[1]	Has name
+PlaceFlagHasRatio	UB[1]	Has ratio
+PlaceFlagHasColorTransform	UB[1]	Has color transform
+PlaceFlagHasMatrix	UB[1]	Has matrix
+PlaceFlagHasCharacter	UB[1]	Places a character
+PlaceFlagMove	UB[1]	Defines a character to be 
+		moved
+Reserved	UB[3]	Must be 0
+PlaceFlagHasImage	UB[1]	Has class name or 
+		character ID of bitmap to 
+		place. If 
+		PlaceFlagHasClassName, 
+		use ClassName. If 
+		PlaceFlagHasCharacter, 
+		use CharacterId
+PlaceFlagHasClassName	UB[1]	Has class name of object 
+		to place
+PlaceFlagHasCacheAsBitmap	UB[1]	Enables bitmap caching
+PlaceFlagHasBlendMode	UB[1]	Has blend mode
+PlaceFlagHasFilterList	UB[1]	Has filter list
+Depth	UI16	Depth of character
+ClassName	If PlaceFlagHasClassName or 	Name of the class to place
+	(PlaceFlagHasImage and 
+	PlaceFlagHasCharacter), STRING
+CharacterId	If PlaceFlagHasCharacter, UI16	ID of character to place
+Matrix	If PlaceFlagHasMatrix, MATRIX	Transform matrix data
+ColorTransform	If PlaceFlagHasColorTransform, 	Color transform data
+	CXFORMWITHALPHA
+Ratio	If PlaceFlagHasRatio, UI16
+Name	If PlaceFlagHasName, STRING	Name of character
+ClipDepth	If PlaceFlagHasClipDepth, UI16	Clip depth
+		(see Clipping layers)
+SurfaceFilterList	If PlaceFlagHasFilterList, 	List of filters on this object
+	FILTERLIST
+BlendMode	If PlaceFlagHasBlendMode, UI8	0 or 1 = normal
+		2 = layer
+		3 = multiply
+		4 = screen
+		5 = lighten
+		6 = darken
+		7 = difference
+		8 = add
+		9 = subtract
+		10 = invert
+		11 = alpha
+		12 = erase
+		13 = overlay
+		14 = hardlight
+		Values 15 to 255 are 
+		reserved.
+BitmapCache	If PlaceFlagHasCacheAsBitmap, 	0 = Bitmap cache disabled
+	UI8	1-255 = Bitmap cache 
+		enabled
+ClipActions	If PlaceFlagHasClipActions, 	SWF 5 and later:
+	CLIPACTIONS	Clip Actions Data
+
+
+FILTERLIST
+Field	Type	Comment
+NumberOfFilters	UI8	Number of Filters
+Filter	FILTER[NumberOfFilters]	List of filters
+
+
+FILTER
+Field	Type	Comment
+FilterID	UI8	0 = Has DropShadowFilter
+		1 = Has BlurFilter
+		2 = Has GlowFilter
+		3 = Has BevelFilter
+		4 = Has GradientGlowFilter
+		5 = Has ConvolutionFilter
+		6 = Has ColorMatrixFilter
+		7 = Has GradientBevelFilter
+DropShadowFilter	If FilterID = 0, 	Drop Shadow filter
+	DROPSHADOWFILTER
+BlurFilter	If FilterID = 1, BLURFILTER	Blur filter
+GlowFilter	If FilterID = 2, GLOWFILTER	Glow filter
+BevelFilter	If FilterID = 3, BEVELFILTER	Bevel filter 
+GradientGlowFilter	If FilterID = 4, 	Gradient Glow filter
+	GRADIENTGLOWFILTER
+ConvolutionFilter	If FilterID = 5, 	Convolution filter
+	CONVOLUTIONFILTER
+ColorMatrixFilter	If FilterID = 6, 	Color Matrix filter
+	COLORMATRIXFILTER
+GradientBevelFilter	If FilterID = 7, 	Gradient Bevel filter
+	GRADIENTBEVELFILTER
+
+
+COLORMATRIXFILTER
+Field	Type	Comment
+Matrix	FLOAT[20]	Color matrix values
+
+
+CONVOLUTIONFILTER
+Field	Type	Comment
+MatrixX	UI8	Horizontal matrix size
+MatrixY	UI8	Vertical matrix size
+Divisor	FLOAT 	Divisor applied to the 
+		matrix values
+Bias	FLOAT	Bias applied to the matrix 
+		values
+Matrix	FLOAT[MatrixX * MatrixY]	Matrix values
+DefaultColor	RGBA	Default color for pixels 
+		outside the image
+Reserved	UB[6]	Must be 0
+Clamp	UB[1]	Clamp mode
+PreserveAlpha	UB[1]	Preserve the alpha
+
+
+BLURFILTER
+Field	Type	Comment
+BlurX	FIXED	Horizontal blur amount
+BlurY	FIXED	Vertical blur amount
+Passes	UB[5]	Number of blur passes
+Reserved	UB[3]	Must be 0
+
+
+DROPSHADOWFILTER
+Field	Type	Comment
+DropShadowColor	RGBA	Color of the shadow
+BlurX	FIXED	Horizontal blur amount
+BlurY	FIXED	Vertical blur amount
+Angle	FIXED	Radian angle of the drop 
+		shadow
+Distance	FIXED	Distance of the drop 
+		shadow
+Strength	FIXED8	Strength of the drop 
+		shadow
+InnerShadow	UB[1]	Inner shadow mode
+Knockout	UB[1]	Knockout mode
+CompositeSource	UB[1]	Composite source
+		Always 1
+Passes	UB[5]	Number of blur passes
+
+
+GLOWFILTER
+Field	Type	Comment
+GlowColor	RGBA	Color of the shadow
+BlurX	FIXED	Horizontal blur amount
+BlurY	FIXED	Vertical blur amount
+Strength	FIXED8	Strength of the glow
+InnerGlow	UB[1]	Inner glow mode
+Knockout	UB[1]	Knockout mode
+CompositeSource	UB[1]	Composite source
+		Always 1
+Passes	UB[5]	Number of blur passes
+
+
+BEVELFILTER
+Field	Type	Comment
+ShadowColor	RGBA	Color of the shadow
+HighlightColor	RGBA	Color of the highlight
+BlurX	FIXED	Horizontal blur amount
+BlurY	FIXED	Vertical blur amount
+Angle	FIXED	Radian angle of the drop 
+		shadow
+Distance	FIXED	Distance of the drop 
+		shadow
+Strength	FIXED8	Strength of the drop 
+		shadow
+InnerShadow	UB[1]	Inner shadow mode
+Knockout	UB[1]	Knockout mode
+CompositeSource	UB[1]	Composite source
+		Always 1
+OnTop	UB[1]	OnTop mode
+Passes	UB[4]	Number of blur passes
+
+
+GRADIENTGLOWFILTER
+Field	Type	Comment
+NumColors	UI8	Number of colors in the 
+		gradient
+GradientColors	RGBA[NumColors]	Gradient colors
+GradientRatio	UI8[NumColors]	Gradient ratios
+BlurX	FIXED	Horizontal blur amount
+BlurY	FIXED	Vertical blur amount
+Angle	FIXED	Radian angle of the 
+		gradient glow
+Distance	FIXED	Distance of the gradient 
+		glow
+Strength	FIXED8	Strength of the gradient 
+		glow
+InnerShadow	UB[1]	Inner glow mode
+Knockout	UB[1]	Knockout mode
+CompositeSource	UB[1]	Composite source
+		Always 1
+OnTop	UB[1]	OnTop mode
+Passes	UB[4]	Number of blur passes
+
+
+GRADIENTBEVELFILTER
+Field	Type	Comment
+NumColors	UI8	Number of colors in the 
+		gradient
+GradientColors	RGBA[NumColors]	Gradient colors
+GradientRatio	UI8[NumColors]	Gradient ratios
+BlurX	FIXED	Horizontal blur amount
+BlurY	FIXED	Vertical blur amount
+Angle	FIXED	Radian angle of the 
+		gradient bevel
+Distance	FIXED	Distance of the gradient 
+		bevel
+Strength	FIXED8	Strength of the gradient 
+		bevel
+InnerShadow	UB[1]	Inner bevel mode
+Knockout	UB[1]	Knockout mode
+CompositeSource	UB[1]	Composite source
+		Always 1
+OnTop	UB[1]	OnTop mode
+Passes	UB[4]	Number of blur passes
+
+
+CLIPEVENTFLAGS
+Field	Type	Comment
+ClipEventKeyUp	UB[1]	Key up event
+ClipEventKeyDown	UB[1]	Key down event
+ClipEventMouseUp	UB[1]	Mouse up event
+ClipEventMouseDown	UB[1]	Mouse down event
+ClipEventMouseMove	UB[1]	Mouse move event
+ClipEventUnload	UB[1]	Clip unload event
+ClipEventEnterFrame	UB[1]	Frame event
+ClipEventLoad	UB[1]	Clip load event
+ClipEventDragOver	UB[1]	SWF 6 and later: mouse 
+		drag over event
+		Otherwise: always 0
+ClipEventRollOut	UB[1]	SWF 6 and later: mouse 
+		rollout event
+		Otherwise: always 0
+ClipEventRollOver	UB[1]	SWF 6 and later: mouse 
+		rollover event
+		Otherwise: always 0
+ClipEventReleaseOutside	UB[1]	SWF 6 and later: mouse 
+		release outside event
+		Otherwise: always 0
+ClipEventRelease	UB[1]	SWF 6 and later: mouse 
+		release inside event
+		Otherwise: always 0
+ClipEventPress	UB[1]	SWF 6 and later: mouse 
+		press event
+		Otherwise: always 0
+ClipEventInitialize	UB[1]	SWF 6 and later: initialize 
+		event
+		Otherwise: always 0
+ClipEventData	UB[1]	Data received event
+Reserved	If SWF version >= 6, UB[5]	Always 0
+ClipEventConstruct	If SWF version >= 6, UB[1]	SWF 7 and later: construct 
+		event
+		Otherwise: always 0
+ClipEventKeyPress	If SWF version >= 6, UB[1]	Key press event
+ClipEventDragOut	If SWF version >= 6, UB[1]	Mouse drag out event
+Reserved	If SWF version >= 6, UB[8]	Always 0
+
+
+RemoveObject
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 5
+CharacterId	UI16	ID of character to remove
+Depth	UI16	Depth of character
+
+
+RemoveObject2
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 28
+Depth	UI16	Depth of character
+
+
+ShowFrame
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 1
+
+
 CHAPTER 4
 Control Tags
+
 
 SetBackgroundColor
 Field	Type	Comment
 Header	RECORDHEADER	Tag type = 9
 BackgroundColor	RGB	Color of the display background
 
+
 FrameLabel
 Field	Type	Comment
 Header	RECORDHEADER	Tag type = 43
 Name	STRING	Label for frame
 
+
+NamedAnchor
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 43
+	Name Null-terminated STRING. 	Label for frame.
+	(0 is NULL)
+Named Anchor flag	UI8	Always 1
+
+
 Protect
 Field	Type	Comment
 Header	RECORDHEADER	Tag type = 24
 
+
 End
 Field	Type	Comment
 Header	RECORDHEADER	Tag type = 0
+
 
 ExportAssets
 Field	Type	Comment
 Header	RECORDHEADER	Tag type = 56
 Count	UI16	Number of assets to export
 Tag1	UI16	First character ID to export
-Name1	STRING	Identifier for first exported
+Name1	STRING	Identifier for first exported 
 		character
-...		
+...
 TagN	UI16	Last character ID to export
-NameN	STRING	Identifier for last exported
+NameN	STRING	Identifier for last exported 
 		character
+
 
 ImportAssets
 Field	Type	Comment
 Header	RECORDHEADER	Tag type = 57
-URL	STRING URL	where the source
+URL	STRING	URL where the source 
 		SWF file can be found
 Count	UI16	Number of assets to import
-Tag1	UI16	Character ID to use for first
-		imported character in
-		importing SWF file (need
-		not match character ID in
+Tag1	UI16	Character ID to use for first 
+		imported character in 
+		importing SWF file (need 
+		not match character ID in 
 		exporting SWF file)
-Name1	STRING	Identifier for first imported
-		character (must match an
-		identifier in exporting SWF
+Name1	STRING	Identifier for first imported 
+		character (must match an 
+		identifier in exporting SWF 
 		file)
 ...
-TagN	UI16	Character ID to use for last
-		imported character in
+TagN	UI16	Character ID to use for last 
+		imported character in 
 		importing SWF file
-NameN	STRING	Identifier for last imported
+NameN	STRING	Identifier for last imported 
 		character
+
 
 EnableDebugger
 Field	Type	Comment
 Header	RECORDHEADER	Tag type = 58
-Password	Null-terminated STRING. (0	MD5-encrypted password
-	is NULL)	
+Password	Null-terminated STRING. (0 	MD5-encrypted password
+	is NULL)
+
 
 EnableDebugger2
 Field	Type	Comment
 Header	RECORDHEADER	Tag type = 64
 Reserved	UI16	Always 0
-Password	Null-terminated STRING.	MD5-encrypted password
+Password	Null-terminated STRING. 	MD5-encrypted password
 	(0 is NULL)
+
 
 ScriptLimits
 Field	Type	Comment
 Header	RECORDHEADER	Tag type = 65
 MaxRecursionDepth	UI16	Maximum recursion depth
-ScriptTimeoutSeconds	UI16	Maximum ActionScript
-		processing time before
-		script stuck dialog box
+ScriptTimeoutSeconds	UI16	Maximum ActionScript 
+		processing time before 
+		script stuck dialog box 
 		displays
+
 
 SetTabIndex
 Field	Type	Comment
@@ -81,91 +448,97 @@ Header	RECORDHEADER	Tag type = 66
 Depth	UI16	Depth of character
 TabIndex	UI16	Tab order value
 
+
 FileAttributes
 Field	Type	Comment
-Header	RECORDHEADER 	Tag type = 69
+Header	RECORDHEADER	Tag type = 69
 Reserved	UB[1]	Must be 0
-UseDirectBlit	UB[1]	If 1, the SWF file uses hardware acceleration
-		to blit graphics to the screen, where such
-		acceleration is available.
-		If 0, the SWF file will not use hardware
+UseDirectBlit	UB[1]	If 1, the SWF file uses hardware acceleration 
+		to blit graphics to the screen, where such 
+(see note following 		acceleration is available.
+table)		If 0, the SWF file will not use hardware 
 		accelerated graphics facilities.
 		Minimum file version is 10.
-UseGPU	UB[1]	If 1, the SWF file uses GPU compositing
-		features when drawing graphics, where such
-		acceleration is available.
-		If 0, the SWF file will not use hardware
+UseGPU	UB[1]	If 1, the SWF file uses GPU compositing 
+		features when drawing graphics, where such 
+(see note following 		acceleration is available.
+table)		If 0, the SWF file will not use hardware 
 		accelerated graphics facilities.
 		Minimum file version is 10.
 HasMetadata	UB[1]	If 1, the SWF file contains the Metadata tag.
-		If 0, the SWF file does not contain the
+		If 0, the SWF file does not contain the 
 		Metadata tag.
 ActionScript3	UB[1]	If 1, this SWF uses ActionScript 3.0.
 		If 0, this SWF uses ActionScript 1.0 or 2.0.
-		Minimum file format version is 9.
+		Minimum file format version is 9. 
 Reserved	UB[2]	Must be 0
-UseNetwork	UB[1]	If 1, this SWF file is given network file access
+UseNetwork	UB[1]	If 1, this SWF file is given network file access 
 		when loaded locally.
-		If 0, this SWF file is given local file access
+		If 0, this SWF file is given local file access 
 		when loaded locally.
 Reserved	UB[24]	Must be 0
+
 
 ImportAssets2
 Field	Type	Comment
 Header	RECORDHEADER	Tag type = 71
-URL	STRING	URL where the source
+URL	STRING	URL where the source 
 		SWF file can be found
 Reserved	UI8	Must be 1
 Reserved	UI8	Must be 0
 Count	UI16	Number of assets to import
-Tag1	UI16	Character ID to use for first
-		imported character in
-		importing SWF file (need
-		not match character ID in
+Tag1	UI16	Character ID to use for first 
+		imported character in 
+		importing SWF file (need 
+		not match character ID in 
 		exporting SWF file)
-Name1	STRING	Identifier for first imported
-		character (must match an
-		identifier in exporting SWF
+Name1	STRING	Identifier for first imported 
+		character (must match an 
+		identifier in exporting SWF 
 		file)
-...		
-TagN	UI16	Character ID to use for last
-		imported character in
+...
+TagN	UI16	Character ID to use for last 
+		imported character in 
 		importing SWF file
-NameN	STRING	Identifier for last imported
+NameN	STRING	Identifier for last imported 
 		character
+
 
 SymbolClass
 Field	Type	Comment
 Header	RECORDHEADER	Tag type = 76
-NumSymbols	UI16	Number of symbols that
-		will be associated by this
+NumSymbols	UI16	Number of symbols that 
+		will be associated by this 
 		tag.
-Tag1	U16	The 16-bit character tag ID
-		for the symbol to associate
-Name1	STRING	The fully-qualified name of
-		the ActionScript 3.0 class
-		with which to associate this
-		symbol. The class must
-		have already been
+Tag1	U16	The 16-bit character tag ID 
+		for the symbol to associate 
+Name1	STRING	The fully-qualified name of 
+		the ActionScript 3.0 class 
+		with which to associate this 
+		symbol. The class must 
+		have already been 
 		declared by a DoABC tag.
 ...	...	...
 TagN	U16	Tag ID for symbol N
-NameN	STRING	Fully-qualified class name
-		for symbol N
+NameN	STRING	Fully-qualified class name 
+		for symbol N 
+
 
 Metadata
 Field	Type	Comment
 Header	RECORDHEADER	Tag type = 77
 Metadata	STRING	XML Metadata
 
+
 DefineScalingGrid
 Field	Type	Comment
 Header	RECORDHEADER	Tag type = 78
-CharacterId	UI16	ID of sprite or button
-		character upon which the
+CharacterId	UI16	ID of sprite or button 
+		character upon which the 
 		scaling grid will be applied.
-Splitter	RECT	Center region of 9-slice
+Splitter	RECT	Center region of 9-slice 
 		grid
+
 
 DefineSceneAndFrameLabelData
 Field	Type	Comment
@@ -175,114 +548,22 @@ Offset1	EncodedU32	Frame offset for scene 1
 Name1	STRING	Name of scene 1
 ...	...	...
 OffsetN	EncodedU32	Frame offset for scene N
-NameN	STRING	Name of scene N
+NameN	STRING	Name of scene N 
 FrameLabelCount	EncodedU32	Number of frame labels
-FrameNum1	EncodedU32	Frame number of frame
-		label #1 (zero-based,
+FrameNum1	EncodedU32	Frame number of frame 
+		label #1 (zero-based, 
 		global to symbol)
-FrameLabel1	STRING	Frame label string of frame
+FrameLabel1	STRING	Frame label string of frame 
 		label #1
 ...	...	...
-FrameNumN	EncodedU32	Frame number of frame
-		label #N (zero-based,
+FrameNumN	EncodedU32	Frame number of frame 
+		label #N (zero-based, 
 		global to symbol)
-FrameLabelN	STRING	Frame label string of frame
+FrameLabelN	STRING	Frame label string of frame 
 		label #N
 
-CHAPTER 8
-Bitmaps
 
-DefineBits
-Field	Type	Comment
-Header	RECORDHEADER (long)	Tag type = 6
-CharacterID	UI16	ID for this character
-JPEGData	UI8[image data size]	JPEG compressed image
+CHAPTER 5
+Actions
 
-JPEGTables
-Field	Type	Comment
-Header	RECORDHEADER	Tag type = 8
-JPEGData	UI8[encoding data size]	JPEG encoding table
 
-DefineBitsJPEG2
-Field	Type	Comment
-Header	RECORDHEADER (long)	Tag type = 21
-CharacterID	UI16	ID for this character
-ImageData	UI8[data size]	Compressed image data in
-		either JPEG, PNG, or GIF89a
-		format
-
-DefineBitsJPEG3
-Field	Type	Comment
-Header	RECORDHEADER (long)	Tag type = 35
-CharacterID	UI16	ID for this character.
-AlphaDataOffset	UI32	Count of bytes in ImageData.
-ImageData	UI8[data size]	Compressed image data in
-		either JPEG, PNG, or GIF89a
-		format
-BitmapAlphaData	UI8[alpha data size]	ZLIB compressed array of
-		alpha data. Only supported
-		when tag contains JPEG data.
-		One byte per pixel. Total size
-		after decompression must
-		equal (width * height) of JPEG
-		image.
-
-DefineBitsLossless
-Field	Type	Comment
-Header	RECORDHEADER (long)	Tag type = 20
-CharacterID	UI16	ID for this character
-BitmapFormat	UI8	Format of compressed data
-		3 = 8-bit colormapped image
-		4 = 15-bit RGB image
-		5 = 24-bit RGB image
-BitmapWidth	UI16	Width of bitmap image
-BitmapHeight	UI16	Height of bitmap image
-BitmapColorTableSize	If BitmapFormat = 3, UI8	This value is one less than the
-	Otherwise absent	actual number of colors in the
-		color table, allowing for up to
-		256 colors.
-ZlibBitmapData	If BitmapFormat = 3,	ZLIB compressed bitmap data
-	COLORMAPDATA
-	If BitmapFormat = 4 or 5,
-	BITMAPDATA
-
-DefineBitsLossless2
-Field	Type	Comment
-Header	RECORDHEADER (long)	Tag type = 36
-CharacterID	UI16	ID for this character
-BitmapFormat	UI8	Format of compressed data
-		3 = 8-bit colormapped image
-		5 = 32-bit ARGB image
-BitmapWidth	UI16	Width of bitmap image
-BitmapHeight	UI16	Height of bitmap image
-BitmapColorTableSize	If BitmapFormat = 3, UI8	This value is one less than the
-	Otherwise absent	actual number of colors in the
-		color table, allowing for up to
-		256 colors.
-ZlibBitmapData	If BitmapFormat = 3,	ZLIB compressed bitmap data
-	ALPHACOLORMAPDATA
-	If BitmapFormat = 4 or 5,
-	ALPHABITMAPDATA
-
-DefineBitsJPEG4
-Field	Type	Comment
-Header	RECORDHEADER (long)	Tag type = 90.
-CharacterID	UI16	ID for this character.
-AlphaDataOffset	UI32	Count of bytes in ImageData.
-DeblockParam	UI16	Parameter to be fed into the
-		deblocking filter. The parameter
-		describes a relative strength of
-		the deblocking filter from 0-
-		100% expressed in a
-		normalized 8.8 fixed point
-		format.
-ImageData	UI8[data size]	Compressed image data in
-		either JPEG, PNG, or GIF89a
-		format.
-BitmapAlphaData	UI8[alpha data size]	ZLIB compressed array of
-		alpha data. Only supported
-		when tag contains JPEG data.
-		One byte per pixel. Total size
-		after decompression must
-		equal (width * height) of JPEG
-		image.
