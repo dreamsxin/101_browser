@@ -75,12 +75,12 @@ void drawGui(
 
 	if (in_pRawMice != NULL)
 	{
-		for (size_t currentCursorIndex = 0; currentCursorIndex < in_pRawMice->size; 
+		for (size_t currentCursorIndex = 0; currentCursorIndex < in_pRawMice->count(); 
 			currentCursorIndex++)
 		{
 			Gui::Components::drawCursor(
-				static_cast<float>(in_pRawMice->data[currentCursorIndex].x), 
-				static_cast<float>(in_pRawMice->data[currentCursorIndex].y), 
+				static_cast<float>(in_pRawMice->data()[currentCursorIndex].x), 
+				static_cast<float>(in_pRawMice->data()[currentCursorIndex].y), 
 				currentHeight, &cursor);
 		}
 	}

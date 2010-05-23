@@ -8,7 +8,9 @@ template <typename Type, typename NodePropertyType> size_t depth(
 	if (in_pNode==NULL)
 		return 0;
 	else
-		return 1+std::max(depth(in_pNode->left()), depth(in_pNode->right()));
+		// set std::max into parantheses to avoid conflict with max from
+		// windef.h under Windows
+		return 1+(std::max)(depth(in_pNode->left()), depth(in_pNode->right()));
 }
 
 template <typename Type> void testAVLPropertyRecursively(

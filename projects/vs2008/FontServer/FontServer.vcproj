@@ -187,10 +187,6 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="$(SolutionDir)include\FontServer\DynamicMemory.h"
-				>
-			</File>
-			<File
 				RelativePath="$(SolutionDir)include\FontServer\FontServer.h"
 				>
 			</File>

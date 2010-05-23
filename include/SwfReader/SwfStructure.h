@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <list>
 
-struct RECT
+struct SwfRECT
 {
 	unsigned char NBits; // NBits UB[5]	Bits in each rect value field
 	// signed int is the size required for SB[UB[5]]
@@ -16,7 +16,7 @@ struct RECT
 	signed int Ymax; // Ymax SB[Nbits] y maximum position for rect
 #pragma pack(pop)
 
-	inline RECT() : Xmin(0), Xmax(0), Ymin(0), Ymax(0) { }
+	inline SwfRECT() : Xmin(0), Xmax(0), Ymin(0), Ymax(0) { }
 };
 
 /*!
@@ -26,7 +26,7 @@ struct RECT
  * true on success
  * false on failure
  */
-bool readRECT(BasicReadStream* in_pStream, RECT* in_pRect);
+bool readSwfRECT(BasicReadStream* in_pStream, SwfRECT* in_pRect);
 
 struct SwfHeader1
 {
@@ -37,34 +37,34 @@ struct SwfHeader1
 
 struct SwfHeader2
 {
-	RECT FrameSize;
+	SwfRECT FrameSize;
 #pragma pack(push, 1)
 	unsigned short FrameRate;
 	unsigned short FrameCount;
 #pragma pack(pop)
 };
 
-struct RECORDHEADER
+struct SwfRECORDHEADER
 {
 	unsigned short TagType; // 10 Bits
 	signed int Length;      // 6 bits or SI32
 
-	RECORDHEADER() : TagType(0), Length(0) { }
+	SwfRECORDHEADER() : TagType(0), Length(0) { }
 };
 
-struct Tag
+struct SwfTag
 {
-	RECORDHEADER recordHeader;
+	SwfRECORDHEADER recordHeader;
 	unsigned char* tagContent;
 
-	inline Tag() : tagContent(NULL) { }
+	inline SwfTag() : tagContent(NULL) { }
 };
 
 struct SwfFile
 {
 	SwfHeader1 swfHeader1;
 	SwfHeader2 swfHeader2;
-	std::list<Tag> tags;
+	std::list<SwfTag> tags;
 };
 
 #endif

@@ -378,6 +378,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Error"
+				>
+				<File
+					RelativePath="..\..\..\include\BasicDataStructures\Error\ErrorHandling.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"

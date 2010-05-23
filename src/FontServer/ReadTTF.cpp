@@ -11,17 +11,17 @@ using namespace std;
 If we compute the checksum of the head table we have to ignore the 3rd DWORD.
 In this case we have to set 'headAdjustment' to true. In any other case it should be 'false'
  */
-unsigned int computeCheckSum(const DynamicMemory& actTable, const bool headAdjustment=false)
+unsigned int computeCheckSum(const ArrayBlock<unsigned char>& actTable, const bool headAdjustment=false)
 {
 	unsigned int sum=0;
 
 	// The size has to be dividable by 4
-	assert((actTable.size()& 0x3) == 0);
+	assert((actTable.count()& 0x3) == 0);
 
-	unsigned int* actPos=(unsigned int*) actTable.buffer();
-	unsigned int* endPos=actPos+actTable.size()/4;
+	unsigned int* actPos=(unsigned int*) actTable.data();
+	unsigned int* endPos=actPos+actTable.count()/4;
 
-	for (size_t i=0; i<actTable.size()/4; i++)
+	for (size_t i=0; i<actTable.count()/4; i++)
 	{
 		if (headAdjustment && i==2)
 		{
@@ -83,10 +83,10 @@ int readTTF(char* filename) {
 	{
 		printf("Table:\t%c%c%c%c\n", i->tag.bytes[0], i->tag.bytes[1], i->tag.bytes[2], i->tag.bytes[3]);
 		
-		DynamicMemory actTable((i->length+3)& ~3);
+		ArrayBlock<unsigned char> actTable((i->length+3)& ~3);
 
 		fseek(fontFile, i->offset, SEEK_SET);
-		if (fread(actTable.buffer(), actTable.size(), 1, fontFile) != 1)
+		if (fread(actTable.data(), actTable.count(), 1, fontFile) != 1)
 			return -4;
 
 		bool headAdjustment = (i->tag.uint == CHAR4_TO_UINT_LIL_ENDIAN('h', 'e', 'a', 'd'));

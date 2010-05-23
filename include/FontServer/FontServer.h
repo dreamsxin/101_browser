@@ -1,8 +1,8 @@
 #ifndef _FontServer_h
 #define _FontServer_h
 
-#include "FontServer/DynamicMemory.h"
 #include <vector>
+#include "BasicDataStructures/Memory/ArrayBlock.h"
 
 // Pack structures to 1-byte boundaries
 #pragma pack(push, 1)

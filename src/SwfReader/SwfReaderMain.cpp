@@ -63,7 +63,7 @@ int main(int argc, char** argv)
 
 	while (true)
 	{
-		Tag tag;
+		SwfTag tag;
 
 		unsigned short TagCodeAndLength;
 		if (streamToContinue->read(&TagCodeAndLength, sizeof(unsigned short), 1)!=1)
@@ -94,7 +94,7 @@ int main(int argc, char** argv)
 
 	// Cleaning up
 
-	for (list<Tag>::iterator i=swfFile.tags.begin(); i!=swfFile.tags.end(); )
+	for (list<SwfTag>::iterator i=swfFile.tags.begin(); i!=swfFile.tags.end(); )
 	{
 		safe_delete_array(&i->tagContent);
 		i=swfFile.tags.erase(i);
