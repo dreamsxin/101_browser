@@ -16,7 +16,7 @@ unsigned int computeCheckSum(const ArrayBlock<unsigned char>& actTable, const bo
 	unsigned int sum=0;
 
 	// The size has to be dividable by 4
-	assert((actTable.count()& 0x3) == 0);
+	assert((actTable.count() & 0x3) == 0);
 
 	unsigned int* actPos=(unsigned int*) actTable.data();
 	unsigned int* endPos=actPos+actTable.count()/4;
@@ -55,10 +55,14 @@ int readTTF(char* filename) {
 
 	unsigned char correctVersion[4]={0x00, 0x01, 0x00, 0x00};
 
-	if (memcmp(&font.offsetTable.sfntVersion, correctVersion, 4)) return -2;	
-	if (font.offsetTable.searchRange!=16*1<<floorLog2(font.offsetTable.numTables)) return -2;
-	if (font.offsetTable.entrySelector!=floorLog2(font.offsetTable.numTables)) return -2;
-	if (font.offsetTable.rangeShift!=font.offsetTable.numTables*16-font.offsetTable.searchRange) return -2;
+	if (memcmp(&font.offsetTable.sfntVersion, correctVersion, 4))
+		return -2;	
+	if (font.offsetTable.searchRange != 16*1<<floorLog2(font.offsetTable.numTables))
+		return -2;
+	if (font.offsetTable.entrySelector != floorLog2(font.offsetTable.numTables))
+		return -2;
+	if (font.offsetTable.rangeShift != font.offsetTable.numTables*16-font.offsetTable.searchRange)
+		return -2;
 
 	font.tableDirectories.reserve(font.offsetTable.numTables);
 
@@ -66,14 +70,20 @@ int readTTF(char* filename) {
 	{
 		TableDirectory tableDirectory;
 
-		if (fread(&tableDirectory, sizeof(tableDirectory), 1, fontFile)!=1)
+		if (fread(&tableDirectory, sizeof(tableDirectory), 1, fontFile) != 1)
 			return -1;
 
 		switchEndianess(&tableDirectory.checkSum);
 		switchEndianess(&tableDirectory.offset);
 		switchEndianess(&tableDirectory.length);
 
-		if (i>0 && memcmp(&font.tableDirectories.at(i-1).tag, &tableDirectory.tag, 4)>=0)
+		/*
+		 * In http://www.microsoft.com/typography/otspec/otff.htm
+		 * section "Organization of an OpenType Font" we can read:
+		 * "Entries in the Table Record must be sorted in ascending order by tag."
+		 * This is what we test here
+		 */
+		if (i>0 && memcmp(&font.tableDirectories.at(i-1).tag, &tableDirectory.tag, 4) >= 0)
 			return -3;
 
 		font.tableDirectories.push_back(tableDirectory);
@@ -92,7 +102,7 @@ int readTTF(char* filename) {
 
 		bool headAdjustment = (i->tag.uint == CHAR4_TO_UINT_LIL_ENDIAN('h', 'e', 'a', 'd'));
 
-		if (computeCheckSum(actTable, headAdjustment)!=i->checkSum)
+		if (computeCheckSum(actTable, headAdjustment) != i->checkSum)
 		{
 			return -4;
 		}
