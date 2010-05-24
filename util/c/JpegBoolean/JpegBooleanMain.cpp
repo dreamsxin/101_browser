@@ -319,7 +319,7 @@ int main(int argc, char** argv)
 		}
 		else if (bitsCount == 3)
 		{
-			desiredChildrenCount = 4;
+			desiredChildrenCount = 5;
 		}
 	}
 	else if (useModel == UseModelCirc)

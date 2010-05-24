@@ -16,12 +16,7 @@ class BooleanCircuitNode : public FunctionBooleanStructure<const std::vector<boo
 public:
 	size_t child0Index, child1Index;
 
-	BooleanCircuitNode(FunctionType in_functionType) 
-		: FunctionBooleanStructure<const std::vector<bool>*>(in_functionType)
-	{
-		child0Index = 0;
-		child1Index = 0;
-	}
+	BooleanCircuitNode(FunctionType in_functionType);
 
 	virtual bool computeValue(const std::vector<bool>* in_pValues);
 	virtual void print();
@@ -43,25 +38,7 @@ public:
 	std::vector<BooleanCircuitNode> nodes;
 	std::vector<bool> values;
 
-	BooleanCircuitNetwork(FunctionType in_functionTypeAtLast, size_t in_nodeCount) 
-		: FunctionBooleanStructure<const std::vector<bool>*>(in_functionTypeAtLast)
-	{
-		extern size_t varCount;
-
-		nodes.reserve(in_nodeCount);
-		values.reserve(varCount+in_nodeCount);
-		
-		for (size_t i = 0; i<in_nodeCount-1; i++)
-		{
-			nodes.push_back(BooleanCircuitNode(FunctionTypeNot));
-		}
-		nodes.push_back(BooleanCircuitNode(in_functionTypeAtLast));
-
-		for (size_t i=0; i<varCount+in_nodeCount; i++)
-		{
-			values.push_back(false);
-		}
-	}
+	BooleanCircuitNetwork(FunctionType in_functionTypeAtLast, size_t in_nodeCount);
 
 	virtual bool computeValue(const std::vector<bool>* variables);
 	virtual void print();

@@ -1,6 +1,17 @@
 #include "BooleanCircuit.h"
 #include <cstdio>
 
+BooleanCircuitNode::BooleanCircuitNode(FunctionType in_functionType) 
+: FunctionBooleanStructure<const std::vector<bool>*>(in_functionType)
+{
+	child0Index = 0;
+
+	if (in_functionType == FunctionTypeNot)
+		child1Index = 0;
+	else
+		child1Index = 1;
+}
+
 bool BooleanCircuitNode::computeValue(const std::vector<bool>* in_pValues)
 {
 	switch (functionType)
@@ -49,8 +60,14 @@ bool BooleanCircuitNode::increment(BooleanCircuitNodeIncrementParameters in_para
 {
 	extern size_t varCount;
 	size_t maxChildIndex = varCount+in_parameters.thisNodeIndex-1;
-	
-	if (child0Index < maxChildIndex)
+
+	if (child0Index < maxChildIndex && functionType == FunctionTypeNot)
+	{
+		child0Index++;
+		return true;
+	}
+	else if (child0Index < maxChildIndex && functionType != FunctionTypeNot 
+		&& child0Index+1 < child1Index)
 	{
 		child0Index++;
 		return true;
@@ -77,7 +94,7 @@ bool BooleanCircuitNode::increment(BooleanCircuitNodeIncrementParameters in_para
 		}
 
 		child0Index = 0;
-		child1Index = 0;
+		child1Index = 1;
 
 		return true;
 	}
@@ -86,6 +103,25 @@ bool BooleanCircuitNode::increment(BooleanCircuitNodeIncrementParameters in_para
 }
 
 
+BooleanCircuitNetwork::BooleanCircuitNetwork(FunctionType in_functionTypeAtLast, size_t in_nodeCount) 
+: FunctionBooleanStructure<const std::vector<bool>*>(in_functionTypeAtLast)
+{
+	extern size_t varCount;
+
+	nodes.reserve(in_nodeCount);
+	values.reserve(varCount+in_nodeCount);
+
+	for (size_t i = 0; i<in_nodeCount-1; i++)
+	{
+		nodes.push_back(BooleanCircuitNode(FunctionTypeNot));
+	}
+	nodes.push_back(BooleanCircuitNode(in_functionTypeAtLast));
+
+	for (size_t i=0; i<varCount+in_nodeCount; i++)
+	{
+		values.push_back(false);
+	}
+}
 
 bool BooleanCircuitNetwork::computeValue(const std::vector<bool>* variables)
 {
@@ -138,7 +174,7 @@ bool BooleanCircuitNetwork::increment()
 				nodes[nodesSize-1].child1Index = 0;
 
 				for (size_t currentIndexPlusOne2 = nodesSize-1; 
-				currentIndexPlusOne2 > currentIndexPlusOne; currentIndexPlusOne2--)
+					currentIndexPlusOne2 > currentIndexPlusOne; currentIndexPlusOne2--)
 				{
 					nodes[currentIndexPlusOne2-1].reset();
 				}
