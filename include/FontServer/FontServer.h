@@ -7,9 +7,18 @@
 // Pack structures to 1-byte boundaries
 #pragma pack(push, 1)
 
+#define CHAR4_TO_UINT_LIL_ENDIAN(a, b, c, d) (((unsigned char) a)+((unsigned char) b)*(1<<8)+((unsigned char) c)*(1<<16)+((unsigned char) d)*(1<<24)) 
+
+const char csfntVersion[4] = { 0x0, 0x1, 0x0, 0x0 };
+
 class OffsetTable
 {
 public:
+	/*!
+	 * According to http://www.microsoft.com/typography/otspec/otff.htm
+	 * section "Organization of an OpenType Font" this has to be 0x00010000.
+	 * This is the value of the field csfntVersion
+	 */
 	unsigned char sfntVersion[4];
 	unsigned short numTables;
 	unsigned short searchRange;
@@ -29,7 +38,7 @@ public:
 	unsigned int length;
 };
 
-class CmapTableEntry
+class cmapTableEntry
 {
 public:
 	unsigned short platformID;
@@ -37,12 +46,12 @@ public:
 	unsigned int offset;
 };
 
-class CmapTable
+class cmapTable
 {
 public:
-	unsigned short versionNumber;
-	unsigned short encodingTablesCount;
-	std::vector<CmapTableEntry> cmapTableEntries;
+	unsigned short version;
+	unsigned short numTables;
+	std::vector<cmapTableEntry> cmapTableEntries;
 };
 
 

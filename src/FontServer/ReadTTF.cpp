@@ -5,8 +5,6 @@
 
 using namespace std;
 
-#define CHAR4_TO_UINT_LIL_ENDIAN(a, b, c, d) (((unsigned char) a)+((unsigned char) b)*(1<<8)+((unsigned char) c)*(1<<16)+((unsigned char) d)*(1<<24)) 
-
 /*!
  * Returns true if the checksum of the table by in_pTableDirectory
  * is correct.
@@ -50,6 +48,53 @@ bool verifyCheckSum(FILE* fontFile, TableDirectory* in_pTableDirectory)
 	return sum == in_pTableDirectory->checkSum;
 }
 
+bool read_cmapTable(FILE* fontFile, TableDirectory* in_pTableDirectory)
+{
+	fseek(fontFile, in_pTableDirectory->offset, SEEK_SET);
+
+	cmapTable lcmapTable;
+
+	if (fread(&lcmapTable, 2*sizeof(unsigned short), 1, fontFile) != 1)
+	{
+		return false;
+	}
+
+	switchEndianess(&lcmapTable.version); // not really necessary since only version 0 is accepted
+	switchEndianess(&lcmapTable.numTables);
+
+	/*
+	 * According to
+	 * http://www.microsoft.com/typography/otspec/cmap.htm
+	 * the table version number has to be 0.
+	 */
+	if (lcmapTable.version != 0)
+	{
+		return false;
+	}
+
+	lcmapTable.cmapTableEntries.reserve(lcmapTable.numTables);
+
+	for (size_t i=0; i<lcmapTable.numTables; i++)
+	{
+		cmapTableEntry entry;
+		if (fread(&entry, sizeof(entry), 1, fontFile) != 1)
+		{
+			return false;
+		}
+
+		switchEndianess(&entry.platformID);
+		switchEndianess(&entry.encodingID);
+		switchEndianess(&entry.offset);
+
+		printf("platform: %hu\nencoding: %hu\noffset: %u\n\n", 
+			entry.platformID, entry.encodingID, entry.offset);
+
+		lcmapTable.cmapTableEntries.push_back(entry);
+	}
+
+	return true;
+}
+
 
 int readTTF(char* filename) {
 	FILE* fontFile = fopen(filename, "rb");
@@ -67,9 +112,7 @@ int readTTF(char* filename) {
 	switchEndianess(&font.offsetTable.entrySelector);
 	switchEndianess(&font.offsetTable.rangeShift);
 
-	unsigned char correctVersion[4]={0x00, 0x01, 0x00, 0x00};
-
-	if (memcmp(&font.offsetTable.sfntVersion, correctVersion, 4))
+	if (memcmp(&font.offsetTable.sfntVersion, csfntVersion, 4))
 		return -2;	
 	if (font.offsetTable.searchRange != 16*1<<floorLog2(font.offsetTable.numTables))
 		return -2;
@@ -114,7 +157,8 @@ int readTTF(char* filename) {
 
 		switch (i->tag.uint) {
 			case CHAR4_TO_UINT_LIL_ENDIAN('c', 'm', 'a', 'p'):
-				//printf("cmap found\n");
+				if (!read_cmapTable(fontFile, &*i))
+					return -5;
 				break;
 			case CHAR4_TO_UINT_LIL_ENDIAN('g', 'l', 'y', 'f'):
 				break;
