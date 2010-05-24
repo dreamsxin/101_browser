@@ -106,22 +106,11 @@ int readTTF(char* filename) {
 	for (vector<TableDirectory>::iterator i=font.tableDirectories.begin(); i!=font.tableDirectories.end(); ++i)
 	{
 		printf("Table:\t%c%c%c%c\n", i->tag.bytes[0], i->tag.bytes[1], i->tag.bytes[2], i->tag.bytes[3]);
-		
-		ArrayBlock<unsigned char> actTable;
-		actTable.allocate((i->length+3)& ~3);
-
-		fseek(fontFile, i->offset, SEEK_SET);
-		if (fread(actTable.data(), actTable.count(), 1, fontFile) != 1)
-			return -4;
-
-		bool headAdjustment = (i->tag.uint == CHAR4_TO_UINT_LIL_ENDIAN('h', 'e', 'a', 'd'));
 
 		if (!verifyCheckSum(fontFile, &*i))
 		{
 			return -4;
 		}
-
-		actTable.free();
 
 		switch (i->tag.uint) {
 			case CHAR4_TO_UINT_LIL_ENDIAN('c', 'm', 'a', 'p'):
