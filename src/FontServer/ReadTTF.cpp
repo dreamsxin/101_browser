@@ -8,33 +8,47 @@ using namespace std;
 #define CHAR4_TO_UINT_LIL_ENDIAN(a, b, c, d) (((unsigned char) a)+((unsigned char) b)*(1<<8)+((unsigned char) c)*(1<<16)+((unsigned char) d)*(1<<24)) 
 
 /*!
-If we compute the checksum of the head table we have to ignore the 3rd DWORD.
-In this case we have to set 'headAdjustment' to true. In any other case it should be 'false'
+ * Returns true if the checksum of the table by in_pTableDirectory
+ * is correct.
+ * Otherwise returns false.
  */
-unsigned int computeCheckSum(const ArrayBlock<unsigned char>& actTable, const bool headAdjustment=false)
+bool verifyCheckSum(FILE* fontFile, TableDirectory* in_pTableDirectory)
 {
+	bool headAdjustment = (in_pTableDirectory->tag.uint == CHAR4_TO_UINT_LIL_ENDIAN('h', 'e', 'a', 'd'));
+
+	unsigned int size = ((in_pTableDirectory->length+3)& ~3)/4;
+	fseek(fontFile, in_pTableDirectory->offset, SEEK_SET);
 	unsigned int sum=0;
 
-	// The size has to be dividable by 4
-	assert((actTable.count() & 0x3) == 0);
-
-	unsigned int* actPos=(unsigned int*) actTable.data();
-	unsigned int* endPos=actPos+actTable.count()/4;
-
-	for (size_t i=0; i<actTable.count()/4; i++)
+	for (size_t i=0; i<size; i++)
 	{
-		if (headAdjustment && i==2)
+		if (i==2 && headAdjustment)
 		{
-			actPos++;
-			continue;
+			if (fseek(fontFile, 4, SEEK_CUR) != 0)
+			{
+				return false;
+			}
 		}
+		else
+		{
+			unsigned int currentDword;
 
-		sum+=convertEndianess(*actPos++);
+			/*
+			 * This means the file was probably not large enough for the given size.
+			 * So we have an invalid checksum (this error is recoverable - that is why
+			 * we return false and don't call exit)
+			 */
+			if (fread(&currentDword, sizeof(currentDword), 1, fontFile) != 1)
+			{
+				return false;
+			}
+
+			sum+=convertEndianess(currentDword);
+		}
 	}
 
-	return sum;
+	return sum == in_pTableDirectory->checkSum;
 }
-
 
 
 int readTTF(char* filename) {
@@ -102,7 +116,7 @@ int readTTF(char* filename) {
 
 		bool headAdjustment = (i->tag.uint == CHAR4_TO_UINT_LIL_ENDIAN('h', 'e', 'a', 'd'));
 
-		if (computeCheckSum(actTable, headAdjustment) != i->checkSum)
+		if (!verifyCheckSum(fontFile, &*i))
 		{
 			return -4;
 		}
