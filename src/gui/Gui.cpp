@@ -377,12 +377,12 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 	freeTextureMemory(&cursor.andMap);
 	freeTextureMemory(&cursor.xorMap);
 
-	ArrayBlock<Gui::Mouse::RawMouse>* pMiceArray = Gui::Mouse::getRawMouseArray();
-	window.pRawMice = pMiceArray;
+	ArrayBlock<Gui::Mouse::RawMouse> miceArray = Gui::Mouse::getRawMouseArray();
+	window.pRawMice = &miceArray;
 
-	for (size_t currentMouseIndex = 0; currentMouseIndex < pMiceArray->count(); currentMouseIndex++)
+	for (size_t currentMouseIndex = 0; currentMouseIndex < miceArray.count(); currentMouseIndex++)
 	{
-		_ftprintf(logFile, _T("%s\n"), pMiceArray->data()[currentMouseIndex].psName);
+		_ftprintf(logFile, _T("%s\n"), miceArray.data()[currentMouseIndex].psName);
 	}
 
 	showWindow(&window, nCmdShow); // Alternative: use SW_NORMAL instead of nCmdShow
@@ -400,7 +400,7 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 
 	destroyWindow(&window);
 
-	destroyRawMouseArray(&pMiceArray);
+	destroyRawMouseArray(&miceArray);
 
 	if (!unregisterWindowClass(window))
 	{

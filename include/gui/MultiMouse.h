@@ -14,14 +14,13 @@ namespace Gui
 			ULONG x, y, z;
 			TCHAR* psName;
 			ArrayBlock<bool> buttonsPressed;
-
-			inline RawMouse(size_t in_buttonsCount) : buttonsPressed(in_buttonsCount) { }
 		};
 
-		ArrayBlock<RawMouse>* getRawMouseArray();
-		inline void destroyRawMouseArray(ArrayBlock<RawMouse>** in_rawMice)
+		ArrayBlock<RawMouse> getRawMouseArray();
+
+		inline void destroyRawMouseArray(ArrayBlock<RawMouse>* in_rawMice)
 		{
-			safe_delete(in_rawMice);
+			in_rawMice->free();
 		}
 
 		void registerRawMice(HWND hWnd);

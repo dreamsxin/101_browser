@@ -11,7 +11,7 @@ namespace Gui
 {
 	namespace Mouse
 	{
-		ArrayBlock<RawMouse>* getRawMouseArray()
+		ArrayBlock<RawMouse> getRawMouseArray()
 		{
 			UINT nDevices;
 			PRAWINPUTDEVICELIST pRawInputDeviceList;
@@ -81,12 +81,13 @@ namespace Gui
 
 					assert(pDeviceInfo->dwType == RIM_TYPEMOUSE);
 
-					RawMouse currentMouse(pDeviceInfo->mouse.dwNumberOfButtons);
+					RawMouse currentMouse;
 					currentMouse.deviceHandle = pRawInputDeviceList[currentDeviceIndex].hDevice;
 					currentMouse.x = 0;
 					currentMouse.y = 0;
 					currentMouse.z = 0;
 					currentMouse.psName = psName;
+					currentMouse.buttonsPressed.allocate(pDeviceInfo->mouse.dwNumberOfButtons);
 
 					memset(currentMouse.buttonsPressed.data(), 0, 
 						sizeof(bool)*currentMouse.buttonsPressed.count());
@@ -97,14 +98,15 @@ namespace Gui
 
 			safe_free(&pRawInputDeviceList);
 
-			ArrayBlock<RawMouse>* out_rawMiceArray = new ArrayBlock<RawMouse>(rawMiceList.size());
+			ArrayBlock<RawMouse> out_rawMiceArray;
+			out_rawMiceArray.allocate(rawMiceList.size());
 
 			size_t currentPos = 0;
 
 			for (list<RawMouse>::iterator rawMouseIt = rawMiceList.begin(); 
 				rawMouseIt != rawMiceList.end(); rawMouseIt++)
 			{
-				out_rawMiceArray->data()[currentPos] = *rawMouseIt;
+				out_rawMiceArray.data()[currentPos] = *rawMouseIt;
 				currentPos++;
 			}
 

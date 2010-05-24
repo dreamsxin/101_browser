@@ -83,7 +83,8 @@ int readTTF(char* filename) {
 	{
 		printf("Table:\t%c%c%c%c\n", i->tag.bytes[0], i->tag.bytes[1], i->tag.bytes[2], i->tag.bytes[3]);
 		
-		ArrayBlock<unsigned char> actTable((i->length+3)& ~3);
+		ArrayBlock<unsigned char> actTable;
+		actTable.allocate((i->length+3)& ~3);
 
 		fseek(fontFile, i->offset, SEEK_SET);
 		if (fread(actTable.data(), actTable.count(), 1, fontFile) != 1)
@@ -95,6 +96,8 @@ int readTTF(char* filename) {
 		{
 			return -4;
 		}
+
+		actTable.free();
 
 		switch (i->tag.uint) {
 			case CHAR4_TO_UINT_LIL_ENDIAN('c', 'm', 'a', 'p'):
