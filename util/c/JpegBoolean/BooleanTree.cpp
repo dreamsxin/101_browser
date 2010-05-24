@@ -196,7 +196,16 @@ bool FunctionTreeNode::increment(bool isRoot)
 
 		return true;
 	}
-	if (child0->size() != 0 && (!isRoot || (isRoot && functionType != FunctionTypeNot)))
+	if ((!isRoot || (isRoot && functionType != FunctionTypeNot)) && 
+		child0->size() != 0 && 
+		/*
+		 * this condition ensures that the
+		 * left subtree will stay larger or as 
+		 * large as the right one
+		 * (because of the commutativity of 
+		 * the operators this is no restriction)
+		 */
+		child0->size() >= child1->size()+2)
 	{
 		size_t child0size = child0->size();
 		assert(functionType != FunctionTypeNot);
