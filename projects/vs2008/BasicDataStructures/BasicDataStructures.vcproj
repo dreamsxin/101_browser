@@ -239,6 +239,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\BasicDataStructures\Types.h"
+				>
+			</File>
+			<File
 				RelativePath="$(SolutionDir)include\BasicDataStructures\Unicode.h"
 				>
 			</File>

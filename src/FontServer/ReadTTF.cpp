@@ -50,7 +50,8 @@ bool verifyCheckSum(FILE* fontFile, TableDirectory* in_pTableDirectory)
 
 bool read_cmapTable(FILE* fontFile, TableDirectory* in_pTableDirectory)
 {
-	fseek(fontFile, in_pTableDirectory->offset, SEEK_SET);
+	if (fseek(fontFile, in_pTableDirectory->offset, SEEK_SET) != 0)
+		return false;
 
 	cmapTable lcmapTable;
 
@@ -90,6 +91,24 @@ bool read_cmapTable(FILE* fontFile, TableDirectory* in_pTableDirectory)
 			entry.platformID, entry.encodingID, entry.offset);
 
 		lcmapTable.cmapTableEntries.push_back(entry);
+	}
+
+	for (std::vector<cmapTableEntry>::iterator i=lcmapTable.cmapTableEntries.begin(); 
+		i != lcmapTable.cmapTableEntries.end(); i++)
+	{
+		if (fseek(fontFile, in_pTableDirectory->offset, SEEK_SET) != 0)
+			return false;
+		if (fseek(fontFile, i->offset, SEEK_CUR) != 0)
+			return false;
+
+		unsigned short format;
+		
+		if (fread(&format, sizeof(format), 1, fontFile) != 1)
+			return false;
+
+		switchEndianess(&format);
+
+		printf("format: %hu\n\n", format);
 	}
 
 	return true;

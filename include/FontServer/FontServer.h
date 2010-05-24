@@ -1,6 +1,7 @@
 #ifndef _FontServer_h
 #define _FontServer_h
 
+#include "BasicDataStructures/Types.h"
 #include <vector>
 #include "BasicDataStructures/Memory/ArrayBlock.h"
 
@@ -52,6 +53,14 @@ public:
 	unsigned short version;
 	unsigned short numTables;
 	std::vector<cmapTableEntry> cmapTableEntries;
+};
+
+struct cmapSubTable0
+{
+	USHORT	format;            // Format number is set to 0.
+	USHORT	length;            // This is the length in bytes of the subtable.
+	USHORT	language;          // Please see "Note on the language field in 'cmap' subtables" in this document.
+	BYTE	glyphIdArray[256]; // An array that maps character codes to glyph index values.
 };
 
 
