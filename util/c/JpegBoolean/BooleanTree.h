@@ -33,34 +33,8 @@ class FunctionTreeNode
 public:
 	TreeNode *child0, *child1;
 
-	FunctionTreeNode(FunctionType in_functionType, size_t in_childrenCount) 
-		: TreeNode(false), 
-		FunctionBooleanStructure<const std::vector<bool>*>(in_functionType),
-		child0(NULL), child1(NULL)
-	{
-		if (in_childrenCount==0)
-		{
-			child0 = new LeafTreeNode();
-		}
-		else
-		{
-			child0 = new FunctionTreeNode(FunctionTypeNot, in_childrenCount-1);
-		}
-
-		if (functionType != FunctionTypeNot)
-		{
-			child1 = new LeafTreeNode();
-		}
-	}
-
-	virtual ~FunctionTreeNode()
-	{
-		delete child0;
-		child0 = NULL;
-		if (child1 != NULL)
-			delete child1;
-		child1 = NULL;
-	}
+	FunctionTreeNode(FunctionType in_functionType, size_t in_childrenCount);
+	virtual ~FunctionTreeNode();
 
 	virtual bool computeValue(const std::vector<bool>* in_pVariables);
 	virtual void print();

@@ -34,6 +34,35 @@ size_t LeafTreeNode::size()
 	return 0;
 }
 
+FunctionTreeNode::FunctionTreeNode(FunctionType in_functionType, size_t in_childrenCount) 
+: TreeNode(false), 
+FunctionBooleanStructure<const std::vector<bool>*>(in_functionType),
+child0(NULL), child1(NULL)
+{
+	if (in_childrenCount==0)
+	{
+		child0 = new LeafTreeNode();
+	}
+	else
+	{
+		child0 = new FunctionTreeNode(FunctionTypeNot, in_childrenCount-1);
+	}
+
+	if (functionType != FunctionTypeNot)
+	{
+		child1 = new LeafTreeNode();
+	}
+}
+
+FunctionTreeNode::~FunctionTreeNode()
+{
+	delete child0;
+	child0 = NULL;
+	if (child1 != NULL)
+		delete child1;
+	child1 = NULL;
+}
+
 bool FunctionTreeNode::computeValue(const std::vector<bool>* in_pVariables)
 {
 	switch (functionType)
