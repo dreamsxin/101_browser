@@ -108,7 +108,32 @@ bool read_cmapTable(FILE* fontFile, TableDirectory* in_pTableDirectory)
 
 		switchEndianess(&format);
 
-		printf("format: %hu\n\n", format);
+		switch (format)
+		{
+		case 0:
+			{
+				cmapSubTable0 subTable0;
+				subTable0.format = format;
+				if (fread(((BYTE*) &subTable0)+sizeof(subTable0.format), 
+					sizeof(subTable0)-sizeof(subTable0.format), 1, fontFile) != 1)
+					return false;
+
+				switchEndianess(&subTable0.length);
+				switchEndianess(&subTable0.language);
+
+				if (subTable0.length != sizeof(cmapSubTable0))
+					return false;
+
+				printf("format: %hu\nlength: %hu\nlanguage: %hu\n\n", 
+					format, subTable0.length, subTable0.language);
+			}
+			break;
+		default:
+			printf("format: %hu\n\n", format);
+			break;
+		}
+
+		
 	}
 
 	return true;
