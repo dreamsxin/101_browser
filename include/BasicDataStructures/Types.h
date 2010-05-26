@@ -6,7 +6,10 @@
 #else
 typedef unsigned long       DWORD;
 typedef unsigned char       BYTE;
+typedef short               SHORT;
+typedef unsigned short      USHORT;
 typedef unsigned short      WORD;
+
 #endif
 
 #endif

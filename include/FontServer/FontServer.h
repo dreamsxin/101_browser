@@ -59,15 +59,37 @@ struct cmapSubTable0
 {
 	USHORT	format;            // Format number is set to 0.
 	USHORT	length;            // This is the length in bytes of the subtable.
-	USHORT	language;          // Please see "Note on the language field in 'cmap' subtables" in this document.
+	USHORT	language;          // Please see “Note on the language field in 'cmap' subtables“ in this document.
 	BYTE	glyphIdArray[256]; // An array that maps character codes to glyph index values.
+};
+
+struct cmapSubTable4
+{
+	USHORT	format;                   // Format number is set to 4.
+	USHORT	length;                   // This is the length in bytes of the subtable.
+	USHORT	language;                 // Please see “Note on the language field in 'cmap' subtables“ in this document.
+	USHORT	segCountX2;               // 2 x segCount.
+	USHORT	searchRange;              // 2 x (2**floor(log2(segCount)))
+	USHORT	entrySelector;            // log2(searchRange/2)
+	USHORT	rangeShift;               // 2 x segCount - searchRange
+	//USHORT	endCount[segCount]
+	ArrayBlock<USHORT> endCount;      // End characterCode for each segment, last=0xFFFF.
+	USHORT	reservedPad;              // Set to 0.
+	// USHORT	startCount[segCount]
+	ArrayBlock<USHORT> startCount;    // Start character code for each segment.
+	// SHORT	idDelta[segCount]
+	ArrayBlock<SHORT> idDelta;        // Delta for all character codes in segment.
+	// USHORT	idRangeOffset[segCount]
+	ArrayBlock<USHORT> idRangeOffset; // Offsets into glyphIdArray or 0
+	// USHORT	glyphIdArray[ ]
+	ArrayBlock<USHORT> glyphIdArray;  // Glyph index array (arbitrary length)
 };
 
 struct cmapSubTable6
 {
 	USHORT	format;                  // Format number is set to 6.
 	USHORT	length;                  // This is the length in bytes of the subtable.
-	USHORT	language;                // Please see "Note on the language field in 'cmap' subtables" in this document.
+	USHORT	language;                // Please see “Note on the language field in 'cmap' subtables“ in this document.
 	USHORT	firstCode;               // First character code of subrange.
 	USHORT	entryCount;              // Number of character codes in subrange.
 	// glyphIdArray [entryCount]

@@ -112,20 +112,205 @@ bool read_cmapTable(FILE* fontFile, TableDirectory* in_pTableDirectory)
 		{
 		case 0:
 			{
-				cmapSubTable0 subTable0;
-				subTable0.format = format;
-				if (fread(((BYTE*) &subTable0)+sizeof(subTable0.format), 
-					sizeof(subTable0)-sizeof(subTable0.format), 1, fontFile) != 1)
+				cmapSubTable0 subTable;
+				subTable.format = format;
+				if (fread(((BYTE*) &subTable)+sizeof(subTable.format), 
+					sizeof(subTable)-sizeof(subTable.format), 1, fontFile) != 1)
 					return false;
 
-				switchEndianess(&subTable0.length);
-				switchEndianess(&subTable0.language);
+				switchEndianess(&subTable.length);
+				switchEndianess(&subTable.language);
 
-				if (subTable0.length != sizeof(cmapSubTable0))
+				if (subTable.length != sizeof(cmapSubTable0))
 					return false;
 
 				printf("format: %hu\nlength: %hu\nlanguage: %hu\n\n", 
-					subTable0.format, subTable0.length, subTable0.language);
+					subTable.format, subTable.length, subTable.language);
+#if 1
+				for (size_t i=0; i<256; i++)
+				{
+					if (i < 0x20)
+					{
+						char charToPrint = ' ';
+						switch (i)
+						{
+						case 0x7:
+							charToPrint = 'a';
+							break;
+						case 0x8:
+							charToPrint = 'b';
+							break;
+						case 0x9:
+							charToPrint = 't';
+							break;
+						case 0xA:
+							charToPrint = 'n';
+							break;
+						case 0xB:
+							charToPrint = 'v';
+							break;
+						case 0xC:
+							charToPrint = 'f';
+							break;
+						case 0xD:
+							charToPrint = 'r';
+							break;
+						}
+
+						if (charToPrint != ' ')
+						{
+							printf("%2x\t\\%c\t%x\n", i, charToPrint, subTable.glyphIdArray[i]);
+						}
+						else
+						{
+							printf("%2x\t\t%x\n", i, subTable.glyphIdArray[i]);
+						}
+					}
+					else
+					{
+						printf("%2x\t%c\t%x\n", i, (BYTE) i, subTable.glyphIdArray[i]);
+					}
+				}
+
+				printf("\n");
+#endif
+			}
+			break;
+		case 4:
+			{
+				cmapSubTable4 subTable;
+				subTable.format = format;
+				if (fread(((BYTE*) &subTable)+sizeof(subTable.format), 
+					offsetof(cmapSubTable4, endCount)-sizeof(subTable.format), 1, fontFile) != 1)
+					return false;
+
+				switchEndianess(&subTable.length);
+				switchEndianess(&subTable.language);
+				switchEndianess(&subTable.segCountX2);
+				switchEndianess(&subTable.searchRange);
+				switchEndianess(&subTable.entrySelector);
+				switchEndianess(&subTable.rangeShift);
+
+				/*
+				* segCountX2 is  2 x segCount. 
+				* So it has to be an even value.
+				*/
+				if (subTable.segCountX2 % 2 == 1)
+					return false;
+
+				USHORT segCount = subTable.segCountX2 / 2;
+
+				// searchRange has to be 2 x (2**floor(log2(segCount)))
+				if (subTable.searchRange != 2*(1<<floorLog2(segCount)))
+					return false;
+
+				// entrySelector has to be log2(searchRange/2)
+				if (subTable.entrySelector != floorLog2(subTable.searchRange/2))
+					return false;
+
+				// rangeShift has to be 2 x segCount - searchRange
+				assert(2* segCount >= subTable.searchRange);
+				if (subTable.rangeShift != 2* segCount - subTable.searchRange)
+					return false;
+
+				subTable.endCount     .allocate(segCount);
+				subTable.startCount   .allocate(segCount);
+				subTable.idDelta      .allocate(segCount);
+				subTable.idRangeOffset.allocate(segCount);
+
+				size_t sizeWithoutGlyphIdArray = 
+					offsetof(cmapSubTable4, endCount)+
+					/*
+					* 4 comes from endCount, startCount, idDelta, idRangeOffset
+					*
+					* Note that SHORT has the same size as USHORT (for idDelta)
+					*/
+					4 * sizeof(USHORT) * segCount + 
+					sizeof(subTable.reservedPad);
+
+				if (sizeWithoutGlyphIdArray >= subTable.length)
+					return false;
+
+				size_t glyphIdArraySize = subTable.length - sizeWithoutGlyphIdArray;
+
+				/*
+				* since it is an array of USHORTs we need an 
+				* even number of bytes
+				*/
+				if (glyphIdArraySize % sizeof(USHORT) == 1)
+					return false;
+
+				subTable.glyphIdArray.allocate(glyphIdArraySize);
+
+				if (
+					fread(subTable.endCount     .data(), sizeof(USHORT), subTable.endCount     .count(), fontFile) != subTable.endCount     .count() ||
+					fread(&subTable.reservedPad, sizeof(USHORT), 1, fontFile) != 1 ||
+					fread(subTable.startCount   .data(), sizeof(USHORT), subTable.startCount   .count(), fontFile) != subTable.startCount   .count() ||
+					fread(subTable.idDelta      .data(), sizeof( SHORT), subTable.idDelta      .count(), fontFile) != subTable.idDelta      .count() ||
+					fread(subTable.idRangeOffset.data(), sizeof(USHORT), subTable.idRangeOffset.count(), fontFile) != subTable.idRangeOffset.count() ||
+					fread(subTable.glyphIdArray .data(), sizeof(USHORT), subTable.glyphIdArray .count(), fontFile) != subTable.glyphIdArray .count()
+					)
+				{
+					subTable.endCount     .free();
+					subTable.startCount   .free();
+					subTable.idDelta      .free();
+					subTable.idRangeOffset.free();
+					subTable.glyphIdArray .free();
+
+					return false;
+				}
+
+				if (subTable.reservedPad != 0)
+				{
+					subTable.endCount     .free();
+					subTable.startCount   .free();
+					subTable.idDelta      .free();
+					subTable.idRangeOffset.free();
+					subTable.glyphIdArray .free();
+
+					return false;
+				}
+
+				for (size_t i=0; i<segCount; i++)
+				{
+					switchEndianess(subTable.endCount     .data()+i);
+					switchEndianess(subTable.startCount   .data()+i);
+					switchEndianess(subTable.idDelta      .data()+i);
+					switchEndianess(subTable.idRangeOffset.data()+i);
+
+					/*
+					 * According to 
+					 * http://www.microsoft.com/typography/otspec/cmap.htm
+					 * Section "Format 4: Segment mapping to delta values":
+					 * "The segments are sorted in order of increasing endCode values"
+					 */
+					if (i>0 && subTable.endCount.data()[i]<=subTable.endCount.data()[i-1])
+					{
+						return false;
+					}
+				}
+
+				for (size_t i=0; i<glyphIdArraySize; i++)
+				{
+					switchEndianess(subTable.glyphIdArray .data()+i);
+				}
+
+				printf("format: %hu\nlength: %hu\nlanguage: %hu\nsegCountX2: %hu\nsearchRange: %hu\nentrySelector: %hu\nrangeShift: %hu\n\n", 
+					subTable.format, 
+					subTable.length, 
+					subTable.language,
+					subTable.segCountX2,
+					subTable.searchRange,
+					subTable.entrySelector,
+					subTable.rangeShift);
+#if 0
+				printf("endCount:\n");      for (size_t i=0; i<segCount; i++) { printf("%4hx\n", subTable.endCount     .data()[i]); } printf("\n");
+				printf("startCount:\n");    for (size_t i=0; i<segCount; i++) { printf("%4hx\n", subTable.startCount   .data()[i]); } printf("\n");
+				printf("idDelta:\n");       for (size_t i=0; i<segCount; i++) { printf("%hi\n", subTable.idDelta      .data()[i]); } printf("\n");
+				printf("idRangeOffset:\n"); for (size_t i=0; i<segCount; i++) { printf("%hu\n", subTable.idRangeOffset.data()[i]); } printf("\n");
+
+				printf("glyphIdArray:\n");  for (size_t i=0; i<glyphIdArraySize; i++) { printf("%hu\n", subTable.glyphIdArray.data()[i]); } printf("\n");
+#endif
 			}
 			break;
 		case 6:
@@ -142,12 +327,10 @@ bool read_cmapTable(FILE* fontFile, TableDirectory* in_pTableDirectory)
 				switchEndianess(&subTable6.firstCode);
 				switchEndianess(&subTable6.entryCount);
 
-				unsigned foo = offsetof(cmapSubTable6, glyphIdArray); //+2*subTable6.entryCount;
-
 				/*
-				 * Since the subTable6.length is sometimes larger than the number of bytes
-				 * we only check for smaller
-				 */
+				* Since the subTable6.length is sometimes larger than the number of bytes
+				* we only check for smaller
+				*/
 				if (subTable6.length < offsetof(cmapSubTable6, glyphIdArray)+2*subTable6.entryCount)
 					return false;
 				else if (subTable6.length > offsetof(cmapSubTable6, glyphIdArray)+2*subTable6.entryCount)
