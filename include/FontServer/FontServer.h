@@ -63,6 +63,17 @@ struct cmapSubTable0
 	BYTE	glyphIdArray[256]; // An array that maps character codes to glyph index values.
 };
 
+struct cmapSubTable6
+{
+	USHORT	format;                  // Format number is set to 6.
+	USHORT	length;                  // This is the length in bytes of the subtable.
+	USHORT	language;                // Please see "Note on the language field in 'cmap' subtables" in this document.
+	USHORT	firstCode;               // First character code of subrange.
+	USHORT	entryCount;              // Number of character codes in subrange.
+	// glyphIdArray [entryCount]
+	ArrayBlock<USHORT> glyphIdArray; // Array of glyph index values for character codes in the range.
+};
+
 
 // Stop packing structures to 1-byte boundaries
 #pragma pack(pop)

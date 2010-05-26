@@ -6,10 +6,10 @@
 using namespace std;
 
 /*!
- * Returns true if the checksum of the table by in_pTableDirectory
- * is correct.
- * Otherwise returns false.
- */
+* Returns true if the checksum of the table by in_pTableDirectory
+* is correct.
+* Otherwise returns false.
+*/
 bool verifyCheckSum(FILE* fontFile, TableDirectory* in_pTableDirectory)
 {
 	bool headAdjustment = (in_pTableDirectory->tag.uint == CHAR4_TO_UINT_LIL_ENDIAN('h', 'e', 'a', 'd'));
@@ -32,10 +32,10 @@ bool verifyCheckSum(FILE* fontFile, TableDirectory* in_pTableDirectory)
 			unsigned int currentDword;
 
 			/*
-			 * This means the file was probably not large enough for the given size.
-			 * So we have an invalid checksum (this error is recoverable - that is why
-			 * we return false and don't call exit)
-			 */
+			* This means the file was probably not large enough for the given size.
+			* So we have an invalid checksum (this error is recoverable - that is why
+			* we return false and don't call exit)
+			*/
 			if (fread(&currentDword, sizeof(currentDword), 1, fontFile) != 1)
 			{
 				return false;
@@ -64,10 +64,10 @@ bool read_cmapTable(FILE* fontFile, TableDirectory* in_pTableDirectory)
 	switchEndianess(&lcmapTable.numTables);
 
 	/*
-	 * According to
-	 * http://www.microsoft.com/typography/otspec/cmap.htm
-	 * the table version number has to be 0.
-	 */
+	* According to
+	* http://www.microsoft.com/typography/otspec/cmap.htm
+	* the table version number has to be 0.
+	*/
 	if (lcmapTable.version != 0)
 	{
 		return false;
@@ -102,7 +102,7 @@ bool read_cmapTable(FILE* fontFile, TableDirectory* in_pTableDirectory)
 			return false;
 
 		unsigned short format;
-		
+
 		if (fread(&format, sizeof(format), 1, fontFile) != 1)
 			return false;
 
@@ -125,15 +125,58 @@ bool read_cmapTable(FILE* fontFile, TableDirectory* in_pTableDirectory)
 					return false;
 
 				printf("format: %hu\nlength: %hu\nlanguage: %hu\n\n", 
-					format, subTable0.length, subTable0.language);
+					subTable0.format, subTable0.length, subTable0.language);
 			}
 			break;
+		case 6:
+			{
+				cmapSubTable6 subTable6;
+				subTable6.format = format;
+				if (fread(((BYTE*) &subTable6)+sizeof(subTable6.format), 
+					offsetof(cmapSubTable6, glyphIdArray)-sizeof(subTable6.format), 
+					1, fontFile) != 1)
+					return false;
+
+				switchEndianess(&subTable6.length);
+				switchEndianess(&subTable6.language);
+				switchEndianess(&subTable6.firstCode);
+				switchEndianess(&subTable6.entryCount);
+
+				unsigned foo = offsetof(cmapSubTable6, glyphIdArray); //+2*subTable6.entryCount;
+
+				/*
+				 * Since the subTable6.length is sometimes larger than the number of bytes
+				 * we only check for smaller
+				 */
+				if (subTable6.length < offsetof(cmapSubTable6, glyphIdArray)+2*subTable6.entryCount)
+					return false;
+				else if (subTable6.length > offsetof(cmapSubTable6, glyphIdArray)+2*subTable6.entryCount)
+				{
+					printf("Warning: subTable6.length = %hu, but only %hu bytes necessary\n", 
+						subTable6.length, offsetof(cmapSubTable6, glyphIdArray)+2*subTable6.entryCount);
+				}
+
+				subTable6.glyphIdArray.allocate(subTable6.entryCount);
+
+				if (fread(subTable6.glyphIdArray.data(), sizeof(USHORT), 
+					subTable6.entryCount, fontFile) != subTable6.entryCount)
+				{
+					subTable6.glyphIdArray.free();
+					return false;
+				}
+
+				printf("format: %hu\nlength: %hu\nlanguage: %hu\nfirstCode: %hu\nentryCount: %hu\n\n", 
+					subTable6.format, subTable6.length, subTable6.language, 
+					subTable6.firstCode, subTable6.entryCount);
+
+				subTable6.glyphIdArray.free();
+			}
 		default:
 			printf("format: %hu\n\n", format);
 			break;
 		}
 
-		
+
 	}
 
 	return true;
@@ -179,11 +222,11 @@ int readTTF(char* filename) {
 		switchEndianess(&tableDirectory.length);
 
 		/*
-		 * In http://www.microsoft.com/typography/otspec/otff.htm
-		 * section "Organization of an OpenType Font" we can read:
-		 * "Entries in the Table Record must be sorted in ascending order by tag."
-		 * This is what we test here
-		 */
+		* In http://www.microsoft.com/typography/otspec/otff.htm
+		* section "Organization of an OpenType Font" we can read:
+		* "Entries in the Table Record must be sorted in ascending order by tag."
+		* This is what we test here
+		*/
 		if (i>0 && memcmp(&font.tableDirectories.at(i-1).tag, &tableDirectory.tag, 4) >= 0)
 			return -3;
 
