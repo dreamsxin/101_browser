@@ -126,7 +126,7 @@ bool read_cmapTable(FILE* fontFile, TableDirectory* in_pTableDirectory)
 
 				printf("format: %hu\nlength: %hu\nlanguage: %hu\n\n", 
 					subTable.format, subTable.length, subTable.language);
-#if 1
+#if 0
 				for (size_t i=0; i<256; i++)
 				{
 					if (i < 0x20)
@@ -228,7 +228,7 @@ bool read_cmapTable(FILE* fontFile, TableDirectory* in_pTableDirectory)
 					4 * sizeof(USHORT) * segCount + 
 					sizeof(subTable.reservedPad);
 
-				if (sizeWithoutGlyphIdArray >= subTable.length)
+				if (sizeWithoutGlyphIdArray > subTable.length)
 					return false;
 
 				size_t glyphIdArraySize = subTable.length - sizeWithoutGlyphIdArray;
@@ -354,6 +354,7 @@ bool read_cmapTable(FILE* fontFile, TableDirectory* in_pTableDirectory)
 
 				subTable6.glyphIdArray.free();
 			}
+			break;
 		default:
 			printf("format: %hu\n\n", format);
 			break;
