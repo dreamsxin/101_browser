@@ -299,6 +299,7 @@ int main(int argc, char** argv)
 			NULL);
 	}
 
+	// Default initialisation values
 	if (useModel == UseModelTree)
 	{
 		desiredChildrenCount = 0;
@@ -319,7 +320,7 @@ int main(int argc, char** argv)
 		}
 		else if (bitsCount == 3)
 		{
-			desiredChildrenCount = 5;
+			desiredChildrenCount = 6;
 		}
 	}
 	else if (useModel == UseModelCirc)
