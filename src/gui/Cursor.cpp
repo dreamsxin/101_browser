@@ -47,11 +47,11 @@ namespace Gui
 			if (!GetObject(iconInfo.hbmColor, sizeof(BITMAP), &colorBitmap))
 			{
 				DeleteObject(iconInfo.hbmMask);
-#if 0
-				// not necessary here since we tested this above
-				if (isColorIcon)
-#endif
-					DeleteObject(iconInfo.hbmColor);
+				/*
+				 * we tested above that it is a color icon - so we 
+				 * may (and have to) do this
+				 */
+				DeleteObject(iconInfo.hbmColor);
 				return false;
 			}
 		}
@@ -148,56 +148,6 @@ namespace Gui
 				return false;
 			}
 		}
-
-#if 0
-		Texture out=Texture();
-		out.width = bih.biWidth;
-		out.height = bih.biHeight-16;
-		out.colorMode = ColorModeRGBA;
-		allocateTextureMemory(&out);
-		GetDIBits(hDC, iconInfo.hbmMask, 
-			0, out.height, 
-			out.data, (BITMAPINFO*) &bih, 
-			DIB_RGB_COLORS);
-		bih.biHeight -= 16;
-		
-		// Write the result to a BMP file for testing
-		BITMAPFILEHEADER bmfHeader;
-		bmfHeader.bfType = 0x4D42;
-		bmfHeader.bfSize = textureBytesCount(&out)
-			+ sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
-		bmfHeader.bfReserved1 = 0;
-		bmfHeader.bfReserved2 = 0;
-		bmfHeader.bfOffBits = (DWORD)sizeof(BITMAPFILEHEADER) + (DWORD)sizeof(BITMAPINFOHEADER);
-
-		FILE* cursorBmpFile;
-		cursorBmpFile = fopen("cursor.bmp", "w+b");
-		fwrite(&bmfHeader, sizeof(BITMAPFILEHEADER), 1, cursorBmpFile);
-		fwrite(&bih, sizeof(BITMAPINFOHEADER), 1, cursorBmpFile);
-		fwrite(out.data, textureBytesCount(&out), 1, cursorBmpFile);
-			
-		fclose(cursorBmpFile);
-
-		cursorBmpFile = fopen("cursor_and.bmp", "w+b");
-		if (cursorBmpFile)
-		{
-			fwrite(&bmfHeader, sizeof(BITMAPFILEHEADER), 1, cursorBmpFile);
-			fwrite(&bih, sizeof(BITMAPINFOHEADER), 1, cursorBmpFile);
-			fwrite(andMap.data, textureBytesCount(&andMap), 1, cursorBmpFile);
-			
-			fclose(cursorBmpFile);
-		}
-
-		cursorBmpFile = fopen("cursor_xor.bmp", "w+b");
-		if (cursorBmpFile)
-		{
-			fwrite(&bmfHeader, sizeof(BITMAPFILEHEADER), 1, cursorBmpFile);
-			fwrite(&bih, sizeof(BITMAPINFOHEADER), 1, cursorBmpFile);
-			fwrite(xorMap.data, textureBytesCount(&andMap), 1, cursorBmpFile);
-			
-			fclose(cursorBmpFile);
-		}
-#endif
 
 		in_pCursor->hotspot  = Vertex2<DWORD>(iconInfo.xHotspot, iconInfo.yHotspot);
 		in_pCursor->colored  = isColorIcon;
