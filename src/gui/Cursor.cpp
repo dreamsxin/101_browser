@@ -16,7 +16,9 @@ namespace Gui
 
 		if (!(hCursor = LoadCursor(NULL, 
 			IDC_ARROW
-			//IDC_CROSS
+#if 0
+			IDC_CROSS
+#endif
 			)))
 		{
 			return false;
@@ -102,11 +104,6 @@ namespace Gui
 		BITMAPINFOHEADER bih;
 		bih.biSize = sizeof (BITMAPINFOHEADER);
 		bih.biWidth = andMap.width;
-		// setting this value to a negative one the texture gets 
-		// mirrored vertically - this is how OpenGL wishes
-		// Do we really need that?
-		// Note: remove the minus sign if you want to create a BMP file
-		// of the cursor for testing purposes
 		bih.biHeight = maskBitmap.bmHeight;
 		bih.biPlanes = 1;
 		// a byte has 8 bits, so we do <<3, which multiplies by 8
@@ -126,14 +123,13 @@ namespace Gui
 			// to xorMap.height
 			xorMap.height, andMap.height,
 			andMap.data, (BITMAPINFO*) &bih, 
-			DIB_RGB_COLORS)!=andMap.height)
+			DIB_RGB_COLORS) != andMap.height)
 		{
 			DeleteObject(iconInfo.hbmMask);
 			if (isColorIcon)
 				DeleteObject(iconInfo.hbmColor);
 			return false;
 		}
-
 		
 		if (!isColorIcon)
 		{
@@ -149,10 +145,16 @@ namespace Gui
 			}
 		}
 
+		// TODO: handling for color cursors
+
 		in_pCursor->hotspot  = Vertex2<DWORD>(iconInfo.xHotspot, iconInfo.yHotspot);
 		in_pCursor->colored  = isColorIcon;
 		in_pCursor->andMap   = andMap;
 		in_pCursor->xorMap   = !isColorIcon ? xorMap : Texture();
+		/*
+		 * Since handling of color cursors is not yet implemented, we simply
+		 * assign an empty texture
+		 */
 		in_pCursor->colorMap = Texture();
 
 		DeleteObject(iconInfo.hbmMask);

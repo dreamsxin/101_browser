@@ -102,37 +102,10 @@ struct cmapSubTable6
 
 
 
-class TrueTypeFont
+struct TrueTypeFont
 {
-public:
-	OffsetTable offsetTable;
 	std::vector<TableDirectory> tableDirectories;
-
-	// Required
-	void* table_OS2;  // 'OS/2'
-	void* table_cmap; // 'cmap' - mapping of characters to glyphs
-	void* table_glyf; // 'glyf'
-	void* table_head; // 'head'
-	void* table_hhea; // 'hhea'
-	void* table_hmtx; // 'hmtx'
-	void* table_loca; // 'loca'
-	void* table_maxp; // 'maxp'
-	void* table_name; // 'name'
-	void* table_post; // 'post'
-
-	// Optional
-	void* table_DSIG; // 'DSIG' - meaning unknown -> 'digital signature'?
-	void* table_GDEF; // 'GDEF' - for Open Type
-	void* table_GPOS; // 'GPOS' - for Open Type
-	void* table_LTSH; // 'LTSH'
-	void* table_PCLT; // 'PCLT' - PCL5 
-	void* table_VDMX; // 'VDMX'
-	void* table_cvt;  // 'cvt '
-	void* table_fpgm; // 'fpgm'
-	void* table_gasp; // 'gasp'
-	void* table_hdmx; // 'hdmx'
-	void* table_kern; // 'kern' - kerning
-	void* table_prep; // 'prep'
+	cmapTable *mcmapTable;
 };
 
 template <typename T> void switchEndianess(T* in_pVar)

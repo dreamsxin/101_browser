@@ -126,54 +126,6 @@ bool read_cmapTable(FILE* fontFile, TableDirectory* in_pTableDirectory)
 
 				printf("format: %hu\nlength: %hu\nlanguage: %hu\n\n", 
 					subTable.format, subTable.length, subTable.language);
-#if 0
-				for (size_t i=0; i<256; i++)
-				{
-					if (i < 0x20)
-					{
-						char charToPrint = ' ';
-						switch (i)
-						{
-						case 0x7:
-							charToPrint = 'a';
-							break;
-						case 0x8:
-							charToPrint = 'b';
-							break;
-						case 0x9:
-							charToPrint = 't';
-							break;
-						case 0xA:
-							charToPrint = 'n';
-							break;
-						case 0xB:
-							charToPrint = 'v';
-							break;
-						case 0xC:
-							charToPrint = 'f';
-							break;
-						case 0xD:
-							charToPrint = 'r';
-							break;
-						}
-
-						if (charToPrint != ' ')
-						{
-							printf("%2x\t\\%c\t%x\n", i, charToPrint, subTable.glyphIdArray[i]);
-						}
-						else
-						{
-							printf("%2x\t\t%x\n", i, subTable.glyphIdArray[i]);
-						}
-					}
-					else
-					{
-						printf("%2x\t%c\t%x\n", i, (BYTE) i, subTable.glyphIdArray[i]);
-					}
-				}
-
-				printf("\n");
-#endif
 			}
 			break;
 		case 4:
@@ -303,14 +255,6 @@ bool read_cmapTable(FILE* fontFile, TableDirectory* in_pTableDirectory)
 					subTable.searchRange,
 					subTable.entrySelector,
 					subTable.rangeShift);
-#if 0
-				printf("endCount:\n");      for (size_t i=0; i<segCount; i++) { printf("%4hx\n", subTable.endCount     .data()[i]); } printf("\n");
-				printf("startCount:\n");    for (size_t i=0; i<segCount; i++) { printf("%4hx\n", subTable.startCount   .data()[i]); } printf("\n");
-				printf("idDelta:\n");       for (size_t i=0; i<segCount; i++) { printf("%hi\n", subTable.idDelta      .data()[i]); } printf("\n");
-				printf("idRangeOffset:\n"); for (size_t i=0; i<segCount; i++) { printf("%hu\n", subTable.idRangeOffset.data()[i]); } printf("\n");
-
-				printf("glyphIdArray:\n");  for (size_t i=0; i<glyphIdArraySize; i++) { printf("%hu\n", subTable.glyphIdArray.data()[i]); } printf("\n");
-#endif
 			}
 			break;
 		case 6:
@@ -366,6 +310,27 @@ bool read_cmapTable(FILE* fontFile, TableDirectory* in_pTableDirectory)
 	return true;
 }
 
+bool readOffsetTable(FILE* fontFile, OffsetTable* in_pOffsetTable)
+{
+	if (fread(in_pOffsetTable, sizeof(OffsetTable), 1, fontFile)!=1)
+		return false;
+
+	switchEndianess(&in_pOffsetTable->numTables);
+	switchEndianess(&in_pOffsetTable->searchRange);
+	switchEndianess(&in_pOffsetTable->entrySelector);
+	switchEndianess(&in_pOffsetTable->rangeShift);
+
+	if (memcmp(&in_pOffsetTable->sfntVersion, csfntVersion, 4))
+		return false;	
+	if (in_pOffsetTable->searchRange != 16*1<<floorLog2(in_pOffsetTable->numTables))
+		return false;
+	if (in_pOffsetTable->entrySelector != floorLog2(in_pOffsetTable->numTables))
+		return false;
+	if (in_pOffsetTable->rangeShift != in_pOffsetTable->numTables*16-in_pOffsetTable->searchRange)
+		return false;
+
+	return true;
+}
 
 int readTTF(char* filename) {
 	FILE* fontFile = fopen(filename, "rb");
@@ -375,26 +340,14 @@ int readTTF(char* filename) {
 
 	TrueTypeFont font;
 
-	if (fread(&font.offsetTable, sizeof(font.offsetTable), 1, fontFile)!=1)
-		return -1;
+	OffsetTable offsetTable;
 
-	switchEndianess(&font.offsetTable.numTables);
-	switchEndianess(&font.offsetTable.searchRange);
-	switchEndianess(&font.offsetTable.entrySelector);
-	switchEndianess(&font.offsetTable.rangeShift);
-
-	if (memcmp(&font.offsetTable.sfntVersion, csfntVersion, 4))
-		return -2;	
-	if (font.offsetTable.searchRange != 16*1<<floorLog2(font.offsetTable.numTables))
-		return -2;
-	if (font.offsetTable.entrySelector != floorLog2(font.offsetTable.numTables))
-		return -2;
-	if (font.offsetTable.rangeShift != font.offsetTable.numTables*16-font.offsetTable.searchRange)
+	if (!readOffsetTable(fontFile, &offsetTable))
 		return -2;
 
-	font.tableDirectories.reserve(font.offsetTable.numTables);
+	font.tableDirectories.reserve(offsetTable.numTables);
 
-	for (size_t i=0; i<font.offsetTable.numTables; i++)
+	for (size_t i=0; i<offsetTable.numTables; i++)
 	{
 		TableDirectory tableDirectory;
 
