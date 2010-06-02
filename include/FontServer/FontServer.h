@@ -2,7 +2,6 @@
 #define _FontServer_h
 
 #include "BasicDataStructures/Types.h"
-#include <vector>
 #include "BasicDataStructures/Memory/ArrayBlock.h"
 
 // Pack structures to 1-byte boundaries
@@ -52,7 +51,7 @@ class cmapTable
 public:
 	unsigned short version;
 	unsigned short numTables;
-	std::vector<cmapTableEntry> cmapTableEntries;
+	ArrayBlock<cmapTableEntry> cmapTableEntries;
 };
 
 struct cmapSubTable0

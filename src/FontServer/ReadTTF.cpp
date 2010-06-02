@@ -73,7 +73,7 @@ bool read_cmapTable(FILE* fontFile, TableDirectory* in_pTableDirectory)
 		return false;
 	}
 
-	lcmapTable.cmapTableEntries.reserve(lcmapTable.numTables);
+	lcmapTable.cmapTableEntries.allocate(lcmapTable.numTables);
 
 	for (size_t i=0; i<lcmapTable.numTables; i++)
 	{
@@ -90,15 +90,16 @@ bool read_cmapTable(FILE* fontFile, TableDirectory* in_pTableDirectory)
 		printf("platform: %hu\nencoding: %hu\noffset: %u\n\n", 
 			entry.platformID, entry.encodingID, entry.offset);
 
-		lcmapTable.cmapTableEntries.push_back(entry);
+		lcmapTable.cmapTableEntries.data()[i] = entry;
 	}
 
-	for (std::vector<cmapTableEntry>::iterator i=lcmapTable.cmapTableEntries.begin(); 
-		i != lcmapTable.cmapTableEntries.end(); i++)
+	for (size_t current_cmapTableEntryIndex = 0; 
+		current_cmapTableEntryIndex < lcmapTable.cmapTableEntries.count();
+		current_cmapTableEntryIndex++)
 	{
 		if (fseek(fontFile, in_pTableDirectory->offset, SEEK_SET) != 0)
 			return false;
-		if (fseek(fontFile, i->offset, SEEK_CUR) != 0)
+		if (fseek(fontFile, lcmapTable.cmapTableEntries.data()[current_cmapTableEntryIndex].offset, SEEK_CUR) != 0)
 			return false;
 
 		unsigned short format;
