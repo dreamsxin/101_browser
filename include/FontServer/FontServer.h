@@ -11,9 +11,8 @@
 
 const char csfntVersion[4] = { 0x0, 0x1, 0x0, 0x0 };
 
-class OffsetTable
+struct OffsetTable
 {
-public:
 	/*!
 	 * According to http://www.microsoft.com/typography/otspec/otff.htm
 	 * section "Organization of an OpenType Font" this has to be 0x00010000.
@@ -26,9 +25,8 @@ public:
 	unsigned short rangeShift;
 };
 
-class TableDirectory
+struct TableDirectory
 {
-public:
 	union {
 		unsigned char bytes[4];
 		unsigned int uint;
@@ -38,61 +36,77 @@ public:
 	unsigned int length;
 };
 
-class cmapTableEntry
+struct cmapTableEntry
 {
-public:
 	unsigned short platformID;
 	unsigned short encodingID;
 	unsigned int offset;
 };
 
-class cmapTable
+struct cmapTable
 {
-public:
 	unsigned short version;
 	unsigned short numTables;
 	ArrayBlock<cmapTableEntry> cmapTableEntries;
 };
 
+struct glyfTable
+{
+	/*!
+	 * If the number of contours is greater than or equal to zero, 
+	 * this is a single glyph; if negative, this is a composite glyph.
+	 */
+	SHORT	numberOfContours;
+	//! Minimum x for coordinate data.
+	SHORT	xMin;
+	//! Minimum y for coordinate data.
+	SHORT	yMin;
+	//! Maximum x for coordinate data.
+	SHORT	xMax;
+	//! Maximum y for coordinate data.
+	SHORT	yMax;
+};
+
+
 struct cmapSubTable0
 {
-	USHORT	format;            // Format number is set to 0.
-	USHORT	length;            // This is the length in bytes of the subtable.
-	USHORT	language;          // Please see “Note on the language field in 'cmap' subtables“ in this document.
-	BYTE	glyphIdArray[256]; // An array that maps character codes to glyph index values.
+	USHORT	format;            //! Format number is set to 0.
+	USHORT	length;            //! This is the length in bytes of the subtable.
+	USHORT	language;          //! Please see “Note on the language field in 'cmap' subtables“ in this document.
+	BYTE	glyphIdArray[256]; //! An array that maps character codes to glyph index values.
 };
 
 struct cmapSubTable4
 {
-	USHORT	format;                   // Format number is set to 4.
-	USHORT	length;                   // This is the length in bytes of the subtable.
-	USHORT	language;                 // Please see “Note on the language field in 'cmap' subtables“ in this document.
-	USHORT	segCountX2;               // 2 x segCount.
-	USHORT	searchRange;              // 2 x (2**floor(log2(segCount)))
-	USHORT	entrySelector;            // log2(searchRange/2)
-	USHORT	rangeShift;               // 2 x segCount - searchRange
+	USHORT	format;                   //! Format number is set to 4.
+	USHORT	length;                   //! This is the length in bytes of the subtable.
+	USHORT	language;                 //! Please see “Note on the language field in 'cmap' subtables“ in this document.
+	USHORT	segCountX2;               //! 2 x segCount.
+	USHORT	searchRange;              //! 2 x (2**floor(log2(segCount)))
+	USHORT	entrySelector;            //! log2(searchRange/2)
+	USHORT	rangeShift;               //! 2 x segCount - searchRange
 	//USHORT	endCount[segCount]
-	ArrayBlock<USHORT> endCount;      // End characterCode for each segment, last=0xFFFF.
-	USHORT	reservedPad;              // Set to 0.
+	ArrayBlock<USHORT> endCount;      //! End characterCode for each segment, last=0xFFFF.
+	USHORT	reservedPad;              //! Set to 0.
 	// USHORT	startCount[segCount]
-	ArrayBlock<USHORT> startCount;    // Start character code for each segment.
+	ArrayBlock<USHORT> startCount;    //! Start character code for each segment.
 	// SHORT	idDelta[segCount]
-	ArrayBlock<SHORT> idDelta;        // Delta for all character codes in segment.
+	ArrayBlock<SHORT> idDelta;        //! Delta for all character codes in segment.
 	// USHORT	idRangeOffset[segCount]
-	ArrayBlock<USHORT> idRangeOffset; // Offsets into glyphIdArray or 0
+	ArrayBlock<USHORT> idRangeOffset; //! Offsets into glyphIdArray or 0
 	// USHORT	glyphIdArray[ ]
-	ArrayBlock<USHORT> glyphIdArray;  // Glyph index array (arbitrary length)
+	ArrayBlock<USHORT> glyphIdArray;  //! Glyph index array (arbitrary length)
 };
 
 struct cmapSubTable6
 {
-	USHORT	format;                  // Format number is set to 6.
-	USHORT	length;                  // This is the length in bytes of the subtable.
-	USHORT	language;                // Please see “Note on the language field in 'cmap' subtables“ in this document.
-	USHORT	firstCode;               // First character code of subrange.
-	USHORT	entryCount;              // Number of character codes in subrange.
+	USHORT	format;                  //! Format number is set to 6.
+	USHORT	length;                  //! This is the length in bytes of the subtable.
+	USHORT	language;                //! Please see “Note on the language field in 'cmap' subtables“ in this document.
+	USHORT	firstCode;               //! First character code of subrange.
+	USHORT	entryCount;              //! Number of character codes in subrange.
 	// glyphIdArray [entryCount]
-	ArrayBlock<USHORT> glyphIdArray; // Array of glyph index values for character codes in the range.
+	ArrayBlock<USHORT> glyphIdArray; //! Array of glyph index values for character codes in the range.
 };
 
 
