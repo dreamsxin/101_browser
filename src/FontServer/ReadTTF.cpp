@@ -13,7 +13,10 @@ int readTTF(char* filename) {
 	OffsetTable offsetTable;
 
 	if (!readOffsetTable(fontFile, &offsetTable))
+	{
+		fclose(fontFile);
 		return -1;
+	}
 
 	TrueTypeFont font;
 	font.tableDirectories.allocate(offsetTable.numTables);
@@ -23,7 +26,11 @@ int readTTF(char* filename) {
 		TableDirectory tableDirectory;
 
 		if (!readTableDirectory(fontFile, &tableDirectory))
+		{
+			font.tableDirectories.free();
+			fclose(fontFile);
 			return -1;
+		}
 
 		/*
 		* In http://www.microsoft.com/typography/otspec/otff.htm
@@ -32,7 +39,11 @@ int readTTF(char* filename) {
 		* This is what we test here
 		*/
 		if (i>0 && memcmp(&font.tableDirectories.data()[i-1].tag, &tableDirectory.tag, 4) >= 0)
+		{
+			font.tableDirectories.free();
+			fclose(fontFile);
 			return -3;
+		}
 
 		font.tableDirectories.data()[i] = tableDirectory;
 	}
@@ -51,13 +62,19 @@ int readTTF(char* filename) {
 
 		if (!verifyCheckSum(fontFile, pCurrentTableDirectory))
 		{
+			font.tableDirectories.free();
+			fclose(fontFile);
 			return -4;
 		}
 
 		switch (pCurrentTableDirectory->tag.uint) {
 			case CHAR4_TO_UINT_LIL_ENDIAN('c', 'm', 'a', 'p'):
 				if (!readTable_cmap(fontFile, pCurrentTableDirectory))
+				{
+					font.tableDirectories.free();
+					fclose(fontFile);
 					return -5;
+				}
 				break;
 			case CHAR4_TO_UINT_LIL_ENDIAN('g', 'l', 'y', 'f'):
 				break;
