@@ -52,19 +52,15 @@ struct cmapTable
 
 struct glyfTable
 {
-	/*!
-	 * If the number of contours is greater than or equal to zero, 
-	 * this is a single glyph; if negative, this is a composite glyph.
-	 */
-	SHORT	numberOfContours;
-	//! Minimum x for coordinate data.
-	SHORT	xMin;
-	//! Minimum y for coordinate data.
-	SHORT	yMin;
-	//! Maximum x for coordinate data.
-	SHORT	xMax;
-	//! Maximum y for coordinate data.
-	SHORT	yMax;
+	SHORT	numberOfContours;        /*!
+	                                  * If the number of contours is greater than or 
+									  * equal to zero, this is a single glyph; 
+									  * if negative, this is a composite glyph.
+	                                  */
+	SHORT	xMin;                   //! Minimum x for coordinate data.
+	SHORT	yMin;                   //! Minimum y for coordinate data.
+	SHORT	xMax;                   //! Maximum x for coordinate data.
+	SHORT	yMax;                   //! Maximum y for coordinate data.
 };
 
 
@@ -114,60 +110,23 @@ struct cmapSubTable6
 #pragma pack(pop)
 
 
-
 struct TrueTypeFont
 {
 	ArrayBlock<TableDirectory> tableDirectories;
 	cmapTable *mcmapTable;
 };
 
-template <typename T> void switchEndianess(T* in_pVar)
-{
-	T buf=*in_pVar;
-	unsigned char* pByteVar=(unsigned char*) in_pVar;
-	unsigned char* pByteVarBuf=(unsigned char*) &buf;
-
-	size_t size=sizeof(T);
-
-	for (size_t i=0; i<size; i++)
-		pByteVar[i]=pByteVarBuf[size-1-i];
-}
-
-template <typename T> T convertEndianess(const T& in_var)
-{
-	T out=in_var;
-	T buf=in_var;
-	unsigned char* pOut=(unsigned char*) &out;
-	unsigned char* pByteVarBuf=(unsigned char*) &buf;
-
-	size_t size=sizeof(T);
-
-	for (size_t i=0; i<size; i++)
-		pOut[i]=pByteVarBuf[size-1-i];
-
-	return out;
-}
-
-/*!
- Computes the floor (rounding down if necessary) of the binary logarithm
-
- if 0 is given 0xFF gets returned
- */
-inline unsigned short floorLog2(unsigned short value)
-{
-	unsigned short out_value = 16;
-
-	for (signed char i=15; i>=0; i--)
-	{
-		if (value & (1u<<i))
-		{
-			return i;
-		}
-	}
-
-	return 0xFF;
-}
 
 int readTTF(char* filename);
+bool readTableDirectory(FILE* fontFile, TableDirectory* in_pTableDirectory);
+
+/*!
+* Returns true if the checksum of the table by in_pTableDirectory
+* is correct.
+* Otherwise returns false.
+*/
+bool verifyCheckSum(FILE* fontFile, TableDirectory* in_pTableDirectory);
+bool readOffsetTable(FILE* fontFile, OffsetTable* in_pOffsetTable);
+bool readTable_cmap(FILE* fontFile, TableDirectory* in_pTableDirectory);
 
 #endif

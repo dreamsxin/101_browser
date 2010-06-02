@@ -177,7 +177,27 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\FontServer\ReadOffsetTable.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\FontServer\ReadTable_cmap.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\FontServer\ReadTable_glyf.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\FontServer\ReadTableDirectory.cpp"
+				>
+			</File>
+			<File
 				RelativePath="$(SolutionDir)src\FontServer\ReadTTF.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\FontServer\VerifyChecksum.cpp"
 				>
 			</File>
 		</Filter>
@@ -188,6 +208,10 @@
 			>
 			<File
 				RelativePath="$(SolutionDir)include\FontServer\FontServer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\FontServer\FontServerUtil.h"
 				>
 			</File>
 		</Filter>
