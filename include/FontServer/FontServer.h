@@ -104,7 +104,7 @@ struct cmapSubTable6
 
 struct TrueTypeFont
 {
-	std::vector<TableDirectory> tableDirectories;
+	ArrayBlock<TableDirectory> tableDirectories;
 	cmapTable *mcmapTable;
 };
 

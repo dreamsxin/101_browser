@@ -332,31 +332,38 @@ bool readOffsetTable(FILE* fontFile, OffsetTable* in_pOffsetTable)
 	return true;
 }
 
+bool readTableDirectory(FILE* fontFile, TableDirectory* in_pTableDirectory)
+{
+	if (fread(in_pTableDirectory, sizeof(TableDirectory), 1, fontFile) != 1)
+		return false;
+
+	switchEndianess(&in_pTableDirectory->checkSum);
+	switchEndianess(&in_pTableDirectory->offset);
+	switchEndianess(&in_pTableDirectory->length);
+
+	return true;
+}
+
 int readTTF(char* filename) {
 	FILE* fontFile = fopen(filename, "rb");
 
 	if (!fontFile)
 		return -1;
 
-	TrueTypeFont font;
-
 	OffsetTable offsetTable;
 
 	if (!readOffsetTable(fontFile, &offsetTable))
-		return -2;
+		return -1;
 
-	font.tableDirectories.reserve(offsetTable.numTables);
+	TrueTypeFont font;
+	font.tableDirectories.allocate(offsetTable.numTables);
 
 	for (size_t i=0; i<offsetTable.numTables; i++)
 	{
 		TableDirectory tableDirectory;
 
-		if (fread(&tableDirectory, sizeof(tableDirectory), 1, fontFile) != 1)
+		if (!readTableDirectory(fontFile, &tableDirectory))
 			return -1;
-
-		switchEndianess(&tableDirectory.checkSum);
-		switchEndianess(&tableDirectory.offset);
-		switchEndianess(&tableDirectory.length);
 
 		/*
 		* In http://www.microsoft.com/typography/otspec/otff.htm
@@ -364,24 +371,32 @@ int readTTF(char* filename) {
 		* "Entries in the Table Record must be sorted in ascending order by tag."
 		* This is what we test here
 		*/
-		if (i>0 && memcmp(&font.tableDirectories.at(i-1).tag, &tableDirectory.tag, 4) >= 0)
+		if (i>0 && memcmp(&font.tableDirectories.data()[i-1].tag, &tableDirectory.tag, 4) >= 0)
 			return -3;
 
-		font.tableDirectories.push_back(tableDirectory);
+		font.tableDirectories.data()[i] = tableDirectory;
 	}
 
-	for (vector<TableDirectory>::iterator i=font.tableDirectories.begin(); i!=font.tableDirectories.end(); ++i)
+	for (size_t currentTableDirectoryIndex = 0; 
+		currentTableDirectoryIndex < font.tableDirectories.count();
+		currentTableDirectoryIndex++)
 	{
-		printf("Table:\t%c%c%c%c\n", i->tag.bytes[0], i->tag.bytes[1], i->tag.bytes[2], i->tag.bytes[3]);
+		TableDirectory* pCurrentTableDirectory = font.tableDirectories.data()+currentTableDirectoryIndex;
 
-		if (!verifyCheckSum(fontFile, &*i))
+		printf("Table:\t%c%c%c%c\n", 
+			pCurrentTableDirectory->tag.bytes[0], 
+			pCurrentTableDirectory->tag.bytes[1], 
+			pCurrentTableDirectory->tag.bytes[2], 
+			pCurrentTableDirectory->tag.bytes[3]);
+
+		if (!verifyCheckSum(fontFile, pCurrentTableDirectory))
 		{
 			return -4;
 		}
 
-		switch (i->tag.uint) {
+		switch (pCurrentTableDirectory->tag.uint) {
 			case CHAR4_TO_UINT_LIL_ENDIAN('c', 'm', 'a', 'p'):
-				if (!read_cmapTable(fontFile, &*i))
+				if (!read_cmapTable(fontFile, pCurrentTableDirectory))
 					return -5;
 				break;
 			case CHAR4_TO_UINT_LIL_ENDIAN('g', 'l', 'y', 'f'):
