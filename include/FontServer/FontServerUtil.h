@@ -1,6 +1,8 @@
 #ifndef _FontServerUtil_h
 #define _FontServerUtil_h
 
+// TODO: Move into BasicDataStructures
+
 template <typename T> void switchEndianess(T* in_pVar)
 {
 	T buf=*in_pVar;
