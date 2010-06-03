@@ -25,11 +25,11 @@ struct OffsetTable
 	unsigned short rangeShift;
 };
 
-struct TableDirectory
+struct TableRecord
 {
 	union {
 		unsigned char bytes[4];
-		unsigned int uint;
+		UINT uint;
 	} tag;
 	unsigned int checkSum;
 	unsigned int offset;
@@ -43,14 +43,14 @@ struct cmapTableEntry
 	unsigned int offset;
 };
 
-struct cmapTable
+struct Table_cmap
 {
 	unsigned short version;
 	unsigned short numTables;
 	ArrayBlock<cmapTableEntry> cmapTableEntries;
 };
 
-struct glyfTable
+struct Table_glyf
 {
 	SHORT	numberOfContours;        /*!
 	                                  * If the number of contours is greater than or 
@@ -112,21 +112,34 @@ struct cmapSubTable6
 
 struct TrueTypeFont
 {
-	ArrayBlock<TableDirectory> tableDirectories;
-	cmapTable *mcmapTable;
+	ArrayBlock<TableRecord> tableDirectory;
+	Table_cmap *mpTable_cmap;
+	Table_glyf *mpTable_glyf;
 };
 
 
 int readTTF(char* filename);
-bool readTableDirectory(FILE* fontFile, TableDirectory* in_pTableDirectory);
+bool readTableRecord(FILE* fontFile, TableRecord* in_pTableRecord);
 
 /*!
-* Returns true if the checksum of the table by in_pTableDirectory
-* is correct.
-* Otherwise returns false.
-*/
-bool verifyCheckSum(FILE* fontFile, TableDirectory* in_pTableDirectory);
+ * Returns true if 
+ * a.) the checksum of the table by in_pTableRecord is correct.
+ * and
+ * b.) the position in fontFile could successfully become saved and restored
+ * 
+ * Otherwise returns false.
+ *
+ * Invariants:
+ * I_verifyCheckSum_1: if we return true the position in fontFile is not changed
+ *                     (but it may change if false is returned)
+ */
+bool verifyCheckSum(FILE* fontFile, TableRecord* in_pTableRecord);
 bool readOffsetTable(FILE* fontFile, OffsetTable* in_pOffsetTable);
-bool readTable_cmap(FILE* fontFile, TableDirectory* in_pTableDirectory);
+
+bool readTable(FILE* fontFile, const ArrayBlock<TableRecord>* in_pTableDirectory, UINT in_tag);
+
+bool readTable_cmap(FILE* fontFile, TableRecord* in_pTableRecord);
+bool readTable_glyf(FILE* fontFile, TableRecord* in_pTableRecord);
+bool readTable_loca(FILE* fontFile, TableRecord* in_pTableRecord);
 
 #endif

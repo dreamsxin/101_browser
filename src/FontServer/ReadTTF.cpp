@@ -1,8 +1,6 @@
 #include "FontServer/FontServer.h"
 #include <cstdio>
 #include <cstring>
-#include <cassert>
-
 
 int readTTF(char* filename) {
 	FILE* fontFile = fopen(filename, "rb");
@@ -19,15 +17,15 @@ int readTTF(char* filename) {
 	}
 
 	TrueTypeFont font;
-	font.tableDirectories.allocate(offsetTable.numTables);
+	font.tableDirectory.allocate(offsetTable.numTables);
 
 	for (size_t i=0; i<offsetTable.numTables; i++)
 	{
-		TableDirectory tableDirectory;
+		TableRecord TableRecord;
 
-		if (!readTableDirectory(fontFile, &tableDirectory))
+		if (!readTableRecord(fontFile, &TableRecord))
 		{
-			font.tableDirectories.free();
+			font.tableDirectory.free();
 			fclose(fontFile);
 			return -1;
 		}
@@ -38,49 +36,49 @@ int readTTF(char* filename) {
 		* "Entries in the Table Record must be sorted in ascending order by tag."
 		* This is what we test here
 		*/
-		if (i>0 && memcmp(&font.tableDirectories.data()[i-1].tag, &tableDirectory.tag, 4) >= 0)
+		if (i>0 && memcmp(&font.tableDirectory.data()[i-1].tag, &TableRecord.tag, 4) >= 0)
 		{
-			font.tableDirectories.free();
+			font.tableDirectory.free();
 			fclose(fontFile);
 			return -3;
 		}
 
-		font.tableDirectories.data()[i] = tableDirectory;
-	}
-
-	for (size_t currentTableDirectoryIndex = 0; 
-		currentTableDirectoryIndex < font.tableDirectories.count();
-		currentTableDirectoryIndex++)
-	{
-		TableDirectory* pCurrentTableDirectory = font.tableDirectories.data()+currentTableDirectoryIndex;
-
-		printf("Table:\t%c%c%c%c\n", 
-			pCurrentTableDirectory->tag.bytes[0], 
-			pCurrentTableDirectory->tag.bytes[1], 
-			pCurrentTableDirectory->tag.bytes[2], 
-			pCurrentTableDirectory->tag.bytes[3]);
-
-		if (!verifyCheckSum(fontFile, pCurrentTableDirectory))
+		if (!verifyCheckSum(fontFile, &TableRecord))
 		{
-			font.tableDirectories.free();
+			font.tableDirectory.free();
 			fclose(fontFile);
 			return -4;
 		}
 
-		switch (pCurrentTableDirectory->tag.uint) {
-			case CHAR4_TO_UINT_LIL_ENDIAN('c', 'm', 'a', 'p'):
-				if (!readTable_cmap(fontFile, pCurrentTableDirectory))
-				{
-					font.tableDirectories.free();
-					fclose(fontFile);
-					return -5;
-				}
-				break;
-			case CHAR4_TO_UINT_LIL_ENDIAN('g', 'l', 'y', 'f'):
-				break;
-			default:
-				break;
-		}
+		font.tableDirectory.data()[i] = TableRecord;
+	}
+
+	for (size_t currentTableRecordIndex = 0; 
+		currentTableRecordIndex < font.tableDirectory.count();
+		currentTableRecordIndex++)
+	{
+		TableRecord* pCurrentTableRecord = font.tableDirectory.data()+currentTableRecordIndex;
+
+		printf("Table:\t%c%c%c%c\n", 
+			pCurrentTableRecord->tag.bytes[0], 
+			pCurrentTableRecord->tag.bytes[1], 
+			pCurrentTableRecord->tag.bytes[2], 
+			pCurrentTableRecord->tag.bytes[3]);
+	}
+
+	printf("\n");
+
+	if (!readTable(fontFile, &font.tableDirectory, CHAR4_TO_UINT_LIL_ENDIAN('c', 'm', 'a', 'p')))
+	{
+		font.tableDirectory.free();
+		fclose(fontFile);
+		return -5;
+	}
+	if (!readTable(fontFile, &font.tableDirectory, CHAR4_TO_UINT_LIL_ENDIAN('g', 'l', 'y', 'f')))
+	{
+		font.tableDirectory.free();
+		fclose(fontFile);
+		return -6;
 	}
 
 	fclose(fontFile);

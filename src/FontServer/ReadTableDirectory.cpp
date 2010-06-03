@@ -1,14 +1,14 @@
 #include "FontServer/FontServer.h"
 #include "FontServer/FontServerUtil.h"
 
-bool readTableDirectory(FILE* fontFile, TableDirectory* in_pTableDirectory)
+bool readTableRecord(FILE* fontFile, TableRecord* in_pTableRecord)
 {
-	if (fread(in_pTableDirectory, sizeof(TableDirectory), 1, fontFile) != 1)
+	if (fread(in_pTableRecord, sizeof(TableRecord), 1, fontFile) != 1)
 		return false;
 
-	switchEndianess(&in_pTableDirectory->checkSum);
-	switchEndianess(&in_pTableDirectory->offset);
-	switchEndianess(&in_pTableDirectory->length);
+	switchEndianess(&in_pTableRecord->checkSum);
+	switchEndianess(&in_pTableRecord->offset);
+	switchEndianess(&in_pTableRecord->length);
 
 	return true;
 }

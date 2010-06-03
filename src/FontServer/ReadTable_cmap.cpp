@@ -1,34 +1,40 @@
+#include <cassert>
 #include "FontServer/FontServer.h"
 #include "FontServer/FontServerUtil.h"
 
-bool readTable_cmap(FILE* fontFile, TableDirectory* in_pTableDirectory)
+bool readTable_cmap(FILE* fontFile, TableRecord* in_pTableRecord)
 {
-	if (fseek(fontFile, in_pTableDirectory->offset, SEEK_SET) != 0)
+	assert(in_pTableRecord->tag.uint == CHAR4_TO_UINT_LIL_ENDIAN('c', 'm', 'a', 'p'));
+
+	if (fseek(fontFile, in_pTableRecord->offset, SEEK_SET) != 0)
 		return false;
 
-	cmapTable lcmapTable;
+	Table_cmap lTable_cmap;
 
-	if (fread(&lcmapTable, 2*sizeof(unsigned short), 1, fontFile) != 1)
+	if (in_pTableRecord->length < 2*sizeof(USHORT))
+		return false;
+
+	if (fread(&lTable_cmap, 2*sizeof(USHORT), 1, fontFile) != 1)
 	{
 		return false;
 	}
 
-	switchEndianess(&lcmapTable.version); // not really necessary since only version 0 is accepted
-	switchEndianess(&lcmapTable.numTables);
+	switchEndianess(&lTable_cmap.version); // not really necessary since only version 0 is accepted
+	switchEndianess(&lTable_cmap.numTables);
 
 	/*
 	* According to
 	* http://www.microsoft.com/typography/otspec/cmap.htm
 	* the table version number has to be 0.
 	*/
-	if (lcmapTable.version != 0)
+	if (lTable_cmap.version != 0)
 	{
 		return false;
 	}
 
-	lcmapTable.cmapTableEntries.allocate(lcmapTable.numTables);
+	lTable_cmap.cmapTableEntries.allocate(lTable_cmap.numTables);
 
-	for (size_t i=0; i<lcmapTable.numTables; i++)
+	for (size_t i=0; i<lTable_cmap.numTables; i++)
 	{
 		cmapTableEntry entry;
 		if (fread(&entry, sizeof(entry), 1, fontFile) != 1)
@@ -43,16 +49,16 @@ bool readTable_cmap(FILE* fontFile, TableDirectory* in_pTableDirectory)
 		printf("platform: %hu\nencoding: %hu\noffset: %u\n\n", 
 			entry.platformID, entry.encodingID, entry.offset);
 
-		lcmapTable.cmapTableEntries.data()[i] = entry;
+		lTable_cmap.cmapTableEntries.data()[i] = entry;
 	}
 
 	for (size_t current_cmapTableEntryIndex = 0; 
-		current_cmapTableEntryIndex < lcmapTable.cmapTableEntries.count();
+		current_cmapTableEntryIndex < lTable_cmap.cmapTableEntries.count();
 		current_cmapTableEntryIndex++)
 	{
-		if (fseek(fontFile, in_pTableDirectory->offset, SEEK_SET) != 0)
+		if (fseek(fontFile, in_pTableRecord->offset, SEEK_SET) != 0)
 			return false;
-		if (fseek(fontFile, lcmapTable.cmapTableEntries.data()[current_cmapTableEntryIndex].offset, SEEK_CUR) != 0)
+		if (fseek(fontFile, lTable_cmap.cmapTableEntries.data()[current_cmapTableEntryIndex].offset, SEEK_CUR) != 0)
 			return false;
 
 		unsigned short format;

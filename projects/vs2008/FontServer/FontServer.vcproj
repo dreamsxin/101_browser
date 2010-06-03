@@ -181,11 +181,23 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\FontServer\ReadTable.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\FontServer\ReadTable_cmap.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\src\FontServer\ReadTable_glyf.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\FontServer\ReadTable_head.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\FontServer\ReadTable_loca.cpp"
 				>
 			</File>
 			<File

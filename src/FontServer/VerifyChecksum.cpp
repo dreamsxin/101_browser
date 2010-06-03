@@ -1,12 +1,17 @@
 #include "FontServer/FontServer.h"
 #include "FontServer/FontServerUtil.h"
 
-bool verifyCheckSum(FILE* fontFile, TableDirectory* in_pTableDirectory)
+bool verifyCheckSum(FILE* fontFile, TableRecord* in_pTableRecord)
 {
-	bool headAdjustment = (in_pTableDirectory->tag.uint == CHAR4_TO_UINT_LIL_ENDIAN('h', 'e', 'a', 'd'));
+	fpos_t posBackup;
+	
+	if (fgetpos(fontFile, &posBackup) != 0)
+		return false;
 
-	unsigned int size = ((in_pTableDirectory->length+3)& ~3)/4;
-	fseek(fontFile, in_pTableDirectory->offset, SEEK_SET);
+	bool headAdjustment = (in_pTableRecord->tag.uint == CHAR4_TO_UINT_LIL_ENDIAN('h', 'e', 'a', 'd'));
+
+	unsigned int size = ((in_pTableRecord->length+3)& ~3)/4;
+	fseek(fontFile, in_pTableRecord->offset, SEEK_SET);
 	unsigned int sum=0;
 
 	for (size_t i=0; i<size; i++)
@@ -36,5 +41,8 @@ bool verifyCheckSum(FILE* fontFile, TableDirectory* in_pTableDirectory)
 		}
 	}
 
-	return sum == in_pTableDirectory->checkSum;
+	if (fsetpos(fontFile, &posBackup) != 0)
+		return false;
+
+	return sum == in_pTableRecord->checkSum;
 }
