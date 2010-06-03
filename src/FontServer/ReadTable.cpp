@@ -18,6 +18,10 @@ bool readTable(FILE* fontFile, const ArrayBlock<TableRecord>* in_pTableDirectory
 				return readTable_cmap(fontFile, pCurrentTableRecord);
 			case CHAR4_TO_UINT_LIL_ENDIAN('g', 'l', 'y', 'f'):
 				return readTable_glyf(fontFile, pCurrentTableRecord);
+			case CHAR4_TO_UINT_LIL_ENDIAN('h', 'e', 'a', 'd'):
+				return readTable_head(fontFile, pCurrentTableRecord);
+			case CHAR4_TO_UINT_LIL_ENDIAN('l', 'o', 'c', 'a'):
+				return readTable_loca(fontFile, pCurrentTableRecord);
 			default:
 				return false;
 			}

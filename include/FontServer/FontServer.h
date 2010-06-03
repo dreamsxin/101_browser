@@ -65,7 +65,7 @@ struct Table_glyf
 
 struct Table_head
 {
-	Fixed TableVersionNumber;     // 0x00010000 for version 1.0.
+	Fixed tableVersionNumber;     // 0x00010000 for version 1.0.
 	Fixed fontRevision;           // Set by font manufacturer.
 	UINT checkSumAdjustment;      // To compute: set it to 0, sum the entire font as ULONG, then store 0xB1B0AFBA - sum.
 	UINT magicNumber;             // Set to 0x5F0F3CF5.
@@ -183,6 +183,7 @@ bool readTable(FILE* fontFile, const ArrayBlock<TableRecord>* in_pTableDirectory
 
 bool readTable_cmap(FILE* fontFile, TableRecord* in_pTableRecord);
 bool readTable_glyf(FILE* fontFile, TableRecord* in_pTableRecord);
+bool readTable_head(FILE* fontFile, TableRecord* in_pTableRecord);
 bool readTable_loca(FILE* fontFile, TableRecord* in_pTableRecord);
 
 #endif
