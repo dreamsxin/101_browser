@@ -74,6 +74,7 @@ int readTTF(char* filename) {
 		fclose(fontFile);
 		return -5;
 	}
+
 	if (!readTable(fontFile, &font.tableDirectory, CHAR4_TO_UINT_LIL_ENDIAN('g', 'l', 'y', 'f')))
 	{
 		font.tableDirectory.free();
