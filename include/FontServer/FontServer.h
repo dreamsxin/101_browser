@@ -77,7 +77,9 @@ struct Table_head
 	                              // Bits 5-10: These should be set according to Apple's specification . However, they are not implemented in OpenType. 
 	                              // Bit 11: Font data is 'lossless,' as a result of having been compressed and decompressed with the Agfa MicroType Express engine.
 	                              // Bit 12: Font converted (produce compatible metrics)
-	                              // Bit 13: Font optimized for ClearType™. Note, fonts that rely on embedded bitmaps (EBDT) for rendering should not be considered optimized for ClearType, and therefore should keep this bit cleared.
+	                              // Bit 13: Font optimized for ClearType™. Note, fonts that rely on embedded bitmaps (EBDT) for 
+	                              //         rendering should not be considered optimized for 
+	                              //         ClearType, and therefore should keep this bit cleared.
 	                              // Bit 14: Reserved, set to 0
 	                              // Bit 15: Reserved, set to 0 
 	USHORT unitsPerEm;            // Valid range is from 16 to 16384. This value should be a power of 2 for fonts that have TrueType outlines.
@@ -179,11 +181,11 @@ bool readTableRecord(FILE* fontFile, TableRecord* in_pTableRecord);
 bool verifyCheckSum(FILE* fontFile, TableRecord* in_pTableRecord);
 bool readOffsetTable(FILE* fontFile, OffsetTable* in_pOffsetTable);
 
-bool readTable(FILE* fontFile, const ArrayBlock<TableRecord>* in_pTableDirectory, UINT in_tag);
+TableRecord* getTableRecordPointer(FILE* fontFile, const ArrayBlock<TableRecord>* in_pTableDirectory, UINT in_tag);
 
-bool readTable_cmap(FILE* fontFile, TableRecord* in_pTableRecord);
-bool readTable_glyf(FILE* fontFile, TableRecord* in_pTableRecord);
-bool readTable_head(FILE* fontFile, TableRecord* in_pTableRecord);
-bool readTable_loca(FILE* fontFile, TableRecord* in_pTableRecord);
+bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont);
+bool readTable_glyf(FILE* fontFile, TrueTypeFont* in_trueTypeFont);
+bool readTable_head(FILE* fontFile, TrueTypeFont* in_trueTypeFont);
+bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont);
 
 #endif

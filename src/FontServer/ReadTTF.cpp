@@ -68,21 +68,21 @@ int readTTF(char* filename) {
 
 	printf("\n");
 
-	if (!readTable(fontFile, &font.tableDirectory, CHAR4_TO_UINT_LIL_ENDIAN('h', 'e', 'a', 'd')))
+	if (!readTable_head(fontFile, &font))
 	{
 		font.tableDirectory.free();
 		fclose(fontFile);
 		return -6;
 	}
 
-	if (!readTable(fontFile, &font.tableDirectory, CHAR4_TO_UINT_LIL_ENDIAN('c', 'm', 'a', 'p')))
+	if (!readTable_cmap(fontFile, &font))
 	{
 		font.tableDirectory.free();
 		fclose(fontFile);
 		return -5;
 	}
 
-	if (!readTable(fontFile, &font.tableDirectory, CHAR4_TO_UINT_LIL_ENDIAN('g', 'l', 'y', 'f')))
+	if (!readTable_glyf(fontFile, &font))
 	{
 		font.tableDirectory.free();
 		fclose(fontFile);

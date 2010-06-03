@@ -177,11 +177,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\FontServer\ReadOffsetTable.cpp"
+				RelativePath="..\..\..\src\FontServer\GetTableRecordPointer.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\FontServer\ReadTable.cpp"
+				RelativePath="..\..\..\src\FontServer\ReadOffsetTable.cpp"
 				>
 			</File>
 			<File

@@ -2,18 +2,23 @@
 #include "FontServer/FontServer.h"
 #include "FontServer/FontServerUtil.h"
 
-bool readTable_glyf(FILE* fontFile, TableRecord* in_pTableRecord)
+bool readTable_glyf(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 {
-	assert(in_pTableRecord->tag.uint == CHAR4_TO_UINT_LIL_ENDIAN('g', 'l', 'y', 'f'));
+	TableRecord* pTableRecord = getTableRecordPointer(fontFile, 
+		&in_trueTypeFont->tableDirectory, 
+		CHAR4_TO_UINT_LIL_ENDIAN('g', 'l', 'y', 'f'));
 	
-	if (fseek(fontFile, in_pTableRecord->offset, SEEK_SET) != 0)
+	if (pTableRecord == NULL)
+		return false;
+
+	if (fseek(fontFile, pTableRecord->offset, SEEK_SET) != 0)
 		return false;
 
 	/*
 	 * The 5 shorts with which to compare are - of course:
 	 * numberOfContours, xMin, yMin, xMax, yMax
 	 */
-	if (in_pTableRecord->length < 5*sizeof(SHORT))
+	if (pTableRecord->length < 5*sizeof(SHORT))
 		return false;
 
 	Table_glyf lTable_glyf;

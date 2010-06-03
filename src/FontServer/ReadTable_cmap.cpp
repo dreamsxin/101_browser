@@ -2,16 +2,21 @@
 #include "FontServer/FontServer.h"
 #include "FontServer/FontServerUtil.h"
 
-bool readTable_cmap(FILE* fontFile, TableRecord* in_pTableRecord)
+bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 {
-	assert(in_pTableRecord->tag.uint == CHAR4_TO_UINT_LIL_ENDIAN('c', 'm', 'a', 'p'));
+	TableRecord* pTableRecord = getTableRecordPointer(fontFile, 
+		&in_trueTypeFont->tableDirectory, 
+		CHAR4_TO_UINT_LIL_ENDIAN('c', 'm', 'a', 'p'));
 
-	if (fseek(fontFile, in_pTableRecord->offset, SEEK_SET) != 0)
+	if (pTableRecord == NULL)
+		return false;
+
+	if (fseek(fontFile, pTableRecord->offset, SEEK_SET) != 0)
 		return false;
 
 	Table_cmap lTable_cmap;
 
-	if (in_pTableRecord->length < 2*sizeof(USHORT))
+	if (pTableRecord->length < 2*sizeof(USHORT))
 		return false;
 
 	if (fread(&lTable_cmap, 2*sizeof(USHORT), 1, fontFile) != 1)
@@ -56,7 +61,7 @@ bool readTable_cmap(FILE* fontFile, TableRecord* in_pTableRecord)
 		current_cmapTableEntryIndex < lTable_cmap.cmapTableEntries.count();
 		current_cmapTableEntryIndex++)
 	{
-		if (fseek(fontFile, in_pTableRecord->offset, SEEK_SET) != 0)
+		if (fseek(fontFile, pTableRecord->offset, SEEK_SET) != 0)
 			return false;
 		if (fseek(fontFile, lTable_cmap.cmapTableEntries.data()[current_cmapTableEntryIndex].offset, SEEK_CUR) != 0)
 			return false;

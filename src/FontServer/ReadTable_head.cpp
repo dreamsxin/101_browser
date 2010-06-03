@@ -2,16 +2,21 @@
 #include "FontServer/FontServer.h"
 #include "FontServer/FontServerUtil.h"
 
-bool readTable_head(FILE* fontFile, TableRecord* in_pTableRecord)
+bool readTable_head(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 {
-	assert(in_pTableRecord->tag.uint == CHAR4_TO_UINT_LIL_ENDIAN('h', 'e', 'a', 'd'));
+	TableRecord* pTableRecord = getTableRecordPointer(fontFile, 
+		&in_trueTypeFont->tableDirectory, 
+		CHAR4_TO_UINT_LIL_ENDIAN('h', 'e', 'a', 'd'));
+	
+	if (pTableRecord == NULL)
+		return false;
 
-	if (fseek(fontFile, in_pTableRecord->offset, SEEK_SET) != 0)
+	if (fseek(fontFile, pTableRecord->offset, SEEK_SET) != 0)
 		return false;
 
 	Table_head lTable_head;
 
-	if (in_pTableRecord->length != sizeof(lTable_head))
+	if (pTableRecord->length != sizeof(lTable_head))
 		return false;
 
 	if (fread(&lTable_head, sizeof(lTable_head), 1, fontFile) != 1)
