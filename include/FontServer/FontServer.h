@@ -185,7 +185,7 @@ TableRecord* getTableRecordPointer(FILE* fontFile, const ArrayBlock<TableRecord>
 
 bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont);
 bool readTable_glyf(FILE* fontFile, TrueTypeFont* in_trueTypeFont);
-bool readTable_head(FILE* fontFile, TrueTypeFont* in_trueTypeFont);
+bool readTable_head(FILE* fontFile, TrueTypeFont* in_trueTypeFont, Table_head* lpTable_head);
 bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont);
 
 #endif

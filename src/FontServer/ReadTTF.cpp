@@ -68,7 +68,9 @@ int readTTF(char* filename) {
 
 	printf("\n");
 
-	if (!readTable_head(fontFile, &font))
+	Table_head lTable_head;
+
+	if (!readTable_head(fontFile, &font, &lTable_head))
 	{
 		font.tableDirectory.free();
 		fclose(fontFile);
