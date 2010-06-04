@@ -74,21 +74,30 @@ int readTTF(char* filename) {
 	{
 		font.tableDirectory.free();
 		fclose(fontFile);
-		return -6;
+		return -5;
 	}
+
+	Table_maxp lTable_maxp;
 
 	if (!readTable_cmap(fontFile, &font))
 	{
 		font.tableDirectory.free();
 		fclose(fontFile);
-		return -5;
+		return -6;
+	}
+
+	if (!readTable_maxp(fontFile, &font, &lTable_maxp))
+	{
+		font.tableDirectory.free();
+		fclose(fontFile);
+		return -7;
 	}
 
 	if (!readTable_glyf(fontFile, &font))
 	{
 		font.tableDirectory.free();
 		fclose(fontFile);
-		return -6;
+		return -8;
 	}
 
 	fclose(fontFile);

@@ -201,6 +201,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\FontServer\ReadTable_maxp.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\FontServer\ReadTableDirectory.cpp"
 				>
 			</File>

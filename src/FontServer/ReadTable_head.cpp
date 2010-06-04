@@ -2,7 +2,7 @@
 #include "FontServer/FontServer.h"
 #include "FontServer/FontServerUtil.h"
 
-bool readTable_head(FILE* fontFile, TrueTypeFont* in_trueTypeFont, Table_head* lpTable_head)
+bool readTable_head(FILE* fontFile, TrueTypeFont* in_trueTypeFont, Table_head* in_pTable_head)
 {
 	TableRecord* pTableRecord = getTableRecordPointer(fontFile, 
 		&in_trueTypeFont->tableDirectory, 
@@ -17,49 +17,53 @@ bool readTable_head(FILE* fontFile, TrueTypeFont* in_trueTypeFont, Table_head* l
 	if (pTableRecord->length != sizeof(Table_head))
 		return false;
 
-	if (fread(lpTable_head, sizeof(Table_head), 1, fontFile) != 1)
+	if (fread(in_pTable_head, sizeof(Table_head), 1, fontFile) != 1)
 	{
 		return false;
 	}
 
-	switchEndianess(&lpTable_head->tableVersionNumber.beforeComma);
-	switchEndianess(&lpTable_head->tableVersionNumber. afterComma);
-	switchEndianess(&lpTable_head->fontRevision      .beforeComma);
-	switchEndianess(&lpTable_head->fontRevision      . afterComma);
-	switchEndianess(&lpTable_head->checkSumAdjustment            );
-	switchEndianess(&lpTable_head->magicNumber                   );
-	switchEndianess(&lpTable_head->flags                         );
-	switchEndianess(&lpTable_head->unitsPerEm                    );
-	switchEndianess(&lpTable_head->created                       );
-	switchEndianess(&lpTable_head->modified                      );
-	switchEndianess(&lpTable_head->xMin                          );
-	switchEndianess(&lpTable_head->yMin                          );
-	switchEndianess(&lpTable_head->xMax                          );
-	switchEndianess(&lpTable_head->xMax                          );
-	switchEndianess(&lpTable_head->macStyle                      );
-	switchEndianess(&lpTable_head->lowestRecPPEM                 );
-	switchEndianess(&lpTable_head->fontDirectionHint             );
-	switchEndianess(&lpTable_head->indexToLocFormat              );
-	switchEndianess(&lpTable_head->glyphDataFormat               );
+	switchEndianess(&in_pTable_head->tableVersionNumber.beforeComma);
+	switchEndianess(&in_pTable_head->tableVersionNumber. afterComma);
+	switchEndianess(&in_pTable_head->fontRevision      .beforeComma);
+	switchEndianess(&in_pTable_head->fontRevision      . afterComma);
+	switchEndianess(&in_pTable_head->checkSumAdjustment            );
+	switchEndianess(&in_pTable_head->magicNumber                   );
+	switchEndianess(&in_pTable_head->flags                         );
+	switchEndianess(&in_pTable_head->unitsPerEm                    );
+	switchEndianess(&in_pTable_head->created                       );
+	switchEndianess(&in_pTable_head->modified                      );
+	switchEndianess(&in_pTable_head->xMin                          );
+	switchEndianess(&in_pTable_head->yMin                          );
+	switchEndianess(&in_pTable_head->xMax                          );
+	switchEndianess(&in_pTable_head->xMax                          );
+	switchEndianess(&in_pTable_head->macStyle                      );
+	switchEndianess(&in_pTable_head->lowestRecPPEM                 );
+	switchEndianess(&in_pTable_head->fontDirectionHint             );
+	switchEndianess(&in_pTable_head->indexToLocFormat              );
+	switchEndianess(&in_pTable_head->glyphDataFormat               );
+
+	if (in_pTable_head->tableVersionNumber.beforeComma != 1 || 
+		in_pTable_head->tableVersionNumber.afterComma  != 0)
+		return false;
 
 	/*
 	 * According to http://www.microsoft.com/typography/otspec/head.htm
 	 * this field must have the value 0x5F0F3CF5
 	 */
-	if (lpTable_head->magicNumber != 0x5F0F3CF5)
+	if (in_pTable_head->magicNumber != 0x5F0F3CF5)
 		return false;
 
 	/*
 	 * According to http://www.microsoft.com/typography/otspec/head.htm
 	 * this field must be from 16 to 16384
 	 */
-	if (lpTable_head->unitsPerEm < 16 || lpTable_head->unitsPerEm > 16384)
+	if (in_pTable_head->unitsPerEm < 16 || in_pTable_head->unitsPerEm > 16384)
 		return false;
 
-	if (lpTable_head->glyphDataFormat != 0)
+	if (in_pTable_head->glyphDataFormat != 0)
 		return false;
 
-	if (lpTable_head->indexToLocFormat != 0 && lpTable_head->indexToLocFormat != 1)
+	if (in_pTable_head->indexToLocFormat != 0 && in_pTable_head->indexToLocFormat != 1)
 		return false;
 
 	printf("tableVersionNumber: %hi.%hu\n"
@@ -82,27 +86,27 @@ bool readTable_head(FILE* fontFile, TrueTypeFont* in_trueTypeFont, Table_head* l
 		"indexToLocFormat: %hi\n"
 		"glyphDataFormat: %hi\n"
 		"\n",
-		lpTable_head->tableVersionNumber.beforeComma, 
-		lpTable_head->tableVersionNumber. afterComma, 
-		lpTable_head->fontRevision      .beforeComma, 
-		lpTable_head->fontRevision      . afterComma, 
-		lpTable_head->checkSumAdjustment, 
-		lpTable_head->magicNumber, 
-		lpTable_head->flags, 
-		lpTable_head->unitsPerEm, 
+		in_pTable_head->tableVersionNumber.beforeComma, 
+		in_pTable_head->tableVersionNumber. afterComma, 
+		in_pTable_head->fontRevision      .beforeComma, 
+		in_pTable_head->fontRevision      . afterComma, 
+		in_pTable_head->checkSumAdjustment, 
+		in_pTable_head->magicNumber, 
+		in_pTable_head->flags, 
+		in_pTable_head->unitsPerEm, 
 #ifdef _WIN32
-		lpTable_head->created, 
-		lpTable_head->modified, 
+		in_pTable_head->created, 
+		in_pTable_head->modified, 
 #endif
-		lpTable_head->xMin, 
-		lpTable_head->yMin, 
-		lpTable_head->xMax, 
-		lpTable_head->xMax, 
-		lpTable_head->macStyle, 
-		lpTable_head->lowestRecPPEM, 
-		lpTable_head->fontDirectionHint, 
-		lpTable_head->indexToLocFormat, 
-		lpTable_head->glyphDataFormat);
+		in_pTable_head->xMin, 
+		in_pTable_head->yMin, 
+		in_pTable_head->xMax, 
+		in_pTable_head->xMax, 
+		in_pTable_head->macStyle, 
+		in_pTable_head->lowestRecPPEM, 
+		in_pTable_head->fontDirectionHint, 
+		in_pTable_head->indexToLocFormat, 
+		in_pTable_head->glyphDataFormat);
 
 	return true;
 }
