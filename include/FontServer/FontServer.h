@@ -117,6 +117,16 @@ struct Table_head
 	SHORT	glyphDataFormat;      // 0 for current format.
 };
 
+struct Table_loca_short
+{
+	ArrayBlock<USHORT> offsets;
+};
+
+struct Table_loca_long
+{
+	ArrayBlock<UINT> offsets;
+};
+
 struct Table_maxp
 {
 	Fixed tableVersionNumber;      // 0x00005000 for version 0.5
@@ -141,8 +151,6 @@ struct Table_maxp
 	USHORT	maxComponentElements;  // Maximum number of components referenced at “top level” for any composite glyph.
 	USHORT	maxComponentDepth;     // Maximum levels of recursion; 1 for simple components.
 };
-
-
 
 struct cmapSubTable0
 {
@@ -209,8 +217,8 @@ bool readTableRecord(FILE* fontFile, TableRecord* in_pTableRecord);
  * 
  * Otherwise returns false.
  *
- * Invariants:
- * I_verifyCheckSum_1: if we return true the position in fontFile is not changed
+ * Postconditions:
+ * P_verifyCheckSum_1: if we return true the position in fontFile is not changed
  *                     (but it may change if false is returned)
  */
 bool verifyCheckSum(FILE* fontFile, TableRecord* in_pTableRecord);
@@ -220,8 +228,21 @@ TableRecord* getTableRecordPointer(FILE* fontFile, const ArrayBlock<TableRecord>
 
 bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont);
 bool readTable_glyf(FILE* fontFile, TrueTypeFont* in_trueTypeFont);
+/*!
+ * Postconditions:
+ * P_readTable_head_1: If true is returned the value of if in_pTable_head->indexToLocFormat 
+ *                     is either 0 or 1
+ */
 bool readTable_head(FILE* fontFile, TrueTypeFont* in_trueTypeFont, Table_head* lpTable_head);
-bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont);
+/*!
+ * Parameters: 
+ * in_numGlyphs:        the value of numGlyphs in Table_maxp
+ * useLongTableVersion: if the value of indexToLocFormat in Table_head is 0 we
+ *                      set it to false. If it is 1 to true (other values are
+ *                      not defined)
+ */
+bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont, 
+					USHORT in_numGlyphs, bool useLongTableVersion);
 bool readTable_maxp(FILE* fontFile, TrueTypeFont* in_trueTypeFont, Table_maxp* in_pTable_maxp);
 
 #endif

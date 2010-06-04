@@ -93,11 +93,18 @@ int readTTF(char* filename) {
 		return -7;
 	}
 
-	if (!readTable_glyf(fontFile, &font))
+	if (!readTable_loca(fontFile, &font, lTable_maxp.numGlyphs, lTable_head.glyphDataFormat == 1))
 	{
 		font.tableDirectory.free();
 		fclose(fontFile);
 		return -8;
+	}
+
+	if (!readTable_glyf(fontFile, &font))
+	{
+		font.tableDirectory.free();
+		fclose(fontFile);
+		return -9;
 	}
 
 	fclose(fontFile);

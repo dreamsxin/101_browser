@@ -28,13 +28,13 @@ public:
 	{
 		free();
 		mCount=in_count;
-		mData = safeMallocExitOnFailure<Type>(mCount);
+		mData = safeNewArray<Type>(mCount);
 	}
 
 	inline void free()
 	{
 		mCount = 0;
-		safe_free(&mData);
+		safe_delete_array(&mData);
 	}
 };
 
