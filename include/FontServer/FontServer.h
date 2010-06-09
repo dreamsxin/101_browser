@@ -168,6 +168,20 @@ struct cmapSubTable6
 	ArrayBlock<USHORT> glyphIdArray; //! Array of glyph index values for character codes in the range.
 };
 
+struct cmapSubTable12
+{
+	USHORT	format;                  //! Subtable format; set to 12.
+	USHORT	reserved;                //! Reserved; set to 0
+	UINT	length;                  //! Byte length of this subtable (including the header)
+	UINT	language;                //! Please see “Note on the language field in 'cmap' subtables“ in this document.
+	UINT	nGroups;                 //! Number of groupings which follow
+	struct cmapSubTable12Group
+	{
+		UINT    startCharCode;       //! First character code in this group
+		UINT    endCharCode;         //! Last character code in this group
+		UINT    startGlyphID;        //! Glyph index corresponding to the starting character code
+	} groups;
+};
 
 // Stop packing structures to 1-byte boundaries
 #pragma pack(pop)

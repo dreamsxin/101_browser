@@ -118,8 +118,6 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 			readOffset = 2*static_cast<UINT>(readShortOffset);
 		}
 
-		
-
 		/*
 		 * According to
 		 * http://www.microsoft.com/typography/otspec/loca.htm
@@ -157,9 +155,9 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 	{
 		printf("%lu: %lu\n", currentIndex, in_lpTable_loca->offsets.data()[currentIndex]);
 	}
-#endif
 
 	printf("\n");
+#endif
 
 	return true;
 }

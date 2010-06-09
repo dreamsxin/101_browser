@@ -72,6 +72,8 @@ bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 
 		switchEndianess(&format);
 
+		printf("format: %hu\n", format);
+
 		switch (format)
 		{
 		case 0:
@@ -261,20 +263,32 @@ bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 					return false;
 				}
 
-				printf("format: %hu\nlength: %hu\nlanguage: %hu\nfirstCode: %hu\nentryCount: %hu\n\n", 
+				printf("format: %hu\n"
+					"length: %hu\n"
+					"language: %hu\n"
+					"firstCode: %hu\n"
+					"entryCount: %hu\n"
+					"\n", 
 					subTable6.format, subTable6.length, subTable6.language, 
 					subTable6.firstCode, subTable6.entryCount);
 
 				subTable6.glyphIdArray.free();
 			}
 			break;
+			/*
+			 * The file DroidSansFallback.ttf provides a test case for format
+			 */
+		case 12:
+			{
+
+			}
+			break;
 		default:
-			printf("format: %hu\n\n", format);
 			break;
 		}
-
-
 	}
+
+	printf("\n");
 
 	return true;
 }
