@@ -77,8 +77,6 @@ int readTTF(char* filename) {
 		return -5;
 	}
 
-	Table_maxp lTable_maxp;
-
 	if (!readTable_cmap(fontFile, &font))
 	{
 		font.tableDirectory.free();
@@ -86,16 +84,9 @@ int readTTF(char* filename) {
 		return -6;
 	}
 
-	if (!readTable_maxp(fontFile, &font, &lTable_maxp))
-	{
-		font.tableDirectory.free();
-		fclose(fontFile);
-		return -7;
-	}
-
 	Table_loca lTable_loca;
 
-	if (!readTable_loca(fontFile, &font, lTable_maxp.numGlyphs, 
+	if (!readTable_loca(fontFile, &font, 
 		lTable_head.glyphDataFormat == 1, &lTable_loca))
 	{
 		lTable_loca.offsets.free();

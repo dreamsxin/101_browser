@@ -1,10 +1,10 @@
 #include <cassert>
+#include <climits>
 #include "FontServer/FontServer.h"
 #include "FontServer/FontServerUtil.h"
 
 bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont, 
-					USHORT in_numGlyphs, bool useLongTableVersion,
-					Table_loca *in_lpTable_loca)
+					bool useLongTableVersion, Table_loca *in_lpTable_loca)
 {
 	TableRecord* pTableRecord = getTableRecordPointer(fontFile, 
 		&in_trueTypeFont->tableDirectory, 
@@ -13,16 +13,49 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 	if (pTableRecord == NULL)
 		return false;
 
-	/*!
-	 * According to 
-	 * http://www.microsoft.com/typography/otspec/loca.htm
-	 * "Most routines will look at the 'maxp' table to determine the number of glyphs in the font, 
-	 * but the value in the 'loca' table must agree."
-	 */
-	if (!useLongTableVersion && pTableRecord->length != sizeof(USHORT)*(static_cast<size_t>(in_numGlyphs)+1))
-		return false;
-	if (useLongTableVersion && pTableRecord->length != sizeof(UINT)*(static_cast<size_t>(in_numGlyphs)+1))
-		return false;
+	size_t numGlyfs;
+	if (!useLongTableVersion)
+	{
+		/*
+		 * The reason for the first condition holds should be obvious.
+		 * The second condition comes from that according to
+		 * http://www.microsoft.com/typography/otspec/loca.htm
+		 * "By definition, index zero points to the “missing character,” which is 
+		 * the character that appears if a character is not found in the font."
+		 * This shows that the size has at least to be 2.
+		 * Additionally we can read:
+		 * " In the particular case of the last glyph(s), loca[n] will be equal 
+		 * the length of the glyph data ('glyf') table."
+		 * Because of the former condition the glyf table can't be empty. So there
+		 * has to be a second entry different from the first and pTableRecord->length 
+		 * has to be 4 or larger.
+		 */
+		if ((pTableRecord->length & 0x1) != 0 || pTableRecord->length <= 4)
+			return false;
+		else
+			numGlyfs=pTableRecord->length/2-1;
+	}
+	else
+	{
+		/*
+		 * The reason for the first condition holds should be obvious.
+		 * The second condition comes from that according to
+		 * http://www.microsoft.com/typography/otspec/loca.htm
+		 * "By definition, index zero points to the “missing character,” which is 
+		 * the character that appears if a character is not found in the font."
+		 * This shows that the size has at least to be 4.
+		 * Additionally we can read:
+		 * " In the particular case of the last glyph(s), loca[n] will be equal 
+		 * the length of the glyph data ('glyf') table."
+		 * Because of the former condition the glyf table can't be empty. So there
+		 * has to be a second entry different from the first and pTableRecord->length 
+		 * has to be 8 or larger.
+		 */
+		if ((pTableRecord->length & 0x3) != 0 || pTableRecord->length <=8)
+			return false;
+		else
+			numGlyfs=pTableRecord->length/4-1;
+	}
 
 	TableRecord* pTableRecord_glyf = getTableRecordPointer(fontFile, 
 		&in_trueTypeFont->tableDirectory, 
@@ -34,8 +67,15 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 	if (fseek(fontFile, pTableRecord->offset, SEEK_SET) != 0)
 		return false;
 
-	assert(sizeof(size_t)>sizeof(in_numGlyphs));
-	in_lpTable_loca->offsets.allocate(((size_t) in_numGlyphs)+1);
+	/*
+	 * This assertion is true because when we compute the
+	 * value of numGlyfs we either divide an UINT (for which 
+	 * sizeof(UINT) is less or equal sizeof(size_t)) value by
+	 * 2 or 4 -- so it has to be < SIZE_MAX - 1 (even smaller --
+	 * but we won't need more exactness ;-) )
+	 */
+	assert(numGlyfs < SIZE_MAX - 1);
+	in_lpTable_loca->offsets.allocate(numGlyfs+1);
 
 	UINT previousOffset = 0;
 
