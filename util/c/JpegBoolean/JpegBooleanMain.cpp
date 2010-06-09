@@ -215,7 +215,7 @@ char usageString[] = "Usage: JpegBoolean circ|tree bitsCount\n";
 
 int main(int argc, char** argv)
 {
-	if (argc<=3)
+	if (argc<=2)
 	{
 		fprintf(stderr, usageString);
 		exit(1);
