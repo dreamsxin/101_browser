@@ -6,6 +6,7 @@
 bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont, 
 					bool useLongTableVersion, Table_loca *in_lpTable_loca)
 {
+
 	TableRecord* pTableRecord = getTableRecordPointer(fontFile, 
 		&in_trueTypeFont->tableDirectory, 
 		CHAR4_TO_UINT_LIL_ENDIAN('l', 'o', 'c', 'a'));
@@ -13,7 +14,22 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 	if (pTableRecord == NULL)
 		return false;
 
+	TableRecord* pTableRecord_glyf = getTableRecordPointer(fontFile, 
+		&in_trueTypeFont->tableDirectory, 
+		CHAR4_TO_UINT_LIL_ENDIAN('g', 'l', 'y', 'f'));
+
+	if (pTableRecord_glyf == NULL)
+		return false;
+
+	if (fseek(fontFile, pTableRecord->offset, SEEK_SET) != 0)
+		return false;
+
+	/*
+	 * This variable has to equal the value numGlyphs from the maxp table.
+	 * At the moment this won't be checked for a more simple implementation.
+	 */
 	size_t numGlyfs;
+
 	if (!useLongTableVersion)
 	{
 		/*
@@ -24,7 +40,7 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 		 * the character that appears if a character is not found in the font."
 		 * This shows that the size has at least to be 2.
 		 * Additionally we can read:
-		 * " In the particular case of the last glyph(s), loca[n] will be equal 
+		 * "In the particular case of the last glyph(s), loca[n] will be equal 
 		 * the length of the glyph data ('glyf') table."
 		 * Because of the former condition the glyf table can't be empty. So there
 		 * has to be a second entry different from the first and pTableRecord->length 
@@ -45,7 +61,7 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 		 * the character that appears if a character is not found in the font."
 		 * This shows that the size has at least to be 4.
 		 * Additionally we can read:
-		 * " In the particular case of the last glyph(s), loca[n] will be equal 
+		 * "In the particular case of the last glyph(s), loca[n] will be equal 
 		 * the length of the glyph data ('glyf') table."
 		 * Because of the former condition the glyf table can't be empty. So there
 		 * has to be a second entry different from the first and pTableRecord->length 
@@ -56,16 +72,6 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 		else
 			numGlyfs=pTableRecord->length/4-1;
 	}
-
-	TableRecord* pTableRecord_glyf = getTableRecordPointer(fontFile, 
-		&in_trueTypeFont->tableDirectory, 
-		CHAR4_TO_UINT_LIL_ENDIAN('g', 'l', 'y', 'f'));
-
-	if (pTableRecord_glyf == NULL)
-		return false;
-
-	if (fseek(fontFile, pTableRecord->offset, SEEK_SET) != 0)
-		return false;
 
 	/*
 	 * This assertion is true because when we compute the
