@@ -118,15 +118,27 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 			readOffset = 2*static_cast<UINT>(readShortOffset);
 		}
 
-		/*!
+		
+
+		/*
 		 * According to
 		 * http://www.microsoft.com/typography/otspec/loca.htm
 		 * "The offsets must be in ascending order with loca[n] <= loca[n+1]."
 		 */
-		if (previousOffset > readOffset)
+		if (previousOffset > readOffset && readOffset != 0)
 		{
+#if 1
+			printf("Warning: offset %u followed by offset %u. Expected ascending order.\n", 
+				previousOffset, readOffset);
+#endif
+			/*
+			 * The reason why this code is commented is that DroidSansFallback.ttf
+			 * provides a test case where this tested condition is not fullfilled :-(
+			 */
+#if 0
 			in_lpTable_loca->offsets.free();
 			return false;
+#endif
 		}
 
 		in_lpTable_loca->offsets.data()[currentIndex] = readOffset;
@@ -146,14 +158,24 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 	 */
 	if (previousOffset != pTableRecord_glyf->length)
 	{
+		/*
+		 * The reason why this code is commented is that DroidSansFallback.ttf
+		 * provides a test case where this tested condition is not fullfilled :-(
+		 */
+		printf("Warning: expected final offset %u to be length of table record glyf: %u\n", 
+			previousOffset, pTableRecord_glyf->length);
+#if 0
 		in_lpTable_loca->offsets.free();
 		return false;
+#endif
 	}
 
+#if 0
 	for (size_t currentIndex = 0; currentIndex < in_lpTable_loca->offsets.count(); currentIndex++)
 	{
 		printf("%lu: %lu\n", currentIndex, in_lpTable_loca->offsets.data()[currentIndex]);
 	}
+#endif
 
 	printf("\n");
 

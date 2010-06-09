@@ -144,6 +144,11 @@ bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 					4 * sizeof(USHORT) * segCount + 
 					sizeof(subTable.reservedPad);
 
+				/*
+				 * the case that the size of glyphIdArray is 0
+				 * can really happen. The font file DroidSans.ttf
+				 * provides a test case for that.
+				 */
 				if (sizeWithoutGlyphIdArray > subTable.length)
 					return false;
 
