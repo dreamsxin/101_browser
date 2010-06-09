@@ -87,7 +87,7 @@ int readTTF(char* filename) {
 	Table_loca lTable_loca;
 
 	if (!readTable_loca(fontFile, &font, 
-		lTable_head.glyphDataFormat == 1, &lTable_loca))
+		lTable_head.indexToLocFormat == 1, &lTable_loca))
 	{
 		lTable_loca.offsets.free();
 		font.tableDirectory.free();

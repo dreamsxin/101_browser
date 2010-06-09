@@ -28,7 +28,7 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 	 * This variable has to equal the value numGlyphs from the maxp table.
 	 * At the moment this won't be checked for a more simple implementation.
 	 */
-	size_t numGlyfs;
+	size_t numGlyphs;
 
 	if (!useLongTableVersion)
 	{
@@ -49,7 +49,7 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 		if ((pTableRecord->length & 0x1) != 0 || pTableRecord->length <= 4)
 			return false;
 		else
-			numGlyfs=pTableRecord->length/2-1;
+			numGlyphs = pTableRecord->length/2-1;
 	}
 	else
 	{
@@ -70,7 +70,7 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 		if ((pTableRecord->length & 0x3) != 0 || pTableRecord->length <=8)
 			return false;
 		else
-			numGlyfs=pTableRecord->length/4-1;
+			numGlyphs = pTableRecord->length/4-1;
 	}
 
 	/*
@@ -80,8 +80,8 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 	 * 2 or 4 -- so it has to be < SIZE_MAX - 1 (even smaller --
 	 * but we won't need more exactness ;-) )
 	 */
-	assert(numGlyfs < SIZE_MAX - 1);
-	in_lpTable_loca->offsets.allocate(numGlyfs+1);
+	assert(numGlyphs < SIZE_MAX - 1);
+	in_lpTable_loca->offsets.allocate(numGlyphs+1);
 
 	UINT previousOffset = 0;
 
@@ -127,18 +127,8 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 		 */
 		if (previousOffset > readOffset && readOffset != 0)
 		{
-#if 1
-			printf("Warning: offset %u followed by offset %u. Expected ascending order.\n", 
-				previousOffset, readOffset);
-#endif
-			/*
-			 * The reason why this code is commented is that DroidSansFallback.ttf
-			 * provides a test case where this tested condition is not fullfilled :-(
-			 */
-#if 0
 			in_lpTable_loca->offsets.free();
 			return false;
-#endif
 		}
 
 		in_lpTable_loca->offsets.data()[currentIndex] = readOffset;
@@ -158,16 +148,8 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 	 */
 	if (previousOffset != pTableRecord_glyf->length)
 	{
-		/*
-		 * The reason why this code is commented is that DroidSansFallback.ttf
-		 * provides a test case where this tested condition is not fullfilled :-(
-		 */
-		printf("Warning: expected final offset %u to be length of table record glyf: %u\n", 
-			previousOffset, pTableRecord_glyf->length);
-#if 0
 		in_lpTable_loca->offsets.free();
 		return false;
-#endif
 	}
 
 #if 0
