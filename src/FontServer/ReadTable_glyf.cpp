@@ -12,7 +12,7 @@ bool readTable_glyf(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 		return false;
 
 	/*
-	 * The 5 shorts with which to compare are - of course:
+	 * The 5 shorts, whose length we compare to, are - of course:
 	 * numberOfContours, xMin, yMin, xMax, yMax
 	 */
 	if (pTableRecord->length < 5*sizeof(SHORT))

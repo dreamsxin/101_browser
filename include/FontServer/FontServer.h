@@ -117,12 +117,12 @@ struct Table_head
 	SHORT	glyphDataFormat;      // 0 for current format.
 };
 
-struct Table_loca_short
-{
-	ArrayBlock<USHORT> offsets;
-};
-
-struct Table_loca_long
+/*!
+ * Note that in the specification there exists a long and a short version
+ * of this table type. But in this implementation both types get converted
+ * to the long version.
+ */
+struct Table_loca
 {
 	ArrayBlock<UINT> offsets;
 };
@@ -242,7 +242,8 @@ bool readTable_head(FILE* fontFile, TrueTypeFont* in_trueTypeFont, Table_head* l
  *                      not defined)
  */
 bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont, 
-					USHORT in_numGlyphs, bool useLongTableVersion);
+					USHORT in_numGlyphs, bool useLongTableVersion, 
+					Table_loca *in_lpTable_loca);
 bool readTable_maxp(FILE* fontFile, TrueTypeFont* in_trueTypeFont, Table_maxp* in_pTable_maxp);
 
 #endif
