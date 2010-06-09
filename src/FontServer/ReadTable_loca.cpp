@@ -1,10 +1,10 @@
 #include <cassert>
+#include <climits>
 #include "FontServer/FontServer.h"
 #include "FontServer/FontServerUtil.h"
 
 bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont, 
-					USHORT in_numGlyphs, bool useLongTableVersion,
-					Table_loca *in_lpTable_loca)
+					bool useLongTableVersion, Table_loca *in_lpTable_loca)
 {
 
 	TableRecord* pTableRecord = getTableRecordPointer(fontFile, 
@@ -14,16 +14,6 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 	if (pTableRecord == NULL)
 		return false;
 
-	/*!
-	 * According to 
-	 * http://www.microsoft.com/typography/otspec/loca.htm
-	 * "Most routines will look at the 'maxp' table to determine the number of glyphs in the font, 
-	 * but the value in the 'loca' table must agree."
-	 */
-	if (!useLongTableVersion && pTableRecord->length != sizeof(USHORT)*(static_cast<size_t>(in_numGlyphs)+1))
-		return false;
-	if (useLongTableVersion && pTableRecord->length != sizeof(UINT)*(static_cast<size_t>(in_numGlyphs)+1))
-		return false;
 	TableRecord* pTableRecord_glyf = getTableRecordPointer(fontFile, 
 		&in_trueTypeFont->tableDirectory, 
 		CHAR4_TO_UINT_LIL_ENDIAN('g', 'l', 'y', 'f'));
@@ -83,8 +73,15 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 			numGlyfs=pTableRecord->length/4-1;
 	}
 
-	assert(sizeof(size_t)>sizeof(in_numGlyphs));
-	in_lpTable_loca->offsets.allocate(((size_t) in_numGlyphs)+1);
+	/*
+	 * This assertion is true because when we compute the
+	 * value of numGlyfs we either divide an UINT (for which 
+	 * sizeof(UINT) is less or equal sizeof(size_t)) value by
+	 * 2 or 4 -- so it has to be < SIZE_MAX - 1 (even smaller --
+	 * but we won't need more exactness ;-) )
+	 */
+	assert(numGlyfs < SIZE_MAX - 1);
+	in_lpTable_loca->offsets.allocate(numGlyfs+1);
 
 	UINT previousOffset = 0;
 
