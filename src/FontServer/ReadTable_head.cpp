@@ -1,6 +1,6 @@
 #include <cassert>
 #include "FontServer/FontServer.h"
-#include "FontServer/FontServerUtil.h"
+#include "BasicDataStructures/Endianess.h"
 
 bool readTable_head(FILE* fontFile, TrueTypeFont* in_trueTypeFont, Table_head* in_pTable_head)
 {
@@ -22,25 +22,25 @@ bool readTable_head(FILE* fontFile, TrueTypeFont* in_trueTypeFont, Table_head* i
 		return false;
 	}
 
-	switchEndianess(&in_pTable_head->tableVersionNumber.beforeComma);
-	switchEndianess(&in_pTable_head->tableVersionNumber. afterComma);
-	switchEndianess(&in_pTable_head->fontRevision      .beforeComma);
-	switchEndianess(&in_pTable_head->fontRevision      . afterComma);
-	switchEndianess(&in_pTable_head->checkSumAdjustment            );
-	switchEndianess(&in_pTable_head->magicNumber                   );
-	switchEndianess(&in_pTable_head->flags                         );
-	switchEndianess(&in_pTable_head->unitsPerEm                    );
-	switchEndianess(&in_pTable_head->created                       );
-	switchEndianess(&in_pTable_head->modified                      );
-	switchEndianess(&in_pTable_head->xMin                          );
-	switchEndianess(&in_pTable_head->yMin                          );
-	switchEndianess(&in_pTable_head->xMax                          );
-	switchEndianess(&in_pTable_head->xMax                          );
-	switchEndianess(&in_pTable_head->macStyle                      );
-	switchEndianess(&in_pTable_head->lowestRecPPEM                 );
-	switchEndianess(&in_pTable_head->fontDirectionHint             );
-	switchEndianess(&in_pTable_head->indexToLocFormat              );
-	switchEndianess(&in_pTable_head->glyphDataFormat               );
+	MTAx::Endianess::switchEndianess(&in_pTable_head->tableVersionNumber.beforeComma);
+	MTAx::Endianess::switchEndianess(&in_pTable_head->tableVersionNumber. afterComma);
+	MTAx::Endianess::switchEndianess(&in_pTable_head->fontRevision      .beforeComma);
+	MTAx::Endianess::switchEndianess(&in_pTable_head->fontRevision      . afterComma);
+	MTAx::Endianess::switchEndianess(&in_pTable_head->checkSumAdjustment            );
+	MTAx::Endianess::switchEndianess(&in_pTable_head->magicNumber                   );
+	MTAx::Endianess::switchEndianess(&in_pTable_head->flags                         );
+	MTAx::Endianess::switchEndianess(&in_pTable_head->unitsPerEm                    );
+	MTAx::Endianess::switchEndianess(&in_pTable_head->created                       );
+	MTAx::Endianess::switchEndianess(&in_pTable_head->modified                      );
+	MTAx::Endianess::switchEndianess(&in_pTable_head->xMin                          );
+	MTAx::Endianess::switchEndianess(&in_pTable_head->yMin                          );
+	MTAx::Endianess::switchEndianess(&in_pTable_head->xMax                          );
+	MTAx::Endianess::switchEndianess(&in_pTable_head->xMax                          );
+	MTAx::Endianess::switchEndianess(&in_pTable_head->macStyle                      );
+	MTAx::Endianess::switchEndianess(&in_pTable_head->lowestRecPPEM                 );
+	MTAx::Endianess::switchEndianess(&in_pTable_head->fontDirectionHint             );
+	MTAx::Endianess::switchEndianess(&in_pTable_head->indexToLocFormat              );
+	MTAx::Endianess::switchEndianess(&in_pTable_head->glyphDataFormat               );
 
 	if (in_pTable_head->tableVersionNumber.beforeComma != 1 || 
 		in_pTable_head->tableVersionNumber.afterComma  != 0)

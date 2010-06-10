@@ -1,4 +1,5 @@
 #include "FontServer/FontServer.h"
+#include "BasicDataStructures/Endianess.h"
 #include "FontServer/FontServerUtil.h"
 
 bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
@@ -23,8 +24,8 @@ bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 		return false;
 	}
 
-	switchEndianess(&lTable_cmap.version); // not really necessary since only version 0 is accepted
-	switchEndianess(&lTable_cmap.numTables);
+	MTAx::Endianess::switchEndianess(&lTable_cmap.version); // not really necessary since only version 0 is accepted
+	MTAx::Endianess::switchEndianess(&lTable_cmap.numTables);
 
 	/*
 	* According to
@@ -46,9 +47,9 @@ bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 			return false;
 		}
 
-		switchEndianess(&entry.platformID);
-		switchEndianess(&entry.encodingID);
-		switchEndianess(&entry.offset);
+		MTAx::Endianess::switchEndianess(&entry.platformID);
+		MTAx::Endianess::switchEndianess(&entry.encodingID);
+		MTAx::Endianess::switchEndianess(&entry.offset);
 
 		printf("platform: %hu\nencoding: %hu\noffset: %u\n\n", 
 			entry.platformID, entry.encodingID, entry.offset);
@@ -70,7 +71,7 @@ bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 		if (fread(&format, sizeof(format), 1, fontFile) != 1)
 			return false;
 
-		switchEndianess(&format);
+		MTAx::Endianess::switchEndianess(&format);
 
 		printf("format: %hu\n", format);
 
@@ -84,8 +85,8 @@ bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 					sizeof(subTable)-sizeof(subTable.format), 1, fontFile) != 1)
 					return false;
 
-				switchEndianess(&subTable.length);
-				switchEndianess(&subTable.language);
+				MTAx::Endianess::switchEndianess(&subTable.length);
+				MTAx::Endianess::switchEndianess(&subTable.language);
 
 				if (subTable.length != sizeof(cmapSubTable0))
 					return false;
@@ -102,12 +103,12 @@ bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 					offsetof(cmapSubTable4, endCount)-sizeof(subTable.format), 1, fontFile) != 1)
 					return false;
 
-				switchEndianess(&subTable.length);
-				switchEndianess(&subTable.language);
-				switchEndianess(&subTable.segCountX2);
-				switchEndianess(&subTable.searchRange);
-				switchEndianess(&subTable.entrySelector);
-				switchEndianess(&subTable.rangeShift);
+				MTAx::Endianess::switchEndianess(&subTable.length);
+				MTAx::Endianess::switchEndianess(&subTable.language);
+				MTAx::Endianess::switchEndianess(&subTable.segCountX2);
+				MTAx::Endianess::switchEndianess(&subTable.searchRange);
+				MTAx::Endianess::switchEndianess(&subTable.entrySelector);
+				MTAx::Endianess::switchEndianess(&subTable.rangeShift);
 
 				/*
 				* segCountX2 is  2 x segCount. 
@@ -196,10 +197,10 @@ bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 
 				for (size_t i=0; i<segCount; i++)
 				{
-					switchEndianess(subTable.endCount     .data()+i);
-					switchEndianess(subTable.startCount   .data()+i);
-					switchEndianess(subTable.idDelta      .data()+i);
-					switchEndianess(subTable.idRangeOffset.data()+i);
+					MTAx::Endianess::switchEndianess(subTable.endCount     .data()+i);
+					MTAx::Endianess::switchEndianess(subTable.startCount   .data()+i);
+					MTAx::Endianess::switchEndianess(subTable.idDelta      .data()+i);
+					MTAx::Endianess::switchEndianess(subTable.idRangeOffset.data()+i);
 
 					/*
 					 * According to 
@@ -215,7 +216,7 @@ bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 
 				for (size_t i=0; i<glyphIdArraySize; i++)
 				{
-					switchEndianess(subTable.glyphIdArray .data()+i);
+					MTAx::Endianess::switchEndianess(subTable.glyphIdArray .data()+i);
 				}
 
 				printf("format: %hu\nlength: %hu\nlanguage: %hu\nsegCountX2: %hu\nsearchRange: %hu\nentrySelector: %hu\nrangeShift: %hu\n\n", 
@@ -237,10 +238,10 @@ bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 					1, fontFile) != 1)
 					return false;
 
-				switchEndianess(&subTable6.length);
-				switchEndianess(&subTable6.language);
-				switchEndianess(&subTable6.firstCode);
-				switchEndianess(&subTable6.entryCount);
+				MTAx::Endianess::switchEndianess(&subTable6.length);
+				MTAx::Endianess::switchEndianess(&subTable6.language);
+				MTAx::Endianess::switchEndianess(&subTable6.firstCode);
+				MTAx::Endianess::switchEndianess(&subTable6.entryCount);
 
 				/*
 				* Since the subTable6.length is sometimes larger than the number of bytes

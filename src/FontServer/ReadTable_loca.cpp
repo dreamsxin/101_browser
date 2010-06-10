@@ -1,7 +1,7 @@
 #include <cassert>
 #include <climits>
 #include "FontServer/FontServer.h"
-#include "FontServer/FontServerUtil.h"
+#include "BasicDataStructures/Endianess.h"
 
 bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont, 
 					bool useLongTableVersion, Table_loca *in_lpTable_loca)
@@ -107,7 +107,7 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 				return false;
 			}
 
-			switchEndianess(&readLongOffset);
+			MTAx::Endianess::switchEndianess(&readLongOffset);
 
 			readOffset = readLongOffset;
 		}
@@ -121,7 +121,7 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 				return false;
 			}
 
-			switchEndianess(&readShortOffset);
+			MTAx::Endianess::switchEndianess(&readShortOffset);
 
 			readOffset = 2*static_cast<UINT>(readShortOffset);
 		}

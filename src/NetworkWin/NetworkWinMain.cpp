@@ -2,6 +2,8 @@
 #include <cstring>
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#include "Crypto/TLS.h"
+#include "BasicDataStructures/Endianess.h"
 
 char GETstring[] = "GET";
 
@@ -117,6 +119,10 @@ int main(int argc, char** argv)
 	}
 	else
 	{
+		MTAx::TLS::TLSPlaintextHeader tlsPlaintextHeader;
+		tlsPlaintextHeader.type = MTAx::TLS::ContentType_handshake;
+		tlsPlaintextHeader.version = MTAx::TLS::TLS_1_2_ProtocolVersion;
+
 
 	}
 

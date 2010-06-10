@@ -1,4 +1,5 @@
 #include "FontServer/FontServer.h"
+#include "BasicDataStructures/Endianess.h"
 #include "FontServer/FontServerUtil.h"
 
 bool readOffsetTable(FILE* fontFile, OffsetTable* in_pOffsetTable)
@@ -6,10 +7,10 @@ bool readOffsetTable(FILE* fontFile, OffsetTable* in_pOffsetTable)
 	if (fread(in_pOffsetTable, sizeof(OffsetTable), 1, fontFile)!=1)
 		return false;
 
-	switchEndianess(&in_pOffsetTable->numTables);
-	switchEndianess(&in_pOffsetTable->searchRange);
-	switchEndianess(&in_pOffsetTable->entrySelector);
-	switchEndianess(&in_pOffsetTable->rangeShift);
+	MTAx::Endianess::switchEndianess(&in_pOffsetTable->numTables);
+	MTAx::Endianess::switchEndianess(&in_pOffsetTable->searchRange);
+	MTAx::Endianess::switchEndianess(&in_pOffsetTable->entrySelector);
+	MTAx::Endianess::switchEndianess(&in_pOffsetTable->rangeShift);
 
 	if (memcmp(&in_pOffsetTable->sfntVersion, csfntVersion, 4))
 		return false;	

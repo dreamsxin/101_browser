@@ -9,3 +9,8 @@ This field extension is -- of course -- isomorphic to the field of complex numbe
 If you look back into mathematical history the discovery of the complex numbers lead to a mathematical breakthroughs. I only say "fundamental theorem of algebra" and "complex analysis" (which is a lot more elegant than "standard calculus"). Since I think browser technology needs a radical breakthrough of disruptive changes I found it a fitting name. ;-)
 
 Unluckily the project server of the university which I used at the beginning did not like the ^ character in its name -- so I were requested to change the project name. Since I wanted to preserve the spirit of the name I chose the coefficient order of the polynomial x^2+1 which obviously is 1, 0, 1 and renamed it to 101 browser.
+
+h3. What does the "MTAx" namespace mean?
+
+Since 101 is not a valid namespace name, I used MTAx, which is 101 encoded in Base64.
+

@@ -1,6 +1,6 @@
 #include <cassert>
 #include "FontServer/FontServer.h"
-#include "FontServer/FontServerUtil.h"
+#include "BasicDataStructures/Endianess.h"
 
 bool readTable_glyf(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 {
@@ -25,11 +25,11 @@ bool readTable_glyf(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 		return false;
 	}
 
-	switchEndianess(&lTable_glyf.numberOfContours);
-	switchEndianess(&lTable_glyf.xMin);
-	switchEndianess(&lTable_glyf.yMin);
-	switchEndianess(&lTable_glyf.xMax);
-	switchEndianess(&lTable_glyf.yMax);
+	MTAx::Endianess::switchEndianess(&lTable_glyf.numberOfContours);
+	MTAx::Endianess::switchEndianess(&lTable_glyf.xMin);
+	MTAx::Endianess::switchEndianess(&lTable_glyf.yMin);
+	MTAx::Endianess::switchEndianess(&lTable_glyf.xMax);
+	MTAx::Endianess::switchEndianess(&lTable_glyf.yMax);
 
 	printf("numberOfContours: %hi\nxMin: %hi\nyMin: %hi\nxMax: %hi\nyMax %hi\n\n", 
 			lTable_glyf.numberOfContours, 

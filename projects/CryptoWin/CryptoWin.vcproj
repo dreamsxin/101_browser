@@ -186,6 +186,10 @@
 				RelativePath="..\..\include\CryptoWin\CryptoWin.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\include\Crypto\TLS.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

@@ -1,5 +1,5 @@
 #include "FontServer/FontServer.h"
-#include "FontServer/FontServerUtil.h"
+#include "BasicDataStructures/Endianess.h"
 
 bool verifyCheckSum(FILE* fontFile, TableRecord* in_pTableRecord)
 {
@@ -37,7 +37,7 @@ bool verifyCheckSum(FILE* fontFile, TableRecord* in_pTableRecord)
 				return false;
 			}
 
-			sum+=convertEndianess(currentDword);
+			sum+=MTAx::Endianess::convertEndianess(currentDword);
 		}
 	}
 

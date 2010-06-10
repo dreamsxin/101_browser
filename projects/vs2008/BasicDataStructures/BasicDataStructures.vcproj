@@ -219,6 +219,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\BasicDataStructures\Endianess.h"
+				>
+			</File>
+			<File
 				RelativePath="$(SolutionDir)include\BasicDataStructures\HigherOrderFunctions.h"
 				>
 			</File>

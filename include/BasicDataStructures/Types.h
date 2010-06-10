@@ -1,6 +1,18 @@
 #ifndef _Types_h
 #define _Types_h
 
+/*
+ * Visual Studio 2010 is the first version to 
+ * contains cstdint. In the versions before we
+ * have to use boost
+ */
+#if defined(_MSC_VER) && (_MSC_VER<=1500)
+#include "boost/cstdint.hpp"
+using namespace boost; // This is a hack - you should not use this in header files
+#else
+#include <cstdint>
+#endif
+
 #ifdef _WIN32
 #include "windows.h"
 #else
