@@ -20,7 +20,6 @@ namespace MTAx
 		__declspec(dllexport) void freeRandomNumberContext(CryptoContext* pContext)
 		{
 			CryptReleaseContext(*pContext, 0);
-			*pContext = NULL;
 		}
 
 		__declspec(dllexport) void getRandomBytes(CryptoContext context, 

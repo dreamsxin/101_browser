@@ -3,21 +3,31 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
-
 char GETstring[] = "GET";
+
+void printUsageAndExit(char* argv0)
+{
+	printf(
+		"Usage: %s [COMMAND] protocol url\n"
+		"Where protocol is http|https\n", argv0);
+	exit(0);
+}
+
+char port80String[] = "80";
+char port443String[] = "443";
 
 int main(int argc, char** argv)
 {
-	if (argc <= 1)
+	if (argc <= 2)
 	{
-		printf("Usage: %s [COMMAND] url\n", argv[0]);
-		exit(0);
+		printUsageAndExit(argv[0]);
 	}
 
 	char *hostName = argv[argc-1];
+	char *protocol = argv[argc-2];
 	char *command;
 
-	if (argc > 2)
+	if (argc > 3)
 	{
 		command = argv[1];
 	}
@@ -25,6 +35,23 @@ int main(int argc, char** argv)
 	{
 		command = GETstring;
 	}
+
+	bool useHttps;
+	
+	if (strcmp("http", protocol) == 0)
+	{
+		useHttps = false;
+	}
+	else if (strcmp("https", protocol) == 0)
+	{
+		useHttps = true;
+	}
+	else
+	{
+		printUsageAndExit(argv[0]);
+	}
+
+	char* portString = useHttps ? port443String : port80String;
 
 	WORD wVersionRequired = MAKEWORD(2, 2);
 	WSADATA lWSAData;
@@ -45,7 +72,7 @@ int main(int argc, char** argv)
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
 
-	status = getaddrinfo(hostName, "80", &hints, &pAddrInfo);
+	status = getaddrinfo(hostName, portString, &hints, &pAddrInfo);
 
 	if (status != 0)
 	{
@@ -78,20 +105,37 @@ int main(int argc, char** argv)
 
 	freeaddrinfo(pAddrInfo);
 
-	char requestString0[] = " / HTTP/1.1\r\nHost: ";
-	char requestString1[] = "\r\n\r\n";
+	if (!useHttps)
+	{
+		char requestString0[] = " / HTTP/1.1\r\nHost: ";
+		char requestString1[] = "\r\n\r\n";
 
-	send(serverSocket, command, strlen(command), 0);
-	send(serverSocket, requestString0, strlen(requestString0), 0);
-	send(serverSocket, hostName, strlen(hostName), 0);
-	send(serverSocket, requestString1, strlen(requestString1), 0);
+		send(serverSocket, command, strlen(command), 0);
+		send(serverSocket, requestString0, strlen(requestString0), 0);
+		send(serverSocket, hostName, strlen(hostName), 0);
+		send(serverSocket, requestString1, strlen(requestString1), 0);
+	}
+	else
+	{
+
+	}
 
 	char buffer[256];
 
 	while (0 < (status = recv(serverSocket, buffer, sizeof(buffer)-1, 0)))
 	{
-		buffer[status] = 0;
-		printf("%s", buffer);
+		if (!useHttps)
+		{
+			buffer[status] = 0;
+			printf("%s", buffer);
+		}
+		else
+		{
+			for (size_t currentElement=0; currentElement<(unsigned int) status; currentElement++)
+			{
+				printf("%2hu ", (unsigned short) buffer[currentElement]);
+			}
+		}
 	}
 
 	if (status == SOCKET_ERROR)

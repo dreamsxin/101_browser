@@ -30,6 +30,10 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 	 */
 	size_t numGlyphs;
 
+	/*
+	 * The file DroidSans.ttf provides a test case for
+	 * the short table version
+	 */
 	if (!useLongTableVersion)
 	{
 		/*
@@ -51,6 +55,10 @@ bool readTable_loca(FILE* fontFile, TrueTypeFont* in_trueTypeFont,
 		else
 			numGlyphs = pTableRecord->length/2-1;
 	}
+	/*
+	 * The file DroidSansFallback.ttf provides a test case for
+	 * the long table version
+	 */
 	else
 	{
 		/*

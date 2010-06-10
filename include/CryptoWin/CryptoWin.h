@@ -15,7 +15,7 @@ namespace MTAx
 		typedef HCRYPTPROV CryptoContext;
 
 		__declspec(dllexport) CryptoContext allocRandomNumberContext();
-		__declspec(dllexport) void freeRandomNumberContext(CryptoContext* pContext);
+		__declspec(dllexport) void freeRandomNumberContext(CryptoContext pContext);
 		__declspec(dllexport) void getRandomBytes(CryptoContext context, size_t count, void* buffer);
 	}
 }
