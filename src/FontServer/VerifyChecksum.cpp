@@ -10,7 +10,7 @@ bool verifyCheckSum(FILE* fontFile, TableRecord* in_pTableRecord)
 
 	bool headAdjustment = (in_pTableRecord->tag.uint == CHAR4_TO_UINT_LIL_ENDIAN('h', 'e', 'a', 'd'));
 
-	unsigned int size = ((in_pTableRecord->length+3)& ~3)/4;
+	unsigned int size = ((in_pTableRecord->length+3) & ~3)/4;
 	fseek(fontFile, in_pTableRecord->offset, SEEK_SET);
 	unsigned int sum=0;
 

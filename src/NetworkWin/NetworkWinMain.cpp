@@ -2,7 +2,9 @@
 #include <cstring>
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#include "CryptoWin/CryptoWin.h"
 #include "Crypto/TLS.h"
+#include <ctime>
 #include "BasicDataStructures/Endianess.h"
 
 char GETstring[] = "GET";
@@ -122,6 +124,17 @@ int main(int argc, char** argv)
 		MTAx::TLS::TLSPlaintextHeader tlsPlaintextHeader;
 		tlsPlaintextHeader.type = MTAx::TLS::ContentType_handshake;
 		tlsPlaintextHeader.version = MTAx::TLS::TLS_1_2_ProtocolVersion;
+
+		
+		MTAx::Endianess::switchEndianess(&tlsPlaintextHeader.length);
+
+		MTAx::TLS::Random tlsRandom;
+		tlsRandom.gmt_unix_time = static_cast<uint32_t>(time(NULL));
+		
+		MTAx::Crypto::CryptoContext randomNumberContext = MTAx::Crypto::allocRandomNumberContext();
+		MTAx::Crypto::getRandomBytes(randomNumberContext, 
+			sizeof(tlsRandom.random_bytes), &tlsRandom.random_bytes);
+		MTAx::Crypto::freeRandomNumberContext(randomNumberContext);
 
 
 	}

@@ -17,15 +17,15 @@ namespace MTAx
 			return hCryptProv;
 		}
 
-		__declspec(dllexport) void freeRandomNumberContext(CryptoContext* pContext)
+		__declspec(dllexport) void freeRandomNumberContext(CryptoContext pContext)
 		{
-			CryptReleaseContext(*pContext, 0);
+			CryptReleaseContext(pContext, 0);
 		}
 
 		__declspec(dllexport) void getRandomBytes(CryptoContext context, 
 			size_t count, void* buffer)
 		{
-			CryptGenRandom(context, count, (BYTE*)buffer);
+			CryptGenRandom(context, count, static_cast<BYTE*>(buffer));
 		}
 	}
 }

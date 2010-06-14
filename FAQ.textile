@@ -12,5 +12,5 @@ Unluckily the project server of the university which I used at the beginning did
 
 h3. What does the "MTAx" namespace mean?
 
-Since 101 is not a valid namespace name, I used MTAx, which is 101 encoded in Base64.
+Since 101 is not a valid namespace, I used MTAx, which is 101 encoded in Base64.
 
