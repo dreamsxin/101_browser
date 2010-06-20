@@ -394,6 +394,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Array"
+				>
+				<File
+					RelativePath=".\Array\FileArray.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"
