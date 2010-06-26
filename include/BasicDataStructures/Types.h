@@ -4,13 +4,13 @@
 /*
  * Visual Studio 2010 is the first version to 
  * contains cstdint. In the versions before we
- * have to use boost
+ * have to use boost. Also gcc does not like this
  */
-#if defined(_MSC_VER) && (_MSC_VER<=1500)
+#if defined(_MSC_VER) && (_MSC_VER > 1500)
+#include <cstdint>
+#else
 #include "boost/cstdint.hpp"
 using namespace boost; // This is a hack - you should not use this in header files
-#else
-#include <cstdint>
 #endif
 
 #ifdef _WIN32

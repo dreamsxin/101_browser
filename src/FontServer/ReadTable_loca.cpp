@@ -1,5 +1,8 @@
 #include <cassert>
 #include <climits>
+#ifndef SIZE_MAX
+#define SIZE_MAX ((size_t)(-1)) 
+#endif
 #include "FontServer/FontServer.h"
 #include "BasicDataStructures/Endianess.h"
 

@@ -1,3 +1,4 @@
+#include "BasicDataStructures/OffsetofInObject.h"
 #include "FontServer/FontServer.h"
 #include "BasicDataStructures/Endianess.h"
 #include "FontServer/FontServerUtil.h"
@@ -100,7 +101,7 @@ bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 				cmapSubTable4 subTable;
 				subTable.format = format;
 				if (fread(((BYTE*) &subTable)+sizeof(subTable.format), 
-					offsetof(cmapSubTable4, endCount)-sizeof(subTable.format), 1, fontFile) != 1)
+					offsetof_in_object(subTable, endCount)-sizeof(subTable.format), 1, fontFile) != 1)
 					return false;
 
 				MTAx::Endianess::switchEndianess(&subTable.length);
@@ -138,7 +139,7 @@ bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 				subTable.idRangeOffset.allocate(segCount);
 
 				size_t sizeWithoutGlyphIdArray = 
-					offsetof(cmapSubTable4, endCount)+
+					offsetof_in_object(subTable, endCount)+
 					/*
 					* 4 comes from endCount, startCount, idDelta, idRangeOffset
 					*
@@ -234,7 +235,7 @@ bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 				cmapSubTable6 subTable6;
 				subTable6.format = format;
 				if (fread(((BYTE*) &subTable6)+sizeof(subTable6.format), 
-					offsetof(cmapSubTable6, glyphIdArray)-sizeof(subTable6.format), 
+					offsetof_in_object(subTable6, glyphIdArray)-sizeof(subTable6.format), 
 					1, fontFile) != 1)
 					return false;
 
@@ -247,12 +248,12 @@ bool readTable_cmap(FILE* fontFile, TrueTypeFont* in_trueTypeFont)
 				* Since the subTable6.length is sometimes larger than the number of bytes
 				* we only check for smaller
 				*/
-				if (subTable6.length < offsetof(cmapSubTable6, glyphIdArray)+2*subTable6.entryCount)
+				if (subTable6.length < offsetof_in_object(subTable6, glyphIdArray)+2*subTable6.entryCount)
 					return false;
-				else if (subTable6.length > offsetof(cmapSubTable6, glyphIdArray)+2*subTable6.entryCount)
+				else if (subTable6.length > offsetof_in_object(subTable6, glyphIdArray)+2*subTable6.entryCount)
 				{
 					printf("Warning: subTable6.length = %hu, but only %hu bytes necessary\n", 
-						subTable6.length, offsetof(cmapSubTable6, glyphIdArray)+2*subTable6.entryCount);
+						subTable6.length, offsetof_in_object(subTable6, glyphIdArray)+2*subTable6.entryCount);
 				}
 
 				subTable6.glyphIdArray.allocate(subTable6.entryCount);

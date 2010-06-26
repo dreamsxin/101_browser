@@ -2,7 +2,7 @@
 #define _SafeMemoryManagement_h
 
 #include <cstdlib>
-#include <exception>
+#include <new>
 #include "BasicDataStructures/Error/ErrorHandling.h"
 
 template <typename T> T* safeMallocBytesExitOnFailure(size_t in_bytesCount)

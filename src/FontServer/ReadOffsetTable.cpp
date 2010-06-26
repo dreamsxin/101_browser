@@ -1,6 +1,8 @@
 #include "FontServer/FontServer.h"
 #include "BasicDataStructures/Endianess.h"
 #include "FontServer/FontServerUtil.h"
+// for memcmp
+#include <cstring>
 
 bool readOffsetTable(FILE* fontFile, OffsetTable* in_pOffsetTable)
 {
@@ -23,3 +25,4 @@ bool readOffsetTable(FILE* fontFile, OffsetTable* in_pOffsetTable)
 
 	return true;
 }
+
