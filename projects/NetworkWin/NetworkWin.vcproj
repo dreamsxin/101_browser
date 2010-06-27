@@ -169,6 +169,10 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{561422E6-5ADA-44BB-BC4A-62F814D83399}"
+			RelativePathToProject=".\projects\CryptoWin\CryptoWin.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter

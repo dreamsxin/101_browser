@@ -30,11 +30,7 @@ testfiles/fonts/*.FON
 testfiles/swf/*.swf
 testfiles/pdf/*.pdf
 BuildLog.htm
-lib/zlib/*
-lib/BasicDataStructures/*/*.lib
-Debug/*.lib
-Release/*.lib
-projects/zlib/*/*.lib
+*.lib
 data/*/*.zip
 data/*/*.doc
 log.txt
