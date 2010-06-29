@@ -14,3 +14,19 @@ h3. What does the "MTAx" namespace mean?
 
 Since 101 is not a valid namespace, I used MTAx, which is 101 encoded in Base64.
 
+h2. Questions concerning implemented standards
+
+h3. Where can I get the ITU-T T.81 standard?
+
+Under http://www.w3.org/Graphics/JPEG/ there is a link to http://www.w3.org/Graphics/JPEG/itu-t81.pdf
+
+h3. Where can I get the ITU-T T.83 standard?
+
+I don't know of a free way that I am sure to be legal. So you will either have to pay or be on your own. :-(
+
+Hint for adventurous people who don't fear legal consequences: search engines are a great invention. ;-)
+
+h3. Where can I obtain the test vectors for ITU-T T.83?
+
+Under http://www.itu.int/net/itu-t/sigdb/speimage/Tseries-s.htm there is a link to http://www.itu.int/net/itu-t/sigdb/speimage/ImageForm-s.aspx?val=1010083 where you can get the test vectors.
+
