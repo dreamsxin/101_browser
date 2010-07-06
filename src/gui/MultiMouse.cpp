@@ -1,8 +1,8 @@
 #include "BasicDataStructures/Memory/SafeMemoryManagement.h"
 #include "BasicDataStructures/Error/ErrorHandling.h"
 #include "gui/MultiMouse.h"
+#include "contrib/hidusage.h"
 #include <tchar.h>
-#include <hidusage.h>
 #include <cassert>
 #include <list>
 using namespace std;

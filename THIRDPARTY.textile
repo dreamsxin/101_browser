@@ -1,0 +1,21 @@
+h1. 101 browser information concerning included Third Party material
+
+h2. hidusage.h
+
+|_. Property|_. Value|
+|File|include/contrib/hidusage.h|
+|Origin|http://www.koders.com/c/fid0821947244D2BE0C866F2B43625AAA7670336C4E.aspx|
+|Project|ReactOS|
+|Homepage| http://www.reactos.org|
+
+h2. pstdint.h
+
+|File|include/contrib/pstdint.h|
+|Origin|http://www.azillionmonkeys.com/qed/pstdint.h|
+|Homepage: http://www.azillionmonkeys.com/qed/ninja.html|
+
+h2. zlib 1.2.3 (soon to be removed)
+
+|Files|include/zlib/*; src/zlib/*|
+|Project|zlib|
+|Homepage|http://zlib.net/|

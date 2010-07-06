@@ -402,6 +402,26 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="HigherOrderFunctions"
+				>
+				<File
+					RelativePath="..\..\..\include\BasicDataStructures\HigherOrderFunctions\Fold.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="PlatformIndependentHeaders"
+				>
+				<File
+					RelativePath="..\..\..\include\BasicDataStructures\PlatformIndependentHeaders\climits.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\BasicDataStructures\PlatformIndependentHeaders\cstdint.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"

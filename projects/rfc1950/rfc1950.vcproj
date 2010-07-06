@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="TestSuite"
-	ProjectGUID="{509A97A0-019B-478F-BA5F-EF10C9D17E90}"
-	RootNamespace="TestSuite"
+	Name="rfc1950"
+	ProjectGUID="{5F76E696-30B1-4534-827F-16F2CC84E89C}"
+	RootNamespace="rfc1950"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -20,7 +20,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="1"
 			>
 			<Tool
@@ -42,12 +42,12 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(SolutionDir)include;D:\download\boost\boost_1_40_0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;RFC1950_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
-				WarningLevel="4"
+				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -61,11 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="rfc1950.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(SolutionDir)$(ConfigurationName)"
 				GenerateDebugInformation="true"
-				SubSystem="1"
+				SubSystem="2"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -94,7 +92,7 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -118,7 +116,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="$(SolutionDir)include;D:\download\boost\boost_1_40_0"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;RFC1950_EXPORTS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -136,11 +134,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="rfc1950.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(SolutionDir)$(ConfigurationName)"
 				GenerateDebugInformation="true"
-				SubSystem="1"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -177,39 +173,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="$(SolutionDir)src\TestSuite\IteratorTestUtil.cpp"
+				RelativePath="..\..\src\rfc1950\adler32_impl.c"
 				>
 			</File>
 			<File
-				RelativePath="$(SolutionDir)src\TestSuite\Test_BasicDataStructures.cpp"
-				>
-			</File>
-			<File
-				RelativePath="$(SolutionDir)src\TestSuite\Test_BasicDataStructures_Tree.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TestSuite\Test_IteratorInstances.cpp"
-				>
-			</File>
-			<File
-				RelativePath="$(SolutionDir)src\TestSuite\Test_OuterBorderIterator.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TestSuite\Test_rfc1950.cpp"
-				>
-			</File>
-			<File
-				RelativePath="$(SolutionDir)src\TestSuite\Test_TriangleStripBorderIterator.cpp"
-				>
-			</File>
-			<File
-				RelativePath="$(SolutionDir)src\TestSuite\TestSuiteMain.cpp"
-				>
-			</File>
-			<File
-				RelativePath="$(SolutionDir)src\TestSuite\TestSuiteTest.cpp"
+				RelativePath="..\..\src\rfc1950\adler32_update.cpp"
 				>
 			</File>
 		</Filter>
@@ -219,15 +187,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="$(SolutionDir)include\TestSuite\IteratorTestUtil.h"
-				>
-			</File>
-			<File
-				RelativePath="$(SolutionDir)include\TestSuite\Tests.h"
-				>
-			</File>
-			<File
-				RelativePath="$(SolutionDir)include\TestSuite\TestSuite.h"
+				RelativePath="..\..\include\rfc1950\rfc1950.h"
 				>
 			</File>
 		</Filter>

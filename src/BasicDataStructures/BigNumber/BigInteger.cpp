@@ -1,7 +1,7 @@
 #include "BasicDataStructures/BigNumber/BigInteger.h"
+#include "BasicDataStructures/PlatformIndependentHeaders/climits.h"
 
 #include <cassert>
-#include <climits>
 
 bool isZero(UnsignedBigInteger const * const in_pcInt)
 {
