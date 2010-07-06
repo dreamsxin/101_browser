@@ -320,14 +320,14 @@ int main(int argc, char** argv)
 		}
 		else if (bitsCount == 3)
 		{
-			desiredChildrenCount = 6;
+			desiredChildrenCount = 7;
 		}
 	}
 	else if (useModel == UseModelCirc)
 	{
 		if (bitsCount == 2)
 		{
-			desiredChildrenCount = 5;
+			desiredChildrenCount = 6;
 		}
 	}
 	// End hack
