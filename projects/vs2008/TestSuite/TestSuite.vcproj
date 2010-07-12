@@ -169,6 +169,10 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{5F76E696-30B1-4534-827F-16F2CC84E89C}"
+			RelativePathToProject=".\projects\rfc1950\rfc1950.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter

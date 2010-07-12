@@ -1,4 +1,4 @@
-#include <cstdio>
+#include "BasicDataStructures/PlatformIndependentFunctions/fopen_s.h"
 #include <cstdlib>
 #include <cassert>
 #include "JpegDecoder/JpegDecoder.h"
@@ -12,15 +12,7 @@ int main()
 
 	FILE* jpegFile = NULL;
 
-#ifdef _MSC_VER
-	errno_t openResult = fopen_s(&jpegFile, filename, mode);
-
-	if (openResult != 0)
-#else
-	jpegFile = fopen(filename, mode);
-
-	if (!jpegFile)
-#endif
+	if (pi_fopen_s(&jpegFile, filename, mode) != 0)
 	{
 		fprintf(stderr, "Could not open file %s\n", filename);
 		exit(1);

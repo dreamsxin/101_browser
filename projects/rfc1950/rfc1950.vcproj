@@ -173,11 +173,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\src\rfc1950\adler32_impl.c"
+				RelativePath="..\..\src\rfc1950\rfc1950_adler32_impl.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\rfc1950\adler32_update.cpp"
+				RelativePath="..\..\src\rfc1950\rfc1950_adler32_update.cpp"
 				>
 			</File>
 		</Filter>
@@ -187,7 +187,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\include\rfc1950\rfc1950.h"
+				RelativePath="..\..\include\rfc1950\rfc1950_adler32.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\rfc1950\rfc1950_zlib.h"
 				>
 			</File>
 		</Filter>

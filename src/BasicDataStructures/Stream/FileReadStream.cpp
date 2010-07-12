@@ -1,10 +1,13 @@
 #include "BasicDataStructures/Stream/FileReadStream.h"
+#include "BasicDataStructures/PlatformIndependentFunctions/fopen_s.h"
 
 bool FileReadStream::open(const char* in_filename)
 {
 	close();
-	mFile = fopen(in_filename, "rb");
-	return isOpen();
+	if (pi_fopen_s(&mFile, in_filename, "rb") != 0)
+		return false;
+	else
+		return true;
 }
 
 bool FileReadStream::isOpen() const

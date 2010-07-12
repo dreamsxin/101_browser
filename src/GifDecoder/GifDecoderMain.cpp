@@ -1,4 +1,4 @@
-#include <cstdio>
+#include "BasicDataStructures/PlatformIndependentFunctions/fopen_s.h"
 #include <cstdlib>
 #include <cstring>
 #include <vector>
@@ -39,9 +39,9 @@ size_t globalColorTableColorCount(LogicalScreenDescriptor logScrDescr)
 int main()
 {
 	char filename[] = "testfiles/gif/GifSample.gif";
-	FILE* imgFile = fopen(filename, "rb");
+	FILE* imgFile = NULL;
 
-	if (!imgFile)
+	if (pi_fopen_s(&imgFile, filename, "rb") != 0)
 	{
 		fprintf(stderr, "Could not open file %s\n", filename);
 		exit(1);
