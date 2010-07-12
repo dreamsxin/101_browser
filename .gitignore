@@ -3,6 +3,7 @@
 *.user
 *.dep
 *.obj
+*.lib
 *.embed.manifest
 *.intermediate.manifest
 *.exe
