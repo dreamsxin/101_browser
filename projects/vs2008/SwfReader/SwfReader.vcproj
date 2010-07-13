@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="BasicDataStructures.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(SolutionDir)lib\BasicDataStructures\Debug"
+				AdditionalLibraryDirectories="$(SolutionDir)$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -138,7 +138,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="BasicDataStructures.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(SolutionDir)lib\BasicDataStructures\Release\"
+				AdditionalLibraryDirectories="$(SolutionDir)$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -171,11 +171,11 @@
 	<References>
 		<ProjectReference
 			ReferencedProjectIdentifier="{E97BF0CC-EB71-43A2-B4BA-8CB5F1E11214}"
-			RelativePathToProject=".\projects\BasicDataStructures\BasicDataStructures.vcproj"
+			RelativePathToProject=".\projects\vs2008\BasicDataStructures\BasicDataStructures.vcproj"
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{0039884E-1AF1-4FFD-B864-7A386353C88F}"
-			RelativePathToProject=".\projects\zlib\zlib.vcproj"
+			RelativePathToProject=".\projects\vs2008\zlib\zlib.vcproj"
 		/>
 	</References>
 	<Files>

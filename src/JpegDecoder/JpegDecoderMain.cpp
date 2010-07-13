@@ -1,4 +1,4 @@
-#include "BasicDataStructures/PlatformIndependentFunctions/fopen_s.h"
+#include "MiniStdlib/MTAx_fopen.h"
 #include <cstdlib>
 #include <cassert>
 #include "JpegDecoder/JpegDecoder.h"
@@ -10,9 +10,9 @@ int main()
 
 	char mode[] = "rb";
 
-	FILE* jpegFile = NULL;
+	FILE* jpegFile = MTAx_fopen(filename, mode);
 
-	if (pi_fopen_s(&jpegFile, filename, mode) != 0)
+	if (jpegFile == NULL)
 	{
 		fprintf(stderr, "Could not open file %s\n", filename);
 		exit(1);

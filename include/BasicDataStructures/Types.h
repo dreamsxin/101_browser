@@ -1,7 +1,7 @@
 #ifndef _Types_h
 #define _Types_h
 
-#include "BasicDataStructures/PlatformIndependentHeaders/cstdint.h"
+#include "MiniStdlib/cstdint.h"
 
 #ifdef _WIN32
 #include "windows.h"

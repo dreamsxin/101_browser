@@ -1,5 +1,5 @@
 #include <cassert>
-#include "BasicDataStructures/PlatformIndependentHeaders/climits.h"
+#include "MiniStdlib/climits.h"
 #include "FontServer/FontServer.h"
 #include "BasicDataStructures/Endianess.h"
 

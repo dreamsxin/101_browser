@@ -1,7 +1,7 @@
 #ifndef _OZO_rfc1950_adler32_h
 #define _OZO_rfc1950_adler32_h
 
-#include "BasicDataStructures/PlatformIndependentHeaders/cstdint.h"
+#include "MiniStdlib/cstdint.h"
 
 #ifdef __cplusplus
 extern "C" {

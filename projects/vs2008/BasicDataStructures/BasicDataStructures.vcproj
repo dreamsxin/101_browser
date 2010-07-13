@@ -61,7 +61,9 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="MiniStdlib.lib"
 				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).lib"
+				AdditionalLibraryDirectories="$(SolutionDir)$(ConfigurationName)"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -125,7 +127,9 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="MiniStdlib.lib"
 				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).lib"
+				AdditionalLibraryDirectories="$(SolutionDir)$(ConfigurationName)"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -201,14 +205,6 @@
 				>
 				<File
 					RelativePath="$(SolutionDir)src\BasicDataStructures\BigNumber\BigInteger.cpp"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="PlatformIndependentFunctions"
-				>
-				<File
-					RelativePath="..\..\..\src\BasicDataStructures\PlatformIndependentFunctions\fopen_s.c"
 					>
 				</File>
 			</Filter>
@@ -415,26 +411,6 @@
 				>
 				<File
 					RelativePath="..\..\..\include\BasicDataStructures\HigherOrderFunctions\Fold.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="PlatformIndependentHeaders"
-				>
-				<File
-					RelativePath="..\..\..\include\BasicDataStructures\PlatformIndependentHeaders\climits.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\include\BasicDataStructures\PlatformIndependentHeaders\cstdint.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="PlatformIndependentFunctions"
-				>
-				<File
-					RelativePath="..\..\..\include\BasicDataStructures\PlatformIndependentFunctions\fopen_s.h"
 					>
 				</File>
 			</Filter>

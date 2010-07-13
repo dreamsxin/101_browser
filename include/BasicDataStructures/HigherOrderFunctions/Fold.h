@@ -3,7 +3,7 @@
 
 #include <climits>
 #include <cassert>
-#include "BasicDataStructures/PlatformIndependentHeaders/cstdint.h"
+#include "MiniStdlib/cstdint.h"
 
 namespace OZO
 {

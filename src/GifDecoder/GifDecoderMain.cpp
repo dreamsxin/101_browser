@@ -1,4 +1,4 @@
-#include "BasicDataStructures/PlatformIndependentFunctions/fopen_s.h"
+#include "MiniStdlib/MTAx_fopen.h"
 #include <cstdlib>
 #include <cstring>
 #include <vector>
@@ -39,9 +39,9 @@ size_t globalColorTableColorCount(LogicalScreenDescriptor logScrDescr)
 int main()
 {
 	char filename[] = "testfiles/gif/GifSample.gif";
-	FILE* imgFile = NULL;
+	FILE* imgFile = MTAx_fopen(filename, "rb");
 
-	if (pi_fopen_s(&imgFile, filename, "rb") != 0)
+	if (imgFile == NULL)
 	{
 		fprintf(stderr, "Could not open file %s\n", filename);
 		exit(1);

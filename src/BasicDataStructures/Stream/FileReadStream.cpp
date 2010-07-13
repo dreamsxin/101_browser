@@ -1,13 +1,13 @@
 #include "BasicDataStructures/Stream/FileReadStream.h"
-#include "BasicDataStructures/PlatformIndependentFunctions/fopen_s.h"
+#include "MiniStdlib/MTAx_fopen.h"
 
 bool FileReadStream::open(const char* in_filename)
 {
 	close();
-	if (pi_fopen_s(&mFile, in_filename, "rb") != 0)
-		return false;
-	else
-		return true;
+
+	mFile = MTAx_fopen(in_filename, "rb");
+
+	return isOpen();
 }
 
 bool FileReadStream::isOpen() const

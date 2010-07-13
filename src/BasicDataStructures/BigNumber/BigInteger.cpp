@@ -1,5 +1,5 @@
 #include "BasicDataStructures/BigNumber/BigInteger.h"
-#include "BasicDataStructures/PlatformIndependentHeaders/climits.h"
+#include "MiniStdlib/climits.h"
 
 #include <cassert>
 

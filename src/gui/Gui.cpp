@@ -1,7 +1,7 @@
 #include <windows.h>
 #include <string>
 #include <cassert>
-#include <cstdlib>
+#include "MiniStdlib/MTAx_fopen.h"
 #include <tchar.h>
 #include "GuiOpenGL/GuiComponentsDefaults.h"
 #include "GuiOpenGL/GuiOpenGLState.h"
@@ -346,7 +346,12 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 					LPSTR,		// lpCmdLine,		// Command Line Parameters
 					int			nCmdShow)			// Window Show State
 {
-	logFile = fopen("log.txt", "w+");
+	logFile = MTAx_fopen("log.txt", "w+");
+
+	if (logFile == NULL)
+	{
+		showErrorMessageAndExit(L"Could not open log file");
+	}
 
 	Window window(hInstance, 640, 480);
 	window.windowClassName = L"101_window_class";
