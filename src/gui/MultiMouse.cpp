@@ -52,6 +52,8 @@ namespace Gui
 						showErrorMessageAndExit(L"GetRawInputDeviceInfo() get");
 					}
 
+					assert(_tcsnlen(psName, cbSize) == cbSize - 1);
+
 					// We want to ignore RDP mice
 					{
 						TCHAR rdpMouseName[] = _T("\\??\\Root#RDP_MOU#0000#");
