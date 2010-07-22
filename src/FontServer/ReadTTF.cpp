@@ -1,9 +1,9 @@
 #include "FontServer/FontServer.h"
-#include <cstdio>
+#include "MiniStdlib/MTAx_fopen.h"
 #include <cstring>
 
 int readTTF(char* filename) {
-	FILE* fontFile = fopen(filename, "rb");
+	FILE* fontFile = MTAx_fopen(filename, "rb");
 
 	if (!fontFile)
 		return -1;

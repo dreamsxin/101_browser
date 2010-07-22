@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="rfc1950"
-	ProjectGUID="{5F76E696-30B1-4534-827F-16F2CC84E89C}"
-	RootNamespace="rfc1950"
+	Name="NetworkWin"
+	ProjectGUID="{F1685509-FA26-4AE0-AD5A-02E329CFFB41}"
+	RootNamespace="NetworkWin"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -20,7 +20,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			CharacterSet="1"
 			>
 			<Tool
@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(SolutionDir)include;D:\download\boost\boost_1_40_0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;RFC1950_EXPORTS"
+				AdditionalIncludeDirectories="$(SolutionDir)include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -61,9 +61,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="ws2_32.lib CryptoWin.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(SolutionDir)$(ConfigurationName)"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -92,7 +94,7 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -115,8 +117,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="$(SolutionDir)include;D:\download\boost\boost_1_40_0"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;RFC1950_EXPORTS"
+				AdditionalIncludeDirectories="$(SolutionDir)include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -134,9 +136,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="ws2_32.lib CryptoWin.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="$(SolutionDir)$(ConfigurationName)"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -165,6 +169,10 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{561422E6-5ADA-44BB-BC4A-62F814D83399}"
+			RelativePathToProject=".\projects\CryptoWin\CryptoWin.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter
@@ -173,11 +181,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\src\rfc1950\rfc1950_adler32_impl.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\rfc1950\rfc1950_adler32_update.cpp"
+				RelativePath="..\..\..\src\NetworkWin\NetworkWinMain.cpp"
 				>
 			</File>
 		</Filter>
@@ -186,14 +190,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="..\..\include\rfc1950\rfc1950_adler32.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\rfc1950\rfc1950_zlib.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

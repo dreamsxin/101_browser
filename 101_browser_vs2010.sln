@@ -19,8 +19,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PdfReader", "projects\vs201
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SwfReader", "projects\vs2010\SwfReader\SwfReader.vcxproj", "{50CD3C85-17F6-4FD5-8467-26C7EE82AA7F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VirtualMachine", "projects\vs2010\VirtualMachine\VirtualMachine.vcxproj", "{4C94433E-6DAB-4435-B2FB-5F53C970A461}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XmlReader", "projects\vs2010\XmlReader\XmlReader.vcxproj", "{76F5E41D-1713-4CD7-9160-DEBF2F63D651}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BasicDataStructures", "projects\vs2010\BasicDataStructures\BasicDataStructures.vcxproj", "{5418215D-EE32-42B5-B2F2-59F6EC623F10}"

@@ -17,8 +17,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PdfReader", "projects\vs200
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XmlReader", "projects\vs2008\XmlReader\XmlReader.vcproj", "{733736C2-83AC-4AE1-A6A3-8DAF4393573E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VirtualMachine", "projects\vs2008\VirtualMachine\VirtualMachine.vcproj", "{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Html5Reader", "projects\vs2008\Html5Reader\Html5Reader.vcproj", "{5CD1AAF7-719B-42D8-B3EE-3781F720DA5F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiDataStructures", "projects\vs2008\GuiDataStructures\GuiDataStructures.vcproj", "{0403DAC4-7C0F-41E5-9405-86A4DC16FBBA}"
@@ -31,13 +29,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsDataStructures", "p
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiWin", "projects\vs2008\GuiWin\GuiWin.vcproj", "{64A360E3-664D-4B8E-A7B3-E8B27437305D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetworkWin", "projects\NetworkWin\NetworkWin.vcproj", "{F1685509-FA26-4AE0-AD5A-02E329CFFB41}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetworkWin", "projects\vs2008\NetworkWin\NetworkWin.vcproj", "{F1685509-FA26-4AE0-AD5A-02E329CFFB41}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CryptoWin", "projects\CryptoWin\CryptoWin.vcproj", "{561422E6-5ADA-44BB-BC4A-62F814D83399}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CryptoWin", "projects\vs2008\CryptoWin\CryptoWin.vcproj", "{561422E6-5ADA-44BB-BC4A-62F814D83399}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rfc1950", "projects\rfc1950\rfc1950.vcproj", "{5F76E696-30B1-4534-827F-16F2CC84E89C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rfc1950", "projects\vs2008\rfc1950\rfc1950.vcproj", "{5F76E696-30B1-4534-827F-16F2CC84E89C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MiniStdlib", "projects\MiniStdlib\MiniStdlib.vcproj", "{618B3D14-87D5-4E5C-B7C4-8D04A8A50C95}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MiniStdlib", "projects\vs2008\MiniStdlib\MiniStdlib.vcproj", "{618B3D14-87D5-4E5C-B7C4-8D04A8A50C95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -213,26 +211,6 @@ Global
 		{733736C2-83AC-4AE1-A6A3-8DAF4393573E}.LIB Release|Win32.Build.0 = Release|Win32
 		{733736C2-83AC-4AE1-A6A3-8DAF4393573E}.Release|Win32.ActiveCfg = Release|Win32
 		{733736C2-83AC-4AE1-A6A3-8DAF4393573E}.Release|Win32.Build.0 = Release|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.Debug|Win32.ActiveCfg = Debug|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.Debug|Win32.Build.0 = Debug|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.DLL ASM Debug|Win32.ActiveCfg = Debug|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.DLL ASM Debug|Win32.Build.0 = Debug|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.DLL ASM Release|Win32.ActiveCfg = Release|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.DLL ASM Release|Win32.Build.0 = Release|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.DLL Debug|Win32.ActiveCfg = Debug|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.DLL Debug|Win32.Build.0 = Debug|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.DLL Release|Win32.ActiveCfg = Release|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.DLL Release|Win32.Build.0 = Release|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.LIB ASM Debug|Win32.ActiveCfg = Debug|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.LIB ASM Debug|Win32.Build.0 = Debug|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.LIB ASM Release|Win32.ActiveCfg = Release|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.LIB ASM Release|Win32.Build.0 = Release|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.LIB Debug|Win32.ActiveCfg = Debug|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.LIB Debug|Win32.Build.0 = Debug|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.LIB Release|Win32.ActiveCfg = Release|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.LIB Release|Win32.Build.0 = Release|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.Release|Win32.ActiveCfg = Release|Win32
-		{AE4C9F8E-29CD-4A63-8178-C1DFDC686B1E}.Release|Win32.Build.0 = Release|Win32
 		{5CD1AAF7-719B-42D8-B3EE-3781F720DA5F}.Debug|Win32.ActiveCfg = Debug|Win32
 		{5CD1AAF7-719B-42D8-B3EE-3781F720DA5F}.Debug|Win32.Build.0 = Debug|Win32
 		{5CD1AAF7-719B-42D8-B3EE-3781F720DA5F}.DLL ASM Debug|Win32.ActiveCfg = Debug|Win32
