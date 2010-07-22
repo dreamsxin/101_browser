@@ -90,6 +90,7 @@ namespace Gui
 					currentMouse.x = 0;
 					currentMouse.y = 0;
 					currentMouse.z = 0;
+					currentMouse.buttonsPressed = ArrayBlock<bool>();
 					currentMouse.buttonsPressed.allocate(pDeviceInfo->mouse.dwNumberOfButtons);
 
 					memset(currentMouse.buttonsPressed.data(), 0, 
