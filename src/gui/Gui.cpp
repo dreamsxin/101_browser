@@ -10,8 +10,6 @@
 #include "BasicDataStructures/Error/ErrorHandling.h"
 #include "BasicDataStructures/Memory/SafeMemoryManagement.h"
 
-void toggleMultiMouse(bool multipleMice, HWND hWnd);
-
 struct Window
 {
 	HINSTANCE	hInstance;		// Holds The Instance Of The Application
@@ -19,15 +17,17 @@ struct Window
 	HWND		hWnd;		    // Holds Our Window Handle
 	HDC			hDC;		    // Private GDI Device Context
 	HGLRC		hGLRC;		    // Permanent Rendering Context
-	ArrayBlock<Gui::Mouse::RawMouse>* pRawMice;
+	ArrayBlock<Gui::Mouse::RawMouse> rawMice;
 	UINT width;
 	UINT height;
 
 	Window(HINSTANCE in_hInstance, UINT in_width, UINT in_height) 
-		: hInstance(in_hInstance), hWnd(0), hDC(0), hGLRC(0), pRawMice(NULL),
+		: hInstance(in_hInstance), hWnd(0), hDC(0), hGLRC(0),
 		width(in_width), height(in_height)
 	{ }
 };
+
+void toggleMultiMouse(bool multipleMice, HWND hWnd, ArrayBlock<Gui::Mouse::RawMouse>* pRawMice);
 
 bool runProgram = true;
 FILE* logFile = NULL;
@@ -63,15 +63,13 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				window->width = LOWORD(lParam);
 				window->height = HIWORD(lParam);
 
-				assert(window->pRawMice != NULL);
-
-				for (size_t currentMouseIndex = 0; currentMouseIndex < window->pRawMice->count(); 
+				for (size_t currentMouseIndex = 0; currentMouseIndex < window->rawMice.count(); 
 					currentMouseIndex++)
 				{
-					if (window->pRawMice->data()[currentMouseIndex].x >= window->width)
-						window->pRawMice->data()[currentMouseIndex].x = window->width - 1;
-					if (window->pRawMice->data()[currentMouseIndex].y >= window->height)
-						window->pRawMice->data()[currentMouseIndex].y = window->height - 1;
+					if (window->rawMice.data()[currentMouseIndex].x >= window->width)
+						window->rawMice.data()[currentMouseIndex].x = window->width - 1;
+					if (window->rawMice.data()[currentMouseIndex].y >= window->height)
+						window->rawMice.data()[currentMouseIndex].y = window->height - 1;
 				}
 
 				ReshapeGL(window->width, window->height);
@@ -85,7 +83,7 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// handler - but what should be done else
 		// for drawing the window *while* resizing, moving etc.
 		UpdateGuiState();
-		drawGui(multipleMice ? window->pRawMice : NULL);
+		drawGui(multipleMice ? &window->rawMice : NULL);
 		SwapBuffers(window->hDC);
 		ValidateRect(window->hWnd, NULL);
 		return 0;
@@ -93,15 +91,13 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (wParam == VK_F12)
 		{
 			multipleMice = !multipleMice;
-			toggleMultiMouse(multipleMice, window->hWnd);
+			toggleMultiMouse(multipleMice, window->hWnd, &window->rawMice);
 			InvalidateRect(window->hWnd, NULL, FALSE);
 		}
 		return 0;
 
 	case WM_INPUT:
 		{
-			assert(window->pRawMice != NULL);
-
 			UINT cbSize;
 			if (GetRawInputData((HRAWINPUT) lParam, RID_INPUT, 
 				NULL, &cbSize, sizeof(RAWINPUTHEADER)) != 0)
@@ -118,10 +114,10 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				showErrorMessageAndExit(L"GetRawInputData() get");
 			}
 
-			for (size_t currentMouseIndex = 0; currentMouseIndex < window->pRawMice->count();
+			for (size_t currentMouseIndex = 0; currentMouseIndex < window->rawMice.count();
 				currentMouseIndex++)
 			{
-				if (window->pRawMice->data()[currentMouseIndex].deviceHandle == 
+				if (window->rawMice.data()[currentMouseIndex].deviceHandle == 
 					pRawInput->header.hDevice)
 				{
 					fprintf(logFile, "(%i, %i)\n", 
@@ -129,21 +125,21 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					fflush(logFile);
 
 					if (pRawInput->data.mouse.lLastX < 0 && 
-						((ULONG) -pRawInput->data.mouse.lLastX) > window->pRawMice->data()[currentMouseIndex].x)
-						window->pRawMice->data()[currentMouseIndex].x = 0;
+						((ULONG) -pRawInput->data.mouse.lLastX) > window->rawMice.data()[currentMouseIndex].x)
+						window->rawMice.data()[currentMouseIndex].x = 0;
 					else
-						window->pRawMice->data()[currentMouseIndex].x += pRawInput->data.mouse.lLastX;
+						window->rawMice.data()[currentMouseIndex].x += pRawInput->data.mouse.lLastX;
 
 					if (pRawInput->data.mouse.lLastY < 0 && 
-						((ULONG) -pRawInput->data.mouse.lLastY) > window->pRawMice->data()[currentMouseIndex].y)
-						window->pRawMice->data()[currentMouseIndex].y = 0;
+						((ULONG) -pRawInput->data.mouse.lLastY) > window->rawMice.data()[currentMouseIndex].y)
+						window->rawMice.data()[currentMouseIndex].y = 0;
 					else
-						window->pRawMice->data()[currentMouseIndex].y += pRawInput->data.mouse.lLastY;
+						window->rawMice.data()[currentMouseIndex].y += pRawInput->data.mouse.lLastY;
 
-					if (window->pRawMice->data()[currentMouseIndex].x >= window->width)
-						window->pRawMice->data()[currentMouseIndex].x = window->width - 1;
-					if (window->pRawMice->data()[currentMouseIndex].y >= window->height)
-						window->pRawMice->data()[currentMouseIndex].y = window->height - 1;
+					if (window->rawMice.data()[currentMouseIndex].x >= window->width)
+						window->rawMice.data()[currentMouseIndex].x = window->width - 1;
+					if (window->rawMice.data()[currentMouseIndex].y >= window->height)
+						window->rawMice.data()[currentMouseIndex].y = window->height - 1;
 
 					InvalidateRect(window->hWnd, NULL, FALSE);
 					break;
@@ -207,20 +203,20 @@ bool createWindow(Window* in_window, std::wstring in_titleText,
 	AdjustWindowRectEx(&windowRect, dwStyle, FALSE, dwExStyle);			// Adjust Window To True Requested Size
 
 	in_window->hWnd = CreateWindowEx (
-		dwExStyle,						// Extended Style
-		in_window->windowClassName.c_str(),	// Class Name
-		in_titleText.c_str(),				// Window Title
-		dwStyle,								// Window Style
+		dwExStyle,                                                      // Extended Style
+		in_window->windowClassName.c_str(),                             // Class Name
+		in_titleText.c_str(),                                           // Window Title
+		dwStyle,                                                        // Window Style
 		// We don't use windowRect.left and windowRect.top here
 		// since this moves the window corner to places with negative screen
 		// coordinates
-		0,									// Window X Position
-		0,									// Window Y Position
-		windowRect.right - windowRect.left,	// Window Width
-		windowRect.bottom - windowRect.top,	// Window Height
-		HWND_DESKTOP,						// Desktop Is Window's Parent
-		0,									// No Menu
-		in_window->hInstance,				// Pass The Window Instance
+		0,                                                              // Window X Position
+		0,                                                              // Window Y Position
+		windowRect.right - windowRect.left,                             // Window Width
+		windowRect.bottom - windowRect.top,                             // Window Height
+		HWND_DESKTOP,                                                   // Desktop Is Window's Parent
+		0,                                                              // No Menu
+		in_window->hInstance,                                           // Pass The Window Instance
 		in_window);
 
 	if (!in_window->hWnd)
@@ -327,11 +323,15 @@ void destroyWindow(Window* in_window)
  * Note: it is important not to call the function when already the 
  *       desired state is reached
  */
-void toggleMultiMouse(bool multipleMice, HWND hWnd)
+void toggleMultiMouse(bool multipleMice, HWND hWnd, ArrayBlock<Gui::Mouse::RawMouse>* pRawMice)
 {
 	if (multipleMice)
 	{
 		Gui::Mouse::registerRawMice(hWnd);
+		ArrayBlock<Gui::Mouse::RawMouse> block = Gui::Mouse::getRawMouseArray();
+		Gui::Mouse::syncRawMousePositions(pRawMice, &block);
+		Gui::Mouse::destroyRawMouseArray(pRawMice);
+		*pRawMice = block;
 		ShowCursor(FALSE);
 	}
 	else
@@ -382,13 +382,7 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 	freeTextureMemory(&cursor.andMap);
 	freeTextureMemory(&cursor.xorMap);
 
-	ArrayBlock<Gui::Mouse::RawMouse> miceArray = Gui::Mouse::getRawMouseArray();
-	window.pRawMice = &miceArray;
-
-	for (size_t currentMouseIndex = 0; currentMouseIndex < miceArray.count(); currentMouseIndex++)
-	{
-		_ftprintf(logFile, _T("%s\n"), miceArray.data()[currentMouseIndex].psName);
-	}
+	window.rawMice = ArrayBlock<Gui::Mouse::RawMouse>();
 
 	showWindow(&window, nCmdShow); // Alternative: use SW_NORMAL instead of nCmdShow
 
@@ -405,7 +399,7 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 
 	destroyWindow(&window);
 
-	destroyRawMouseArray(&miceArray);
+	destroyRawMouseArray(&window.rawMice);
 
 	if (!unregisterWindowClass(window))
 	{

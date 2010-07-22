@@ -12,16 +12,14 @@ namespace Gui
 		{
 			HANDLE deviceHandle;
 			ULONG x, y, z;
-			TCHAR* psName;
 			ArrayBlock<bool> buttonsPressed;
 		};
 
 		ArrayBlock<RawMouse> getRawMouseArray();
 
-		inline void destroyRawMouseArray(ArrayBlock<RawMouse>* in_rawMice)
-		{
-			in_rawMice->free();
-		}
+		void syncRawMousePositions(ArrayBlock<RawMouse>* in_oldRawMice, ArrayBlock<RawMouse>* in_newRawMice);
+
+		void destroyRawMouseArray(ArrayBlock<RawMouse>* in_rawMice);
 
 		void registerRawMice(HWND hWnd);
 		void unregisterRawMice();

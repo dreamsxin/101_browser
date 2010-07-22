@@ -115,7 +115,7 @@ namespace Gui
 		bih.biClrUsed = 0;
 		bih.biClrImportant = 0;
 
-		if (GetDIBits(hDC, iconInfo.hbmMask, 
+		int retVal = GetDIBits(hDC, iconInfo.hbmMask, 
 			// if we have no color icon: xorMap.height=0
 			// otherwise it has a sensible value
 			// so we can shorten
@@ -123,7 +123,9 @@ namespace Gui
 			// to xorMap.height
 			xorMap.height, andMap.height,
 			andMap.data, (BITMAPINFO*) &bih, 
-			DIB_RGB_COLORS) != andMap.height)
+			DIB_RGB_COLORS);
+
+		if (retVal < 0 || ((unsigned long) retVal) != andMap.height)
 		{
 			DeleteObject(iconInfo.hbmMask);
 			if (isColorIcon)

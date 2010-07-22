@@ -65,6 +65,8 @@ namespace Gui
 						}
 					}
 
+					safe_free(&psName);
+
 					if (GetRawInputDeviceInfo(hDevice, RIDI_DEVICEINFO, NULL, &cbSize) != 0)
 					{
 						showErrorMessageAndExit(L"GetRawInputDeviceInfo() count");
@@ -86,7 +88,6 @@ namespace Gui
 					currentMouse.x = 0;
 					currentMouse.y = 0;
 					currentMouse.z = 0;
-					currentMouse.psName = psName;
 					currentMouse.buttonsPressed.allocate(pDeviceInfo->mouse.dwNumberOfButtons);
 
 					memset(currentMouse.buttonsPressed.data(), 0, 
@@ -111,6 +112,42 @@ namespace Gui
 			}
 
 			return out_rawMiceArray;
+		}
+
+		void syncRawMousePositions(ArrayBlock<RawMouse>* in_oldRawMice, ArrayBlock<RawMouse>* in_newRawMice)
+		{
+			assert(in_oldRawMice->count() < SIZE_MAX);
+			assert(in_newRawMice->count() < SIZE_MAX);
+
+			for (size_t lNewIndex = 0; lNewIndex < in_newRawMice->count(); lNewIndex++)
+			{
+				RawMouse* pCurrentNewRawMouse = in_newRawMice->data()+lNewIndex;
+
+				for (size_t lOldIndex = 0; lOldIndex < in_oldRawMice->count(); lOldIndex++)
+				{
+					RawMouse* pCurrentOldRawMouse = in_oldRawMice->data()+lOldIndex;
+
+					if (pCurrentNewRawMouse->deviceHandle == pCurrentOldRawMouse->deviceHandle)
+					{
+						pCurrentNewRawMouse->x = pCurrentOldRawMouse->x;
+						pCurrentNewRawMouse->y = pCurrentOldRawMouse->y;
+						pCurrentNewRawMouse->z = pCurrentOldRawMouse->z;
+						break;
+					}
+				}
+			}
+		}
+
+		void destroyRawMouseArray(ArrayBlock<RawMouse>* in_rawMice)
+		{
+			assert(in_rawMice->count() < SIZE_MAX);
+
+			for (size_t index = 0; index < in_rawMice->count(); index++)
+			{
+				in_rawMice->data()[index].buttonsPressed.free();
+			}
+
+			in_rawMice->free();
 		}
 
 		void registerRawMice(HWND hWnd)

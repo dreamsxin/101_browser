@@ -34,8 +34,7 @@ namespace Gui
 				&createRoundBorder, 16, 8);
 			drawVertexArray(&boxVertices, colors);
 			drawVertexArray(&borderTriangleStrip, Defaults::cCheckBoxBorderColor);
-			// Before we reactivate this line we have to use an iterator using only
-			// the outer contour
+			
 #if 1
 			drawVertexArray(&coloredBorder, Defaults::cColorRed);
 #endif
