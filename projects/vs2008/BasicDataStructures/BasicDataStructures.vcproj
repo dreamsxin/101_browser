@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)out\vs2008\$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
@@ -62,8 +62,8 @@
 			<Tool
 				Name="VCLibrarianTool"
 				AdditionalDependencies="MiniStdlib.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).lib"
-				AdditionalLibraryDirectories="$(SolutionDir)$(ConfigurationName)"
+				OutputFile="$(SolutionDir)out\vs2008\$(ConfigurationName)\$(ProjectName).lib"
+				AdditionalLibraryDirectories="$(SolutionDir)out\vs2008\$(ConfigurationName)"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -128,8 +128,8 @@
 			<Tool
 				Name="VCLibrarianTool"
 				AdditionalDependencies="MiniStdlib.lib"
-				OutputFile="$(SolutionDir)$(ConfigurationName)\$(ProjectName).lib"
-				AdditionalLibraryDirectories="$(SolutionDir)$(ConfigurationName)"
+				OutputFile="$(SolutionDir)out\vs2008\$(ConfigurationName)\$(ProjectName).lib"
+				AdditionalLibraryDirectories="$(SolutionDir)out\vs2008\$(ConfigurationName)"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -227,7 +227,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\BasicDataStructures\Endianess.h"
+				RelativePath="$(SolutionDir)include\BasicDataStructures\Endianess.h"
 				>
 			</File>
 			<File
@@ -251,7 +251,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\BasicDataStructures\Types.h"
+				RelativePath="$(SolutionDir)include\BasicDataStructures\Types.h"
 				>
 			</File>
 			<File

@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)out\vs2008\$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="BasicDataStructures.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(SolutionDir)$(ConfigurationName)"
+				AdditionalLibraryDirectories="$(SolutionDir)out\vs2008\$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -92,7 +92,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)out\vs2008\$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
@@ -138,7 +138,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="BasicDataStructures.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(SolutionDir)$(ConfigurationName)"
+				AdditionalLibraryDirectories="$(SolutionDir)out\vs2008\$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -169,6 +169,10 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{E97BF0CC-EB71-43A2-B4BA-8CB5F1E11214}"
+			RelativePathToProject=".\projects\vs2008\BasicDataStructures\BasicDataStructures.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter

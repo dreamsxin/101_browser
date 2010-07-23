@@ -85,6 +85,7 @@ int main(int argc, char** argv)
 	}
 
 	struct addrinfo * currentAddrInfo;
+
 	SOCKET serverSocket;
 
 	for (currentAddrInfo = pAddrInfo; currentAddrInfo != NULL; currentAddrInfo = currentAddrInfo->ai_next)
@@ -124,7 +125,6 @@ int main(int argc, char** argv)
 		MTAx::TLS::TLSPlaintextHeader tlsPlaintextHeader;
 		tlsPlaintextHeader.type = MTAx::TLS::ContentType_handshake;
 		tlsPlaintextHeader.version = MTAx::TLS::TLS_1_2_ProtocolVersion;
-
 		
 		MTAx::Endianess::switchEndianess(&tlsPlaintextHeader.length);
 

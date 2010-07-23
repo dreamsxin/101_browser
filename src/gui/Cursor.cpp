@@ -14,12 +14,7 @@ namespace Gui
 		ICONINFO iconInfo;
 		HDC hDC = CreateCompatibleDC(NULL);
 
-		if (!(hCursor = LoadCursor(NULL, 
-			IDC_ARROW
-#if 0
-			IDC_CROSS
-#endif
-			)))
+		if (!(hCursor = LoadCursor(NULL, IDC_ARROW)))
 		{
 			return false;
 		}
@@ -115,7 +110,9 @@ namespace Gui
 		bih.biClrUsed = 0;
 		bih.biClrImportant = 0;
 
-		int retVal = GetDIBits(hDC, iconInfo.hbmMask, 
+		int retVal;
+		
+		retVal = GetDIBits(hDC, iconInfo.hbmMask, 
 			// if we have no color icon: xorMap.height=0
 			// otherwise it has a sensible value
 			// so we can shorten
@@ -135,10 +132,12 @@ namespace Gui
 		
 		if (!isColorIcon)
 		{
-			if (GetDIBits(hDC, iconInfo.hbmMask, 
+			retVal  = GetDIBits(hDC, iconInfo.hbmMask, 
 				0, xorMap.height, 
 				xorMap.data, (BITMAPINFO*) &bih, 
-				DIB_RGB_COLORS)!=xorMap.height)
+				DIB_RGB_COLORS);
+
+			if (retVal < 0 || ((unsigned long) retVal) != xorMap.height)
 			{
 				DeleteObject(iconInfo.hbmMask);
 				if (isColorIcon)
