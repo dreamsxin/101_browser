@@ -1,0 +1,25 @@
+h1. Informations concerning web standards
+
+h2. Graphics standards
+
+h3. JPEG
+
+h4. Where can I get the ITU-T T.81 standard?
+
+Under http://www.w3.org/Graphics/JPEG/ there is a link to http://www.w3.org/Graphics/JPEG/itu-t81.pdf
+
+h4. Where can I get the ITU-T T.83 standard?
+
+I don't know of a free way that I am sure to be legal. So you will either have to pay or be on your own. :-(
+
+Hint for adventurous people who don't fear legal consequences: search engines are a great invention. ;-)
+
+h4. Where can I obtain the test vectors for ITU-T T.83?
+
+Under http://www.itu.int/net/itu-t/sigdb/speimage/Tseries-s.htm there is a link to http://www.itu.int/net/itu-t/sigdb/speimage/ImageForm-s.aspx?val=1010083 where you can get the test vectors.
+
+h3. GIF
+
+h4. Where can I find the specification of GIF files?
+
+Look at http://www.w3.org/Graphics/GIF/spec-gif87.txt (GIF87) or http://www.w3.org/Graphics/GIF/spec-gif89a.txt (GIF89A).
