@@ -22,4 +22,4 @@ h3. GIF
 
 h4. Where can I find the specification of GIF files?
 
-Look at http://www.w3.org/Graphics/GIF/spec-gif87.txt (GIF87) or http://www.w3.org/Graphics/GIF/spec-gif89a.txt (GIF89A).
+Look at http://www.w3.org/Graphics/GIF/spec-gif87.txt (GIF87A) or http://www.w3.org/Graphics/GIF/spec-gif89a.txt (GIF89A).
