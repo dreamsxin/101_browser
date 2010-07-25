@@ -1,6 +1,13 @@
 h1. Informations concerning web standards
 
-h2. Graphics standards
+h2. Crypto
+
+h3. Where can I get information concerning SHA-1 and SHA-2
+
+FIBS 180-3: http://csrc.nist.gov/publications/fips/fips180-3/fips180-3_final.pdf
+RFC 3174: http://www.apps.ietf.org/rfc/rfc3174.html
+
+h2. Graphics
 
 h3. JPEG
 
