@@ -4,7 +4,7 @@
 // 2.3 Case-sensitivity and string comparison
 // Draft Standard — 6 February 2010
 
-#include "Template/Map.h"
+#include "Template/HigherOrderFunctions/Map.h"
 #include "BasicDataStructures/Unicode.h"
 
 inline bool compareTokenCaseSensitive(UnicodeCodePoint p1, UnicodeCodePoint p2)
