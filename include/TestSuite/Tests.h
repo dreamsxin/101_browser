@@ -6,6 +6,7 @@ void testBasicDataStructuresTree();
 void testTriangleStripBorderIterator();
 void testOuterBorderIterator();
 void testIteratorInstances();
+void testHTML5();
 
 #ifdef __cplusplus
 extern "C" {
