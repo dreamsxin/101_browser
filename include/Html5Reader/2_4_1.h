@@ -36,9 +36,7 @@ inline bool isAlphanumericASCIICharacter(UnicodeCodePoint in_p)
 		);
 }
 
-inline bool collectSequenceOfCharacters()
-{
-
-}
+// not implemented yet
+// inline bool collectSequenceOfCharacters()
 
 #endif

@@ -173,6 +173,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\..\..\src\Html5Reader\2_4_5.c"
+				>
+			</File>
+			<File
 				RelativePath="$(SolutionDir)src\Html5Reader\Html5ReaderMain.cpp"
 				>
 			</File>
@@ -188,6 +192,10 @@
 			</File>
 			<File
 				RelativePath="$(SolutionDir)include\Html5Reader\2_4_1.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\Html5Reader\2_4_5.h"
 				>
 			</File>
 		</Filter>
