@@ -126,6 +126,9 @@ module html5
              attribute Function onchange;
              attribute Function onclick;
              attribute Function oncontextmenu;
+  
+             attribute Function oncuechange;
+  
              attribute Function ondblclick;
              attribute Function ondrag;
              attribute Function ondragend;
@@ -243,6 +246,9 @@ module html5
              attribute Function onchange;
              attribute Function onclick;
              attribute Function oncontextmenu;
+  
+             attribute Function oncuechange;
+  
              attribute Function ondblclick;
              attribute Function ondrag;
              attribute Function ondragend;
@@ -595,22 +601,22 @@ module html5
   
     readonly attribute TimedTrackCueList cues;
     readonly attribute TimedTrackCueList activeCues;
-    readonly attribute Function onentercue;
-    readonly attribute Function onexitcue;
-  };
   
+    readonly attribute Function oncuechange;
+  };
+
   interface MutableTimedTrack : TimedTrack {
    void addCue(in TimedTrackCue cue);
    void removeCue(in TimedTrackCue cue);
   };
-  
+
   interface TimedTrackCueList {
     readonly attribute unsigned long length;
     getter TimedTrackCue (in unsigned long index);
     TimedTrackCue getCueById(in DOMString id);
   };
-  
-  [Constructor(in DOMString id, in float startTime, in float endTime, in DOMString settings, in DOMString text, in optional boolean pauseOnExit)]
+
+  [Constructor(in DOMString id, in float startTime, in float endTime, in DOMString text, in optional DOMString settings, in optional DOMString voice, in optional boolean pauseOnExit)]
   interface TimedTrackCue {
     readonly attribute TimedTrack track;
     readonly attribute DOMString id;
@@ -629,6 +635,9 @@ module html5
     readonly attribute DOMString voice;
     DOMString getCueAsSource();
     DocumentFragment getCueAsHTML();
+  
+    readonly attribute Function onenter;
+    readonly attribute Function onexit;
   };
 
   interface TimeRanges {
@@ -1245,6 +1254,9 @@ module html5
              attribute Function onchange;
              attribute Function onclick;
              attribute Function oncontextmenu;
+  
+             attribute Function oncuechange;
+  
              attribute Function ondblclick;
              attribute Function ondrag;
              attribute Function ondragend;

@@ -1,6 +1,7 @@
 module websockets
 {
-  [Constructor(in DOMString url, in optional DOMString protocol)]
+  [Constructor(in DOMString url, in optional DOMString protocols)]
+  [Constructor(in DOMString url, in optional DOMString[] protocols)]
   interface WebSocket {
     readonly attribute DOMString url;
   
@@ -17,6 +18,7 @@ module websockets
              attribute Function onmessage;
              attribute Function onerror;
              attribute Function onclose;
+    readonly attribute DOMString protocol;
     boolean send(in DOMString data);
     void close();
   };
