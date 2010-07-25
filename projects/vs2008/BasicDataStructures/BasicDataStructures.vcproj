@@ -231,10 +231,6 @@
 				>
 			</File>
 			<File
-				RelativePath="$(SolutionDir)include\BasicDataStructures\HigherOrderFunctions.h"
-				>
-			</File>
-			<File
 				RelativePath="$(SolutionDir)include\BasicDataStructures\Interval.h"
 				>
 			</File>
@@ -407,14 +403,6 @@
 				>
 				<File
 					RelativePath=".\Array\FileArray.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="HigherOrderFunctions"
-				>
-				<File
-					RelativePath="..\..\..\include\BasicDataStructures\HigherOrderFunctions\Fold.h"
 					>
 				</File>
 			</Filter>
