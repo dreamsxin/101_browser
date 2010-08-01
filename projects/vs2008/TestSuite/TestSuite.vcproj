@@ -193,6 +193,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TestSuite\Test_HTML5.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TestSuite\Test_IteratorInstances.cpp"
 				>
 			</File>
