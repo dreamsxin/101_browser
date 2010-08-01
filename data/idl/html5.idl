@@ -185,6 +185,12 @@ module html5
   };
   DOMImplementation implements DOMHTMLImplementation;
 
+  [Supplemental, NoInterfaceObject]
+  interface XMLDocumentLoader {
+             attribute boolean async;
+    boolean load(in DOMString url);
+  };
+
   interface HTMLElement : Element {
     // DOM tree accessors
     NodeList getElementsByClassName(in DOMString classNames);
