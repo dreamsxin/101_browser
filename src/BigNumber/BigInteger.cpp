@@ -1,6 +1,7 @@
 #include "BigNumber/BigInteger.h"
 #include "MiniStdlib/climits.h"
 
+#include <cstdlib>
 #include <cassert>
 
 bool isZero(UnsignedBigInteger const * const in_pcInt)

@@ -1,7 +1,7 @@
 #ifndef _BigInteger_h
 #define _BigInteger_h
 
-#include <cstdlib>
+#include "MiniStdlib/cstdint.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -11,7 +11,7 @@ struct UnsignedBigInteger
 {
 	size_t numberSize;
 	size_t allocedLimbsCount;
-	unsigned long* limbs;
+	uint32_t* limbs;
 
 	inline UnsignedBigInteger() : 
 	numberSize(0), allocedLimbsCount(0), limbs(NULL) { }
@@ -59,6 +59,11 @@ bool inc(UnsignedBigInteger* in_pInt);
 __declspec(dllexport)
 #endif
 bool dec(UnsignedBigInteger* in_pInt);
+
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+bool addUBUC(UnsignedBigInteger* in_pInt, uint32_t in_c);
 
 #ifdef __cplusplus
 }
