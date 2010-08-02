@@ -1,4 +1,4 @@
-#include "BasicDataStructures/BigNumber/BigInteger.h"
+#include "BigNumber/BigInteger.h"
 #include "MiniStdlib/climits.h"
 
 #include <cassert>
