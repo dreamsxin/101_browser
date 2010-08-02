@@ -3,6 +3,10 @@
 
 #include <cstdlib>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct UnsignedBigInteger
 {
 	size_t numberSize;
@@ -19,6 +23,9 @@ struct SignedBigInteger
 	bool isNegative;
 };
 
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 bool isZero(UnsignedBigInteger const * const in_pcInt);
 
 /*!
@@ -31,6 +38,9 @@ bool isZero(UnsignedBigInteger const * const in_pcInt);
  * 1. a memory allocation failed
  * 2. in_pInt->numberSize >= SIZE_MAX-1
  */
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 bool inc(UnsignedBigInteger* in_pInt);
 
 /*!
@@ -45,6 +55,13 @@ bool inc(UnsignedBigInteger* in_pInt);
  * 2. a realloc to a smaller block size fails (this should
  *    never happen, but how sure can you be :-( )
  */
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 bool dec(UnsignedBigInteger* in_pInt);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
