@@ -61,3 +61,5 @@ lib/*
 # Temporary file of SCons 
 .sconsign.dblite
 
+# Windows likes to create these file
+Thumbs.db
