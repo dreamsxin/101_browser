@@ -1,6 +1,6 @@
-vsinstr Debug\TestSuite.exe /COVERAGE
+vsinstr out\vs2008\Debug\TestSuite.exe /COVERAGE
 Start VSPerfMon.exe /COVERAGE /OUTPUT:testsuite
 PAUSE
-Debug\TestSuite.exe
+out\vs2008\Debug\TestSuite.exe
 PAUSE
 VSPerfCmd.exe /SHUTDOWN
