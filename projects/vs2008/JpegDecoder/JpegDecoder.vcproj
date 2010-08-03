@@ -173,6 +173,10 @@
 			ReferencedProjectIdentifier="{E97BF0CC-EB71-43A2-B4BA-8CB5F1E11214}"
 			RelativePathToProject=".\projects\vs2008\BasicDataStructures\BasicDataStructures.vcproj"
 		/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{618B3D14-87D5-4E5C-B7C4-8D04A8A50C95}"
+			RelativePathToProject=".\projects\vs2008\MiniStdlib\MiniStdlib.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter
