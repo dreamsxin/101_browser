@@ -6,14 +6,16 @@ void testBasicDataStructuresTree();
 void testTriangleStripBorderIterator();
 void testOuterBorderIterator();
 void testIteratorInstances();
-void testHTML5();
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-void testRfc1950();
+void testBigNumber();
 #ifdef __cplusplus
 }
 #endif
+
+void testHTML5();
+void testRfc1950();
 
 #endif

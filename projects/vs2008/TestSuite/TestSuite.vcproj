@@ -64,6 +64,7 @@
 				AdditionalDependencies="rfc1950.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(SolutionDir)out\vs2008\$(ConfigurationName)"
+				ModuleDefinitionFile=""
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -139,6 +140,7 @@
 				AdditionalDependencies="rfc1950.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(SolutionDir)out\vs2008\$(ConfigurationName)"
+				ModuleDefinitionFile=""
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -193,11 +195,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TestSuite\Test_HTML5.cpp"
+				RelativePath="..\..\..\src\TestSuite\Test_BigNumber.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TestSuite\Test_IteratorInstances.cpp"
+				RelativePath="$(SolutionDir)src\TestSuite\Test_HTML5.cpp"
+				>
+			</File>
+			<File
+				RelativePath="$(SolutionDir)src\TestSuite\Test_IteratorInstances.cpp"
 				>
 			</File>
 			<File
@@ -205,7 +211,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TestSuite\Test_rfc1950.cpp"
+				RelativePath="$(SolutionDir)src\TestSuite\Test_rfc1950.cpp"
 				>
 			</File>
 			<File
@@ -217,7 +223,7 @@
 				>
 			</File>
 			<File
-				RelativePath="$(SolutionDir)src\TestSuite\TestSuiteTest.cpp"
+				RelativePath="..\..\..\src\TestSuite\TestSuiteTest.c"
 				>
 			</File>
 		</Filter>

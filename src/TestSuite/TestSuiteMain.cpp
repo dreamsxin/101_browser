@@ -9,6 +9,8 @@ int main()
 	testTriangleStripBorderIterator();
 	printf("Testing OuterBorderIterator\n");
 	testOuterBorderIterator();
+	printf("Testing BigNumber\n");
+	testBigNumber();
 	printf("Testing rfc1950\n");
 	testRfc1950();
 
