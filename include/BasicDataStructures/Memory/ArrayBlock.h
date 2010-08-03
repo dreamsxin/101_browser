@@ -1,7 +1,7 @@
 #ifndef _ArrayBlock_h
 #define _ArrayBlock_h
 
-#include "BasicDataStructures/Memory/SafeMemoryManagement.h"
+#include "Template/Memory/SafeMemoryManagement.h"
 #include <algorithm>
 #include <cassert>
 

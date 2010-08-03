@@ -7,63 +7,69 @@
 extern "C" {
 #endif
 
-struct UnsignedBigInteger
+typedef struct _UnsignedBigInteger
 {
 	size_t numberSize;
 	size_t allocedLimbsCount;
 	uint32_t* limbs;
 
-	inline UnsignedBigInteger() : 
-	numberSize(0), allocedLimbsCount(0), limbs(NULL) { }
-};
+	/*inline UnsignedBigInteger() : 
+	numberSize(0), allocedLimbsCount(0), limbs(NULL) { }*/
+} UnsignedBigInteger;
 
 struct SignedBigInteger
 {
 	UnsignedBigInteger absoluteValue;
-	bool isNegative;
+	uint8_t isNegative;
 };
 
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-bool isZero(UnsignedBigInteger const * const in_pcInt);
+uint8_t isZero(UnsignedBigInteger const * const in_pcInt);
+
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+uint32_t incUB(UnsignedBigInteger* in_pInt);
 
 /*!
- * Tries to increment the value pointed by in_pInt
+ * Adds in_c to in_pInt.
  * 
- * Return value: true if succeeded
- *               false otherwise
- *
- * The reasons why it may returns false are
- * 1. a memory allocation failed
- * 2. in_pInt->numberSize >= SIZE_MAX-1
+ * Return value:
+ * 0 if sucessfull
+ * other value: either the size of the number is too large or
+ *              memory could not be allocated. In this case we
+ *              return the value that would go into the highest
+ *              digit
  */
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-bool inc(UnsignedBigInteger* in_pInt);
+uint32_t addUBUC(UnsignedBigInteger* in_pInt, uint32_t in_c);
 
 /*!
- * Tries to decrement the value pointed by in_pInt
- *
- * Return value: true if succeeded
- *               false otherwise
- *
- * The reasons why it may returns false are
- * 1. the value pointed by in_pInt is already zero
- *    (this can be detected by isZero)
- * 2. a realloc to a smaller block size fails (this should
- *    never happen, but how sure can you be :-( )
+ * Multiplies in_pInt with in_c.
+ * 
+ * Return value:
+ * 0 if sucessfull
+ * other value: either the size of the number is too large or
+ *              memory could not be allocated. In this case we
+ *              return the value that would go into the highest
+ *              digit
  */
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-bool dec(UnsignedBigInteger* in_pInt);
+uint32_t mulUBUC(UnsignedBigInteger* in_pInt, uint32_t in_c);
 
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-bool addUBUC(UnsignedBigInteger* in_pInt, uint32_t in_c);
+uint32_t modUBUC(UnsignedBigInteger const * const  in_pInt, uint32_t in_c);
+
+// An internal helper function
+uint32_t applyCarry(UnsignedBigInteger* in_pInt, uint32_t in_c);
 
 #ifdef __cplusplus
 }

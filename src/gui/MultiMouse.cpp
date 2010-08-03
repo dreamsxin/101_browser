@@ -1,4 +1,5 @@
-#include "BasicDataStructures/Memory/SafeMemoryManagement.h"
+#include "Template/Memory/SafeMemoryManagement.h"
+#include "MiniStdlib/safe_free.h"
 #include "BasicDataStructures/Error/ErrorHandling.h"
 #include "gui/MultiMouse.h"
 #include "contrib/hidusage.h"

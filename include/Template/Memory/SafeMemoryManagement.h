@@ -36,12 +36,6 @@ template <typename T> T* safeNewArray(size_t in_count)
 	return NULL;
 }
 
-template <typename T> void safe_free(T** in_ppT)
-{
-	free(*in_ppT);
-	*in_ppT = NULL;
-}
-
 template <typename T> void safe_delete(T** in_ppT)
 {
 	delete *in_ppT;

@@ -369,10 +369,6 @@
 					RelativePath="..\..\..\include\BasicDataStructures\Memory\ArrayBlock.h"
 					>
 				</File>
-				<File
-					RelativePath="..\..\..\include\BasicDataStructures\Memory\SafeMemoryManagement.h"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="Error"

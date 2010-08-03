@@ -4,7 +4,7 @@
 #include "SwfReader/SwfStructure.h"
 #include <cstdlib>
 #include <cstring>
-#include "BasicDataStructures/Memory/SafeMemoryManagement.h"
+#include "Template/Memory/SafeMemoryManagement.h"
 
 using namespace std;
 

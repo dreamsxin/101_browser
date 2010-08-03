@@ -8,7 +8,8 @@
 #include "gui/MultiMouse.h"
 #include "gui/Cursor.h"
 #include "BasicDataStructures/Error/ErrorHandling.h"
-#include "BasicDataStructures/Memory/SafeMemoryManagement.h"
+#include "MiniStdlib/safe_free.h"
+#include "Template/Memory/SafeMemoryManagement.h"
 
 struct Window
 {

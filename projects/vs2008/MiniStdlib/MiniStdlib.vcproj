@@ -154,6 +154,10 @@
 				RelativePath="..\..\..\src\MiniStdlib\MTAx_fopen.c"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\src\MiniStdlib\safe_free.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -170,6 +174,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\MiniStdlib\MTAx_fopen.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\MiniStdlib\safe_free.h"
 				>
 			</File>
 		</Filter>
