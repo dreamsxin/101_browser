@@ -2,7 +2,10 @@
 #define _TestSuite_h
 
 #ifdef __cplusplus
+#include <cwchar>
 extern "C" {
+#else
+#include <wchar.h>
 #endif
 
 #ifndef _WIN32

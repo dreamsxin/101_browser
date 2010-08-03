@@ -1,5 +1,5 @@
 #include "Html5Reader/2_4_5.h"
-#include <cassert>
+#include <assert.h>
 
 uint8_t numberOfDaysInMonthOfYear(uint8_t month, uint32_t year)
 {

@@ -12,10 +12,17 @@ typedef struct _UnsignedBigInteger
 	size_t numberSize;
 	size_t allocedLimbsCount;
 	uint32_t* limbs;
-
-	/*inline UnsignedBigInteger() : 
-	numberSize(0), allocedLimbsCount(0), limbs(NULL) { }*/
 } UnsignedBigInteger;
+
+/*
+ * Return value: 1 on success
+ *               0 on failure
+ */
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+uint8_t initUnsignedBigInteger(UnsignedBigInteger* in_pNumber, 
+							   uint32_t* limbs, size_t limbsCount);
 
 struct SignedBigInteger
 {

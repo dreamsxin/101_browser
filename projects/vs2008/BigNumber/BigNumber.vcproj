@@ -189,6 +189,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\BigNumber\initUnsignedBigInteger.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\BigNumber\isZero.c"
 				>
 			</File>

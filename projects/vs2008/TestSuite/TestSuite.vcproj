@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="rfc1950.lib"
+				AdditionalDependencies="BigNumber.lib rfc1950.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(SolutionDir)out\vs2008\$(ConfigurationName)"
 				ModuleDefinitionFile=""
@@ -137,7 +137,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="rfc1950.lib"
+				AdditionalDependencies="BigNumber.lib rfc1950.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(SolutionDir)out\vs2008\$(ConfigurationName)"
 				ModuleDefinitionFile=""
@@ -175,6 +175,10 @@
 			ReferencedProjectIdentifier="{5F76E696-30B1-4534-827F-16F2CC84E89C}"
 			RelativePathToProject=".\projects\vs2008\rfc1950\rfc1950.vcproj"
 		/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{9284112E-B844-4C06-B513-2C865F5EEC6E}"
+			RelativePathToProject=".\projects\vs2008\BigNumber\BigNumber.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter
@@ -195,7 +199,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TestSuite\Test_BigNumber.cpp"
+				RelativePath="..\..\..\src\TestSuite\Test_BigNumber.c"
 				>
 			</File>
 			<File
