@@ -31,9 +31,7 @@ h3. 2.2 Required software for building
 
 h4. 2.2.1 Windows
 
-Visual Studio 2008/2010 (the former is recommended since I don't do regular updates of the Visual Studio 2010 projects at the moment). 
-
-When using Visual Studio 2008 (this does *not* apply when using Visual Studio 2010): a current version of Boost
+Visual Studio 2008/2010 (the former is strongly recommended since I don't do regular updates of the Visual Studio 2010 projects at the moment).
 
 h4. 2.2.2 Linux
 
