@@ -21,17 +21,17 @@ Windows XP/Server 2003/Vista/Server 2008/7 (only tested under XP, but the other 
 
 h4. 2.1.2 Linux
 
-Current Linux (I'm only testing under the current Ubuntu (10.4 at the moment)
+An up-to-date Linux distribution (I'm only testing under the most current Ubuntu (10.4 at the moment))
 
 h4. 2.1.3 Other Operation Systems
 
-There is *no* port to crApple MacOS X (and *none* is planned at the moment; if crApple is willing to donate a Mac, I'll think about reconsidering).
+There is *no* port to crApple MacOS X (and *none* is planned at the moment; if crApple is willing to donate a Mac, I'll think about reconsidering)
 
 h3. 2.2 Required software for building
 
 h4. 2.2.1 Windows
 
-Visual Studio 2008/2010 (the former is strongly recommended since I don't do regular updates of the Visual Studio 2010 projects at the moment).
+Visual Studio 2008/2010 (the former is strongly recommended since I don't do regular updates of the Visual Studio 2010 projects at the moment)
 
 h4. 2.2.2 Linux
 
