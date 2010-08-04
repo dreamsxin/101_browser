@@ -13,6 +13,12 @@ void testBigNumber()
 
 		test(initUnsignedBigInteger(&n, l, 5));
 		test(isZero(&n));
+
+		/*
+		 * We test whether a number stays zero when freed
+		 */
+		freeUnsignedBigInteger(&n);
+		test(isZero(&n));
 	}
 
 	/*
@@ -24,6 +30,12 @@ void testBigNumber()
 
 		test(initUnsignedBigInteger(&n, l, 5));
 		test(n.numberSize == 2);
+
+		/*
+		 * We test whether a number gets to zero when freed
+		 */
+		freeUnsignedBigInteger(&n);
+		test(isZero(&n));
 	}
 
 	/*
@@ -42,6 +54,8 @@ void testBigNumber()
 			test(n.limbs[0] == 0);
 			test(n.limbs[1] == 1);
 		}
+
+		freeUnsignedBigInteger(&n);
 	}
 
 	/*
@@ -63,8 +77,9 @@ void testBigNumber()
 			test(n.limbs[3] == 0);
 			test(n.limbs[4] == 1);
 		}
-	}
 
+		freeUnsignedBigInteger(&n);
+	}
 	
 	/*
 	 * Test whether additional memory gets allocated correctly
@@ -85,6 +100,8 @@ void testBigNumber()
 			test(n.limbs[3] == 0);
 			test(n.limbs[4] == 1);
 		}
+
+		freeUnsignedBigInteger(&n);
 	}
 
 	{
@@ -101,5 +118,7 @@ void testBigNumber()
 			test(n.limbs[1] == 0xFFFFFFFF);
 			test(n.limbs[2] == 1);
 		}
+
+		freeUnsignedBigInteger(&n);
 	}
 }

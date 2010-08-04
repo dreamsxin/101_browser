@@ -185,6 +185,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\BigNumber\freeUnsignedBigInteger.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\BigNumber\incUB.cpp"
 				>
 			</File>

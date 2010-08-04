@@ -15,6 +15,11 @@ typedef struct _UnsignedBigInteger
 } UnsignedBigInteger;
 
 /*
+ * Creates a number using the passed limbs. Note that we will allocate 
+ * limbsCount many uint32_t although the number could be shorter (last passed
+ * limbs zero). This can (amd should) be used to tell the implementation
+ * when to allocate more memory than necessary.
+ * 
  * Return value: 1 on success
  *               0 on failure
  */
@@ -23,6 +28,14 @@ __declspec(dllexport)
 #endif
 uint8_t initUnsignedBigInteger(UnsignedBigInteger* in_pNumber, 
 							   uint32_t* limbs, size_t limbsCount);
+
+/*
+ * Deallocates the used memory and sets the number to zero
+ */
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+void freeUnsignedBigInteger(UnsignedBigInteger* in_pNumber);
 
 struct SignedBigInteger
 {
@@ -75,7 +88,7 @@ __declspec(dllexport)
 #endif
 uint32_t modUBUC(UnsignedBigInteger const * const  in_pInt, uint32_t in_c);
 
-// An internal helper function
+/* An internal helper function */
 uint32_t applyCarry(UnsignedBigInteger* in_pInt, uint32_t in_c);
 
 #ifdef __cplusplus
