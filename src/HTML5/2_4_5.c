@@ -35,5 +35,6 @@ uint8_t numberOfDaysInMonthOfYear(uint8_t month, UnsignedBigInteger year)
 
 bool isDigit(UnicodeCodePoint in_p)
 {
-	return (in_p >= '0' && in_p <= '9');
+	return (in_p >= 0x0030  /* DIGIT ZERO */
+		&& in_p <= 0x0039); /* DIGIT NINE */
 }
