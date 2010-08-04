@@ -14,6 +14,12 @@ typedef struct _UnsignedBigInteger
 	uint32_t* limbs;
 } UnsignedBigInteger;
 
+
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+uint8_t initUnsignedBigIntegerUC(UnsignedBigInteger* in_pNumber, uint32_t in_value);
+
 /*
  * Creates a number using the passed limbs. Note that we will allocate 
  * limbsCount many uint32_t although the number could be shorter (last passed
@@ -26,7 +32,7 @@ typedef struct _UnsignedBigInteger
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-uint8_t initUnsignedBigInteger(UnsignedBigInteger* in_pNumber, 
+uint8_t initUnsignedBigIntegerUCA(UnsignedBigInteger* in_pNumber, 
 							   uint32_t* limbs, size_t limbsCount);
 
 /*

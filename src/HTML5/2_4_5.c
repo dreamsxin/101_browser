@@ -1,7 +1,7 @@
 #include "HTML5/2_4_5.h"
 #include <assert.h>
 
-uint8_t numberOfDaysInMonthOfYear(uint8_t month, uint32_t year)
+uint8_t numberOfDaysInMonthOfYear(uint8_t month, UnsignedBigInteger year)
 {
 	assert(month >= 1);
 	assert(month <= 12);
@@ -23,10 +23,10 @@ uint8_t numberOfDaysInMonthOfYear(uint8_t month, uint32_t year)
 		return 30;
 	case 2:
 		{
-			if (year % 400 == 0)
+			if (modUBUC(&year, 400) == 0)
 				return 29;
-			else if (year % 4 == 0 && year % 100 != 0)
-				return 28;
+			else if (modUBUC(&year, 4) == 0 && modUBUC(&year, 100) != 0)
+				return 29;
 			else
 				return 28;
 		}

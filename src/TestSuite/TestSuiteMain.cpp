@@ -13,6 +13,8 @@ int main()
 	testBigNumber();
 	printf("Testing rfc1950\n");
 	testRfc1950();
+	printf("Testing HTML5\n");
+	testHTML5();
 
 	return 0;
 }

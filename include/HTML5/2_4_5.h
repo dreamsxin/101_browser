@@ -2,6 +2,7 @@
 #define _2_4_5_h
 
 #include "MiniStdlib/cstdint.h"
+#include "BigNumber/BigInteger.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -15,7 +16,7 @@ extern "C" {
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-uint8_t numberOfDaysInMonthOfYear(uint8_t month, uint32_t year);
+uint8_t numberOfDaysInMonthOfYear(uint8_t month, UnsignedBigInteger year);
 
 #ifdef __cplusplus
 }

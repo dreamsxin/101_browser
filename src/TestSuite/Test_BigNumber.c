@@ -4,11 +4,35 @@
 
 void testBigNumber()
 {
+	/* Test whether a number of zero makes number empty */
+	{
+		UnsignedBigInteger n;
+
+		test(initUnsignedBigIntegerUC(&n, 0));
+		test(isZero(&n));
+
+		/* We test whether a number stays zero when freed */
+		freeUnsignedBigInteger(&n);
+		test(isZero(&n));
+	}
+
+	/* Test whether a number of non-zero makes number non-empty */
+	{
+		UnsignedBigInteger n;
+
+		test(initUnsignedBigIntegerUC(&n, 42));
+		test(!isZero(&n));
+
+		/* We test whether a number stays zero when freed */
+		freeUnsignedBigInteger(&n);
+		test(isZero(&n));
+	}
+
 	/* Test whether an empty array becomes number 0 */
 	{
 		UnsignedBigInteger n;
 
-		test(initUnsignedBigInteger(&n, NULL, 0));
+		test(initUnsignedBigIntegerUCA(&n, NULL, 0));
 		test(isZero(&n));
 
 		/* We test whether a number stays zero when freed */
@@ -22,7 +46,7 @@ void testBigNumber()
 
 		uint32_t l[5] = {0, 0, 0, 0, 0};
 
-		test(initUnsignedBigInteger(&n, l, 0));
+		test(initUnsignedBigIntegerUCA(&n, l, 0));
 		test(isZero(&n));
 
 		/* We test whether a number stays zero when freed */
@@ -35,7 +59,7 @@ void testBigNumber()
 		UnsignedBigInteger n;
 		uint32_t l[5] = {0, 0, 0, 0, 0};
 
-		test(initUnsignedBigInteger(&n, l, 5));
+		test(initUnsignedBigIntegerUCA(&n, l, 5));
 		test(isZero(&n));
 
 		/* We test whether a number stays zero when freed */
@@ -48,7 +72,7 @@ void testBigNumber()
 		UnsignedBigInteger n;
 		uint32_t l[5] = {2, 3, 0, 0, 0};
 
-		test(initUnsignedBigInteger(&n, l, 5));
+		test(initUnsignedBigIntegerUCA(&n, l, 5));
 		test(n.numberSize == 2);
 
 		/* We test whether a number gets to zero when freed */
@@ -60,7 +84,7 @@ void testBigNumber()
 	{
 		UnsignedBigInteger n;
 
-		test(initUnsignedBigInteger(&n, NULL, 0));
+		test(initUnsignedBigIntegerUCA(&n, NULL, 0));
 		test(n.numberSize == 0);
 		test(incUB(&n) == 0);
 		test(n.numberSize == 1);
@@ -76,7 +100,7 @@ void testBigNumber()
 		UnsignedBigInteger n;
 		uint32_t l[1] = {0x22};
 
-		test(initUnsignedBigInteger(&n, l, 1));
+		test(initUnsignedBigIntegerUCA(&n, l, 1));
 		test(n.numberSize == 1);
 		test(incUB(&n) == 0);
 		test(n.numberSize == 1);
@@ -91,7 +115,7 @@ void testBigNumber()
 		UnsignedBigInteger n;
 		uint32_t l[1] = {0xFFFFFFFF};
 
-		test(initUnsignedBigInteger(&n, l, 1));
+		test(initUnsignedBigIntegerUCA(&n, l, 1));
 		test(n.numberSize == 1);
 		test(incUB(&n) == 0);
 		test(n.numberSize == 2);
@@ -106,7 +130,7 @@ void testBigNumber()
 		UnsignedBigInteger n;
 		uint32_t l[5] = {0xFFFFFFFF, 0, 0, 0, 0};
 
-		test(initUnsignedBigInteger(&n, l, 5));
+		test(initUnsignedBigIntegerUCA(&n, l, 5));
 		test(addUBUC(&n, 1) == 0);
 		test(n.numberSize == 2);
 
@@ -124,7 +148,7 @@ void testBigNumber()
 		UnsignedBigInteger n;
 		uint32_t l[5] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0};
 
-		test(initUnsignedBigInteger(&n, l, 5));
+		test(initUnsignedBigIntegerUCA(&n, l, 5));
 		test(addUBUC(&n, 1) == 0);
 		test(n.numberSize == 5);
 
@@ -145,7 +169,7 @@ void testBigNumber()
 		UnsignedBigInteger n;
 		uint32_t l[4] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
 
-		test(initUnsignedBigInteger(&n, l, 4));
+		test(initUnsignedBigIntegerUCA(&n, l, 4));
 		test(addUBUC(&n, 1) == 0);
 		test(n.numberSize == 5);
 
@@ -166,7 +190,7 @@ void testBigNumber()
 		UnsignedBigInteger n;
 		uint32_t l[2] = {0x22, 0x22};
 
-		test(initUnsignedBigInteger(&n, l, 2));
+		test(initUnsignedBigIntegerUCA(&n, l, 2));
 		test(mulUBUC(&n, 0) == 0);
 		test(isZero(&n));
 
@@ -178,7 +202,7 @@ void testBigNumber()
 		UnsignedBigInteger n;
 		uint32_t l[5] = {0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF, 0, 0};
 
-		test(initUnsignedBigInteger(&n, l, 5));
+		test(initUnsignedBigIntegerUCA(&n, l, 5));
 		test(mulUBUC(&n, 2) == 0);
 		test(n.numberSize == 3);
 
@@ -197,7 +221,7 @@ void testBigNumber()
 		UnsignedBigInteger n;
 		uint32_t l[5] = {0xFFFFFFFF, 0xFFFFFFFE};
 
-		test(initUnsignedBigInteger(&n, l, 5));
+		test(initUnsignedBigIntegerUCA(&n, l, 5));
 		test(mulUBUC(&n, 5) == 0);
 		test(n.numberSize == 3);
 
@@ -219,7 +243,7 @@ void testBigNumber()
 		UnsignedBigInteger n;
 		uint32_t l[5] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
 
-		test(initUnsignedBigInteger(&n, l, 5));
+		test(initUnsignedBigIntegerUCA(&n, l, 5));
 		test(mulUBUC(&n, 0xFFFFFFFF) == 0);
 		test(n.numberSize == 6);
 
@@ -241,7 +265,7 @@ void testBigNumber()
 		UnsignedBigInteger n;
 		uint32_t l[1] = { 0x0 };
 
-		test(initUnsignedBigInteger(&n, l, 1));
+		test(initUnsignedBigIntegerUCA(&n, l, 1));
 		test(modUBUC(&n, 12) == 0);
 
 		freeUnsignedBigInteger(&n);
@@ -252,7 +276,7 @@ void testBigNumber()
 		UnsignedBigInteger n;
 		uint32_t l[1] = { 99 };
 
-		test(initUnsignedBigInteger(&n, l, 1));
+		test(initUnsignedBigIntegerUCA(&n, l, 1));
 		test(modUBUC(&n, 10) == 9);
 
 		freeUnsignedBigInteger(&n);
@@ -263,7 +287,7 @@ void testBigNumber()
 		UnsignedBigInteger n;
 		uint32_t l[5] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
 
-		test(initUnsignedBigInteger(&n, l, 5));
+		test(initUnsignedBigIntegerUCA(&n, l, 5));
 		test(modUBUC(&n, 37) == 8);
 
 		freeUnsignedBigInteger(&n);
@@ -274,7 +298,7 @@ void testBigNumber()
 		UnsignedBigInteger n;
 		uint32_t l[5] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
 
-		test(initUnsignedBigInteger(&n, l, 5));
+		test(initUnsignedBigIntegerUCA(&n, l, 5));
 		test(modUBUC(&n, 0xFFFFFFFE) == 0x1F);
 
 		freeUnsignedBigInteger(&n);

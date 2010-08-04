@@ -11,6 +11,7 @@ void testPassed(const wchar_t *_Message, const wchar_t *_File, unsigned int _Lin
 {
 	extern unsigned long testNr;
 	extern uint8_t verbose;
+
 	if (verbose)
 		wprintf(L"Test %u testing %s in %s:%u OK\n", testNr, _Message, _File, _Line);
 	else
@@ -24,8 +25,8 @@ void testFailed(const wchar_t *_Message, const wchar_t *_File, unsigned int _Lin
 	extern uint8_t exitOnFailure;
 
 	wprintf(L"Test %u testing %s in %s:%u FAILED\n", testNr, _Message, _File, _Line);
+	testNr++;
 
 	if (exitOnFailure)
 		exit(-1);
 }
-

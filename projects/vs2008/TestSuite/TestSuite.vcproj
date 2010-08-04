@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="BigNumber.lib rfc1950.lib"
+				AdditionalDependencies="BigNumber.lib HTML5.lib rfc1950.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(SolutionDir)out\vs2008\$(ConfigurationName)"
 				ModuleDefinitionFile=""
@@ -138,7 +138,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="BigNumber.lib rfc1950.lib"
+				AdditionalDependencies="BigNumber.lib HTML5.lib rfc1950.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(SolutionDir)out\vs2008\$(ConfigurationName)"
 				ModuleDefinitionFile=""
@@ -179,6 +179,14 @@
 		<ProjectReference
 			ReferencedProjectIdentifier="{9284112E-B844-4C06-B513-2C865F5EEC6E}"
 			RelativePathToProject=".\projects\vs2008\BigNumber\BigNumber.vcproj"
+		/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{618B3D14-87D5-4E5C-B7C4-8D04A8A50C95}"
+			RelativePathToProject=".\projects\vs2008\MiniStdlib\MiniStdlib.vcproj"
+		/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{51F91F5E-EA63-4B47-9273-F00118F985B4}"
+			RelativePathToProject=".\projects\vs2008\HTML5\HTML5.vcproj"
 		/>
 	</References>
 	<Files>
