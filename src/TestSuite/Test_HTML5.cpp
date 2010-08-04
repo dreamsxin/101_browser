@@ -1,6 +1,7 @@
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
 #include "HTML5/2_4_5.h"
+#include <cassert>
 
 void testHTML5()
 {
@@ -29,4 +30,12 @@ void testHTML5()
 	test(initUnsignedBigIntegerUC(&year, 2000));
 	test(numberOfDaysInMonthOfYear(2, year) == 29);
 	freeUnsignedBigInteger(&year);
+
+	assert('/' < '0');
+	test(!isDigit('/'));
+	test(isDigit('0'));
+	test(isDigit('5'));
+	test(isDigit('9'));
+	assert(':' > '9');
+	test(!isDigit(':'));
 }

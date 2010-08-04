@@ -22,6 +22,9 @@ __declspec(dllexport)
 #endif
 uint8_t numberOfDaysInMonthOfYear(uint8_t month, UnsignedBigInteger year);
 
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 bool isDigit(UnicodeCodePoint in_p);
 
 #ifdef __cplusplus
