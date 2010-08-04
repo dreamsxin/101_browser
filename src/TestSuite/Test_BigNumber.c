@@ -46,7 +46,7 @@ void testBigNumber()
 		uint32_t l[5] = {0xFFFFFFFF, 0, 0, 0, 0};
 
 		test(initUnsignedBigInteger(&n, l, 5));
-		addUBUC(&n, 1);
+		test(addUBUC(&n, 1) == 0);
 		test(n.numberSize == 2);
 
 		if (n.numberSize == 2)
@@ -66,7 +66,7 @@ void testBigNumber()
 		uint32_t l[5] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0};
 
 		test(initUnsignedBigInteger(&n, l, 5));
-		addUBUC(&n, 1);
+		test(addUBUC(&n, 1) == 0);
 		test(n.numberSize == 5);
 
 		if (n.numberSize == 5)
@@ -89,7 +89,7 @@ void testBigNumber()
 		uint32_t l[5] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
 
 		test(initUnsignedBigInteger(&n, l, 4));
-		addUBUC(&n, 1);
+		test(addUBUC(&n, 1) == 0);
 		test(n.numberSize == 5);
 
 		if (n.numberSize == 5)
@@ -104,19 +104,68 @@ void testBigNumber()
 		freeUnsignedBigInteger(&n);
 	}
 
+	/* 
+	 * A test for multiplication without overflow 
+	 */
 	{
 		UnsignedBigInteger n;
-		uint32_t l[5] = {0xFFFFFFFF, 0xFFFFFFFF, 0, 0, 0};
+		uint32_t l[5] = {0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF, 0, 0};
 
 		test(initUnsignedBigInteger(&n, l, 5));
-		mulUBUC(&n, 2);
+		test(mulUBUC(&n, 2) == 0);
 		test(n.numberSize == 3);
 
 		if (n.numberSize == 3)
 		{
 			test(n.limbs[0] == 0xFFFFFFFE);
+			test(n.limbs[1] == 0xFFFFFFFE);
+			test(n.limbs[2] == 0xFFFFFFFE);
+		}
+
+		freeUnsignedBigInteger(&n);
+	}
+
+	/* 
+	 * A test for multiplication with simple overflow
+	 */
+	{
+		UnsignedBigInteger n;
+		uint32_t l[5] = {0xFFFFFFFF, 0xFFFFFFFE};
+
+		test(initUnsignedBigInteger(&n, l, 5));
+		test(mulUBUC(&n, 5) == 0);
+		test(n.numberSize == 3);
+
+		if (n.numberSize == 3)
+		{
+			test(n.limbs[0] == 0xFFFFFFFB);
+			test(n.limbs[1] == 0xFFFFFFFA);
+			test(n.limbs[2] == 4);
+		}
+
+		freeUnsignedBigInteger(&n);
+	}
+
+	/* 
+	 * A test for multiplication with more complicated overflow 
+	 * and need to allocate additional memory
+	 */
+	{
+		UnsignedBigInteger n;
+		uint32_t l[5] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
+
+		test(initUnsignedBigInteger(&n, l, 5));
+		test(mulUBUC(&n, 0xFFFFFFFF) == 0);
+		test(n.numberSize == 6);
+
+		if (n.numberSize == 6)
+		{
+			test(n.limbs[0] == 0x1);
 			test(n.limbs[1] == 0xFFFFFFFF);
-			test(n.limbs[2] == 1);
+			test(n.limbs[2] == 0xFFFFFFFF);
+			test(n.limbs[3] == 0xFFFFFFFF);
+			test(n.limbs[4] == 0xFFFFFFFF);
+			test(n.limbs[5] == 0xFFFFFFFE);
 		}
 
 		freeUnsignedBigInteger(&n);
