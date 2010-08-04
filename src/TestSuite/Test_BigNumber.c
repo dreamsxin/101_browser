@@ -4,9 +4,33 @@
 
 void testBigNumber()
 {
-	/*
-	 * Test whether an array of zeros really gets to number 0
-	 */
+	/* Test whether an empty array becomes number 0 */
+	{
+		UnsignedBigInteger n;
+
+		test(initUnsignedBigInteger(&n, NULL, 0));
+		test(isZero(&n));
+
+		/* We test whether a number stays zero when freed */
+		freeUnsignedBigInteger(&n);
+		test(isZero(&n));
+	}
+
+	/* Test whether an empty array becomes number 0 */
+	{
+		UnsignedBigInteger n;
+
+		uint32_t l[5] = {0, 0, 0, 0, 0};
+
+		test(initUnsignedBigInteger(&n, l, 0));
+		test(isZero(&n));
+
+		/* We test whether a number stays zero when freed */
+		freeUnsignedBigInteger(&n);
+		test(isZero(&n));
+	}
+
+	/* Test whether an array of zeros becomes 0 */
 	{
 		UnsignedBigInteger n;
 		uint32_t l[5] = {0, 0, 0, 0, 0};
@@ -14,16 +38,12 @@ void testBigNumber()
 		test(initUnsignedBigInteger(&n, l, 5));
 		test(isZero(&n));
 
-		/*
-		 * We test whether a number stays zero when freed
-		 */
+		/* We test whether a number stays zero when freed */
 		freeUnsignedBigInteger(&n);
 		test(isZero(&n));
 	}
 
-	/*
-	 * Test whether an zeroes at the end do not mind
-	 */
+	/* Test whether an zeroes at the end do not mind */
 	{
 		UnsignedBigInteger n;
 		uint32_t l[5] = {2, 3, 0, 0, 0};
@@ -31,16 +51,12 @@ void testBigNumber()
 		test(initUnsignedBigInteger(&n, l, 5));
 		test(n.numberSize == 2);
 
-		/*
-		 * We test whether a number gets to zero when freed
-		 */
+		/* We test whether a number gets to zero when freed */
 		freeUnsignedBigInteger(&n);
 		test(isZero(&n));
 	}
 
-	/*
-	 * The most simple overflow case in addition
-	 */
+	/* The most simple overflow case in addition */
 	{
 		UnsignedBigInteger n;
 		uint32_t l[5] = {0xFFFFFFFF, 0, 0, 0, 0};
@@ -58,9 +74,7 @@ void testBigNumber()
 		freeUnsignedBigInteger(&n);
 	}
 
-	/*
-	 * A more complicated (ripple carrier) overflow case
-	 */
+	/* A more complicated (ripple carrier) overflow case */
 	{
 		UnsignedBigInteger n;
 		uint32_t l[5] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0};
@@ -81,12 +95,10 @@ void testBigNumber()
 		freeUnsignedBigInteger(&n);
 	}
 	
-	/*
-	 * Test whether additional memory gets allocated correctly
-	 */
+	/* Test whether additional memory gets allocated correctly */
 	{
 		UnsignedBigInteger n;
-		uint32_t l[5] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
+		uint32_t l[4] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
 
 		test(initUnsignedBigInteger(&n, l, 4));
 		test(addUBUC(&n, 1) == 0);
@@ -104,9 +116,7 @@ void testBigNumber()
 		freeUnsignedBigInteger(&n);
 	}
 
-	/* 
-	 * A test for multiplication without overflow 
-	 */
+	/* A test for multiplication without overflow */
 	{
 		UnsignedBigInteger n;
 		uint32_t l[5] = {0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFFF, 0, 0};
@@ -125,9 +135,7 @@ void testBigNumber()
 		freeUnsignedBigInteger(&n);
 	}
 
-	/* 
-	 * A test for multiplication with simple overflow
-	 */
+	/* A test for multiplication with simple overflow */
 	{
 		UnsignedBigInteger n;
 		uint32_t l[5] = {0xFFFFFFFF, 0xFFFFFFFE};
@@ -167,6 +175,50 @@ void testBigNumber()
 			test(n.limbs[4] == 0xFFFFFFFF);
 			test(n.limbs[5] == 0xFFFFFFFE);
 		}
+
+		freeUnsignedBigInteger(&n);
+	}
+
+	/* Testing modulo of 0 */
+	{
+		UnsignedBigInteger n;
+		uint32_t l[1] = { 0x0 };
+
+		test(initUnsignedBigInteger(&n, l, 1));
+		test(modUBUC(&n, 12) == 0);
+
+		freeUnsignedBigInteger(&n);
+	}
+
+	/* Testing modulo of a single limb */
+	{
+		UnsignedBigInteger n;
+		uint32_t l[1] = { 99 };
+
+		test(initUnsignedBigInteger(&n, l, 1));
+		test(modUBUC(&n, 10) == 9);
+
+		freeUnsignedBigInteger(&n);
+	}
+
+	/* Testing modulo of a longer number against a "small" value */
+	{
+		UnsignedBigInteger n;
+		uint32_t l[5] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
+
+		test(initUnsignedBigInteger(&n, l, 5));
+		test(modUBUC(&n, 37) == 8);
+
+		freeUnsignedBigInteger(&n);
+	}
+
+	/* Testing modulo of a longer number against a "big" value */
+	{
+		UnsignedBigInteger n;
+		uint32_t l[5] = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
+
+		test(initUnsignedBigInteger(&n, l, 5));
+		test(modUBUC(&n, 0xFFFFFFFE) == 0x1F);
 
 		freeUnsignedBigInteger(&n);
 	}
