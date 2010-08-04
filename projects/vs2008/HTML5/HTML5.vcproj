@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="Html5Reader"
-	ProjectGUID="{5CD1AAF7-719B-42D8-B3EE-3781F720DA5F}"
-	RootNamespace="Html5Reader"
+	Name="HTML5"
+	ProjectGUID="{51F91F5E-EA63-4B47-9273-F00118F985B4}"
+	RootNamespace="HTML5"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -18,9 +18,9 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)out\vs2008\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="1"
 			>
 			<Tool
@@ -42,12 +42,12 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(SolutionDir)include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;HTML5_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
-				SubSystem="1"
+				SubSystem="2"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -90,9 +90,9 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)out\vs2008\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -116,11 +116,11 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="$(SolutionDir)include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;HTML5_EXPORTS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -136,7 +136,7 @@
 				Name="VCLinkerTool"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
-				SubSystem="1"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -165,6 +165,10 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{9284112E-B844-4C06-B513-2C865F5EEC6E}"
+			RelativePathToProject=".\projects\vs2008\BigNumber\BigNumber.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter
@@ -173,11 +177,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\..\src\Html5Reader\2_4_5.c"
-				>
-			</File>
-			<File
-				RelativePath="$(SolutionDir)src\Html5Reader\Html5ReaderMain.cpp"
+				RelativePath="..\..\..\src\HTML5\2_4_5.c"
 				>
 			</File>
 		</Filter>
@@ -187,15 +187,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="$(SolutionDir)include\Html5Reader\2_3.h"
+				RelativePath="..\..\..\include\HTML5\2_3.h"
 				>
 			</File>
 			<File
-				RelativePath="$(SolutionDir)include\Html5Reader\2_4_1.h"
+				RelativePath="..\..\..\include\HTML5\2_4_1.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\Html5Reader\2_4_5.h"
+				RelativePath="..\..\..\include\HTML5\2_4_5.h"
 				>
 			</File>
 		</Filter>

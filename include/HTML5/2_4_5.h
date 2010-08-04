@@ -12,6 +12,9 @@ extern "C" {
  *
  * Precondition: 1 <= month <= 12
  */
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 uint8_t numberOfDaysInMonthOfYear(uint8_t month, uint32_t year);
 
 #ifdef __cplusplus
