@@ -32,3 +32,8 @@ uint8_t numberOfDaysInMonthOfYear(uint8_t month, UnsignedBigInteger year)
 		}
 	}
 }
+
+bool isDigit(UnicodeCodePoint in_p)
+{
+	return (in_p >= '0' && in_p <= '9');
+}

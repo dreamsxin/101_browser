@@ -1,6 +1,8 @@
 #ifndef _Unicode_h
 #define _Unicode_h
 
-typedef unsigned int UnicodeCodePoint;
+#include "MiniStdlib/cstdint.h"
+
+typedef uint32_t UnicodeCodePoint;
 
 #endif

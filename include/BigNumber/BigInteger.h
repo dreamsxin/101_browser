@@ -2,6 +2,7 @@
 #define _BigInteger_h
 
 #include "MiniStdlib/cstdint.h"
+#include "MiniStdlib/cstdbool.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,7 +19,7 @@ typedef struct _UnsignedBigInteger
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-uint8_t initUnsignedBigIntegerUC(UnsignedBigInteger* in_pNumber, uint32_t in_value);
+bool initUnsignedBigIntegerUC(UnsignedBigInteger* in_pNumber, uint32_t in_value);
 
 /*
  * Creates a number using the passed limbs. Note that we will allocate 
@@ -32,7 +33,7 @@ uint8_t initUnsignedBigIntegerUC(UnsignedBigInteger* in_pNumber, uint32_t in_val
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-uint8_t initUnsignedBigIntegerUCA(UnsignedBigInteger* in_pNumber, 
+bool initUnsignedBigIntegerUCA(UnsignedBigInteger* in_pNumber, 
 							   uint32_t* limbs, size_t limbsCount);
 
 /*
@@ -46,13 +47,13 @@ void freeUnsignedBigInteger(UnsignedBigInteger* in_pNumber);
 struct SignedBigInteger
 {
 	UnsignedBigInteger absoluteValue;
-	uint8_t isNegative;
+	bool isNegative;
 };
 
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-uint8_t isZero(UnsignedBigInteger const * const in_pcInt);
+bool isZero(UnsignedBigInteger const * const in_pcInt);
 
 #ifdef _WIN32
 __declspec(dllexport)

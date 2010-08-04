@@ -1,8 +1,9 @@
 #ifndef _2_4_1_h
 #define _2_4_1_h
 
-// 2.4.1 Common parser idioms
-// Draft Standard — 6 February 2010
+/* 2.4.1 Common parser idioms
+ * Draft Standard — 6th of February 2010
+ */
 
 #include "BasicDataStructures/Unicode.h"
 #include "BasicDataStructures/Collections.h"

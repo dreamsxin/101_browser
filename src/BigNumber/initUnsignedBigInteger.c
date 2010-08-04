@@ -2,21 +2,21 @@
 #include <assert.h>
 #include <stdlib.h>
 
-uint8_t initUnsignedBigIntegerUC(UnsignedBigInteger* in_pNumber, uint32_t in_value)
+bool initUnsignedBigIntegerUC(UnsignedBigInteger* in_pNumber, uint32_t in_value)
 {
 	if (in_value != 0)
 	{
 		uint32_t* allocLimbs = (uint32_t*) malloc(sizeof(uint32_t));
 
 		if (allocLimbs == NULL)
-			return 0;
+			return false;
 		else
 		{
 			in_pNumber->numberSize = 1;
 			in_pNumber->allocedLimbsCount = 1;
 			in_pNumber->limbs = allocLimbs;
 			in_pNumber->limbs[0] = in_value;
-			return 1;
+			return true;
 		}
 	}
 	else
@@ -24,11 +24,11 @@ uint8_t initUnsignedBigIntegerUC(UnsignedBigInteger* in_pNumber, uint32_t in_val
 		in_pNumber->numberSize = 0;
 		in_pNumber->allocedLimbsCount = 0;
 		in_pNumber->limbs = NULL;
-		return 1;
+		return true;
 	}
 }
 
-uint8_t initUnsignedBigIntegerUCA(UnsignedBigInteger* in_pNumber, 
+bool initUnsignedBigIntegerUCA(UnsignedBigInteger* in_pNumber, 
 								  uint32_t* limbs, size_t limbsCount)
 {
 	size_t idx;
@@ -39,7 +39,7 @@ uint8_t initUnsignedBigIntegerUCA(UnsignedBigInteger* in_pNumber,
 		uint32_t* allocLimbs = (uint32_t*) malloc(sizeof(uint32_t) * limbsCount);
 
 		if (allocLimbs == NULL)
-			return 0;
+			return false;
 		else
 			in_pNumber->limbs = allocLimbs;
 	}
@@ -55,5 +55,5 @@ uint8_t initUnsignedBigIntegerUCA(UnsignedBigInteger* in_pNumber,
 		in_pNumber->limbs[idx] = limbs[idx];
 	}
 
-	return 1;
+	return true;
 }

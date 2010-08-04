@@ -169,6 +169,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\MiniStdlib\cstdbool.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\MiniStdlib\cstdint.h"
 				>
 			</File>
