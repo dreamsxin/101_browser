@@ -31,6 +31,10 @@ void testHTML5()
 	test(numberOfDaysInMonthOfYear(2, year) == 29);
 	freeUnsignedBigInteger(&year);
 
+	test(initUnsignedBigIntegerUC(&year, 2004));
+	test(numberOfDaysInMonthOfYear(2, year) == 29);
+	freeUnsignedBigInteger(&year);
+
 	assert('/' < '0');
 	test(!isDigit('/'));
 	test(isDigit('0'));
