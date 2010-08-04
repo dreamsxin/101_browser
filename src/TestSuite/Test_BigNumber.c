@@ -56,6 +56,51 @@ void testBigNumber()
 		test(isZero(&n));
 	}
 
+	/* Incrementing zero */
+	{
+		UnsignedBigInteger n;
+
+		test(initUnsignedBigInteger(&n, NULL, 0));
+		test(n.numberSize == 0);
+		test(incUB(&n) == 0);
+		test(n.numberSize == 1);
+		test(!isZero(&n));
+
+		/* We test whether a number gets to zero when freed */
+		freeUnsignedBigInteger(&n);
+		test(isZero(&n));
+	}
+
+	/* Incrementing without overflow */
+	{
+		UnsignedBigInteger n;
+		uint32_t l[1] = {0x22};
+
+		test(initUnsignedBigInteger(&n, l, 1));
+		test(n.numberSize == 1);
+		test(incUB(&n) == 0);
+		test(n.numberSize == 1);
+
+		/* We test whether a number gets to zero when freed */
+		freeUnsignedBigInteger(&n);
+		test(isZero(&n));
+	}
+
+	/* Incrementing with overflow */
+	{
+		UnsignedBigInteger n;
+		uint32_t l[1] = {0xFFFFFFFF};
+
+		test(initUnsignedBigInteger(&n, l, 1));
+		test(n.numberSize == 1);
+		test(incUB(&n) == 0);
+		test(n.numberSize == 2);
+
+		/* We test whether a number gets to zero when freed */
+		freeUnsignedBigInteger(&n);
+		test(isZero(&n));
+	}
+
 	/* The most simple overflow case in addition */
 	{
 		UnsignedBigInteger n;
@@ -112,6 +157,18 @@ void testBigNumber()
 			test(n.limbs[3] == 0);
 			test(n.limbs[4] == 1);
 		}
+
+		freeUnsignedBigInteger(&n);
+	}
+
+	/* A test for multiplication with zero */
+	{
+		UnsignedBigInteger n;
+		uint32_t l[2] = {0x22, 0x22};
+
+		test(initUnsignedBigInteger(&n, l, 2));
+		test(mulUBUC(&n, 0) == 0);
+		test(isZero(&n));
 
 		freeUnsignedBigInteger(&n);
 	}
