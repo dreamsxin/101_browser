@@ -7,8 +7,7 @@ using namespace std;
 void testTriangleStripBorderIterator()
 {
 	vector<unsigned int> v, w, result;
-	DoubleIterator<unsigned int, TriangleStripBorderIterator<unsigned int>::IteratorState> 
-		itInterface = triangleStripBorderIterator_create<unsigned int>();
+	DoubleIterator itInterface = triangleStripBorderIterator_create<unsigned int>();
 
 	// Testing correct behaviour for small datasets
 

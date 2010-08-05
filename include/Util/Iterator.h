@@ -1,6 +1,10 @@
 #ifndef _Iterator_h
 #define _Iterator_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum IterateResult
 {
 	/*!
@@ -22,49 +26,47 @@ enum IterateResult
 	 * state (i. e. at the end the iterator will not go back to the
 	 * beginning).
 	 * If the state is already invalid it should not change it (since
-	 * when we go backward (in case of a DoubleIterator it MUST return
+	 * when we go backward (in case of a DoubleIterator) it MUST return
 	 * to the valid state if such existed before).
 	 */
 	IterateResultToInvalidState
 };
 
-template <typename Type, typename IteratorState> struct SingleIterator
+struct SingleIterator
 {
 	/*
 	 * Gets a pointer to the value. If the iterator state is invalid 
 	 * the result is NULL.
 	 */
-	Type* (*mpfGet)(const IteratorState*);
+	void* (*mpfGet)(const void*);
 
 	/*!
 	 * Iterates the state to the next. Returns the IterateResult
 	 * as described in IterateResult's description
 	 */
-	IterateResult (*mpfIterate)(IteratorState*);
+	IterateResult (*mpfIterate)(void*);
 };
 
-template <typename Type, typename IteratorState> struct DoubleIterator
+struct DoubleIterator
 {
 	/*!
 	 * As in SingleIterator
 	 */
-	Type* (*mpfGet)(const IteratorState*);
+	void* (*mpfGet)(const void*);
 
 	/*!
 	 * Iterates forward
 	 */
-	IterateResult (*mpfIterateNext)(IteratorState*);
+	IterateResult (*mpfIterateNext)(void*);
 
 	/*!
 	 * Iterates backward
 	 */
-	IterateResult (*mpfIteratePrev)(IteratorState*);
+	IterateResult (*mpfIteratePrev)(void*);
 };
 
-template <typename Type, typename IteratorState> struct DoubleIteratorInstance
-{
-	IteratorState state;
-	DoubleIterator<Type, IteratorState> iterator;
-};
+#ifdef __cplusplus
+}
+#endif
 
 #endif

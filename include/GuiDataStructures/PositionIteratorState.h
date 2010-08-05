@@ -15,11 +15,12 @@ template <typename Type> struct PositionConstIteratorState
 	size_t mCurrentPosition;
 };
 
-template <typename Type, typename IteratorState> Type* positionIterator_get(
-	const IteratorState* in_pIts)
+template <typename IteratorState> void* positionIterator_get(const void* in_pIts)
 {
-	if (in_pIts->mCurrentPosition < in_pIts->mpVector->size())
-		return &(in_pIts->mpVector->at(in_pIts->mCurrentPosition));
+	const IteratorState* pIts = (const IteratorState*) in_pIts;
+
+	if (pIts->mCurrentPosition < pIts->mpVector->size())
+		return &(pIts->mpVector->at(pIts->mCurrentPosition));
 	else
 		return NULL;
 }

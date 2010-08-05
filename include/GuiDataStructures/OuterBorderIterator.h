@@ -2,7 +2,8 @@
 #define _OuterBorderIterator_h
 
 #include <cassert>
-#include "BasicDataStructures/Iterator.h"
+#include "Util/Iterator.h"
+#include "Util/IteratorInstance.hpp"
 #include "GuiDataStructures/PositionIteratorState.h"
 
 template <typename Type> class OuterBorderIterator
@@ -31,20 +32,21 @@ outerBorderConstIteratorState_create(const std::vector<Type>* in_pVector)
 	return out_state;
 }
 
-template <typename Type, typename IteratorState> IterateResult outerBorderIterator_next(
-	IteratorState* in_pIts)
+template <typename IteratorState> IterateResult outerBorderIterator_next(void* in_pIts)
 {
-	assert(in_pIts->mpVector->size()>=4 || in_pIts->mpVector->size()==0);
-	assert(in_pIts->mpVector->size()%2==0);
-	assert(in_pIts->mCurrentPosition%2==1);
-	in_pIts->mCurrentPosition+=2;
-	assert(in_pIts->mCurrentPosition%2==1);
+	IteratorState* pIts = (IteratorState*) in_pIts;
 
-	if (in_pIts->mCurrentPosition+2>=in_pIts->mpVector->size())
+	assert(pIts->mpVector->size()>=4 || pIts->mpVector->size()==0);
+	assert(pIts->mpVector->size()%2==0);
+	assert(pIts->mCurrentPosition%2==1);
+	pIts->mCurrentPosition+=2;
+	assert(pIts->mCurrentPosition%2==1);
+
+	if (pIts->mCurrentPosition+2 >= pIts->mpVector->size())
 	{
-		in_pIts->mCurrentPosition = 1;
+		pIts->mCurrentPosition = 1;
 
-		if (in_pIts->mpVector->size()==0)
+		if (pIts->mpVector->size()==0)
 		{
 			return IterateResultToInvalidState;
 		}
@@ -59,52 +61,52 @@ template <typename Type, typename IteratorState> IterateResult outerBorderIterat
 	}
 }
 
-template <typename Type, typename IteratorState> IterateResult outerBorderIterator_prev(
-	IteratorState* in_pIts)
+template <typename IteratorState> IterateResult outerBorderIterator_prev(void* in_pIts)
 {
-	assert(in_pIts->mpVector->size()>=4 || in_pIts->mpVector->size()==0);
-	assert(in_pIts->mpVector->size()%2==0);
-	assert(in_pIts->mCurrentPosition%2==1);
+	IteratorState* pIts = (IteratorState*) in_pIts;
 
-	if (in_pIts->mCurrentPosition != 1)
+	assert(pIts->mpVector->size() >= 4 || pIts->mpVector->size() == 0);
+	assert(pIts->mpVector->size()%2 == 0);
+	assert(pIts->mCurrentPosition%2 == 1);
+
+	if (pIts->mCurrentPosition != 1)
 	{
-		assert(in_pIts->mCurrentPosition>=3);
-		in_pIts->mCurrentPosition-=2;
-		assert(in_pIts->mCurrentPosition%2==1);
+		assert(pIts->mCurrentPosition >= 3);
+		pIts->mCurrentPosition -= 2;
+		assert(pIts->mCurrentPosition%2 == 1);
 		return IterateResultOK;
 	}
 	else
 	{
-		if (in_pIts->mpVector->size() == 0)
+		if (pIts->mpVector->size() == 0)
 		{
-			assert(in_pIts->mCurrentPosition == 1);
+			assert(pIts->mCurrentPosition == 1);
 			return IterateResultToInvalidState;
 		}
 		else
 		{
-			in_pIts->mCurrentPosition = in_pIts->mpVector->size()-3;
+			pIts->mCurrentPosition = pIts->mpVector->size()-3;
 			return IterateResultOverBoundary;
 		}
 	}
 }
 
-template <typename Type> DoubleIterator<Type, typename OuterBorderIterator<Type>::IteratorState>
-outerBorderIterator_create()
+template <typename Type> DoubleIterator outerBorderIterator_create()
 {
-	DoubleIterator<Type, typename OuterBorderIterator<Type>::IteratorState> out_iter = 
+	DoubleIterator out_iter = 
 	{
-		&positionIterator_get,
-		&outerBorderIterator_next<Type, typename OuterBorderIterator<Type>::IteratorState>,
-		&outerBorderIterator_prev<Type, typename OuterBorderIterator<Type>::IteratorState>
+		&positionIterator_get<typename OuterBorderIterator<Type>::IteratorState>,
+		&outerBorderIterator_next<typename OuterBorderIterator<Type>::IteratorState>,
+		&outerBorderIterator_prev<typename OuterBorderIterator<Type>::IteratorState>
 	};
 
 	return out_iter;
 }
 
-template <typename Type> DoubleIteratorInstance<Type, typename OuterBorderIterator<Type>::IteratorState>
+template <typename Type> DoubleIteratorInstance<typename OuterBorderIterator<Type>::IteratorState>
 outerBorderIteratorInstance_create(std::vector<Type>* in_pVector)
 {
-	DoubleIteratorInstance<Type, typename OuterBorderIterator<Type>::IteratorState>
+	DoubleIteratorInstance<typename OuterBorderIterator<Type>::IteratorState>
 		inst = {outerBorderIteratorState_create(in_pVector), outerBorderIterator_create<Type>()};
 
 	return inst;

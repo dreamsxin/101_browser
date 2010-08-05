@@ -2,12 +2,12 @@
 #define _IteratorTestUtil_h
 
 #include <vector>
-#include "BasicDataStructures/Iterator.h"
+#include "Util/Iterator.h"
 #include "TestSuite/TestSuite.h"
 
 template <typename IteratorState> 
 void runIteratorForward(IteratorState* in_pItState, 
-						DoubleIterator<unsigned int, IteratorState> in_interface,
+						DoubleIterator in_interface,
 						std::vector<unsigned int>* in_out_pResult)
 {
 	*in_out_pResult=std::vector<unsigned int>();
@@ -22,7 +22,7 @@ void runIteratorForward(IteratorState* in_pItState,
 
 	do
 	{
-		in_out_pResult->push_back(*(*in_interface.mpfGet)(in_pItState));
+		in_out_pResult->push_back(*(unsigned int*) (*in_interface.mpfGet)(in_pItState));
 		itRes = (*in_interface.mpfIterateNext)(in_pItState);
 	}
 	while (itRes == IterateResultOK);
@@ -32,7 +32,7 @@ void runIteratorForward(IteratorState* in_pItState,
 
 template <typename IteratorState> 
 void runIteratorBackward(IteratorState* in_pItState, 
-						 DoubleIterator<unsigned int, IteratorState> in_interface,
+						 DoubleIterator in_interface,
 						 std::vector<unsigned int>* in_out_pResult)
 {
 	*in_out_pResult=std::vector<unsigned int>();
@@ -49,7 +49,7 @@ void runIteratorBackward(IteratorState* in_pItState,
 
 	do
 	{
-		in_out_pResult->push_back(*(*in_interface.mpfGet)(in_pItState));
+		in_out_pResult->push_back(*(unsigned int*) (*in_interface.mpfGet)(in_pItState));
 		itRes = (*in_interface.mpfIteratePrev)(in_pItState);
 	}
 	while (itRes == IterateResultOK);
@@ -65,7 +65,7 @@ template <typename IteratorState> void testIterator(
 	std::vector<unsigned int>& v, 
 	std::vector<unsigned int>& w,
 	IteratorState (*in_pItCreate)(std::vector<unsigned int>*),
-	DoubleIterator<unsigned int, IteratorState>& itInterface
+	DoubleIterator& itInterface
 	)
 {
 	std::vector<unsigned int> result;

@@ -28,7 +28,7 @@ void createRoundBorder(Vertex2<float> prevVertex,
 * borderWidth: the desired width of the border
 */
 inline void createBorderTriangleStrip(
-									  DoubleIteratorInstance<Vertex2<float>, 
+									  DoubleIteratorInstance<
 									  TriangleStripBorderIterator<Vertex2<float> >::IteratorState> itInstance,
 									  std::vector<Vertex2<float> >* pBorderTriangleStrip,
 									  void (*borderCreatingFunction)(Vertex2<float>, 
@@ -45,17 +45,17 @@ inline void createBorderTriangleStrip(
 	itRes = (*itInstance.iterator.mpfIteratePrev)(&itInstance.state);
 	assert(itRes == IterateResultOverBoundary);
 
-	Vertex2<float> prevVertex = *(*itInstance.iterator.mpfGet)(&itInstance.state);
+	Vertex2<float> prevVertex = *(Vertex2<float>*) (*itInstance.iterator.mpfGet)(&itInstance.state);
 
 	itRes = itInstance.iterator.mpfIterateNext(&itInstance.state);
 	assert(itRes == IterateResultOverBoundary);
 
-	Vertex2<float> currVertex = *(*itInstance.iterator.mpfGet)(&itInstance.state);
+	Vertex2<float> currVertex = *(Vertex2<float>*) (*itInstance.iterator.mpfGet)(&itInstance.state);
 
 	itRes = itInstance.iterator.mpfIterateNext(&itInstance.state);
 	assert(itRes == IterateResultOK);
 
-	Vertex2<float> nextVertex = *(*itInstance.iterator.mpfGet)(&itInstance.state);
+	Vertex2<float> nextVertex = *(Vertex2<float>*) (*itInstance.iterator.mpfGet)(&itInstance.state);
 
 	bool breakAfterSecondNextIteration = false;
 	bool breakAfterNextIteration = false;
@@ -83,7 +83,7 @@ inline void createBorderTriangleStrip(
 
 		prevVertex = currVertex;
 		currVertex = nextVertex;
-		nextVertex = *(*itInstance.iterator.mpfGet)(&itInstance.state);
+		nextVertex = *(Vertex2<float>*) (*itInstance.iterator.mpfGet)(&itInstance.state);
 	}
 }
 

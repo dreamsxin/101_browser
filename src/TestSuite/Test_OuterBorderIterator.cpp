@@ -8,8 +8,7 @@ void testOuterBorderIterator()
 {
 	vector<unsigned int> v, w, result;
 	OuterBorderIterator<unsigned int>::IteratorState itState;
-	DoubleIterator<unsigned int, OuterBorderIterator<unsigned int>::IteratorState> 
-		itInterface = outerBorderIterator_create<unsigned int>();
+	DoubleIterator itInterface = outerBorderIterator_create<unsigned int>();
 
 	v=vector<unsigned int>();
 	w=vector<unsigned int>();

@@ -2,7 +2,8 @@
 #define _TriangleStripBorderIterator_h
 
 #include <cassert>
-#include "BasicDataStructures/Iterator.h"
+#include "Util/Iterator.h"
+#include "Util/IteratorInstance.hpp"
 #include "GuiDataStructures/PositionIteratorState.h"
 
 template <typename Type> class TriangleStripBorderIterator
@@ -18,34 +19,35 @@ triangleStripBorderIteratorState_create(std::vector<Type>* in_pVector)
 	return out_state;
 }
 
-template <typename Type, typename IteratorState> IterateResult triangleStripBorderIterator_next(
-	IteratorState* in_pIts)
+template <typename IteratorState> IterateResult triangleStripBorderIterator_next(void* in_pIts)
 {
-	if (in_pIts->mCurrentPosition==0)
+	IteratorState* pIts = (IteratorState*) in_pIts;
+
+	if (pIts->mCurrentPosition==0)
 	{
-		switch (in_pIts->mpVector->size())
+		switch (pIts->mpVector->size())
 		{
 		case 0:
 			return IterateResultToInvalidState;
 		case 1:
 			return IterateResultOverBoundary;
 		default:
-			in_pIts->mCurrentPosition++;
+			pIts->mCurrentPosition++;
 			return IterateResultOK;
 		}
 	}
 	else
 	{
-		if (in_pIts->mCurrentPosition%2==1)
+		if (pIts->mCurrentPosition%2==1)
 		{
-			if (in_pIts->mCurrentPosition+2<in_pIts->mpVector->size())
+			if (pIts->mCurrentPosition+2 < pIts->mpVector->size())
 			{
-				in_pIts->mCurrentPosition+=2;
+				pIts->mCurrentPosition+=2;
 				return IterateResultOK;
 			}
-			else if (in_pIts->mCurrentPosition+1<in_pIts->mpVector->size())
+			else if (pIts->mCurrentPosition+1 < pIts->mpVector->size())
 			{
-				in_pIts->mCurrentPosition+=1;
+				pIts->mCurrentPosition+=1;
 				return IterateResultOK;
 			}
 			else
@@ -53,10 +55,10 @@ template <typename Type, typename IteratorState> IterateResult triangleStripBord
 				// Since the other conditions in the if/else if part are
 				// wrong and we have in_pIts->mCurrentPosition<in_pIts->mpVector->size()
 				// we get in_pIts->mCurrentPosition == in_pIts->mpVector->size()-1
-				assert(in_pIts->mCurrentPosition == in_pIts->mpVector->size()-1);
+				assert(pIts->mCurrentPosition == pIts->mpVector->size()-1);
 
-				in_pIts->mCurrentPosition-=1;
-				if (in_pIts->mCurrentPosition==0)
+				pIts->mCurrentPosition-=1;
+				if (pIts->mCurrentPosition==0)
 					return IterateResultOverBoundary;
 				else
 					return IterateResultOK;
@@ -66,11 +68,11 @@ template <typename Type, typename IteratorState> IterateResult triangleStripBord
 		{
 			// As we have checked above we have in_pIts->mCurrentPosition!=0. 
 			// So we have in_pIts->mCurrentPosition>=2
-			assert(in_pIts->mCurrentPosition>=2);
+			assert(pIts->mCurrentPosition>=2);
 
-			in_pIts->mCurrentPosition-=2;
+			pIts->mCurrentPosition-=2;
 
-			if (in_pIts->mCurrentPosition==0)
+			if (pIts->mCurrentPosition==0)
 				return IterateResultOverBoundary;
 			else
 				return IterateResultOK;
@@ -78,58 +80,58 @@ template <typename Type, typename IteratorState> IterateResult triangleStripBord
 	}
 }
 
-template <typename Type, typename IteratorState> IterateResult triangleStripBorderIterator_prev(
-	IteratorState* in_pIts)
+template <typename IteratorState> IterateResult triangleStripBorderIterator_prev(void* in_pIts)
 {
-	if (in_pIts->mCurrentPosition==0)
+	IteratorState* pIts = (IteratorState*) in_pIts;
+
+	if (pIts->mCurrentPosition==0)
 	{
-		switch (in_pIts->mpVector->size())
+		switch (pIts->mpVector->size())
 		{
 		case 0:
 			return IterateResultToInvalidState;
 		case 1:
 			return IterateResultOverBoundary;
 		case 2:
-			in_pIts->mCurrentPosition = 1;
+			pIts->mCurrentPosition = 1;
 			return IterateResultOverBoundary;
 		default:
-			in_pIts->mCurrentPosition = 2;
+			pIts->mCurrentPosition = 2;
 			return IterateResultOverBoundary;
 		}
 	}
 	else
 	{
-		if (in_pIts->mCurrentPosition%2==0)
+		if (pIts->mCurrentPosition%2==0)
 		{
-			if (in_pIts->mCurrentPosition+2<in_pIts->mpVector->size())
-				in_pIts->mCurrentPosition+=2;
-			else if (in_pIts->mCurrentPosition+1<in_pIts->mpVector->size())
-				in_pIts->mCurrentPosition+=1;
+			if (pIts->mCurrentPosition+2 < pIts->mpVector->size())
+				pIts->mCurrentPosition+=2;
+			else if (pIts->mCurrentPosition+1 < pIts->mpVector->size())
+				pIts->mCurrentPosition+=1;
 			else
 			{
 				// Since the other conditions in the if/else if part are
 				// wrong and we have in_pIts->mCurrentPosition<in_pIts->mpVector->size()
 				// we get in_pIts->mCurrentPosition == in_pIts->mpVector->size()-1
-				assert(in_pIts->mCurrentPosition == in_pIts->mpVector->size()-1);
+				assert(pIts->mCurrentPosition == pIts->mpVector->size()-1);
 
 				// As we have checked above we have in_pIts->mCurrentPosition!=0. 
 				// So we have in_pIts->mCurrentPosition>=2
-				assert(in_pIts->mCurrentPosition>=2);
+				assert(pIts->mCurrentPosition>=2);
 
-				in_pIts->mCurrentPosition-=1;
-				
+				pIts->mCurrentPosition-=1;
 			}
 
 			return IterateResultOK;
 		}
 		else
 		{
-			if (in_pIts->mCurrentPosition==1)
-				in_pIts->mCurrentPosition=0;
+			if (pIts->mCurrentPosition==1)
+				pIts->mCurrentPosition=0;
 			else
 			{
-				assert(in_pIts->mCurrentPosition>=3);
-				in_pIts->mCurrentPosition-=2;
+				assert(pIts->mCurrentPosition>=3);
+				pIts->mCurrentPosition-=2;
 			}
 
 			return IterateResultOK;
@@ -137,23 +139,22 @@ template <typename Type, typename IteratorState> IterateResult triangleStripBord
 	}
 }
 
-template <typename Type> DoubleIterator<Type, typename TriangleStripBorderIterator<Type>::IteratorState>
-triangleStripBorderIterator_create()
+template <typename Type> DoubleIterator triangleStripBorderIterator_create()
 {
-	DoubleIterator<Type, typename TriangleStripBorderIterator<Type>::IteratorState> out_iter = 
+	DoubleIterator out_iter = 
 	{
-		&positionIterator_get,
-		&triangleStripBorderIterator_next<Type, typename TriangleStripBorderIterator<Type>::IteratorState>,
-		&triangleStripBorderIterator_prev<Type, typename TriangleStripBorderIterator<Type>::IteratorState>
+		&positionIterator_get<typename TriangleStripBorderIterator<Type>::IteratorState>,
+		&triangleStripBorderIterator_next<typename TriangleStripBorderIterator<Type>::IteratorState>,
+		&triangleStripBorderIterator_prev<typename TriangleStripBorderIterator<Type>::IteratorState>
 	};
 
 	return out_iter;
 }
 
-template <typename Type> DoubleIteratorInstance<Type, typename TriangleStripBorderIterator<Type>::IteratorState>
+template <typename Type> DoubleIteratorInstance<typename TriangleStripBorderIterator<Type>::IteratorState>
 triangleStripBorderIteratorInstance_create(std::vector<Type>* in_pVector)
 {
-	DoubleIteratorInstance<Type, typename TriangleStripBorderIterator<Type>::IteratorState>
+	DoubleIteratorInstance<typename TriangleStripBorderIterator<Type>::IteratorState>
 		inst = {triangleStripBorderIteratorState_create(in_pVector), triangleStripBorderIterator_create<Type>()};
 
 	return inst;

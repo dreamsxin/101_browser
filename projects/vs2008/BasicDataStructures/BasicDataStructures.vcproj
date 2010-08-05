@@ -227,10 +227,6 @@
 				>
 			</File>
 			<File
-				RelativePath="$(SolutionDir)include\BasicDataStructures\Iterator.h"
-				>
-			</File>
-			<File
 				RelativePath="$(SolutionDir)include\BasicDataStructures\Maybe.h"
 				>
 			</File>
