@@ -5,7 +5,7 @@
 // Draft Standard — 6 February 2010
 
 #include "Template/HigherOrderFunctions/Map.h"
-#include "BasicDataStructures/Unicode.h"
+#include "Util/Unicode.h"
 
 inline bool compareTokenCaseSensitive(UnicodeCodePoint p1, UnicodeCodePoint p2)
 {

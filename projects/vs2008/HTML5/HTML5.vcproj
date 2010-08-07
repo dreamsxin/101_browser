@@ -181,6 +181,10 @@
 				RelativePath="..\..\..\src\HTML5\2_4_5.c"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\src\HTML5\StringUnicodeIterator.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -197,6 +201,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\HTML5\2_4_5.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\HTML5\StringUnicodeIterator.h"
 				>
 			</File>
 		</Filter>

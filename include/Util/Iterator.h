@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-enum IterateResult
+typedef enum _IterateResult
 {
 	/*!
 	 * Is returned when the current iterator state is valid
@@ -30,29 +30,29 @@ enum IterateResult
 	 * to the valid state if such existed before).
 	 */
 	IterateResultToInvalidState
-};
+} IterateResult;
 
-struct SingleIterator
+typedef struct _SingleIterator
 {
 	/*
 	 * Gets a pointer to the value. If the iterator state is invalid 
 	 * the result is NULL.
 	 */
-	void* (*mpfGet)(const void*);
+	void* (*mpfGet)(void*);
 
 	/*!
 	 * Iterates the state to the next. Returns the IterateResult
 	 * as described in IterateResult's description
 	 */
 	IterateResult (*mpfIterate)(void*);
-};
+} SingleIterator;
 
-struct DoubleIterator
+typedef struct _DoubleIterator
 {
 	/*!
 	 * As in SingleIterator
 	 */
-	void* (*mpfGet)(const void*);
+	void* (*mpfGet)(void*);
 
 	/*!
 	 * Iterates forward
@@ -63,7 +63,7 @@ struct DoubleIterator
 	 * Iterates backward
 	 */
 	IterateResult (*mpfIteratePrev)(void*);
-};
+} DoubleIterator;
 
 #ifdef __cplusplus
 }

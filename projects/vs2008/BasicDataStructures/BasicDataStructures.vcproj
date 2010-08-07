@@ -238,10 +238,6 @@
 				RelativePath="$(SolutionDir)include\BasicDataStructures\Types.h"
 				>
 			</File>
-			<File
-				RelativePath="$(SolutionDir)include\BasicDataStructures\Unicode.h"
-				>
-			</File>
 			<Filter
 				Name="Tree"
 				>

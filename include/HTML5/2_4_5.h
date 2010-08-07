@@ -4,7 +4,7 @@
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstdbool.h"
 #include "BigNumber/BigInteger.h"
-#include "BasicDataStructures/Unicode.h"
+#include "Util/Unicode.h"
 
 #ifdef __cplusplus
 extern "C" {
