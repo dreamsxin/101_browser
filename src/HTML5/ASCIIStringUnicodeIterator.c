@@ -26,7 +26,18 @@ IterateResult asciiStringUnicodeIterator_next(void* in_pIteratorState)
 	if (*pIteratorState->characterPointer)
 	{
 		pIteratorState->characterPointer++;
-		return IterateResultOK;
+
+		assert(*pIteratorState->characterPointer >= 0);
+		assert(*pIteratorState->characterPointer <= 127);
+
+		if (*pIteratorState->characterPointer)
+		{
+			return IterateResultOK;
+		}
+		else
+		{
+			return IterateResultToInvalidState;
+		}
 	}
 	else
 	{
@@ -34,7 +45,7 @@ IterateResult asciiStringUnicodeIterator_next(void* in_pIteratorState)
 	}
 }
 
-SingleIterator stringUnicodeIterator_create()
+SingleIterator asciiStringUnicodeIterator_create()
 {
 	SingleIterator out_si = { &asciiStringUnicodeIterator_get, &asciiStringUnicodeIterator_next };
 	return out_si;

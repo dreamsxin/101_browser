@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TestSuite\Test_ASCIIStringUnicodeIterator.c"
+				>
+			</File>
+			<File
 				RelativePath="$(SolutionDir)src\TestSuite\Test_BasicDataStructures.cpp"
 				>
 			</File>
@@ -212,7 +216,7 @@
 				>
 			</File>
 			<File
-				RelativePath="$(SolutionDir)src\TestSuite\Test_HTML5.cpp"
+				RelativePath="..\..\..\src\TestSuite\Test_HTML5.c"
 				>
 			</File>
 			<File

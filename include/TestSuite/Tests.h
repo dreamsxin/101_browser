@@ -10,12 +10,15 @@ void testIteratorInstances();
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 void testBigNumber();
+void testASCIIStringUnicodeIterator();
+void testHTML5();
+
 #ifdef __cplusplus
 }
 #endif
 
-void testHTML5();
 void testRfc1950();
 
 #endif

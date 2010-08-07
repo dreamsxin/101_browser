@@ -14,8 +14,14 @@ typedef struct _ASCIIStringUnicodeIteratorState
 	UnicodeCodePoint codePoint;
 } ASCIIStringUnicodeIteratorState;
 
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 SingleIterator asciiStringUnicodeIterator_create();
 
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 ASCIIStringUnicodeIteratorState asciiStringUnicodeIteratorState_create(char* string);
 
 #ifdef __cplusplus

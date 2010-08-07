@@ -24,7 +24,7 @@ inline bool isSpaceCharacter(UnicodeCodePoint in_p)
 }
 
 // not implemented yet
-// inline bool isWhiteSpaceCharacter(UnicodeCodePoint in_p)
+// bool isWhiteSpaceCharacter(UnicodeCodePoint in_p)
 
 inline bool isAlphanumericASCIICharacter(UnicodeCodePoint in_p)
 {
