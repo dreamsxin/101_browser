@@ -178,6 +178,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\..\..\src\HTML5\2_3.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\HTML5\2_4_5.c"
 				>
 			</File>

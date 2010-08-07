@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstring>
 #include "TestSuite/Tests.h"
 
 int main()
