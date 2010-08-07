@@ -182,7 +182,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\HTML5\StringUnicodeIterator.c"
+				RelativePath="..\..\..\src\HTML5\ASCIIStringUnicodeIterator.c"
 				>
 			</File>
 		</Filter>
@@ -204,7 +204,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\HTML5\StringUnicodeIterator.h"
+				RelativePath="..\..\..\include\HTML5\ASCIIStringUnicodeIterator.h"
 				>
 			</File>
 		</Filter>
