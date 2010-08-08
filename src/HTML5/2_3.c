@@ -40,8 +40,8 @@ bool universalCompare(SingleIterator in_it, void* in_iteratorState0, void* in_it
 
 			compResult = (*in_cmpFunc)(*cp0, *cp1);
 
-			if (compResult)
-				return true;
+			if (!compResult)
+				return false;
 			else
 			{
 				(*in_it.mpfIterate)(in_iteratorState0);
@@ -63,23 +63,23 @@ bool compareStringsASCIICaseInsensitive(SingleIterator in_it, void* in_iteratorS
 
 UnicodeCodePoint tokenToASCIILowercase(UnicodeCodePoint in_p)
 {
-	if (in_p>=0x0061 && in_p<=0x007A)
-		in_p -= (0x0061-0x0041);
-	
-	return in_p;
-}
-
-UnicodeCodePoint tokenToASCIIUppercase(UnicodeCodePoint in_p)
-{
 	if (in_p>=0x0041 && in_p<=0x005A)
 		in_p += (0x0061-0x0041);
 
 	return in_p;
 }
 
+UnicodeCodePoint tokenToASCIIUppercase(UnicodeCodePoint in_p)
+{
+	if (in_p>=0x0061 && in_p<=0x007A)
+		in_p -= (0x0061-0x0041);
+	
+	return in_p;
+}
+
 void universalConvertString(char* in_string, UnicodeCodePoint (*in_func)(UnicodeCodePoint))
 {
-	while (in_string != NULL)
+	while (*in_string)
 	{
 		UnicodeCodePoint p = (*in_func)((unsigned char) *in_string);
 		*in_string = (unsigned char) p;
