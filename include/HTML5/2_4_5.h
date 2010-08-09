@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
 /* 2.4.5 Dates and times
- * Draft Standard — 4th of August 2010
+ * Draft Standard - 4th of August 2010
  */
 
 /*

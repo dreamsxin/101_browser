@@ -7,7 +7,7 @@
 
 /*
  * 2.3 Case-sensitivity and string comparison
- * Draft Standard — 6th of August 2010
+ * Draft Standard - 6th of August 2010
  */
 
 #ifdef __cplusplus
