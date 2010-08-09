@@ -6,6 +6,7 @@
  */
 
 #include "Util/Unicode.h"
+#include "MiniStdlib/cstdbool.h"
 
 #ifdef __cplusplus
 extern "C" {
