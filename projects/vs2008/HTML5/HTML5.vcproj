@@ -182,6 +182,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\HTML5\2_4_1.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\HTML5\2_4_5.c"
 				>
 			</File>

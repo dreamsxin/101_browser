@@ -19,7 +19,7 @@ module websockets
              attribute Function onerror;
              attribute Function onclose;
     readonly attribute DOMString protocol;
-    boolean send(in DOMString data);
+    void send(in DOMString data);
     void close();
   };
   WebSocket implements EventTarget;
