@@ -19,7 +19,7 @@ bool isSpaceCharacter(UnicodeCodePoint in_p);
 bool isAlphanumericASCIICharacter(UnicodeCodePoint in_p);
 
 // not implemented yet
-// inline bool collectSequenceOfCharacters()
+// bool collectSequenceOfCharacters()
 
 #ifdef __cplusplus
 }
