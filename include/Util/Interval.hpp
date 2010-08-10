@@ -1,5 +1,5 @@
-#ifndef _Interval_h
-#define _Interval_h
+#ifndef _Interval_hpp
+#define _Interval_hpp
 
 #include "BasicDataStructures/Comparator.h"
 #include <cassert>

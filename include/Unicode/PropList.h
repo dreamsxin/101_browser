@@ -1,10 +1,11 @@
 #ifndef _PropList_h
 #define _PropList_h
 
+/* For FILE */
 #ifdef __cplusplus
-#include <cstdlib>
+#include <cstdio>
 #else
-#include <stdlib.h>
+#include <stdio.h>
 #endif
 
 #include "MiniStdlib/cstdbool.h"
@@ -16,7 +17,11 @@ extern "C" {
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-bool readPropList(FILE* in_file, char* in_property);
+/*
+ * out_ppIntervals has to be a pointer to a pointer to Interval<UnicodeCodePoint>
+ * it will be allocated
+ */
+bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals);
 
 #ifdef __cplusplus
 }

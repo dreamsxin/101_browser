@@ -223,10 +223,6 @@
 				>
 			</File>
 			<File
-				RelativePath="$(SolutionDir)include\BasicDataStructures\Interval.h"
-				>
-			</File>
-			<File
 				RelativePath="$(SolutionDir)include\BasicDataStructures\Maybe.h"
 				>
 			</File>
