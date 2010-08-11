@@ -63,3 +63,12 @@ lib/*
 
 # Windows likes to create these file
 Thumbs.db
+
+# Visio file
+*.vsd
+# Temporary file by Visio
+*.~vsd
+
+# Files produced by LaTeX
+*.aux
+*.dvi

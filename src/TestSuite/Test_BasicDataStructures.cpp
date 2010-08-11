@@ -1,6 +1,6 @@
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
-#include "BasicDataStructures/Interval.h"
+#include "Util/Interval.hpp"
 
 void testBasicDataStructures()
 {

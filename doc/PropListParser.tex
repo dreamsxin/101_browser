@@ -1,0 +1,53 @@
+\documentclass[10pt]{scrartcl}
+\usepackage[latin1]{inputenc}
+\usepackage[english,ngerman]{babel}
+\usepackage{pstricks}
+\usepackage{pst-node}
+\usepackage{lscape}
+\author{Wolfgang Keller}
+\title{Documentation of \texttt{PropList.txt} parser}
+\begin{document}
+\maketitle
+
+\begin{figure}
+\rotatebox{90}{
+\begin{minipage}{\textheight}
+\begin{pspicture}(22,15)
+%\psgrid
+\begin{psmatrix}[rowsep=2.0,colsep=2.3]
+& \psframebox[,framearc=.5]{\parbox[c][0.7cm][c]{2.0cm}{\centering Properly terminated}} \\
+\psframebox[,framearc=.5]{\parbox[c][0.7cm][c]{2.0cm}{\centering Begin of line}} & \psframebox[,framearc=.5]{\parbox[c][0.7cm][c]{2.0cm}{\centering First number}} \\
+& \psframebox[,framearc=.5]{\parbox[c][0.7cm][c]{2.0cm}{\centering Separator}} & \psframebox[,framearc=.5]{\parbox[c][0.7cm][c]{2.15cm}{\centering Before second number}} & \psframebox[,framearc=.5]{\parbox[c][0.7cm][c]{2.0cm}{\centering Second number}} & \psframebox[,framearc=.5]{\parbox[c][0.7cm][c]{2.0cm}{\centering Spaces after number(s)}} \\
+\psframebox[,framearc=.5]{\parbox[c][0.7cm][c]{2.0cm}{\centering Comment}} & \psframebox[,framearc=.5]{\parbox[c][0.7cm][c]{2.0cm}{\centering Error}} & & & \psframebox[,framearc=.5]{\parbox[c][0.7cm][c]{2.0cm}{\centering Space before property}} \\
+\\
+\psframebox[,framearc=.5]{\parbox[c][0.7cm][c]{2.0cm}{\centering Space after property}} & & \psframebox[,framearc=.5]{\parbox[c][0.7cm][c]{2.0cm}{\centering Property}}
+\end{psmatrix}
+\ncline{->}{2,1}{1,2}\ncput*{{[}End of stream{]}}
+\ncline{->}{2,1}{2,2}\naput{{[}'0'-'9','A'-'F'{]}}
+\ncline[offset=-0.7cm]{->}{2,1}{4,1}\ncput*{{[}'\#'{]}}
+\ncline{->}{2,1}{4,2}\ncput*{{[}else{]}}
+\ncline{->}{2,2}{3,2}\ncput*{{[}'.'{]}}
+\ncline{->}{3,2}{3,3}\ncput*{{[}'.'{]}}
+\ncline{->}{3,2}{4,2}\ncput*{{[}else{]}}
+\ncline{->}{3,3}{3,4}\naput{{[}'0'-'9','A'-'F'{]}}
+\ncline{->}{3,3}{4,2}\ncput*{{[}else{]}}
+\ncline{->}{3,4}{3,5}\ncput*{{[}'~'{]}}
+\ncline{->}{3,4}{4,2}\ncput*{{[}else{]}}
+\ncline{->}{3,4}{4,5}\ncput*{{[}';'{]}}
+\ncline{->}{3,5}{4,2}\ncput*{{[}else{]}}
+\ncline{->}{3,5}{4,5}\ncput*{{[}';'{]}}
+\ncline[offset=0.2cm]{->}{4,1}{2,1}\nbput{{[}0x0A~('\\n'){]}}
+\ncline{->}{4,5}{4,2}\ncput*{{[}else{]}}
+\ncline{->}{4,5}{6,3}\ncput*{{[}'~'{]}}
+\ncline{->}{6,1}{4,1}\ncput*{{[}'\#'{]}}
+\ncline{->}{6,1}{4,2}\ncput*{{[}else{]}}
+\ncline{->}{6,3}{4,2}\ncput*{{[}else{]}}
+\ncline{->}{6,3}{6,1}\ncput*{{[}'~'{]}}
+\ncangle[angleB=90]{->}{2,2}{3,5}\ncput*{{[}'~'{]}}
+\end{pspicture}
+\end{minipage}
+}
+\caption{State chart of the \texttt{PropList.txt} parser}
+\end{figure}
+
+\end{document}
