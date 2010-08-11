@@ -20,5 +20,6 @@ void testHTML5();
 #endif
 
 void testRfc1950();
+void testUnicode();
 
 #endif

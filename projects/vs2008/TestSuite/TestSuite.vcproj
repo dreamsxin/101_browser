@@ -188,6 +188,10 @@
 			ReferencedProjectIdentifier="{51F91F5E-EA63-4B47-9273-F00118F985B4}"
 			RelativePathToProject=".\projects\vs2008\HTML5\HTML5.vcproj"
 		/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{BC55BA95-3E8C-46AA-B3AF-2587EF39FD5D}"
+			RelativePathToProject=".\projects\vs2008\Unicode\Unicode.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter
@@ -233,6 +237,10 @@
 			</File>
 			<File
 				RelativePath="$(SolutionDir)src\TestSuite\Test_TriangleStripBorderIterator.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TestSuite\Test_Unicode.cpp"
 				>
 			</File>
 			<File

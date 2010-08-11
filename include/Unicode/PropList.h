@@ -23,6 +23,15 @@ __declspec(dllexport)
  */
 bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals);
 
+/*
+ * in_ppIntervals has to be a pointer to a pointer to Interval<UnicodeCodePoint>;
+ * its pointee will be freed
+ */
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+void freeIntervalsFromPropList(void* in_ppIntervals);
+
 #ifdef __cplusplus
 }
 #endif

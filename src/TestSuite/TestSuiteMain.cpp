@@ -16,6 +16,8 @@ int main()
 	testRfc1950();
 	printf("Testing ASCIIStringUnicodeIterator\n");
 	testASCIIStringUnicodeIterator();
+	printf("Testing Unicode\n");
+	testUnicode();
 	printf("Testing HTML5\n");
 	testHTML5();
 

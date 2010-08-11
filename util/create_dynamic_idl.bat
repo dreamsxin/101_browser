@@ -1,5 +1,7 @@
 set PATH=c:\cygwin\bin;%PATH%
 
+wget http://www.cl.cam.ac.uk/~mgk25/ucs/examples/UTF-8-test.txt -O ../testfiles/Unicode/UTF-8-test.txt
+
 wget http://unicode.org/Public/UNIDATA/PropList.txt -O ../data/Unicode/PropList.txt
 
 wget http://www.whatwg.org/specs/web-apps/current-work/ -O html5.html

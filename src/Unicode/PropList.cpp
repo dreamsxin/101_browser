@@ -1,3 +1,4 @@
+#include "MiniStdlib/safe_free.h"
 #include "Unicode/PropList.h"
 #include "Util/Interval.hpp"
 #include "Util/Unicode.h"
@@ -45,7 +46,7 @@ enum PropListState
 
 bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals)
 {
-	Interval<UnicodeCodePoint>** ppIntervals = static_cast<Interval<UnicodeCodePoint>**>(out_ppIntervals);
+	Interval<UnicodeCodePoint>* pIntervals = NULL;
 	std::list<Interval<UnicodeCodePoint> > listIntervals;
 
 	unsigned char token;
@@ -78,6 +79,10 @@ bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals)
 			else if (token == '#')
 			{
 				currentState = Comment;
+			}
+			else if (token == '\n')
+			{
+				// nothing
 			}
 			else
 			{
@@ -222,21 +227,28 @@ bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals)
 
 	if (currentState == ProperlyTerminated)
 	{
-		*ppIntervals = (Interval<UnicodeCodePoint>*) malloc(sizeof(Interval<UnicodeCodePoint>) * listIntervals.size());
+		pIntervals = (Interval<UnicodeCodePoint>*) malloc(sizeof(Interval<UnicodeCodePoint>) * listIntervals.size());
 
-		if (*ppIntervals == NULL)
+		if (pIntervals == NULL)
 			return false;
 
 		size_t index = 0;
 
 		for (list<Interval<UnicodeCodePoint> >::iterator i = listIntervals.begin(); i != listIntervals.end(); ++i)
 		{
-			(*ppIntervals)[index] = *i;
+			pIntervals[index] = *i;
 			index++;
 		}
+
+		*((Interval<UnicodeCodePoint>**) out_ppIntervals) = pIntervals;
 
 		return true;
 	}
 	else
 		return false;
+}
+
+void freeIntervalsFromPropList(void* in_ppIntervals)
+{
+	safe_free(in_ppIntervals);
 }

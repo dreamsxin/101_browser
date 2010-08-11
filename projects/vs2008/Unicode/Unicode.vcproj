@@ -61,7 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="MiniStdlib.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(SolutionDir)out\vs2008\$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -134,7 +136,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="MiniStdlib.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="$(SolutionDir)out\vs2008\$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"

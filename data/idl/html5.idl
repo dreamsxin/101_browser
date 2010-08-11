@@ -1208,7 +1208,7 @@ module html5
     readonly attribute WindowProxy window;
     readonly attribute WindowProxy self;
     readonly attribute Document document;
-             attribute DOMString name;
+             attribute DOMString name; 
     [PutForwards=href] readonly attribute Location location;
     readonly attribute History history;
     readonly attribute UndoManager undoManager;
