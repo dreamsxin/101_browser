@@ -21,7 +21,7 @@ __declspec(dllexport)
  * out_ppIntervals has to be a pointer to a pointer to Interval<UnicodeCodePoint>
  * it will be allocated
  */
-bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals);
+bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals, size_t* out_intervalsCount);
 
 /*
  * in_ppIntervals has to be a pointer to a pointer to Interval<UnicodeCodePoint>;

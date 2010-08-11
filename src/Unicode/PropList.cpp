@@ -19,7 +19,7 @@ uint8_t readHexDigit(char token)
 	{
 		assert(token >= 'A' && token <= 'F');
 
-		return (token - 'A');
+		return 10+(token - 'A');
 	}
 }
 
@@ -44,7 +44,7 @@ enum PropListState
 	Comment
 };
 
-bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals)
+bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals, size_t* out_intervalsCount)
 {
 	Interval<UnicodeCodePoint>* pIntervals = NULL;
 	std::list<Interval<UnicodeCodePoint> > listIntervals;
@@ -184,7 +184,7 @@ bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals)
 			}
 			else if (token == ' ')
 			{
-				if (*propertyPos != 0)
+				if (*propertyPos)
 					propertyEquals = false;
 
 				if (propertyEquals)
@@ -195,7 +195,7 @@ bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals)
 					}
 					catch (bad_alloc&)
 					{
-						return false;
+						return 0;
 					}
 				}
 
@@ -230,7 +230,7 @@ bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals)
 		pIntervals = (Interval<UnicodeCodePoint>*) malloc(sizeof(Interval<UnicodeCodePoint>) * listIntervals.size());
 
 		if (pIntervals == NULL)
-			return false;
+			return 0;
 
 		size_t index = 0;
 
@@ -241,6 +241,7 @@ bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals)
 		}
 
 		*((Interval<UnicodeCodePoint>**) out_ppIntervals) = pIntervals;
+		*out_intervalsCount = index;
 
 		return true;
 	}

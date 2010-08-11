@@ -16,7 +16,31 @@ void testUnicode()
 		return;
 
 	Interval<UnicodeCodePoint>* pIntervals;
+	size_t intervalsCount;
 
-	test(readPropList(propListFile, "Dash", &pIntervals));
+	fseek(propListFile, 0, SEEK_SET);
+	test(readPropList(propListFile, "White_Space", &pIntervals, &intervalsCount));
+	test(intervalsCount == 12);
+	freeIntervalsFromPropList(&pIntervals);
+
+	fseek(propListFile, 0, SEEK_SET);
+	test(readPropList(propListFile, "Dash", &pIntervals, &intervalsCount));
+	test(intervalsCount == 19);
+	test(pIntervals[0].const_x0() == 0x002D);
+	test(pIntervals[0].const_x1() == 0x002D);
+	test(pIntervals[5].const_x0() == 0x2010);
+	test(pIntervals[5].const_x1() == 0x2015);
+	test(pIntervals[18].const_x0() == 0xFF0D);
+	test(pIntervals[18].const_x1() == 0xFF0D);
+	freeIntervalsFromPropList(&pIntervals);
+
+	fseek(propListFile, 0, SEEK_SET);
+	test(readPropList(propListFile, "Dash", &pIntervals, &intervalsCount));
+	test(intervalsCount == 19);
+	freeIntervalsFromPropList(&pIntervals);
+
+	fseek(propListFile, 0, SEEK_SET);
+	test(readPropList(propListFile, "Noncharacter_Code_Point", &pIntervals, &intervalsCount));
+	test(intervalsCount == 18);
 	freeIntervalsFromPropList(&pIntervals);
 }
