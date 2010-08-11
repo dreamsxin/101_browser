@@ -46,6 +46,12 @@ enum PropListState
 
 bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals, size_t* out_intervalsCount)
 {
+	fpos_t position;
+	if (fgetpos(in_file, &position) != 0)
+		return false;
+
+	fseek(in_file, 0, SEEK_SET);
+
 	Interval<UnicodeCodePoint>* pIntervals = NULL;
 	std::list<Interval<UnicodeCodePoint> > listIntervals;
 
@@ -195,6 +201,7 @@ bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals, size_
 					}
 					catch (bad_alloc&)
 					{
+						fsetpos(in_file, &position);
 						return 0;
 					}
 				}
@@ -230,7 +237,10 @@ bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals, size_
 		pIntervals = (Interval<UnicodeCodePoint>*) malloc(sizeof(Interval<UnicodeCodePoint>) * listIntervals.size());
 
 		if (pIntervals == NULL)
-			return 0;
+		{
+			fsetpos(in_file, &position);
+			return false;
+		}
 
 		size_t index = 0;
 
@@ -243,10 +253,14 @@ bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals, size_
 		*((Interval<UnicodeCodePoint>**) out_ppIntervals) = pIntervals;
 		*out_intervalsCount = index;
 
+		fsetpos(in_file, &position);
 		return true;
 	}
 	else
+	{
+		fsetpos(in_file, &position);
 		return false;
+	}
 }
 
 void freeIntervalsFromPropList(void* in_ppIntervals)
