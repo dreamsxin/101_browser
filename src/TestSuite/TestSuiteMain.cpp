@@ -1,24 +1,29 @@
 #include <cstdio>
 #include <cstring>
+#include <cwchar>
+#include "MiniStdlib/cstdint.h"
 #include "TestSuite/Tests.h"
+#include "TestSuite/TestSuite.h"
 
 int main()
 {
+	wprintf(L"Testing BasicDataStructures\n");
 	testBasicDataStructures();
+	wprintf(L"Testing BasicDataStructures Tree\n");
 	testBasicDataStructuresTree();
-	printf("Testing TriangleStripBorderIterator\n");
+	wprintf(L"Testing TriangleStripBorderIterator\n");
 	testTriangleStripBorderIterator();
-	printf("Testing OuterBorderIterator\n");
+	wprintf(L"Testing OuterBorderIterator\n");
 	testOuterBorderIterator();
-	printf("Testing BigNumber\n");
+	wprintf(L"Testing BigNumber\n");
 	testBigNumber();
-	printf("Testing rfc1950\n");
+	wprintf(L"Testing rfc1950\n");
 	testRfc1950();
-	printf("Testing ASCIIStringUnicodeIterator\n");
+	wprintf(L"Testing ASCIIStringUnicodeIterator\n");
 	testASCIIStringUnicodeIterator();
-	printf("Testing Unicode\n");
+	wprintf(L"Testing Unicode\n");
 	testUnicode();
-	printf("Testing HTML5\n");
+	wprintf(L"Testing HTML5\n");
 	testHTML5();
 
 	return 0;
