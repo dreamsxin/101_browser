@@ -187,7 +187,6 @@ module html5
 
   [Supplemental, NoInterfaceObject]
   interface XMLDocumentLoader {
-             attribute boolean async;
     boolean load(in DOMString url);
   };
 
@@ -658,7 +657,7 @@ module html5
   
     DOMString toDataURL(in optional DOMString type, in any... args);
   
-    object getContext(in DOMString contextId);
+    object getContext(in DOMString contextId, in any... args);
   };
 
   interface CanvasRenderingContext2D {
@@ -674,8 +673,8 @@ module html5
     void scale(in float x, in float y);
     void rotate(in float angle);
     void translate(in float x, in float y);
-    void transform(in float m11, in float m12, in float m21, in float m22, in float dx, in float dy);
-    void setTransform(in float m11, in float m12, in float m21, in float m22, in float dx, in float dy);
+    void transform(in float a, in float b, in float c, in float d, in float e, in float f);
+    void setTransform(in float a, in float b, in float c, in float d, in float e, in float f);
   
     // compositing
              attribute float globalAlpha; // (default 1.0)
@@ -988,6 +987,7 @@ module html5
     readonly attribute HTMLFormElement form;
              attribute boolean multiple;
              attribute DOMString name;
+             attribute boolean required;
              attribute unsigned long size;
   
     readonly attribute DOMString type;
