@@ -26,6 +26,7 @@ uint32_t applyCarry(UnsignedBigInteger* in_pInt, uint32_t in_c)
 
 					if (newLimbs != NULL)
 					{
+						in_pInt->limbs = newLimbs;
 						in_pInt->limbs[in_pInt->numberSize] = in_c;
 
 						in_pInt->allocedLimbsCount++;
