@@ -1,6 +1,10 @@
 
-env = Environment()
-env = Environment(CPPPATH='#/include')
+
+
+if ARGUMENTS.get('debug', 0):
+    env = Environment(CCFLAGS = '-g',CPPPATH='#/include')
+else:
+    env = Environment(CPPPATH='#/include')
 
 MiniStdlib = env.Clone()
 MiniStdlib.Library('lib/MiniStdlib', Glob('src/MiniStdlib/*.c')+Glob('src/MiniStdlib/*.cpp'))
