@@ -12,6 +12,15 @@ extern "C" {
 
 FILE* MTAx_fopen(const char *in_cFilename, const char *in_cMode);
 
+/*
+ * Closes the file and sets the value of *in_ppFile to NULL.
+ * The reason why we always do so and not only in case of 
+ * success is that fclose only returns an error if the stream
+ * was already invalid. So also in this case it is better
+ * to set it to NULL.
+ */
+int MTAx_fclose(FILE** in_ppFile);
+
 #ifdef __cplusplus
 }
 #endif

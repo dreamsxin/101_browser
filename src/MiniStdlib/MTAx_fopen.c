@@ -12,3 +12,10 @@ FILE* MTAx_fopen(const char *in_cFilename, const char *in_cMode)
 	return fopen(in_cFilename, in_cMode);
 #endif
 }
+
+int MTAx_fclose(FILE** in_ppFile)
+{
+	int result = fclose(*in_ppFile);
+	*in_ppFile = NULL;
+	return result;
+}

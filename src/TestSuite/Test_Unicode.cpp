@@ -41,5 +41,5 @@ void testUnicode()
 	test(intervalsCount == 18);
 	freeIntervalsFromPropList(&pIntervals);
 
-	fclose(propListFile);
+	MTAx_fclose(&propListFile);
 }
