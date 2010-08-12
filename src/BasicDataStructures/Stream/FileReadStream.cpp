@@ -1,5 +1,5 @@
 #include "BasicDataStructures/Stream/FileReadStream.h"
-#include "MiniStdlib/MTAx_fopen.h"
+#include "MiniStdlib/MTAx_cstdlib.h"
 
 bool FileReadStream::open(const char* in_filename)
 {

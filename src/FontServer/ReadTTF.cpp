@@ -1,5 +1,5 @@
 #include "FontServer/FontServer.h"
-#include "MiniStdlib/MTAx_fopen.h"
+#include "MiniStdlib/MTAx_cstdlib.h"
 #include <cstring>
 
 int readTTF(char* filename) {
