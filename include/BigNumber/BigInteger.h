@@ -4,6 +4,13 @@
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstdbool.h"
 
+// for size_t
+#ifdef __cplusplus
+#include <cstdlib>
+#else
+#include <stdlib.h>
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif

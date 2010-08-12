@@ -2,6 +2,7 @@
 #include "Unicode/PropList.h"
 #include "Util/Interval.hpp"
 #include "Util/Unicode.h"
+#include <cstdlib> // for malloc
 #include <list>
 #include <stdexcept>
 using namespace std;

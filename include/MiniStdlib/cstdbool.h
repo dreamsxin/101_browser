@@ -15,9 +15,7 @@ typedef uint8_t _Bool;
 
 # endif
 #else
-# ifdef __cplusplus
-#  include <cstdbool>
-# else
+# ifndef __cplusplus
 #  include <stdbool.h>
 # endif
 #endif

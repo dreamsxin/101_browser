@@ -1,5 +1,6 @@
 #include "HTML5/2_3.h"
-#include "assert.h"
+#include <stdlib.h>
+#include <assert.h>
 
 bool compareTokensCaseSensitive(UnicodeCodePoint p1, UnicodeCodePoint p2)
 {
