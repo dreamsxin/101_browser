@@ -1,3 +1,4 @@
+#include "MiniStdlib/MTAx_fopen.h"
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
 #include "Util/Interval.hpp"
@@ -8,7 +9,7 @@
 
 void testUnicode()
 {
-	FILE* propListFile = fopen("data/Unicode/PropList.txt", "rb");
+	FILE* propListFile = MTAx_fopen("data/Unicode/PropList.txt", "rb");
 
 	test(propListFile != NULL);
 
@@ -39,4 +40,6 @@ void testUnicode()
 	test(readPropList(propListFile, "Noncharacter_Code_Point", &pIntervals, &intervalsCount));
 	test(intervalsCount == 18);
 	freeIntervalsFromPropList(&pIntervals);
+
+	fclose(propListFile);
 }
