@@ -1,4 +1,6 @@
 #include <assert.h>
+// for NULL
+#include <stdlib.h>
 #include "HTML5/ASCIIStringUnicodeIterator.h"
 
 void* asciiStringUnicodeIterator_get(void* in_pIteratorState)

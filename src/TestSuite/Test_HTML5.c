@@ -1,4 +1,4 @@
-#include <cassert>
+#include <assert.h>
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
 #include "HTML5/2_3.h"
