@@ -59,9 +59,9 @@ template <typename Type> void testAllAVLTreePropertiesRecursively(
 
 void testBasicDataStructuresTree()
 {
-	AVLTreeDefiner<int>::AVLTree avlTree(&simpleCompare, &avlTreeInserted);
+	AVLTreeDefiner<int>::AVLTree avlTree(&extendedCompare, &avlTreeInserted);
 
-	InsertResult failEqual={false, Equal};
+	InsertResult failEqual={false, ExtendedCompareResultEqual};
 
 	BinaryTreeNode<int, AVLTreeNodePropertyType>* root;
 	BinaryTreeNode<int, AVLTreeNodePropertyType>* other;

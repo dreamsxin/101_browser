@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="HTML5"
-	ProjectGUID="{51F91F5E-EA63-4B47-9273-F00118F985B4}"
-	RootNamespace="HTML5"
+	Name="Algorithm"
+	ProjectGUID="{BDA835AB-4CF3-4582-9AED-CEE06F553729}"
+	RootNamespace="Algorithm"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)out\vs2008\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -42,12 +42,12 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(SolutionDir)include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;HTML5_EXPORTS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;ALGORITHM_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
-				WarningLevel="4"
+				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -65,7 +65,6 @@
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
-				Profile="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -91,7 +90,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)out\vs2008\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -117,11 +116,11 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="$(SolutionDir)include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;HTML5_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;ALGORITHM_EXPORTS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
-				WarningLevel="4"
+				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -166,10 +165,6 @@
 		</Configuration>
 	</Configurations>
 	<References>
-		<ProjectReference
-			ReferencedProjectIdentifier="{9284112E-B844-4C06-B513-2C865F5EEC6E}"
-			RelativePathToProject=".\projects\vs2008\BigNumber\BigNumber.vcproj"
-		/>
 	</References>
 	<Files>
 		<Filter
@@ -178,23 +173,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\..\src\HTML5\2_3.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\HTML5\2_4_1.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\HTML5\2_4_1.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\HTML5\2_4_5.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\HTML5\ASCIIStringUnicodeIterator.c"
+				RelativePath="..\..\..\src\Algorithm\BinarySearch.c"
 				>
 			</File>
 		</Filter>
@@ -204,19 +183,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\..\include\HTML5\2_3.h"
+				RelativePath="..\..\..\include\Algorithm\BinarySearch.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\HTML5\2_4_1.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\HTML5\2_4_5.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\HTML5\ASCIIStringUnicodeIterator.h"
+				RelativePath="..\..\..\include\Algorithm\CompareResult.h"
 				>
 			</File>
 		</Filter>

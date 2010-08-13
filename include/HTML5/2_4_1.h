@@ -7,6 +7,7 @@
 
 #include "Util/Unicode.h"
 #include "MiniStdlib/cstdbool.h"
+#include "MiniStdlib/cstdint.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -14,8 +15,8 @@ extern "C" {
 
 bool isSpaceCharacter(UnicodeCodePoint in_p);
 
-/* not implemented yet */
-// bool isWhiteSpaceCharacter(UnicodeCodePoint in_p)
+bool isWhiteSpaceCharacter(UnicodeCodePoint in_p, void* in_pWhitespaceIntervals, 
+						   size_t in_pWhitespaceIntervalsCount);
 
 bool isAlphanumericASCIICharacter(UnicodeCodePoint in_p);
 

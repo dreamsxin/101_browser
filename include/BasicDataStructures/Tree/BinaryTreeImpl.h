@@ -43,11 +43,11 @@ template <typename Type, typename NodePropertyType> InsertResult BinaryTree<Type
 
 	while (true)
 	{
-		CompareResult res=(*mpCompare)(in_datum, actNode->datum());
+		ExtendedCompareResult res=(*mpCompare)(in_datum, actNode->datum());
 
-		if (res==Less)
+		if (res == ExtendedCompareResultLess)
 		{
-			if (actNode->left()!=NULL)
+			if (actNode->left() != NULL)
 				actNode=actNode->left();
 			else
 			{
@@ -65,7 +65,7 @@ template <typename Type, typename NodePropertyType> InsertResult BinaryTree<Type
 				return out_insertResult;
 			}
 		}
-		else if (res==Greater)
+		else if (res == ExtendedCompareResultGreater)
 		{
 			if (actNode->right()!=NULL)
 				actNode=actNode->right();
@@ -96,7 +96,7 @@ template <typename Type, typename NodePropertyType> InsertResult BinaryTree<Type
 template <typename Type, typename NodePropertyType> template <typename OtherType>
 const Type* BinaryTree<Type, NodePropertyType>::get(
 	const OtherType& in_pItem, 
-	CompareResult (*in_pContainedIn)(const OtherType&, const Type&))
+	ExtendedCompareResult (*in_pContainedIn)(const OtherType&, const Type&))
 {
 	BinaryTreeNode<Type, NodePropertyType>* actNode=root();
 

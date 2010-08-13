@@ -54,27 +54,27 @@ public:
 	}
 };
 
-template <typename Type> CompareResult compareIntervals(const Interval<Type>& in_a, const Interval<Type>& in_b)
+template <typename Type> ExtendedCompareResult compareIntervals(const Interval<Type>& in_a, const Interval<Type>& in_b)
 {
 	assert(in_a.const_x0()<=in_a.const_x1());
 	assert(in_b.const_x1()<=in_b.const_x1());
 
 	if (in_a.const_x1()<in_b.const_x0())
-		return Less;
+		return ExtendedCompareResultLess;
 	if (in_a.const_x0()>in_b.const_x1())
-		return Greater;
+		return ExtendedCompareResultGreater;
 	if (in_a.const_x0()==in_b.const_x0() && in_a.const_x1()==in_b.const_x1())
-		return Equal;
+		return ExtendedCompareResultEqual;
 	if (in_a.const_x0()<=in_b.const_x0() && in_a.const_x1()>=in_b.const_x1())
-		return Contains;
+		return ExtendedCompareResultContains;
 	if (in_a.const_x0()>=in_b.const_x0() && in_a.const_x1()<=in_b.const_x1())
-		return ContainedIn;
+		return ExtendedCompareResultContainedIn;
 	if (in_a.const_x0()<in_b.const_x0() && in_a.const_x1()<in_b.const_x1())
-		return NotComparableLess;
+		return ExtendedCompareResultNotComparableLess;
 	if (in_a.const_x0()>in_b.const_x0() && in_a.const_x1()>in_b.const_x1())
-		return NotComparableGreater;
+		return ExtendedCompareResultNotComparableGreater;
 
-	return ErrorInCode;
+	return ExtendedCompareResultErrorInCode;
 }
 
 #endif

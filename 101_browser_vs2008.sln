@@ -41,6 +41,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HTML5", "projects\vs2008\HT
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Unicode", "projects\vs2008\Unicode\Unicode.vcproj", "{BC55BA95-3E8C-46AA-B3AF-2587EF39FD5D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Algorithm", "projects\vs2008\Algorithm\Algorithm.vcproj", "{BDA835AB-4CF3-4582-9AED-CEE06F553729}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -455,6 +457,26 @@ Global
 		{BC55BA95-3E8C-46AA-B3AF-2587EF39FD5D}.LIB Release|Win32.Build.0 = Release|Win32
 		{BC55BA95-3E8C-46AA-B3AF-2587EF39FD5D}.Release|Win32.ActiveCfg = Release|Win32
 		{BC55BA95-3E8C-46AA-B3AF-2587EF39FD5D}.Release|Win32.Build.0 = Release|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.Debug|Win32.Build.0 = Debug|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.DLL ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.DLL ASM Debug|Win32.Build.0 = Debug|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.DLL ASM Release|Win32.ActiveCfg = Release|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.DLL ASM Release|Win32.Build.0 = Release|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.DLL Debug|Win32.ActiveCfg = Debug|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.DLL Debug|Win32.Build.0 = Debug|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.DLL Release|Win32.ActiveCfg = Release|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.DLL Release|Win32.Build.0 = Release|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.LIB ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.LIB ASM Debug|Win32.Build.0 = Debug|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.LIB ASM Release|Win32.ActiveCfg = Release|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.LIB ASM Release|Win32.Build.0 = Release|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.LIB Debug|Win32.ActiveCfg = Debug|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.LIB Debug|Win32.Build.0 = Debug|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.LIB Release|Win32.ActiveCfg = Release|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.LIB Release|Win32.Build.0 = Release|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.Release|Win32.ActiveCfg = Release|Win32
+		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

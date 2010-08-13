@@ -67,7 +67,7 @@ struct InsertResult
 	 * 
 	 * if ok==true the value stays the same
 	 */
-	CompareResult failReason;
+	ExtendedCompareResult failReason;
 
 	bool operator==(const InsertResult& in_res)
 	{
@@ -79,7 +79,7 @@ struct InsertResult
 template <typename Type> struct FindResult
 {
 	bool found;
-	CompareResult comparison;
+	ExtendedCompareResult comparison;
 	Type& datum;
 };
 
@@ -94,12 +94,12 @@ protected:
 	BinaryTree(const BinaryTree& in_binaryTree);
 	BinaryTree& operator=(const BinaryTree& in_binaryTree);
 
-	CompareResult (*mpCompare)(const Type&, const Type&);
+	ExtendedCompareResult (*mpCompare)(const Type&, const Type&);
 	BinaryTreeNode<Type, NodePropertyType>* (*mpInserted)(BinaryTreeNode<Type, NodePropertyType>*);
 
 public:
 	BinaryTree(
-		CompareResult (*in_pCompare)(const Type&, const Type&), 
+		ExtendedCompareResult (*in_pCompare)(const Type&, const Type&), 
 		BinaryTreeNode<Type, NodePropertyType>* (*in_pInserted)(BinaryTreeNode<Type, NodePropertyType>*)) : 
 	mpRoot(NULL),
 		mpCompare(in_pCompare), 
@@ -120,7 +120,7 @@ public:
 
 	template <typename OtherType> const Type* get(
 		const OtherType& in_pItem,
-		CompareResult (*in_pContainedIn)(const OtherType&, const Type&));
+		ExtendedCompareResult (*in_pContainedIn)(const OtherType&, const Type&));
 };
 
 #endif
