@@ -31,7 +31,7 @@ void freeWhitespaceIntervals(void** in_pWhitespaceIntervals);
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-extern int isWhiteSpaceCharacter(UnicodeCodePoint in_p, void* in_pWhitespaceIntervals, 
+extern bool isWhiteSpaceCharacter(UnicodeCodePoint in_p, void* in_pWhitespaceIntervals, 
 						   size_t in_whitespaceIntervalsCount);
 
 #ifdef _WIN32

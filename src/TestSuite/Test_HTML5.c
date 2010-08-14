@@ -92,6 +92,51 @@ void test2_4_1()
 	assert('\r' == 0xD);
 	test(isWhiteSpaceCharacter('\r', intervals, whiteSpaceIntervalsCount));
 
+	test(!isWhiteSpaceCharacter(0x19, intervals, whiteSpaceIntervalsCount));
+	test(isWhiteSpaceCharacter(' ', intervals, whiteSpaceIntervalsCount));
+	assert('!' == 0x21);
+	test(!isWhiteSpaceCharacter('!', intervals, whiteSpaceIntervalsCount));
+
+	test(!isWhiteSpaceCharacter('a', intervals, whiteSpaceIntervalsCount));
+
+
+	test( isWhiteSpaceCharacter(0x85, intervals, whiteSpaceIntervalsCount));
+
+	test(!isWhiteSpaceCharacter(0x9F, intervals, whiteSpaceIntervalsCount));
+	test( isWhiteSpaceCharacter(0xA0, intervals, whiteSpaceIntervalsCount));
+	test(!isWhiteSpaceCharacter(0xA1, intervals, whiteSpaceIntervalsCount));
+
+	test(!isWhiteSpaceCharacter(0x167F, intervals, whiteSpaceIntervalsCount));
+	test( isWhiteSpaceCharacter(0x1680, intervals, whiteSpaceIntervalsCount));
+	test(!isWhiteSpaceCharacter(0x1681, intervals, whiteSpaceIntervalsCount));
+
+	test(!isWhiteSpaceCharacter(0x180D, intervals, whiteSpaceIntervalsCount));
+	test( isWhiteSpaceCharacter(0x180E, intervals, whiteSpaceIntervalsCount));
+	test(!isWhiteSpaceCharacter(0x180F, intervals, whiteSpaceIntervalsCount));
+
+	test(!isWhiteSpaceCharacter(0x1FFF, intervals, whiteSpaceIntervalsCount));
+	test( isWhiteSpaceCharacter(0x2000, intervals, whiteSpaceIntervalsCount));
+	test( isWhiteSpaceCharacter(0x2005, intervals, whiteSpaceIntervalsCount));
+	test( isWhiteSpaceCharacter(0x200A, intervals, whiteSpaceIntervalsCount));
+	test(!isWhiteSpaceCharacter(0x200B, intervals, whiteSpaceIntervalsCount));
+
+	test(!isWhiteSpaceCharacter(0x2027, intervals, whiteSpaceIntervalsCount));
+	test( isWhiteSpaceCharacter(0x2028, intervals, whiteSpaceIntervalsCount));
+	test( isWhiteSpaceCharacter(0x2029, intervals, whiteSpaceIntervalsCount));
+	test(!isWhiteSpaceCharacter(0x202A, intervals, whiteSpaceIntervalsCount));
+
+	test(!isWhiteSpaceCharacter(0x202E, intervals, whiteSpaceIntervalsCount));
+	test( isWhiteSpaceCharacter(0x202F, intervals, whiteSpaceIntervalsCount));
+	test(!isWhiteSpaceCharacter(0x2030, intervals, whiteSpaceIntervalsCount));
+
+	test(!isWhiteSpaceCharacter(0x205E, intervals, whiteSpaceIntervalsCount));
+	test( isWhiteSpaceCharacter(0x205F, intervals, whiteSpaceIntervalsCount));
+	test(!isWhiteSpaceCharacter(0x2060, intervals, whiteSpaceIntervalsCount));
+
+	test(!isWhiteSpaceCharacter(0x2FFF, intervals, whiteSpaceIntervalsCount));
+	test( isWhiteSpaceCharacter(0x3000, intervals, whiteSpaceIntervalsCount));
+	test(!isWhiteSpaceCharacter(0x3001, intervals, whiteSpaceIntervalsCount));
+
 	freeWhitespaceIntervals(&intervals);
 	}
 }

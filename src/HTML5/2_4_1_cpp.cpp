@@ -3,7 +3,7 @@
 #include "Unicode/PropList.h"
 #include "Util/Interval.hpp"
 
-int isWhiteSpaceCharacter(UnicodeCodePoint in_p, void* in_pWhitespaceIntervals, 
+bool isWhiteSpaceCharacter(UnicodeCodePoint in_p, void* in_pWhitespaceIntervals, 
 						   size_t in_whitespaceIntervalsCount)
 {
 	return binarySearch(&in_p, in_pWhitespaceIntervals, in_whitespaceIntervalsCount, 
