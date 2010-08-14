@@ -99,4 +99,31 @@ void testInterval()
 
 	i1=Interval<unsigned int>(30, 40);
 	test(compareIntervals(i1, i2)==ExtendedCompareResultGreater);
+
+	// 3. Now we compare an object with an interval
+	unsigned int number;
+	i1=Interval<unsigned int>(30, 40);
+
+	number=10;
+	test(compareElementInterval(&number, &i1) == IntermediateCompareResultLess);
+	number=30;
+	test(compareElementInterval(&number, &i1) == IntermediateCompareResultContainedIn);
+	number=35;
+	test(compareElementInterval(&number, &i1) == IntermediateCompareResultContainedIn);
+	number=40;
+	test(compareElementInterval(&number, &i1) == IntermediateCompareResultContainedIn);
+	number=50;
+	test(compareElementInterval(&number, &i1) == IntermediateCompareResultGreater);
+
+	i1=Interval<unsigned int>(40, 40);
+	number=10;
+	test(compareElementInterval(&number, &i1) == IntermediateCompareResultLess);
+	number=39;
+	test(compareElementInterval(&number, &i1) == IntermediateCompareResultLess);
+	number=40;
+	test(compareElementInterval(&number, &i1) == IntermediateCompareResultEqual);
+	number=41;
+	test(compareElementInterval(&number, &i1) == IntermediateCompareResultGreater);
+	number=50;
+	test(compareElementInterval(&number, &i1) == IntermediateCompareResultGreater);
 }
