@@ -2,7 +2,7 @@
 #include "TestSuite/TestSuite.h"
 #include "Util/Interval.hpp"
 
-void testBasicDataStructures()
+void testInterval()
 {
 	// 0. tests concerning the correctness of the constructor of Interval
 	Interval<unsigned int> i1(34, 37);

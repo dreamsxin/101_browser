@@ -14,13 +14,18 @@ extern "C" {
  * was found.
  * 
  * Parameters:
- * 
+ * in_pToFind:  the element (it may be of another type than the array to follow) to find
+ * in_pFirst:   pointer to the first element in the array
+ * in_count:    number of elements in the array
+ * in_size:     size of an array element
+ * in_pCompare: a comparator function taking a pointer to in_pToFind and a pointer of an array
+ *              element
  */
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-size_t binarySearch(void* in_pFirst, size_t in_count, size_t in_size, const void* in_toFind
-					);
+size_t binarySearch(const void* in_pToFind, const void* in_pFirst, size_t in_count, size_t in_size,
+					IntermediateCompareResult (*in_pCompare)(const void* in_pToFind, const void* in_pDatum));
 
 #ifdef __cplusplus
 }

@@ -77,4 +77,29 @@ template <typename Type> ExtendedCompareResult compareIntervals(const Interval<T
 	return ExtendedCompareResultErrorInCode;
 }
 
+template <typename Type> IntermediateCompareResult compareElementInterval
+(const Type* in_pElement, const Interval<Type>* in_pInterval)
+{
+	assert(in_pInterval->const_x0() <= in_pInterval->const_x1());
+
+	if (*in_pElement < in_pInterval->const_x0())
+		return IntermediateCompareResultLess;
+	else if (*in_pElement > in_pInterval->const_x1())
+		return IntermediateCompareResultGreater;
+	else if (in_pInterval->const_x0() == in_pInterval->const_x1())
+	{
+		assert(*in_pElement == in_pInterval->const_x0());
+		assert(*in_pElement == in_pInterval->const_x1());
+
+		return IntermediateCompareResultEqual;
+	}
+	else
+	{
+		assert(*in_pElement >= in_pInterval->const_x0());
+		assert(*in_pElement <= in_pInterval->const_x1());
+
+		return IntermediateCompareResultContainedIn;
+	}
+}
+
 #endif
