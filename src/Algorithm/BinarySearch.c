@@ -52,10 +52,34 @@ size_t binarySearch(const void* in_pToFind, const void* in_pFirst, size_t in_cou
 
 		if (result == IntermediateCompareResultGreater)
 		{
-			if (center == lastIndex)
-				return -1;
-			else
-				firstIndex = center+1;
+			/*
+			 * Q: Where does this assertion come from?
+			 * 
+			 * A: The loop condition ensures (firstIndex < lastIndex). 
+			 *    We have center = firstIndex + (lastIndex-firstIndex)/2.
+			 *    
+			 *    Let d = (lastIndex-firstIndex)/2 (using integer division)
+			 *    So we have (this time using division in Q):
+			 *    d <= (lastIndex-firstIndex)/2 (since the result of integer 
+			 *    division is always smaller than with division in Q)
+			 *    
+			 *    From this we get 
+			 *    center <= firstIndex+(lastIndex-firstIndex)/2 (again / division in Q).
+			 *    This simplifies to 
+			 *    center <= (lastIndex-firstIndex)/2 (again / division in Q).
+			 *    Since firstIndex >= 0 we get:
+			 *    center <= lastIndex/2 (again / division in Q)
+			 *    For lastIndex >= 2 we obviously follow: center < lastIndex
+			 * 
+			 *    The case: lastIndex == 0 needs firstIndex == 0 (in which the loop
+			 *    never gets entered)
+			 *    In the remaining case: lastIndex == 1 we need firstIndex == 0
+			 *    (since if firstIndex == 1 we would never enter the loop)
+			 *    But then center = 0 => center < lastIndex
+			 */
+			assert(center < lastIndex);
+			
+			firstIndex = center+1;
 		}
 		else if (result == IntermediateCompareResultLess)
 		{
