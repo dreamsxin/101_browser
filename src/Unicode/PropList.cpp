@@ -198,7 +198,7 @@ bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals, size_
 				{
 					try
 					{
-						listIntervals.push_back(Interval<UnicodeCodePoint>(firstNumber, secondNumber));
+						listIntervals.push_back(createInterval<UnicodeCodePoint>(firstNumber, secondNumber));
 					}
 					catch (bad_alloc&)
 					{

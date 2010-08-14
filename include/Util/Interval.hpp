@@ -13,37 +13,8 @@ We must have: x0<=x1
 */
 template <typename T> class Interval
 {
-protected:
-	T mX0, mX1;
-
 public:
-	Interval() { }
-
-	Interval(T in_x0, T in_x1)
-	{
-		if (in_x0<=in_x1)
-		{
-			mX0=in_x0;
-			mX1=in_x1;
-		}
-		else
-		{
-			mX0=in_x1;
-			mX1=in_x0;
-		}
-	}
-
-#if 0
-	T& x0()
-	{
-		return mX0;
-	}
-
-	T& x1()
-	{
-		return mX1;
-	}
-#endif
+	T mX0, mX1;
 
 	const T& const_x0() const
 	{
@@ -55,6 +26,25 @@ public:
 		return mX1;
 	}
 };
+
+template <typename T> Interval<T> createInterval(T in_x0, T in_x1)
+{
+	T mX0, mX1;
+	
+	if (in_x0<=in_x1)
+	{
+		mX0=in_x0;
+		mX1=in_x1;
+	}
+	else
+	{
+		mX0=in_x1;
+		mX1=in_x0;
+	}
+	
+	Interval<T> out_interval = { mX0, mX1 };
+	return out_interval;
+}
 
 template <typename Type> ExtendedCompareResult compareIntervals(const Interval<Type>& in_a, const Interval<Type>& in_b)
 {

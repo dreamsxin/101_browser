@@ -77,67 +77,106 @@ void test2_3()
 void test2_4_1()
 {
 	{
-	FILE* propListFile = MTAx_fopen("data/Unicode/PropList.txt", "rb");
-	void* intervals;
-	size_t whiteSpaceIntervalsCount;
-	
-	bool result = allocWhitespaceIntervals(propListFile, &intervals, &whiteSpaceIntervalsCount);
-	test(result);
-	test(whiteSpaceIntervalsCount > 0);
-	MTAx_fclose(&propListFile);
+		test(!isSpaceCharacter(0x8));
+		assert('\t' == 0x9);
+		test( isSpaceCharacter('\t'));
+		assert('\n' == 0xA);
+		test( isSpaceCharacter('\n'));
+		assert('\v' == 0xB);
+		test(!isSpaceCharacter('\v'));
+		assert('\f' == 0xC);
+		test( isSpaceCharacter('\f'));
+		assert('\r' == 0xD);
+		test( isSpaceCharacter('\r'));
+		test(!isSpaceCharacter(0xE));
 
-	test(!isWhiteSpaceCharacter(0x8, intervals, whiteSpaceIntervalsCount));
-	assert('\t' == 0x9);
-	test(isWhiteSpaceCharacter('\t', intervals, whiteSpaceIntervalsCount));
-	assert('\r' == 0xD);
-	test(isWhiteSpaceCharacter('\r', intervals, whiteSpaceIntervalsCount));
+		test(!isSpaceCharacter(0x1F));
+		test( isSpaceCharacter(' '));
+		assert('!' == 0x21);
+		test(!isSpaceCharacter('!'));
+	}
 
-	test(!isWhiteSpaceCharacter(0x19, intervals, whiteSpaceIntervalsCount));
-	test(isWhiteSpaceCharacter(' ', intervals, whiteSpaceIntervalsCount));
-	assert('!' == 0x21);
-	test(!isWhiteSpaceCharacter('!', intervals, whiteSpaceIntervalsCount));
+	{
+		test(!isAlphanumericASCIICharacter('0'-1));
+		test( isAlphanumericASCIICharacter('0'));
+		test( isAlphanumericASCIICharacter('5'));
+		test( isAlphanumericASCIICharacter('9'));
+		test(!isAlphanumericASCIICharacter('9'+1));
+		
+		test(!isAlphanumericASCIICharacter('A'-1));
+		test( isAlphanumericASCIICharacter('A'));
+		test( isAlphanumericASCIICharacter('M'));
+		test( isAlphanumericASCIICharacter('Z'));
+		test(!isAlphanumericASCIICharacter('Z'+1));
 
-	test(!isWhiteSpaceCharacter('a', intervals, whiteSpaceIntervalsCount));
+		test(!isAlphanumericASCIICharacter('a'-1));
+		test( isAlphanumericASCIICharacter('a'));
+		test( isAlphanumericASCIICharacter('m'));
+		test( isAlphanumericASCIICharacter('z'));
+		test(!isAlphanumericASCIICharacter('z'+1));
+	}
 
+	{
+		FILE* propListFile = MTAx_fopen("data/Unicode/PropList.txt", "rb");
+		void* intervals;
+		size_t whiteSpaceIntervalsCount;
 
-	test( isWhiteSpaceCharacter(0x85, intervals, whiteSpaceIntervalsCount));
+		bool result = allocWhitespaceIntervals(propListFile, &intervals, &whiteSpaceIntervalsCount);
+		test(result);
+		test(whiteSpaceIntervalsCount > 0);
+		MTAx_fclose(&propListFile);
 
-	test(!isWhiteSpaceCharacter(0x9F, intervals, whiteSpaceIntervalsCount));
-	test( isWhiteSpaceCharacter(0xA0, intervals, whiteSpaceIntervalsCount));
-	test(!isWhiteSpaceCharacter(0xA1, intervals, whiteSpaceIntervalsCount));
+		test(!isWhiteSpaceCharacter(0x8, intervals, whiteSpaceIntervalsCount));
+		assert('\t' == 0x9);
+		test(isWhiteSpaceCharacter('\t', intervals, whiteSpaceIntervalsCount));
+		assert('\r' == 0xD);
+		test(isWhiteSpaceCharacter('\r', intervals, whiteSpaceIntervalsCount));
 
-	test(!isWhiteSpaceCharacter(0x167F, intervals, whiteSpaceIntervalsCount));
-	test( isWhiteSpaceCharacter(0x1680, intervals, whiteSpaceIntervalsCount));
-	test(!isWhiteSpaceCharacter(0x1681, intervals, whiteSpaceIntervalsCount));
+		test(!isWhiteSpaceCharacter(0x1F, intervals, whiteSpaceIntervalsCount));
+		test(isWhiteSpaceCharacter(' ', intervals, whiteSpaceIntervalsCount));
+		assert('!' == 0x21);
+		test(!isWhiteSpaceCharacter('!', intervals, whiteSpaceIntervalsCount));
 
-	test(!isWhiteSpaceCharacter(0x180D, intervals, whiteSpaceIntervalsCount));
-	test( isWhiteSpaceCharacter(0x180E, intervals, whiteSpaceIntervalsCount));
-	test(!isWhiteSpaceCharacter(0x180F, intervals, whiteSpaceIntervalsCount));
+		test(!isWhiteSpaceCharacter('a', intervals, whiteSpaceIntervalsCount));
 
-	test(!isWhiteSpaceCharacter(0x1FFF, intervals, whiteSpaceIntervalsCount));
-	test( isWhiteSpaceCharacter(0x2000, intervals, whiteSpaceIntervalsCount));
-	test( isWhiteSpaceCharacter(0x2005, intervals, whiteSpaceIntervalsCount));
-	test( isWhiteSpaceCharacter(0x200A, intervals, whiteSpaceIntervalsCount));
-	test(!isWhiteSpaceCharacter(0x200B, intervals, whiteSpaceIntervalsCount));
+		test( isWhiteSpaceCharacter(0x85, intervals, whiteSpaceIntervalsCount));
 
-	test(!isWhiteSpaceCharacter(0x2027, intervals, whiteSpaceIntervalsCount));
-	test( isWhiteSpaceCharacter(0x2028, intervals, whiteSpaceIntervalsCount));
-	test( isWhiteSpaceCharacter(0x2029, intervals, whiteSpaceIntervalsCount));
-	test(!isWhiteSpaceCharacter(0x202A, intervals, whiteSpaceIntervalsCount));
+		test(!isWhiteSpaceCharacter(0x9F, intervals, whiteSpaceIntervalsCount));
+		test( isWhiteSpaceCharacter(0xA0, intervals, whiteSpaceIntervalsCount));
+		test(!isWhiteSpaceCharacter(0xA1, intervals, whiteSpaceIntervalsCount));
 
-	test(!isWhiteSpaceCharacter(0x202E, intervals, whiteSpaceIntervalsCount));
-	test( isWhiteSpaceCharacter(0x202F, intervals, whiteSpaceIntervalsCount));
-	test(!isWhiteSpaceCharacter(0x2030, intervals, whiteSpaceIntervalsCount));
+		test(!isWhiteSpaceCharacter(0x167F, intervals, whiteSpaceIntervalsCount));
+		test( isWhiteSpaceCharacter(0x1680, intervals, whiteSpaceIntervalsCount));
+		test(!isWhiteSpaceCharacter(0x1681, intervals, whiteSpaceIntervalsCount));
 
-	test(!isWhiteSpaceCharacter(0x205E, intervals, whiteSpaceIntervalsCount));
-	test( isWhiteSpaceCharacter(0x205F, intervals, whiteSpaceIntervalsCount));
-	test(!isWhiteSpaceCharacter(0x2060, intervals, whiteSpaceIntervalsCount));
+		test(!isWhiteSpaceCharacter(0x180D, intervals, whiteSpaceIntervalsCount));
+		test( isWhiteSpaceCharacter(0x180E, intervals, whiteSpaceIntervalsCount));
+		test(!isWhiteSpaceCharacter(0x180F, intervals, whiteSpaceIntervalsCount));
 
-	test(!isWhiteSpaceCharacter(0x2FFF, intervals, whiteSpaceIntervalsCount));
-	test( isWhiteSpaceCharacter(0x3000, intervals, whiteSpaceIntervalsCount));
-	test(!isWhiteSpaceCharacter(0x3001, intervals, whiteSpaceIntervalsCount));
+		test(!isWhiteSpaceCharacter(0x1FFF, intervals, whiteSpaceIntervalsCount));
+		test( isWhiteSpaceCharacter(0x2000, intervals, whiteSpaceIntervalsCount));
+		test( isWhiteSpaceCharacter(0x2005, intervals, whiteSpaceIntervalsCount));
+		test( isWhiteSpaceCharacter(0x200A, intervals, whiteSpaceIntervalsCount));
+		test(!isWhiteSpaceCharacter(0x200B, intervals, whiteSpaceIntervalsCount));
 
-	freeWhitespaceIntervals(&intervals);
+		test(!isWhiteSpaceCharacter(0x2027, intervals, whiteSpaceIntervalsCount));
+		test( isWhiteSpaceCharacter(0x2028, intervals, whiteSpaceIntervalsCount));
+		test( isWhiteSpaceCharacter(0x2029, intervals, whiteSpaceIntervalsCount));
+		test(!isWhiteSpaceCharacter(0x202A, intervals, whiteSpaceIntervalsCount));
+
+		test(!isWhiteSpaceCharacter(0x202E, intervals, whiteSpaceIntervalsCount));
+		test( isWhiteSpaceCharacter(0x202F, intervals, whiteSpaceIntervalsCount));
+		test(!isWhiteSpaceCharacter(0x2030, intervals, whiteSpaceIntervalsCount));
+
+		test(!isWhiteSpaceCharacter(0x205E, intervals, whiteSpaceIntervalsCount));
+		test( isWhiteSpaceCharacter(0x205F, intervals, whiteSpaceIntervalsCount));
+		test(!isWhiteSpaceCharacter(0x2060, intervals, whiteSpaceIntervalsCount));
+
+		test(!isWhiteSpaceCharacter(0x2FFF, intervals, whiteSpaceIntervalsCount));
+		test( isWhiteSpaceCharacter(0x3000, intervals, whiteSpaceIntervalsCount));
+		test(!isWhiteSpaceCharacter(0x3001, intervals, whiteSpaceIntervalsCount));
+
+		freeWhitespaceIntervals(&intervals);
 	}
 }
 

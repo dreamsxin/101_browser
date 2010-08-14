@@ -13,8 +13,7 @@ void testAlgorithm()
 	}
 
 	{
-		Interval<unsigned int> intervals[1];
-		intervals[0] = Interval<unsigned int>(5, 7);
+		Interval<unsigned int> intervals[] = { {5, 7} };
 
 		unsigned int number;
 		
@@ -36,9 +35,7 @@ void testAlgorithm()
 	}
 
 	{
-		Interval<unsigned int> intervals[2];
-		intervals[0] = Interval<unsigned int>(5, 7);
-		intervals[1] = Interval<unsigned int>(10, 15);
+		Interval<unsigned int> intervals[] = { {5, 7}, {10, 15} };
 
 		unsigned int number;
 		
@@ -64,10 +61,7 @@ void testAlgorithm()
 	}
 
 	{
-		Interval<unsigned int> intervals[3];
-		intervals[0] = Interval<unsigned int>(5, 7);
-		intervals[1] = Interval<unsigned int>(10, 15);
-		intervals[2] = Interval<unsigned int>(20, 25);
+		Interval<unsigned int> intervals[] = { {5, 7}, {10, 15}, {20, 25} };
 
 		unsigned int number;
 		
@@ -101,11 +95,7 @@ void testAlgorithm()
 	}
 
 	{
-		Interval<unsigned int> intervals[4];
-		intervals[0] = Interval<unsigned int>(5, 7);
-		intervals[1] = Interval<unsigned int>(10, 15);
-		intervals[2] = Interval<unsigned int>(20, 25);
-		intervals[3] = Interval<unsigned int>(30, 35);
+		Interval<unsigned int> intervals[] = { {5, 7}, {10, 15}, {20, 25}, {30, 35} };
 
 		unsigned int number;
 		
@@ -147,12 +137,7 @@ void testAlgorithm()
 	}
 
 	{
-		Interval<unsigned int> intervals[5];
-		intervals[0] = Interval<unsigned int>(5, 7);
-		intervals[1] = Interval<unsigned int>(10, 15);
-		intervals[2] = Interval<unsigned int>(20, 25);
-		intervals[3] = Interval<unsigned int>(30, 35);
-		intervals[4] = Interval<unsigned int>(40, 45);
+		Interval<unsigned int> intervals[] = { {5, 7}, {10, 15}, {20, 25}, {30, 35}, {40, 45} };
 
 		unsigned int number;
 		
