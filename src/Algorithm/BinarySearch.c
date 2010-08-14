@@ -52,7 +52,7 @@ size_t binarySearch(const void* in_pToFind, const void* in_pFirst, size_t in_cou
 
 		if (result == IntermediateCompareResultGreater)
 		{
-			if (center < lastIndex)
+			if (center == lastIndex)
 				return -1;
 			else
 				firstIndex = center+1;

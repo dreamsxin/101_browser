@@ -17,6 +17,8 @@ protected:
 	T mX0, mX1;
 
 public:
+	Interval() { }
+
 	Interval(T in_x0, T in_x1)
 	{
 		if (in_x0<=in_x1)
@@ -100,6 +102,12 @@ template <typename Type> IntermediateCompareResult compareElementInterval
 
 		return IntermediateCompareResultContainedIn;
 	}
+}
+
+template <typename Type> IntermediateCompareResult compareElementIntervalVoid
+(const void* in_pElement, const void* in_pInterval)
+{
+	return compareElementInterval(static_cast<const Type*>(in_pElement), static_cast<const Interval<Type>*>(in_pInterval));
 }
 
 #endif

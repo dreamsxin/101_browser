@@ -1,6 +1,14 @@
 #ifndef _Tests_h
 #define _Tests_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+void testAlgorithm();
+#ifdef __cplusplus
+}
+#endif
+
 void testInterval();
 void testBasicDataStructuresTree();
 void testTriangleStripBorderIterator();

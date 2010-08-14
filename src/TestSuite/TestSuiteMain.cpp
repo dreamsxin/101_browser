@@ -9,6 +9,8 @@ int main()
 {
 	wprintf(L"Testing Interval\n");
 	testInterval();
+	wprintf(L"Testing Algorithm\n");
+	testAlgorithm();
 	wprintf(L"Testing BasicDataStructures Tree\n");
 	testBasicDataStructuresTree();
 	wprintf(L"Testing TriangleStripBorderIterator\n");
