@@ -25,3 +25,14 @@ bool isAlphanumericASCIICharacter(UnicodeCodePoint in_p)
 		(0x0061 <= in_p && in_p <= 0x007A) // U+0061 LATIN SMALL LETTER A to U+007A LATIN SMALL LETTER Z
 		);
 }
+
+bool allocWhitespaceIntervals(FILE* in_propListFile, void** in_pWhitespaceIntervals, 
+							  size_t* in_pWhitespaceIntervalsCount)
+{
+	return readPropList(in_propListFile, "White_Space", in_pWhitespaceIntervals, in_pWhitespaceIntervalsCount);
+}
+
+void freeWhitespaceIntervals(void** in_pWhitespaceIntervals)
+{
+	freeIntervalsFromPropList(in_pWhitespaceIntervals);
+}

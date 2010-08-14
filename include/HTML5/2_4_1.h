@@ -13,11 +13,30 @@
 extern "C" {
 #endif
 
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 bool isSpaceCharacter(UnicodeCodePoint in_p);
 
-bool isWhiteSpaceCharacter(UnicodeCodePoint in_p, void* in_pWhitespaceIntervals, 
-						   size_t in_pWhitespaceIntervalsCount);
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+bool allocWhitespaceIntervals(FILE* in_propListFile, void** in_pWhitespaceIntervals, 
+							  size_t* in_pWhitespaceIntervalsCount);
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+void freeWhitespaceIntervals(void** in_pWhitespaceIntervals);
 
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+extern int isWhiteSpaceCharacter(UnicodeCodePoint in_p, void* in_pWhitespaceIntervals, 
+						   size_t in_whitespaceIntervalsCount);
+
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 bool isAlphanumericASCIICharacter(UnicodeCodePoint in_p);
 
 // not implemented yet

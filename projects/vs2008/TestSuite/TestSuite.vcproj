@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Algorithm.lib BigNumber.lib HTML5.lib rfc1950.lib"
+				AdditionalDependencies="Algorithm.lib BigNumber.lib HTML5.lib rfc1950.lib Unicode.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(SolutionDir)out\vs2008\$(ConfigurationName)"
 				ModuleDefinitionFile=""
