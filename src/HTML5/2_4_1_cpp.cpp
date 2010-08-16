@@ -13,7 +13,7 @@ const Interval<UnicodeCodePoint> spaceCharacterIntervals[3] =
 bool isSpaceCharacter(UnicodeCodePoint in_p)
 {
 	return binarySearch(&in_p, spaceCharacterIntervals, 3, 
-		sizeof Interval<UnicodeCodePoint>, 
+		sizeof(Interval<UnicodeCodePoint>), 
 		&compareElementIntervalVoid<UnicodeCodePoint>) != -1;
 }
 
@@ -27,7 +27,7 @@ const Interval<UnicodeCodePoint> ASCIICharacterIntervals[3] =
 bool isAlphanumericASCIICharacter(UnicodeCodePoint in_p)
 {
 	return binarySearch(&in_p, ASCIICharacterIntervals, 3, 
-		sizeof Interval<UnicodeCodePoint>, 
+		sizeof(Interval<UnicodeCodePoint>), 
 		&compareElementIntervalVoid<UnicodeCodePoint>) != -1;
 }
 
@@ -35,6 +35,6 @@ bool isWhiteSpaceCharacter(UnicodeCodePoint in_p, void* in_pWhitespaceIntervals,
 						   size_t in_whitespaceIntervalsCount)
 {
 	return binarySearch(&in_p, in_pWhitespaceIntervals, in_whitespaceIntervalsCount, 
-		sizeof Interval<UnicodeCodePoint>, 
+		sizeof(Interval<UnicodeCodePoint>), 
 		&compareElementIntervalVoid<UnicodeCodePoint>) != -1;
 }

@@ -9,6 +9,9 @@ else:
 MiniStdlib = env.Clone()
 MiniStdlib.Library('lib/MiniStdlib', Glob('src/MiniStdlib/*.c')+Glob('src/MiniStdlib/*.cpp'))
 
+Algorithm = env.Clone()
+Algorithm.SharedLibrary('bin/Algorithm', Glob('src/Algorithm/*.c')+Glob('src/Algorithm/*.cpp'))
+
 BigNumber = env.Clone()
 BigNumber.Append(LIBS = ['MiniStdlib'])
 BigNumber.SharedLibrary('bin/BigNumber', Glob('src/BigNumber/*.c')+Glob('src/BigNumber/*.cpp'), LIBPATH = ['#/lib'])
@@ -35,6 +38,6 @@ HTML5.SharedLibrary('bin/HTML5', Glob('src/HTML5/*.c')+Glob('src/HTML5/*.cpp'))
 
 testsuite = env.Clone()
 # testsuite.Append(CCFLAGS = '-fprofile-arcs -ftest-coverage', LIBS = ['gcov'])
-testsuite.Append(LIBS = ['MiniStdlib', 'BigNumber', 'rfc1950', 'Unicode', 'HTML5'])
+testsuite.Append(LIBS = ['MiniStdlib', 'BigNumber', 'rfc1950', 'Unicode', 'HTML5', 'Algorithm'])
 testsuite.Program('bin/TestSuite', Glob('src/TestSuite/*.cpp')+Glob('src/TestSuite/*.c'), LIBPATH = ['#/bin','#/lib'])
 

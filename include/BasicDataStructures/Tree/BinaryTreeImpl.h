@@ -109,24 +109,24 @@ const Type* BinaryTree<Type, NodePropertyType>::get(
 
 	while (!terminate)
 	{
-		CompareResult compResult=(*in_pContainedIn)(in_pItem, actNode->datum());
+		ExtendedCompareResult compResult=(*in_pContainedIn)(in_pItem, actNode->datum());
 
 		switch (compResult)
 		{
-		case Equal:
-		case ContainedIn:
+		case ExtendedCompareResultEqual:
+		case ExtendedCompareResultContainedIn:
 			out_getResult = actNode->datum();
 			// the missing break ist correct
-		case Contains:
-		case NotComparableLess:
-		case NotComparableGreater:
-		case ErrorInCode:
+		case ExtendedCompareResultContains:
+		case ExtendedCompareResultNotComparableLess:
+		case ExtendedCompareResultNotComparableGreater:
+		case ExtendedCompareResultErrorInCode:
 			terminate = true;
 			break;
-		case Less:
+		case ExtendedCompareResultLess:
 			actNode = actNode->left();
 			break;
-		case Greater:
+		case ExtendedCompareResultGreater:
 			actNode = actNode->right();
 			break;
 		}

@@ -5,6 +5,13 @@
  * Draft Standard - 6th of February 2010
  */
 
+// for FILE*
+#ifdef __cplusplus
+#include <cstdio>
+#else
+#include <stdio.h>
+#endif
+
 #include "Util/Unicode.h"
 #include "MiniStdlib/cstdbool.h"
 #include "MiniStdlib/cstdint.h"
@@ -22,7 +29,7 @@ bool isSpaceCharacter(UnicodeCodePoint in_p);
 __declspec(dllexport)
 #endif
 bool allocWhitespaceIntervals(FILE* in_propListFile, void** in_pWhitespaceIntervals, 
-							  size_t* in_pWhitespaceIntervalsCount);
+                              size_t* in_pWhitespaceIntervalsCount);
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
