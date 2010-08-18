@@ -178,6 +178,10 @@
 			ReferencedProjectIdentifier="{BC55BA95-3E8C-46AA-B3AF-2587EF39FD5D}"
 			RelativePathToProject=".\projects\vs2008\Unicode\Unicode.vcproj"
 		/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{BDA835AB-4CF3-4582-9AED-CEE06F553729}"
+			RelativePathToProject=".\projects\vs2008\Algorithm\Algorithm.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter

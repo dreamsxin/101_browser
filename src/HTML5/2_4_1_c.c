@@ -1,4 +1,5 @@
 #include "HTML5/2_4_1.h"
+#include "Unicode/PropList.h"
 
 bool allocWhitespaceIntervals(FILE* in_propListFile, void** in_pWhitespaceIntervals, 
                               size_t* in_pWhitespaceIntervalsCount)
