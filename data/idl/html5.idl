@@ -231,7 +231,7 @@ module html5
              attribute DOMString contentEditable;
     readonly attribute boolean isContentEditable;
              attribute HTMLMenuElement contextMenu;
-             attribute DOMString spellcheck;
+             attribute boolean spellcheck;
   
     // command API
     readonly attribute DOMString commandType;
@@ -554,8 +554,9 @@ module html5
   
     // playback state
              attribute float currentTime;
-    readonly attribute float startTime;
+    readonly attribute float initialTime;
     readonly attribute float duration;
+    readonly attribute Date startOffsetTime;
     readonly attribute boolean paused;
              attribute float defaultPlaybackRate;
              attribute float playbackRate;
@@ -1555,7 +1556,7 @@ module html5
              attribute long loop;
              attribute unsigned long scrollAmount;
              attribute unsigned long scrollDelay;
-             attribute DOMString trueSpeed;
+             attribute boolean trueSpeed;
              attribute unsigned long vspace;
              attribute DOMString width;
   
@@ -1601,6 +1602,7 @@ module html5
              attribute DOMString scrolling;
              attribute DOMString src;
     readonly attribute Document contentDocument;
+    readonly attribute WindowProxy contentWindow;
   };
 
   [Supplemental]
