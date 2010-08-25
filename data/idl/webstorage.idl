@@ -4,7 +4,7 @@ module webstorage
     readonly attribute unsigned long length;
     getter DOMString key(in unsigned long index);
     getter any getItem(in DOMString key);
-    setter creator void setItem(in DOMString key, in any data);
+    setter creator void setItem(in DOMString key, in any value);
     deleter void removeItem(in DOMString key);
     void clear();
   };

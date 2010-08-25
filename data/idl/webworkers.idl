@@ -62,6 +62,7 @@ module webworkers
   WorkerNavigator implements NavigatorOnLine;
 
   interface WorkerLocation {
+    // URL decomposition IDL attributes
     readonly attribute DOMString href;
     readonly attribute DOMString protocol;
     readonly attribute DOMString host;
