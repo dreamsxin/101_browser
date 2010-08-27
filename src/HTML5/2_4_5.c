@@ -30,6 +30,8 @@ uint8_t numberOfDaysInMonthOfYear(uint8_t month, UnsignedBigInteger year)
 			else
 				return 28;
 		}
+	default:
+		return 0;
 	}
 }
 

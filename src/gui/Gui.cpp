@@ -28,12 +28,12 @@ struct Window
 	{ }
 };
 
-void toggleMultiMouse(bool multipleMice, HWND hWnd, ArrayBlock<Gui::Mouse::RawMouse>* pRawMice);
+void toggleMultiMouse(bool *multipleMice, HWND hWnd, ArrayBlock<Gui::Mouse::RawMouse>* pRawMice);
 
 bool runProgram = true;
 FILE* logFile = NULL;
 Gui::Cursor cursor;
-bool multipleMice = false;
+bool gMultipleMice = false;
 
 LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -84,15 +84,14 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// handler - but what should be done else
 		// for drawing the window *while* resizing, moving etc.
 		UpdateGuiState();
-		drawGui(multipleMice ? &window->rawMice : NULL);
+		drawGui(gMultipleMice ? &window->rawMice : NULL);
 		SwapBuffers(window->hDC);
 		ValidateRect(window->hWnd, NULL);
 		return 0;
 	case WM_KEYDOWN:
 		if (wParam == VK_F12)
 		{
-			multipleMice = !multipleMice;
-			toggleMultiMouse(multipleMice, window->hWnd, &window->rawMice);
+			toggleMultiMouse(&gMultipleMice, window->hWnd, &window->rawMice);
 			InvalidateRect(window->hWnd, NULL, FALSE);
 		}
 		return 0;
@@ -107,6 +106,16 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			}
 
 			RAWINPUT *pRawInput = static_cast<RAWINPUT *>(malloc(cbSize));
+
+			if (pRawInput == NULL)
+			{
+				showErrorMessageAndExit(L"malloc");
+				/* 
+				 * Of course the program flow ends here - but the code analyser
+				 * of Visual Studio doesn't get it. :-(
+				 */
+				return 0;
+			}
 
 			if (GetRawInputData((HRAWINPUT) lParam, RID_INPUT, 
 				pRawInput, &cbSize, sizeof(RAWINPUTHEADER)) != cbSize)
@@ -324,21 +333,26 @@ void destroyWindow(Window* in_window)
  * Note: it is important not to call the function when already the 
  *       desired state is reached
  */
-void toggleMultiMouse(bool multipleMice, HWND hWnd, ArrayBlock<Gui::Mouse::RawMouse>* pRawMice)
+void toggleMultiMouse(bool *in_pMultipleMice, HWND hWnd, ArrayBlock<Gui::Mouse::RawMouse>* pRawMice)
 {
-	if (multipleMice)
+	if (in_pMultipleMice != NULL)
 	{
-		Gui::Mouse::registerRawMice(hWnd);
-		ArrayBlock<Gui::Mouse::RawMouse> block = Gui::Mouse::getRawMouseArray();
-		Gui::Mouse::syncRawMousePositions(pRawMice, &block);
-		Gui::Mouse::destroyRawMouseArray(pRawMice);
-		*pRawMice = block;
-		ShowCursor(FALSE);
-	}
-	else
-	{
-		Gui::Mouse::unregisterRawMice();
-		ShowCursor(TRUE);
+		*in_pMultipleMice = !*in_pMultipleMice;
+
+		if (*in_pMultipleMice)
+		{
+			Gui::Mouse::registerRawMice(hWnd);
+			ArrayBlock<Gui::Mouse::RawMouse> block = Gui::Mouse::getRawMouseArray();
+			Gui::Mouse::syncRawMousePositions(pRawMice, &block);
+			Gui::Mouse::destroyRawMouseArray(pRawMice);
+			*pRawMice = block;
+			ShowCursor(FALSE);
+		}
+		else
+		{
+			Gui::Mouse::unregisterRawMice();
+			ShowCursor(TRUE);
+		}
 	}
 }
 

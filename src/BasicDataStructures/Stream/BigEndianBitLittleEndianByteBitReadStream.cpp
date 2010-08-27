@@ -54,7 +54,7 @@ size_t BigEndianBitLittleEndianByteBitReadStream::readBits
 	unsigned char structRemainingBits = in_size % 8;
 
 	// the number of bytes of the structure to fill
-	size_t structBytesCount = structCompleteBytesCount + structRemainingBits ? 1 : 0;
+	size_t structBytesCount = structCompleteBytesCount + (structRemainingBits ? 1 : 0);
 
 	unsigned char* currentPosition = (unsigned char*) in_buffer;
 
