@@ -15,7 +15,8 @@ extern "C" {
  */
 
 /*
- * Precondition: 1 <= month <= 12
+ * For 1 <= month <= 12 this function returns the number of days in the month
+ * if month is out of this interval, 0 is returned.
  */
 #ifdef _WIN32
 __declspec(dllexport)

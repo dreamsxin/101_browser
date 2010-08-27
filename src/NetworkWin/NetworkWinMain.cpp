@@ -53,6 +53,11 @@ int main(int argc, char** argv)
 	else
 	{
 		printUsageAndExit(argv[0]);
+		/* 
+		 * Of course the program flow ends here - but the code analyser
+		 * of Visual Studio doesn't get it. :-(
+		 */
+		return 0;
 	}
 
 	char* portString = useHttps ? port443String : port80String;
