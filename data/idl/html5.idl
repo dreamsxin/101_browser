@@ -553,13 +553,13 @@ module html5
     readonly attribute boolean seeking;
   
     // playback state
-             attribute float currentTime;
-    readonly attribute float initialTime;
-    readonly attribute float duration;
+             attribute double currentTime;
+    readonly attribute double initialTime;
+    readonly attribute double duration;
     readonly attribute Date startOffsetTime;
     readonly attribute boolean paused;
-             attribute float defaultPlaybackRate;
-             attribute float playbackRate;
+             attribute double defaultPlaybackRate;
+             attribute double playbackRate;
     readonly attribute TimeRanges played;
     readonly attribute TimeRanges seekable;
     readonly attribute boolean ended;
@@ -570,7 +570,7 @@ module html5
   
     // controls
              attribute boolean controls;
-             attribute float volume;
+             attribute double volume;
              attribute boolean muted;
   
     // timed tracks
@@ -622,13 +622,13 @@ module html5
     TimedTrackCue getCueById(in DOMString id);
   };
 
-  [Constructor(in DOMString id, in float startTime, in float endTime, in DOMString text, in optional DOMString settings, in optional DOMString voice, in optional boolean pauseOnExit)]
+  [Constructor(in DOMString id, in double startTime, in double endTime, in DOMString text, in optional DOMString settings, in optional DOMString voice, in optional boolean pauseOnExit)]
   interface TimedTrackCue {
     readonly attribute TimedTrack track;
     readonly attribute DOMString id;
   
-    readonly attribute float startTime;
-    readonly attribute float endTime;
+    readonly attribute double startTime;
+    readonly attribute double endTime;
     readonly attribute boolean pauseOnExit;
   
     readonly attribute DOMString direction;
@@ -648,8 +648,8 @@ module html5
 
   interface TimeRanges {
     readonly attribute unsigned long length;
-    float start(in unsigned long index);
-    float end(in unsigned long index);
+    double start(in unsigned long index);
+    double end(in unsigned long index);
   };
 
   interface HTMLCanvasElement : HTMLElement {
@@ -671,86 +671,86 @@ module html5
     void restore(); // pop state stack and restore state
   
     // transformations (default transform is the identity matrix)
-    void scale(in float x, in float y);
-    void rotate(in float angle);
-    void translate(in float x, in float y);
-    void transform(in float a, in float b, in float c, in float d, in float e, in float f);
-    void setTransform(in float a, in float b, in float c, in float d, in float e, in float f);
+    void scale(in double x, in double y);
+    void rotate(in double angle);
+    void translate(in double x, in double y);
+    void transform(in double a, in double b, in double c, in double d, in double e, in double f);
+    void setTransform(in double a, in double b, in double c, in double d, in double e, in double f);
   
     // compositing
-             attribute float globalAlpha; // (default 1.0)
+             attribute double globalAlpha; // (default 1.0)
              attribute DOMString globalCompositeOperation; // (default source-over)
   
     // colors and styles
              attribute any strokeStyle; // (default black)
              attribute any fillStyle; // (default black)
-    CanvasGradient createLinearGradient(in float x0, in float y0, in float x1, in float y1);
-    CanvasGradient createRadialGradient(in float x0, in float y0, in float r0, in float x1, in float y1, in float r1);
+    CanvasGradient createLinearGradient(in double x0, in double y0, in double x1, in double y1);
+    CanvasGradient createRadialGradient(in double x0, in double y0, in double r0, in double x1, in double y1, in double r1);
     CanvasPattern createPattern(in HTMLImageElement image, in DOMString repetition);
     CanvasPattern createPattern(in HTMLCanvasElement image, in DOMString repetition);
     CanvasPattern createPattern(in HTMLVideoElement image, in DOMString repetition);
   
     // line caps/joins
-             attribute float lineWidth; // (default 1)
+             attribute double lineWidth; // (default 1)
              attribute DOMString lineCap; // "butt", "round", "square" (default "butt")
              attribute DOMString lineJoin; // "round", "bevel", "miter" (default "miter")
-             attribute float miterLimit; // (default 10)
+             attribute double miterLimit; // (default 10)
   
     // shadows
-             attribute float shadowOffsetX; // (default 0)
-             attribute float shadowOffsetY; // (default 0)
-             attribute float shadowBlur; // (default 0)
+             attribute double shadowOffsetX; // (default 0)
+             attribute double shadowOffsetY; // (default 0)
+             attribute double shadowBlur; // (default 0)
              attribute DOMString shadowColor; // (default transparent black)
   
     // rects
-    void clearRect(in float x, in float y, in float w, in float h);
-    void fillRect(in float x, in float y, in float w, in float h);
-    void strokeRect(in float x, in float y, in float w, in float h);
+    void clearRect(in double x, in double y, in double w, in double h);
+    void fillRect(in double x, in double y, in double w, in double h);
+    void strokeRect(in double x, in double y, in double w, in double h);
   
     // path API
     void beginPath();
     void closePath();
-    void moveTo(in float x, in float y);
-    void lineTo(in float x, in float y);
-    void quadraticCurveTo(in float cpx, in float cpy, in float x, in float y);
-    void bezierCurveTo(in float cp1x, in float cp1y, in float cp2x, in float cp2y, in float x, in float y);
-    void arcTo(in float x1, in float y1, in float x2, in float y2, in float radius);
-    void rect(in float x, in float y, in float w, in float h);
-    void arc(in float x, in float y, in float radius, in float startAngle, in float endAngle, in boolean anticlockwise);
+    void moveTo(in double x, in double y);
+    void lineTo(in double x, in double y);
+    void quadraticCurveTo(in double cpx, in double cpy, in double x, in double y);
+    void bezierCurveTo(in double cp1x, in double cp1y, in double cp2x, in double cp2y, in double x, in double y);
+    void arcTo(in double x1, in double y1, in double x2, in double y2, in double radius);
+    void rect(in double x, in double y, in double w, in double h);
+    void arc(in double x, in double y, in double radius, in double startAngle, in double endAngle, in boolean anticlockwise);
     void fill();
     void stroke();
     void clip();
-    boolean isPointInPath(in float x, in float y);
+    boolean isPointInPath(in double x, in double y);
   
     // focus management
-    boolean drawFocusRing(in Element element, in float xCaret, in float yCaret, in optional boolean canDrawCustom);
+    boolean drawFocusRing(in Element element, in double xCaret, in double yCaret, in optional boolean canDrawCustom);
   
     // text
              attribute DOMString font; // (default 10px sans-serif)
              attribute DOMString textAlign; // "start", "end", "left", "right", "center" (default: "start")
              attribute DOMString textBaseline; // "top", "hanging", "middle", "alphabetic", "ideographic", "bottom" (default: "alphabetic")
-    void fillText(in DOMString text, in float x, in float y, in optional float maxWidth);
-    void strokeText(in DOMString text, in float x, in float y, in optional float maxWidth);
+    void fillText(in DOMString text, in double x, in double y, in optional double maxWidth);
+    void strokeText(in DOMString text, in double x, in double y, in optional double maxWidth);
     TextMetrics measureText(in DOMString text);
   
     // drawing images
-    void drawImage(in HTMLImageElement image, in float dx, in float dy, in optional float dw, in float dh);
-    void drawImage(in HTMLImageElement image, in float sx, in float sy, in float sw, in float sh, in float dx, in float dy, in float dw, in float dh);
-    void drawImage(in HTMLCanvasElement image, in float dx, in float dy, in optional float dw, in float dh);
-    void drawImage(in HTMLCanvasElement image, in float sx, in float sy, in float sw, in float sh, in float dx, in float dy, in float dw, in float dh);
-    void drawImage(in HTMLVideoElement image, in float dx, in float dy, in optional float dw, in float dh);
-    void drawImage(in HTMLVideoElement image, in float sx, in float sy, in float sw, in float sh, in float dx, in float dy, in float dw, in float dh);
+    void drawImage(in HTMLImageElement image, in double dx, in double dy, in optional double dw, in double dh);
+    void drawImage(in HTMLImageElement image, in double sx, in double sy, in double sw, in double sh, in double dx, in double dy, in double dw, in double dh);
+    void drawImage(in HTMLCanvasElement image, in double dx, in double dy, in optional double dw, in double dh);
+    void drawImage(in HTMLCanvasElement image, in double sx, in double sy, in double sw, in double sh, in double dx, in double dy, in double dw, in double dh);
+    void drawImage(in HTMLVideoElement image, in double dx, in double dy, in optional double dw, in double dh);
+    void drawImage(in HTMLVideoElement image, in double sx, in double sy, in double sw, in double sh, in double dx, in double dy, in double dw, in double dh);
   
     // pixel manipulation
-    ImageData createImageData(in float sw, in float sh);
+    ImageData createImageData(in double sw, in double sh);
     ImageData createImageData(in ImageData imagedata);
-    ImageData getImageData(in float sx, in float sy, in float sw, in float sh);
-    void putImageData(in ImageData imagedata, in float dx, in float dy, in optional float dirtyX, in float dirtyY, in float dirtyWidth, in float dirtyHeight);
+    ImageData getImageData(in double sx, in double sy, in double sw, in double sh);
+    void putImageData(in ImageData imagedata, in double dx, in double dy, in optional double dirtyX, in double dirtyY, in double dirtyWidth, in double dirtyHeight);
   };
   
   interface CanvasGradient {
     // opaque object
-    void addColorStop(in float offset, in DOMString color);
+    void addColorStop(in double offset, in DOMString color);
   };
   
   interface CanvasPattern {
@@ -758,7 +758,7 @@ module html5
   };
   
   interface TextMetrics {
-    readonly attribute float width;
+    readonly attribute double width;
   };
   
   interface ImageData {
@@ -1110,20 +1110,20 @@ module html5
   };
 
   interface HTMLProgressElement : HTMLElement {
-             attribute float value;
-             attribute float max;
-    readonly attribute float position;
+             attribute double value;
+             attribute double max;
+    readonly attribute double position;
     readonly attribute HTMLFormElement form;
     readonly attribute NodeList labels;
   };
 
   interface HTMLMeterElement : HTMLElement {
-             attribute float value;
-             attribute float min;
-             attribute float max;
-             attribute float low;
-             attribute float high;
-             attribute float optimum;
+             attribute double value;
+             attribute double min;
+             attribute double max;
+             attribute double low;
+             attribute double high;
+             attribute double optimum;
     readonly attribute HTMLFormElement form;
     readonly attribute NodeList labels;
   };
