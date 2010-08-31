@@ -12,6 +12,7 @@
 #include <stdio.h>
 #endif
 
+#include "Util/Iterator.h"
 #include "Util/Unicode.h"
 #include "MiniStdlib/cstdbool.h"
 #include "MiniStdlib/cstdint.h"
@@ -28,17 +29,17 @@ bool isSpaceCharacter(UnicodeCodePoint in_p);
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-bool allocWhitespaceIntervals(FILE* in_propListFile, void** in_pWhitespaceIntervals, 
+bool allocWhite_SpaceCharacterIntervals(FILE* in_propListFile, void** in_pWhitespaceIntervals, 
                               size_t* in_pWhitespaceIntervalsCount);
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-void freeWhitespaceIntervals(void** in_pWhitespaceIntervals);
+void freeWhite_SpaceCharacterIntervals(void** in_pWhitespaceIntervals);
 
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-extern bool isWhiteSpaceCharacter(UnicodeCodePoint in_p, void* in_pWhitespaceIntervals, 
+extern bool isWhite_SpaceCharacter(UnicodeCodePoint in_p, void* in_pWhitespaceIntervals, 
 						   size_t in_whitespaceIntervalsCount);
 
 #ifdef _WIN32
@@ -48,6 +49,10 @@ bool isAlphanumericASCIICharacter(UnicodeCodePoint in_p);
 
 // not implemented yet
 // bool collectSequenceOfCharacters()
+
+void skipWhitespace(SingleIterator in_iterator, void* in_iteratorState);
+void skipWhite_SpaceCharacters(SingleIterator in_iterator, void* in_iteratorState, 
+							   void* in_pWhitespaceIntervals, size_t in_whitespaceIntervalsCount);
 
 #ifdef __cplusplus
 }

@@ -31,7 +31,7 @@ bool isAlphanumericASCIICharacter(UnicodeCodePoint in_p)
 		&compareElementIntervalVoid<UnicodeCodePoint>) != -1;
 }
 
-bool isWhiteSpaceCharacter(UnicodeCodePoint in_p, void* in_pWhitespaceIntervals, 
+bool isWhite_SpaceCharacter(UnicodeCodePoint in_p, void* in_pWhitespaceIntervals, 
 						   size_t in_whitespaceIntervalsCount)
 {
 	return binarySearch(&in_p, in_pWhitespaceIntervals, in_whitespaceIntervalsCount, 
