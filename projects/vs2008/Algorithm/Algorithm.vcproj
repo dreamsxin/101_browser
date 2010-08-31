@@ -179,6 +179,10 @@
 				RelativePath="..\..\..\src\Algorithm\BinarySearch.c"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\src\Algorithm\IterateWhile.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -191,6 +195,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\Algorithm\CompareResult.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\Algorithm\IterateWhile.h"
 				>
 			</File>
 		</Filter>
