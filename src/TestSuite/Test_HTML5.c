@@ -179,7 +179,162 @@ void test2_4_1()
 		}
 
 		{
-			
+			char empty[]     = ""     ;
+			char space[]     = " "    ;
+			char A[]         = "A"    ;
+			char spaceA[]    = " A"   ;
+			char tabSpace[]  = "\t "  ;
+			char tabSpaceA[] = "\t A" ;
+			char tabVert[]   = "\t\v" ;
+			char tabVertA[]  = "\t\vA";
+			char vertTab[]   = "\v\t" ;
+			char vertTabA[]  = "\v\tA";
+			void* pCurrentDatum;
+
+			SingleIterator it = asciiStringUnicodeIterator_create();
+			ASCIIStringUnicodeIteratorState s;
+			ASCIIStringUnicodeIteratorState s0;
+			ASCIIStringUnicodeIteratorState s1;
+
+			s = asciiStringUnicodeIteratorState_create(empty);
+			s0 = s;
+			s1 = s;
+			skipWhitespace(it, &s0);
+			test((*it.mpfGet)(&s0) == NULL);
+			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			test((*it.mpfGet)(&s1) == NULL);
+
+			s = asciiStringUnicodeIteratorState_create(space);
+			s0 = s;
+			s1 = s;
+			skipWhitespace(it, &s0);
+			test((*it.mpfGet)(&s0) == NULL);
+			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			test((*it.mpfGet)(&s1) == NULL);
+
+			s = asciiStringUnicodeIteratorState_create(A);
+			s0 = s;
+			s1 = s;
+			skipWhitespace(it, &s0);
+			pCurrentDatum = (*it.mpfGet)(&s0);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
+			}
+			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			pCurrentDatum = (*it.mpfGet)(&s1);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
+			}
+
+			s = asciiStringUnicodeIteratorState_create(spaceA);
+			s0 = s;
+			s1 = s;
+			skipWhitespace(it, &s0);
+			pCurrentDatum = (*it.mpfGet)(&s0);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
+			}
+			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			pCurrentDatum = (*it.mpfGet)(&s1);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
+			}
+
+			s = asciiStringUnicodeIteratorState_create(tabSpace);
+			s0 = s;
+			s1 = s;
+			skipWhitespace(it, &s0);
+			test((*it.mpfGet)(&s0) == NULL);
+			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			test((*it.mpfGet)(&s1) == NULL);
+
+			s = asciiStringUnicodeIteratorState_create(tabSpaceA);
+			s0 = s;
+			s1 = s;
+			skipWhitespace(it, &s0);
+			pCurrentDatum = (*it.mpfGet)(&s0);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
+			}
+			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			pCurrentDatum = (*it.mpfGet)(&s1);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
+			}
+
+			s = asciiStringUnicodeIteratorState_create(tabVert);
+			s0 = s;
+			s1 = s;
+			skipWhitespace(it, &s0);
+			pCurrentDatum = (*it.mpfGet)(&s0);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == '\v');
+			}
+			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			test((*it.mpfGet)(&s1) == NULL);
+
+			s = asciiStringUnicodeIteratorState_create(tabVertA);
+			s0 = s;
+			s1 = s;
+			skipWhitespace(it, &s0);
+			pCurrentDatum = (*it.mpfGet)(&s0);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == '\v');
+			}
+			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			pCurrentDatum = (*it.mpfGet)(&s1);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
+			}
+
+			s = asciiStringUnicodeIteratorState_create(vertTab);
+			s0 = s;
+			s1 = s;
+			skipWhitespace(it, &s0);
+			pCurrentDatum = (*it.mpfGet)(&s0);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == '\v');
+			}
+			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			test((*it.mpfGet)(&s1) == NULL);
+
+			s = asciiStringUnicodeIteratorState_create(vertTabA);
+			s0 = s;
+			s1 = s;
+			skipWhitespace(it, &s0);
+			pCurrentDatum = (*it.mpfGet)(&s0);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == '\v');
+			}
+			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			pCurrentDatum = (*it.mpfGet)(&s1);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
+			}
 		}
 
 		freeWhite_SpaceCharacterIntervals(&intervals);
@@ -228,7 +383,10 @@ void test2_4_5()
 
 void testHTML5()
 {
+	wprintf(L"Testing 2.3\n");
 	test2_3();
+	wprintf(L"Testing 2.4.1\n");
 	test2_4_1();
+	wprintf(L"Testing 2.4.5\n");
 	test2_4_5();
 }

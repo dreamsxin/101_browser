@@ -50,7 +50,14 @@ bool isAlphanumericASCIICharacter(UnicodeCodePoint in_p);
 // not implemented yet
 // bool collectSequenceOfCharacters()
 
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 void skipWhitespace(SingleIterator in_iterator, void* in_iteratorState);
+
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 void skipWhite_SpaceCharacters(SingleIterator in_iterator, void* in_iteratorState, 
 							   void* in_pWhitespaceIntervals, size_t in_whitespaceIntervalsCount);
 
