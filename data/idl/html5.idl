@@ -1174,7 +1174,7 @@ module html5
 
   [Constructor(in DOMString serverConfiguration)]
   interface ConnectionPeer {
-    void sendText(in DOMString text);
+    void sendText(in DOMString text, in optional boolean unimportant); // if second arg is true, then use unreliable low-latency transport (UDP-like), otherwise guarantee delivery (TCP-like)
     attribute Function ontext; // receiving
   
     void sendBitmap(in HTMLImageElement image);
@@ -1189,8 +1189,8 @@ module html5
     readonly attribute Stream[] remoteStreams;
     attribute Function onstream; // receiving
   
-    void getLocalConfiguration(in ConnectionPeerConfigurationCallback callback); // maybe this should be in the constructor
-    void addRemoteConfiguration(in DOMString configuration);
+    void getLocalConfiguration(in ConnectionPeerConfigurationCallback callback); // maybe this should be in the constructor, or be an event
+    void addRemoteConfiguration(in DOMString configuration, in optional DOMString remoteOrigin); // remote origin is assumed to be same-origin if not specified. If specified, has to match remote origin (checked in handshake). Should support leading "*." to mean "any subdomain of".
     void close(); // disconnects and stops listening
   
     attribute Function onconnect;
