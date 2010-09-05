@@ -1,10 +1,12 @@
+#include <cassert>
 #include <cstdio>
 #include <cstring>
+#include <ctime>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include "CryptoWin/CryptoWin.h"
 #include "Crypto/TLS.h"
-#include <ctime>
+
 #include "BasicDataStructures/Endianess.h"
 
 char GETstring[] = "GET";
@@ -12,13 +14,81 @@ char GETstring[] = "GET";
 void printUsageAndExit(char* argv0)
 {
 	printf(
-		"Usage: %s [COMMAND] protocol url\n"
+		"Usage: %s [COMMAND] protocol://url\n"
 		"Where protocol is http|https\n", argv0);
 	exit(0);
 }
 
 char port80String[] = "80";
 char port443String[] = "443";
+
+/*!
+ * Parses the url
+ *
+ * Note that if in_pcUrl[*in_pAfterDomainPos] we have to send a backslash
+ * in the http(s) request.
+ * 
+ * Return value:
+ * true on success
+ * false on failure
+ */
+bool parseURL(const char* in_pcUrl, bool* in_pIsHttps, size_t* in_pDomainPos, 
+			  size_t* in_pAfterDomainPos)
+{
+	size_t lPosition = 0;
+	if (in_pcUrl[lPosition] != 'h')
+		return false;
+
+	lPosition++;
+	if (in_pcUrl[lPosition] != 't')
+		return false;
+
+	lPosition++;
+	if (in_pcUrl[lPosition] != 't')
+		return false;
+
+	lPosition++;
+	if (in_pcUrl[lPosition] != 'p')
+		return false;
+
+	bool lIsHttps;
+
+	lPosition++;
+	if (in_pcUrl[lPosition] == ':')
+	{
+		lIsHttps = false;
+	}
+	else if (in_pcUrl[lPosition] == 's')
+	{
+		lPosition++;
+		if (in_pcUrl[lPosition] == ':')
+			lIsHttps = true;
+		else
+			return false;
+	}
+	else
+		return false;
+
+	lPosition++;
+	if (in_pcUrl[lPosition] != '/')
+		return false;
+
+	lPosition++;
+	if (in_pcUrl[lPosition] != '/')
+		return false;
+
+	size_t lDomainPos = lPosition+1;
+
+	do
+	{
+		lPosition++;
+	} while (in_pcUrl[lPosition] != 0x0 && in_pcUrl[lPosition] != '/');
+
+	*in_pIsHttps = lIsHttps;
+	*in_pDomainPos = lDomainPos;
+	*in_pAfterDomainPos = lPosition;
+	return true;
+}
 
 int main(int argc, char** argv)
 {
@@ -27,13 +97,12 @@ int main(int argc, char** argv)
 		printUsageAndExit(argv[0]);
 	}
 
-	char *hostName = argv[argc-1];
-	char *protocol = argv[argc-2];
+	char *url = argv[argc-1];
 	char *command;
 
-	if (argc > 3)
+	if (argc > 2)
 	{
-		command = argv[1];
+		command = argv[argc-2];
 	}
 	else
 	{
@@ -41,24 +110,22 @@ int main(int argc, char** argv)
 	}
 
 	bool useHttps;
-	
-	if (strcmp("http", protocol) == 0)
-	{
-		useHttps = false;
-	}
-	else if (strcmp("https", protocol) == 0)
-	{
-		useHttps = true;
-	}
-	else
+	size_t domainPos;
+	size_t afterDomainPos;
+
+	if (!parseURL(url, &useHttps, &domainPos, &afterDomainPos))
 	{
 		printUsageAndExit(argv[0]);
-		/* 
-		 * Of course the program flow ends here - but the code analyser
-		 * of Visual Studio doesn't get it. :-(
-		 */
-		return 0;
 	}
+
+	if (url[afterDomainPos] != 0x0)
+	{
+		assert(url[afterDomainPos] == '/');
+		url[afterDomainPos] = 0;
+		afterDomainPos++;
+	}
+
+	printf("Domain: '%s'\nAfter domain: '%s'\n", url+domainPos, url+afterDomainPos);
 
 	char* portString = useHttps ? port443String : port80String;
 
@@ -81,7 +148,7 @@ int main(int argc, char** argv)
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
 
-	status = getaddrinfo(hostName, portString, &hints, &pAddrInfo);
+	status = getaddrinfo(url+domainPos, portString, &hints, &pAddrInfo);
 
 	if (status != 0)
 	{
@@ -117,13 +184,16 @@ int main(int argc, char** argv)
 
 	if (!useHttps)
 	{
-		char requestString0[] = " / HTTP/1.1\r\nHost: ";
-		char requestString1[] = "\r\n\r\n";
+		char requestString0[] = " /";
+		char requestString1[] = " HTTP/1.1\r\nHost: ";
+		char requestString2[] = "\r\n\r\n";
 
 		send(serverSocket, command, strlen(command), 0);
 		send(serverSocket, requestString0, strlen(requestString0), 0);
-		send(serverSocket, hostName, strlen(hostName), 0);
+		send(serverSocket, url+afterDomainPos, strlen(url+afterDomainPos), 0);
 		send(serverSocket, requestString1, strlen(requestString1), 0);
+		send(serverSocket, url+domainPos, strlen(url+domainPos), 0);
+		send(serverSocket, requestString2, strlen(requestString2), 0);
 	}
 	else
 	{
