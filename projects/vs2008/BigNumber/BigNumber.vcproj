@@ -188,6 +188,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\BigNumber\addUBUCKernel.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\BigNumber\applyCarry.c"
 				>
 			</File>
@@ -196,7 +200,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\BigNumber\incUB.cpp"
+				RelativePath="..\..\..\src\BigNumber\incUB.c"
 				>
 			</File>
 			<File
@@ -212,7 +216,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\BigNumber\modUBUCKernel.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\BigNumber\mulUBUC.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\BigNumber\mulUBUCKernel.c"
 				>
 			</File>
 		</Filter>
