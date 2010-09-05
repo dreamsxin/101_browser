@@ -518,9 +518,10 @@ module html5
 
   interface HTMLTrackElement : HTMLElement {
              attribute DOMString kind;
-             attribute DOMString label;
              attribute DOMString src;
+             attribute DOMString charset;
              attribute DOMString srclang;
+             attribute DOMString label;
   
     readonly attribute TimedTrack track;
   };
