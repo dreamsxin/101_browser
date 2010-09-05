@@ -102,8 +102,11 @@ __declspec(dllexport)
 #endif
 uint32_t modUBUC(UnsignedBigInteger const * const  in_pInt, uint32_t in_c);
 
-/* An internal helper function */
+/* Internal helper functions */
 uint32_t applyCarry(UnsignedBigInteger* in_pInt, uint32_t in_c);
+bool addUBUCKernel(uint32_t* in_pCarry, uint32_t* in_pCurrentDigit);
+uint32_t mulUBUCKernel(uint32_t in_carry, uint32_t* in_pCurrentDigit, uint32_t in_n);
+uint32_t modUBUCKernel(uint32_t in_carry, uint32_t* in_pCurrentDigit, uint32_t in_n);
 
 #ifdef __cplusplus
 }
