@@ -1,3 +1,98 @@
+CHAPTER 1
+Basic Data Types
+
+
+STRING
+Field	Type	Comment
+String	UI8[zero or more]	Non-null string character data
+StringEnd	UI8	Marks end of string; always zero
+
+
+LANGCODE
+Field	Type	Comment
+LanguageCode	UI8	Language code (see following)
+
+
+RGB
+Field	Type	Comment
+Red	UI8	Red color value
+Green	UI8	Green color value
+Blue	UI8	Blue color value
+
+
+ARGB
+Field	Type	Comment
+Alpha	UI8	alpha value defining opacity
+Red	UI8	Red color value
+Green	UI8	Green color value
+Blue	UI8	Blue color value
+
+
+RECT
+Field	Type	Comment
+Nbits	UB[5]	Bits used for each subsequent 
+		field
+Xmin	SB[Nbits]	x minimum position for 
+		rectangle in twips
+Xmax	SB[Nbits]	x maximum position for 
+		rectangle in twips
+Ymin	SB[Nbits]	y minimum position for 
+		rectangle in twips
+Ymax	SB[Nbits]	y maximum position for 
+		rectangle in twips
+
+
+MATRIX
+Field	Type	Comment
+HasScale	UB[1]	Has scale values if equal to 1
+NScaleBits	If HasScale = 1,  UB[5]	Bits in each scale value field
+ScaleX	If HasScale = 1,  FB[NScaleBits]	x scale value
+ScaleY	If HasScale = 1,  FB[NScaleBits]	y scale value
+HasRotate	UB[1] Has rotate and skew values if equal 
+		to 1
+NRotateBits	If HasRotate = 1, 	UB[5] Bits in each rotate value field
+RotateSkew0	If HasRotate = 1, 	First rotate and skew value
+	FB[NRotateBits]
+RotateSkew1	If HasRotate = 1, 	Second rotate and skew value
+	FB[NRotateBits]
+NTranslateBits	UB[5]	Bits in each translate value field
+TranslateX	SB[NTranslateBits]	x translate value in twips
+TranslateY	SB[NTranslateBits]	y translate value in twips
+
+
+CXFORM
+Field 	Type	Comment
+HasAddTerms	UB[1]	Has color addition values if equal 
+		to 1
+HasMultTerms	UB[1]	Has color multiply values if equal to 
+		1
+Nbits	UB[4]	Bits in each value field
+RedMultTerm	If HasMultTerms = 1,  SB[Nbits]	Red multiply value
+GreenMultTerm	If HasMultTerms = 1,  SB[Nbits]	Green multiply value
+BlueMultTerm	If HasMultTerms = 1,  SB[Nbits]	Blue multiply value
+RedAddTerm	If HasAddTerms = 1,  SB[Nbits]	Red addition value
+GreenAddTerm	If HasAddTerms = 1,  SB[Nbits]	Green addition value
+BlueAddTerm	If HasAddTerms = 1,  SB[Nbits]	Blue addition value
+
+
+CXFORMWITHALPHA
+Field	Type	Comment
+HasAddTerms	UB[1]	Has color addition values if 
+		equal to 1
+HasMultTerms	UB[1]	Has color multiply values if 
+		equal to 1
+Nbits	UB[4]	Bits in each value field
+RedMultTerm	If HasMultTerms = 1,  SB[Nbits]	Red multiply value
+GreenMultTerm	If HasMultTerms = 1,  SB[Nbits]	Green multiply value
+BlueMultTerm	If HasMultTerms = 1,  SB[Nbits]	Blue multiply value
+AlphaMultTerm	If HasMultTerms = 1,  SB[Nbits]	Alpha multiply value
+RedAddTerm	If HasAddTerms = 1,  SB[Nbits]	Red addition value
+GreenAddTerm	If HasAddTerms = 1,  SB[Nbits]	Green addition value
+BlueAddTerm	If HasAddTerms = 1,  SB[Nbits]	Blue addition value
+AlphaAddTerm	If HasAddTerms = 1,  SB[Nbits]	Transparency addition 
+		value 
+
+
 CHAPTER 3
 The Display List
 
@@ -1001,4 +1096,16 @@ BitmapAlphaData	UI8[alpha data size]	ZLIB compressed array of
 		equal (width * height) of JPEG 
 		image.
 
+
+CHAPTER 15
+Binary data
+
+
+DefineBinaryData
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 87
+Tag	UI16	16-bit character ID
+Reserved	U32	Reserved space; must be 0
+Data	BINARY	A blob of binary data, up to the 
+		end of the tag
 
