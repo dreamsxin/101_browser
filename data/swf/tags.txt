@@ -1,0 +1,1004 @@
+CHAPTER 3
+The Display List
+
+
+PlaceObject
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 4
+CharacterId	UI16	ID of character to place
+Depth	UI16	Depth of character
+Matrix	MATRIX	Transform matrix data
+ColorTransform (optional)	CXFORM	Color transform data
+
+
+PlaceObject2
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 26
+PlaceFlagHasClipActions	UB[1]	SWF 5 and later: has 
+		clip actions (sprite 
+		characters only)
+		Otherwise: always 0
+PlaceFlagHasClipDepth	UB[1]	Has clip depth
+PlaceFlagHasName	UB[1]	Has name
+PlaceFlagHasRatio	UB[1]	Has ratio
+PlaceFlagHasColorTransform	UB[1]	Has color transform
+PlaceFlagHasMatrix	UB[1]	Has matrix
+PlaceFlagHasCharacter	UB[1]	Places a character
+PlaceFlagMove	UB[1]	Defines a character to 
+		be moved
+Depth	UI16	Depth of character
+CharacterId	If PlaceFlagHasCharacter	ID of character to place
+	UI16
+Matrix	If PlaceFlagHasMatrix	Transform matrix data
+	MATRIX
+ColorTransform	If PlaceFlagHasColorTransform	Color transform data
+	CXFORMWITHALPHA
+Ratio	If PlaceFlagHasRatio UI16
+Name	If PlaceFlagHasName STRING	Name of character
+ClipDepth	If PlaceFlagHasClipDepth UI16	Clip depth
+		(see “Clipping layers” 
+		on page 32)
+ClipActions	If PlaceFlagHasClipActions	SWF 5 and later:
+	CLIPACTIONS	Clip Actions Data
+
+
+CLIPACTIONS
+Field	Type	Comment
+Reserved	UI16	Must be 0
+AllEventFlags	CLIPEVENTFLAGS	All events used in these clip 
+		actions
+ClipActionRecords	CLIPACTIONRECORD	Individual event handlers
+	[one or more]
+ClipActionEndFlag	If SWF version <= 5, UI16	Must be 0
+	If SWF version >= 6, UI32
+
+
+CLIPACTIONRECORD
+Field	Type	Comment
+EventFlags	CLIPEVENTFLAGS	Events to which this handler 
+		applies
+ActionRecordSize	UI32	Offset in bytes from end of this 
+		field to next 
+		CLIPACTIONRECORD (or 
+		ClipActionEndFlag)
+KeyCode	If EventFlags contain	Key code to trap (see 
+	ClipEventKeyPress: UI8	“DefineButton2” on page 226)
+	Otherwise absent
+Actions	ACTIONRECORD	Actions to perform
+	[one or more]
+
+
+PlaceObject3
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 70
+PlaceFlagHasClipActions	UB[1]	SWF 5 and later: has clip 
+		actions (sprite characters 
+		only)
+		Otherwise: always 0
+PlaceFlagHasClipDepth	UB[1]	Has clip depth
+PlaceFlagHasName	UB[1]	Has name
+PlaceFlagHasRatio	UB[1]	Has ratio
+PlaceFlagHasColorTransform	UB[1]	Has color transform
+PlaceFlagHasMatrix	UB[1]	Has matrix
+PlaceFlagHasCharacter	UB[1]	Places a character
+PlaceFlagMove	UB[1]	Defines a character to be 
+		moved
+Reserved	UB[3]	Must be 0
+PlaceFlagHasImage	UB[1]	Has class name or 
+		character ID of bitmap to 
+		place. If 
+		PlaceFlagHasClassName, 
+		use ClassName. If 
+		PlaceFlagHasCharacter, 
+		use CharacterId
+PlaceFlagHasClassName	UB[1]	Has class name of object 
+		to place
+PlaceFlagHasCacheAsBitmap	UB[1]	Enables bitmap caching
+PlaceFlagHasBlendMode	UB[1]	Has blend mode
+PlaceFlagHasFilterList	UB[1]	Has filter list
+Depth	UI16	Depth of character
+ClassName	If PlaceFlagHasClassName or 	Name of the class to place
+	(PlaceFlagHasImage and 
+	PlaceFlagHasCharacter), STRING
+CharacterId	If PlaceFlagHasCharacter, UI16	ID of character to place
+Matrix	If PlaceFlagHasMatrix, MATRIX	Transform matrix data
+ColorTransform	If PlaceFlagHasColorTransform, 	Color transform data
+	CXFORMWITHALPHA
+Ratio	If PlaceFlagHasRatio, UI16
+Name	If PlaceFlagHasName, STRING	Name of character
+ClipDepth	If PlaceFlagHasClipDepth, UI16	Clip depth
+		(see Clipping layers)
+SurfaceFilterList	If PlaceFlagHasFilterList, 	List of filters on this object
+	FILTERLIST
+BlendMode	If PlaceFlagHasBlendMode, UI8	0 or 1 = normal
+		2 = layer
+		3 = multiply
+		4 = screen
+		5 = lighten
+		6 = darken
+		7 = difference
+		8 = add
+		9 = subtract
+		10 = invert
+		11 = alpha
+		12 = erase
+		13 = overlay
+		14 = hardlight
+		Values 15 to 255 are 
+		reserved.
+BitmapCache	If PlaceFlagHasCacheAsBitmap, 	0 = Bitmap cache disabled
+	UI8	1-255 = Bitmap cache 
+		enabled
+ClipActions	If PlaceFlagHasClipActions, 	SWF 5 and later:
+	CLIPACTIONS	Clip Actions Data
+
+
+FILTERLIST
+Field	Type	Comment
+NumberOfFilters	UI8	Number of Filters
+Filter	FILTER[NumberOfFilters]	List of filters
+
+
+FILTER
+Field	Type	Comment
+FilterID	UI8	0 = Has DropShadowFilter
+		1 = Has BlurFilter
+		2 = Has GlowFilter
+		3 = Has BevelFilter
+		4 = Has GradientGlowFilter
+		5 = Has ConvolutionFilter
+		6 = Has ColorMatrixFilter
+		7 = Has GradientBevelFilter
+DropShadowFilter	If FilterID = 0, 	Drop Shadow filter
+	DROPSHADOWFILTER
+BlurFilter	If FilterID = 1, BLURFILTER	Blur filter
+GlowFilter	If FilterID = 2, GLOWFILTER	Glow filter
+BevelFilter	If FilterID = 3, BEVELFILTER	Bevel filter 
+GradientGlowFilter	If FilterID = 4, 	Gradient Glow filter
+	GRADIENTGLOWFILTER
+ConvolutionFilter	If FilterID = 5, 	Convolution filter
+	CONVOLUTIONFILTER
+ColorMatrixFilter	If FilterID = 6, 	Color Matrix filter
+	COLORMATRIXFILTER
+GradientBevelFilter	If FilterID = 7, 	Gradient Bevel filter
+	GRADIENTBEVELFILTER
+
+
+COLORMATRIXFILTER
+Field	Type	Comment
+Matrix	FLOAT[20]	Color matrix values
+
+
+CONVOLUTIONFILTER
+Field	Type	Comment
+MatrixX	UI8	Horizontal matrix size
+MatrixY	UI8	Vertical matrix size
+Divisor	FLOAT 	Divisor applied to the 
+		matrix values
+Bias	FLOAT	Bias applied to the matrix 
+		values
+Matrix	FLOAT[MatrixX * MatrixY]	Matrix values
+DefaultColor	RGBA	Default color for pixels 
+		outside the image
+Reserved	UB[6]	Must be 0
+Clamp	UB[1]	Clamp mode
+PreserveAlpha	UB[1]	Preserve the alpha
+
+
+BLURFILTER
+Field	Type	Comment
+BlurX	FIXED	Horizontal blur amount
+BlurY	FIXED	Vertical blur amount
+Passes	UB[5]	Number of blur passes
+Reserved	UB[3]	Must be 0
+
+
+DROPSHADOWFILTER
+Field	Type	Comment
+DropShadowColor	RGBA	Color of the shadow
+BlurX	FIXED	Horizontal blur amount
+BlurY	FIXED	Vertical blur amount
+Angle	FIXED	Radian angle of the drop 
+		shadow
+Distance	FIXED	Distance of the drop 
+		shadow
+Strength	FIXED8	Strength of the drop 
+		shadow
+InnerShadow	UB[1]	Inner shadow mode
+Knockout	UB[1]	Knockout mode
+CompositeSource	UB[1]	Composite source
+		Always 1
+Passes	UB[5]	Number of blur passes
+
+
+GLOWFILTER
+Field	Type	Comment
+GlowColor	RGBA	Color of the shadow
+BlurX	FIXED	Horizontal blur amount
+BlurY	FIXED	Vertical blur amount
+Strength	FIXED8	Strength of the glow
+InnerGlow	UB[1]	Inner glow mode
+Knockout	UB[1]	Knockout mode
+CompositeSource	UB[1]	Composite source
+		Always 1
+Passes	UB[5]	Number of blur passes
+
+
+BEVELFILTER
+Field	Type	Comment
+ShadowColor	RGBA	Color of the shadow
+HighlightColor	RGBA	Color of the highlight
+BlurX	FIXED	Horizontal blur amount
+BlurY	FIXED	Vertical blur amount
+Angle	FIXED	Radian angle of the drop 
+		shadow
+Distance	FIXED	Distance of the drop 
+		shadow
+Strength	FIXED8	Strength of the drop 
+		shadow
+InnerShadow	UB[1]	Inner shadow mode
+Knockout	UB[1]	Knockout mode
+CompositeSource	UB[1]	Composite source
+		Always 1
+OnTop	UB[1]	OnTop mode
+Passes	UB[4]	Number of blur passes
+
+
+GRADIENTGLOWFILTER
+Field	Type	Comment
+NumColors	UI8	Number of colors in the 
+		gradient
+GradientColors	RGBA[NumColors]	Gradient colors
+GradientRatio	UI8[NumColors]	Gradient ratios
+BlurX	FIXED	Horizontal blur amount
+BlurY	FIXED	Vertical blur amount
+Angle	FIXED	Radian angle of the 
+		gradient glow
+Distance	FIXED	Distance of the gradient 
+		glow
+Strength	FIXED8	Strength of the gradient 
+		glow
+InnerShadow	UB[1]	Inner glow mode
+Knockout	UB[1]	Knockout mode
+CompositeSource	UB[1]	Composite source
+		Always 1
+OnTop	UB[1]	OnTop mode
+Passes	UB[4]	Number of blur passes
+
+
+GRADIENTBEVELFILTER
+Field	Type	Comment
+NumColors	UI8	Number of colors in the 
+		gradient
+GradientColors	RGBA[NumColors]	Gradient colors
+GradientRatio	UI8[NumColors]	Gradient ratios
+BlurX	FIXED	Horizontal blur amount
+BlurY	FIXED	Vertical blur amount
+Angle	FIXED	Radian angle of the 
+		gradient bevel
+Distance	FIXED	Distance of the gradient 
+		bevel
+Strength	FIXED8	Strength of the gradient 
+		bevel
+InnerShadow	UB[1]	Inner bevel mode
+Knockout	UB[1]	Knockout mode
+CompositeSource	UB[1]	Composite source
+		Always 1
+OnTop	UB[1]	OnTop mode
+Passes	UB[4]	Number of blur passes
+
+
+CLIPEVENTFLAGS
+Field	Type	Comment
+ClipEventKeyUp	UB[1]	Key up event
+ClipEventKeyDown	UB[1]	Key down event
+ClipEventMouseUp	UB[1]	Mouse up event
+ClipEventMouseDown	UB[1]	Mouse down event
+ClipEventMouseMove	UB[1]	Mouse move event
+ClipEventUnload	UB[1]	Clip unload event
+ClipEventEnterFrame	UB[1]	Frame event
+ClipEventLoad	UB[1]	Clip load event
+ClipEventDragOver	UB[1]	SWF 6 and later: mouse 
+		drag over event
+		Otherwise: always 0
+ClipEventRollOut	UB[1]	SWF 6 and later: mouse 
+		rollout event
+		Otherwise: always 0
+ClipEventRollOver	UB[1]	SWF 6 and later: mouse 
+		rollover event
+		Otherwise: always 0
+ClipEventReleaseOutside	UB[1]	SWF 6 and later: mouse 
+		release outside event
+		Otherwise: always 0
+ClipEventRelease	UB[1]	SWF 6 and later: mouse 
+		release inside event
+		Otherwise: always 0
+ClipEventPress	UB[1]	SWF 6 and later: mouse 
+		press event
+		Otherwise: always 0
+ClipEventInitialize	UB[1]	SWF 6 and later: initialize 
+		event
+		Otherwise: always 0
+ClipEventData	UB[1]	Data received event
+Reserved	If SWF version >= 6, UB[5]	Always 0
+ClipEventConstruct	If SWF version >= 6, UB[1]	SWF 7 and later: construct 
+		event
+		Otherwise: always 0
+ClipEventKeyPress	If SWF version >= 6, UB[1]	Key press event
+ClipEventDragOut	If SWF version >= 6, UB[1]	Mouse drag out event
+Reserved	If SWF version >= 6, UB[8]	Always 0
+
+
+RemoveObject
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 5
+CharacterId	UI16	ID of character to remove
+Depth	UI16	Depth of character
+
+
+RemoveObject2
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 28
+Depth	UI16	Depth of character
+
+
+ShowFrame
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 1
+
+
+CHAPTER 4
+Control Tags
+
+
+SetBackgroundColor
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 9
+BackgroundColor	RGB	Color of the display background
+
+
+FrameLabel
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 43
+Name	STRING	Label for frame
+
+
+NamedAnchor
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 43
+	Name Null-terminated STRING. 	Label for frame.
+	(0 is NULL)
+Named Anchor flag	UI8	Always 1
+
+
+Protect
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 24
+
+
+End
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 0
+
+
+ExportAssets
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 56
+Count	UI16	Number of assets to export
+Tag1	UI16	First character ID to export
+Name1	STRING	Identifier for first exported 
+		character
+...
+TagN	UI16	Last character ID to export
+NameN	STRING	Identifier for last exported 
+		character
+
+
+ImportAssets
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 57
+URL	STRING	URL where the source 
+		SWF file can be found
+Count	UI16	Number of assets to import
+Tag1	UI16	Character ID to use for first 
+		imported character in 
+		importing SWF file (need 
+		not match character ID in 
+		exporting SWF file)
+Name1	STRING	Identifier for first imported 
+		character (must match an 
+		identifier in exporting SWF 
+		file)
+...
+TagN	UI16	Character ID to use for last 
+		imported character in 
+		importing SWF file
+NameN	STRING	Identifier for last imported 
+		character
+
+
+EnableDebugger
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 58
+Password	Null-terminated STRING. (0 	MD5-encrypted password
+	is NULL)
+
+
+EnableDebugger2
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 64
+Reserved	UI16	Always 0
+Password	Null-terminated STRING. 	MD5-encrypted password
+	(0 is NULL)
+
+
+ScriptLimits
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 65
+MaxRecursionDepth	UI16	Maximum recursion depth
+ScriptTimeoutSeconds	UI16	Maximum ActionScript 
+		processing time before 
+		script stuck dialog box 
+		displays
+
+
+SetTabIndex
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 66
+Depth	UI16	Depth of character
+TabIndex	UI16	Tab order value
+
+
+FileAttributes
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 69
+Reserved	UB[1]	Must be 0
+UseDirectBlit	UB[1]	If 1, the SWF file uses hardware acceleration 
+		to blit graphics to the screen, where such 
+(see note following 		acceleration is available.
+table)		If 0, the SWF file will not use hardware 
+		accelerated graphics facilities.
+		Minimum file version is 10.
+UseGPU	UB[1]	If 1, the SWF file uses GPU compositing 
+		features when drawing graphics, where such 
+(see note following 		acceleration is available.
+table)		If 0, the SWF file will not use hardware 
+		accelerated graphics facilities.
+		Minimum file version is 10.
+HasMetadata	UB[1]	If 1, the SWF file contains the Metadata tag.
+		If 0, the SWF file does not contain the 
+		Metadata tag.
+ActionScript3	UB[1]	If 1, this SWF uses ActionScript 3.0.
+		If 0, this SWF uses ActionScript 1.0 or 2.0.
+		Minimum file format version is 9. 
+Reserved	UB[2]	Must be 0
+UseNetwork	UB[1]	If 1, this SWF file is given network file access 
+		when loaded locally.
+		If 0, this SWF file is given local file access 
+		when loaded locally.
+Reserved	UB[24]	Must be 0
+
+
+ImportAssets2
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 71
+URL	STRING	URL where the source 
+		SWF file can be found
+Reserved	UI8	Must be 1
+Reserved	UI8	Must be 0
+Count	UI16	Number of assets to import
+Tag1	UI16	Character ID to use for first 
+		imported character in 
+		importing SWF file (need 
+		not match character ID in 
+		exporting SWF file)
+Name1	STRING	Identifier for first imported 
+		character (must match an 
+		identifier in exporting SWF 
+		file)
+...
+TagN	UI16	Character ID to use for last 
+		imported character in 
+		importing SWF file
+NameN	STRING	Identifier for last imported 
+		character
+
+
+SymbolClass
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 76
+NumSymbols	UI16	Number of symbols that 
+		will be associated by this 
+		tag.
+Tag1	U16	The 16-bit character tag ID 
+		for the symbol to associate 
+Name1	STRING	The fully-qualified name of 
+		the ActionScript 3.0 class 
+		with which to associate this 
+		symbol. The class must 
+		have already been 
+		declared by a DoABC tag.
+...	...	...
+TagN	U16	Tag ID for symbol N
+NameN	STRING	Fully-qualified class name 
+		for symbol N 
+
+
+Metadata
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 77
+Metadata	STRING	XML Metadata
+
+
+DefineScalingGrid
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 78
+CharacterId	UI16	ID of sprite or button 
+		character upon which the 
+		scaling grid will be applied.
+Splitter	RECT	Center region of 9-slice 
+		grid
+
+
+DefineSceneAndFrameLabelData
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 86
+SceneCount	EncodedU32	Number of scenes
+Offset1	EncodedU32	Frame offset for scene 1
+Name1	STRING	Name of scene 1
+...	...	...
+OffsetN	EncodedU32	Frame offset for scene N
+NameN	STRING	Name of scene N 
+FrameLabelCount	EncodedU32	Number of frame labels
+FrameNum1	EncodedU32	Frame number of frame 
+		label #1 (zero-based, 
+		global to symbol)
+FrameLabel1	STRING	Frame label string of frame 
+		label #1
+...	...	...
+FrameNumN	EncodedU32	Frame number of frame 
+		label #N (zero-based, 
+		global to symbol)
+FrameLabelN	STRING	Frame label string of frame 
+		label #N
+
+
+CHAPTER 5
+Actions
+
+
+
+
+CHAPTER 6
+Shapes
+
+
+FILLSTYLEARRAY
+Field	Type	Comment
+FillStyleCount	UI8	Count of fill styles.
+FillStyleCountExtended	If FillStyleCount = 0xFF, UI16	Extended count of fill styles. 
+		Supported only for Shape2 
+		and Shape3.
+FillStyles	FILLSTYLE[FillStyleCount]	Array of fill styles.
+
+
+FILLSTYLE
+Field	Type	Comment
+FillStyleType	UI8	Type of fill style:
+		0x00 = solid fill
+		0x10 = linear gradient fill
+		0x12 = radial gradient fill
+		0x13 = focal radial gradient fill 
+		(SWF 8 file format and later 
+		only)
+		0x40 = repeating bitmap fill
+		0x41 = clipped bitmap fill
+		0x42 = non-smoothed 
+		repeating bitmap
+		0x43 = non-smoothed clipped 
+		bitmap
+Color	If type = 0x00, RGBA (if Shape3); 	Solid fill color with opacity 
+	RGB (if Shape1 or Shape2)	information.
+GradientMatrix	If type = 0x10, 0x12, or 0x13, 	Matrix for gradient fill.
+	MATRIX
+Gradient	If type = 0x10 or 0x12, GRADIENT	Gradient fill.
+	If type = 0x13, FOCALGRADIENT 
+	(SWF 8 and later only)
+BitmapId	If type = 0x40, 0x41, 0x42 or 0x43, 	ID of bitmap character for fill.
+	UI16
+BitmapMatrix	If type = 0x40, 0x41, 0x42 or 0x43, 	Matrix for bitmap fill.
+	MATRIX
+
+
+LINESTYLEARRAY
+Field	Type	Comment
+LineStyleCount	UI8	Count of line styles.
+LineStyleCountExtended	If LineStyleCount = 0xFF, UI16	Extended count of line styles.
+LineStyles	If Shape1, Shape2, or Shape3, 	Array of line styles.
+	LINESTYLE[count] 
+	If Shape4, 
+	LINESTYLE2[count] 
+
+
+LINESTYLE
+Field	Type	Comment
+Width	UI16	Width of line in twips.
+Color	RGB (Shape1 or Shape2)	Color value including alpha 
+	RGBA (Shape3)	channel information for 
+		Shape3.
+
+
+LINESTYLE2
+Field Type Comment
+Width	UI16	Width of line in twips.
+StartCapStyle	UB[2]	Start cap style:
+		0 = Round cap
+		1 = No cap
+		2 = Square cap
+JoinStyle	UB[2]	Join style:
+		0 = Round join
+		1 = Bevel join
+		2 = Miter join
+HasFillFlag	UB[1]	If 1, fill is defined in FillType.
+		If 0, uses Color field.
+NoHScaleFlag	UB[1]	If 1, stroke thickness will not 
+		scale if the object is scaled 
+		horizontally.
+NoVScaleFlag	UB[1]	If 1, stroke thickness will not 
+		scale if the object is scaled 
+		vertically.
+PixelHintingFlag	UB[1]	If 1, all anchors will be aligned 
+		to full pixels.
+Reserved	UB[5]	Must be 0.
+NoClose	UB[1]	If 1, stroke will not be closed if 
+		the stroke’s last point 
+		matches its first point. Flash 
+		Player will apply caps instead 
+		of a join.
+EndCapStyle	UB[2]	End cap style:
+		0 = Round cap
+		1 = No cap
+		2 = Square cap
+MiterLimitFactor	If JoinStyle = 2, UI16	Miter limit factor is an 8.8 
+		fixed-point value.
+Color	If HasFillFlag = 0, RGBA	Color value including alpha 
+		channel.
+FillType	If HasFillFlag = 1, FILLSTYLE	Fill style for this stroke.
+
+
+SHAPE
+Field	Type	Comment
+NumFillBits	UB[4]	Number of fill index bits.
+NumLineBits	UB[4]	Number of line index bits.
+ShapeRecords	SHAPERECORD[one or more]	Shape records (see following)
+
+
+SHAPEWITHSTYLE
+Field	Type	Comment
+FillStyles	FILLSTYLEARRAY	Array of fill styles.
+LineStyles	LINESTYLEARRAY	Array of line styles.
+NumFillBits	UB[4]	Number of fill index bits.
+NumLineBits	UB[4]	Number of line index bits.
+ShapeRecords	SHAPERECORD[one or more]	Shape records (see following). 
+
+
+ENDSHAPERECORD
+Field	Type	Comment
+TypeFlag	UB[1]	Non-edge record flag.
+		Always 0.
+EndOfShape	UB[5]	End of shape flag.
+		Always 0.
+
+
+STYLECHANGERECORD
+Field	Type	Comment
+TypeFlag	UB[1]	Non-edge record flag.
+		Always 0.
+StateNewStyles	UB[1]	New styles flag. Used by 
+		DefineShape2 and 
+		DefineShape3 only.
+StateLineStyle	UB[1]	Line style change flag.
+StateFillStyle1	UB[1]	Fill style 1 change flag.
+StateFillStyle0	UB[1]	Fill style 0 change flag.
+StateMoveTo	UB[1]	Move to flag.
+MoveBits	If StateMoveTo, UB[5]	Move bit count.
+MoveDeltaX	If StateMoveTo, SB[MoveBits]	Delta X value.
+MoveDeltaY	If StateMoveTo, SB[MoveBits]	Delta Y value.
+FillStyle0	If StateFillStyle0, UB[FillBits]	Fill 0 Style.
+FillStyle1	If StateFillStyle1, UB[FillBits]	Fill 1 Style.
+LineStyle	If StateLineStyle, UB[LineBits]	Line Style.
+FillStyles	If StateNewStyles, 	Array of new fill styles.
+	FILLSTYLEARRAY
+LineStyles	If StateNewStyles, 	Array of new line styles.
+	LINESTYLEARRAY
+NumFillBits	If StateNewStyles, UB[4]	Number of fill index bits for new 
+		styles.
+NumLineBits	If StateNewStyles, UB[4]	Number of line index bits for 
+		new styles.
+
+
+STRAIGHTEDGERECORD
+Field	Type	Comment
+TypeFlag	UB[1]	This is an edge record.
+		Always 1.
+StraightFlag	UB[1]	Straight edge.
+		Always 1.
+NumBits	UB[4]	Number of bits per value
+		(2 less than the actual number).
+GeneralLineFlag	UB[1]	General Line equals 1.
+		Vert/Horz Line equals 0.
+VertLineFlag	If GeneralLineFlag = 0, 	Vertical Line equals 1.
+	SB[1]	Horizontal Line equals 0.
+DeltaX	If GeneralLineFlag = 1 or 	X delta.
+	if VertLineFlag = 0, 
+	SB[NumBits+2]
+DeltaY	If GeneralLineFlag = 1 or 	Y delta.
+	if VertLineFlag = 1, 
+	SB[NumBits+2]
+
+
+CURVEDEDGERECORD
+Field	Type	Comment
+TypeFlag	UB[1]	This is an edge record.
+		Always 1.
+StraightFlag	UB[1]	Curved edge.
+		Always 0.
+NumBits	UB[4]	Number of bits per value
+		(2 less than the actual number).
+ControlDeltaX	SB[NumBits+2]	X control point change.
+ControlDeltaY	SB[NumBits+2]	Y control point change.
+AnchorDeltaX	SB[NumBits+2]	X anchor point change.
+AnchorDeltaY	SB[NumBits+2]	Y anchor point change
+
+
+DefineShape
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 2.
+ShapeId	UI16	ID for this character.
+ShapeBounds	RECT	Bounds of the shape.
+Shapes	SHAPEWITHSTYLE	Shape information.
+
+
+DefineShape2
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 22.
+ShapeId	UI16	ID for this character.
+ShapeBounds	RECT	Bounds of the shape.
+Shapes	SHAPEWITHSTYLE	Shape information.
+
+
+DefineShape3
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 32.
+ShapeId	UI16	ID for this character.
+ShapeBounds	RECT	Bounds of the shape.
+Shapes	SHAPEWITHSTYLE	Shape information.
+
+
+DefineShape4
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 83.
+ShapeId	UI16	ID for this character.
+ShapeBounds	RECT	Bounds of the shape.
+EdgeBounds	RECT	Bounds of the shape, excluding 
+		strokes.
+Reserved	UB[5]	Must be 0.
+UsesFillWindingRule	UB[1]	If 1, use fill winding rule.
+		Minimum file format version is 
+		SWF 10
+UsesNonScalingStrokes	UB[1]	If 1, the shape contains at least 
+		one non-scaling stroke.
+UsesScalingStrokes	UB[1]	If 1, the shape contains at least 
+		one scaling stroke.
+Shapes	SHAPEWITHSTYLE	Shape information.
+
+
+CHAPTER 7
+Gradients
+
+
+GRADIENT
+Field	Type	Comment
+SpreadMode	UB[2]	0 = Pad mode
+		1 = Reflect mode
+		2 = Repeat mode
+		3 = Reserved
+InterpolationMode	UB[2]	0 = Normal RGB mode 
+		interpolation
+		1 = Linear RGB mode 
+		interpolation
+		2 and 3 = Reserved
+NumGradients	UB[4]	1 to 15
+GradientRecords	GRADRECORD[NumGradients]	Gradient records (see 
+		following)
+
+
+FOCALGRADIENT
+Field	Type	Comment
+SpreadMode	UB[2]	0 = Pad mode
+		1 = Reflect mode
+		2 = Repeat mode
+		3 = Reserved
+InterpolationMode	UB[2]	0 = Normal RGB mode 
+		interpolation
+		1 = Linear RGB mode 
+		interpolation
+		2 and 3 = Reserved
+NumGradients	UB[4]	1 to 15
+GradientRecords	GRADRECORD[NumGradients]	Gradient records (see 
+		following)
+FocalPoint	FIXED8	Focal point location
+
+
+GRADRECORD
+Field	Type	Comment
+Ratio	UI8	Ratio value
+Color	RGB (Shape1 or Shape2)	Color of gradient
+	RGBA (Shape3)
+
+
+CHAPTER 8
+Bitmaps
+
+
+DefineBits
+Field	Type	Comment
+Header	RECORDHEADER (long)	Tag type = 6
+CharacterID	UI16	ID for this character
+JPEGData	UI8[image data size]	JPEG compressed image
+
+
+JPEGTables
+Field	Type	Comment
+Header	RECORDHEADER	Tag type = 8
+JPEGData	UI8[encoding data size]	JPEG encoding table
+
+
+DefineBitsJPEG2
+Field	Type	Comment
+Header	RECORDHEADER (long)	Tag type = 21
+CharacterID	UI16	ID for this character
+ImageData	UI8[data size]	Compressed image data in 
+		either JPEG, PNG, or GIF89a 
+		format
+
+
+DefineBitsJPEG3
+Field	Type	Comment
+Header	RECORDHEADER (long)	Tag type = 35.
+CharacterID	UI16	ID for this character.
+AlphaDataOffset	UI32	Count of bytes in ImageData.
+ImageData	UI8[data size]	Compressed image data in 
+		either JPEG, PNG, or GIF89a 
+		format
+BitmapAlphaData	UI8[alpha data size]	ZLIB compressed array of 
+		alpha data. Only supported 
+		when tag contains JPEG data. 
+		One byte per pixel. Total size 
+		after decompression must 
+		equal (width * height) of JPEG 
+		image.
+
+
+DefineBitsLossless
+Field	Type	Comment
+Header	RECORDHEADER (long)	Tag type = 20
+CharacterID	UI16	ID for this character
+BitmapFormat	UI8	Format of compressed data
+		3 = 8-bit colormapped image
+		4 = 15-bit RGB image
+		5 = 24-bit RGB image
+BitmapWidth	UI16	Width of bitmap image
+BitmapHeight	UI16	Height of bitmap image
+BitmapColorTableSize	If BitmapFormat = 3, UI8	This value is one less than the 
+	Otherwise absent	actual number of colors in the 
+		color table, allowing for up to 
+		256 colors.
+ZlibBitmapData	If BitmapFormat = 3, 	ZLIB compressed bitmap data
+	COLORMAPDATA
+	If BitmapFormat = 4 or 5, 
+	BITMAPDATA
+
+
+COLORMAPDATA
+Field	Type	Comment
+ColorTableRGB	RGB[color table size]	Defines the mapping from color 
+		indices to RGB values. Number 
+		of RGB values is 
+		BitmapColorTableSize + 1.
+ColormapPixelData	UI8[image data size]	Array of color indices. Number 
+		of entries is BitmapWidth * 
+		BitmapHeight, subject to 
+		padding (see note preceding 
+		this table)
+
+
+BITMAPDATA
+Field	Type	Comment
+BitmapPixelData	If BitmapFormat = 4, 	Array of pixel colors. Number of 
+	PIX15[image data size]	entries is BitmapWidth * 
+	If BitmapFormat = 5, 	BitmapHeight, subject to 
+	PIX24[image data size]	padding (see note above)
+
+
+PIX15
+Field	Type	Comment
+Pix15Reserved	UB[1]	Always 0
+Pix15Red	UB[5]	Red value
+Pix15Green	UB[5]	Green value
+Pix15Blue	UB[5]	Blue value
+
+
+PIX24
+Field	Type	Comment
+Pix24Reserved	UI8	Always 0
+Pix24Red	UI8	Red value
+Pix24Green	UI8	Green value
+Pix24Blue	UI8	Blue value
+
+
+DefineBitsLossless2
+Field	Type	Comment
+Header	RECORDHEADER (long)	Tag type = 36
+CharacterID	UI16	ID for this character
+BitmapFormat	UI8	Format of compressed data
+		3 = 8-bit colormapped image
+		5 = 32-bit ARGB image
+BitmapWidth	UI16	Width of bitmap image
+BitmapHeight	UI16	Height of bitmap image
+BitmapColorTableSize	If BitmapFormat = 3, UI8	This value is one less than the 
+	Otherwise absent	actual number of colors in the 
+		color table, allowing for up to 
+		256 colors.
+ZlibBitmapData	If BitmapFormat = 3, 	ZLIB compressed bitmap data
+	ALPHACOLORMAPDATA
+	If BitmapFormat = 4 or 5, 
+	ALPHABITMAPDATA
+
+
+ALPHACOLORMAPDATA
+Field	Type	Comment
+ColorTableRGB	RGBA[color table size]	Defines the mapping from color 
+		indices to RGBA values. 
+		Number of RGBA values is 
+		BitmapColorTableSize + 1.
+ColormapPixelData	UI8[image data size]	Array of color indices. Number 
+		of entries is BitmapWidth * 
+		BitmapHeight, subject to 
+		padding (see note preceding 
+		this table).
+
+
+ALPHABITMAPDATA
+Field	Type	Comment
+BitmapPixelData	ARGB[image data size]	Array of pixel colors. Number of 
+		entries is BitmapWidth * 
+		BitmapHeight. The RGB data 
+		must already be multiplied by 
+		the alpha channel value.
+
+
+DefineBitsJPEG4
+Field	Type	Comment
+Header	RECORDHEADER (long)	Tag type = 90.
+CharacterID	UI16	ID for this character.
+AlphaDataOffset	UI32	Count of bytes in ImageData.
+DeblockParam	UI16	Parameter to be fed into the 
+		deblocking filter. The parameter 
+		describes a relative strength of 
+		the deblocking filter from 0-
+		100% expressed in a 
+		normalized 8.8 fixed point 
+		format.
+ImageData	UI8[data size]	Compressed image data in 
+		either JPEG, PNG, or GIF89a 
+		format.
+BitmapAlphaData	UI8[alpha data size]	ZLIB compressed array of 
+		alpha data. Only supported 
+		when tag contains JPEG data. 
+		One byte per pixel. Total size 
+		after decompression must 
+		equal (width * height) of JPEG 
+		image.
+
+
