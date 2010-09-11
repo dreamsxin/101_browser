@@ -2,7 +2,7 @@ module html5
 {
   interface HTMLCollection {
     readonly attribute unsigned long length;
-    caller getter object item(in unsigned long index); // only returns Element
+    caller getter Element item(in unsigned long index);
     caller getter object namedItem(in DOMString name); // only returns Element
   };
 
@@ -28,6 +28,7 @@ module html5
     void add(in HTMLElement element, in optional HTMLElement before);
     void add(in HTMLElement element, in long before);
     void remove(in long index);
+             attribute long selectedIndex;
   };
 
   interface HTMLPropertiesCollection : HTMLCollection {
@@ -61,6 +62,12 @@ module html5
     setter void (in DOMString name, in DOMString value);
     creator void (in DOMString name, in DOMString value);
     deleter void (in DOMString name);
+  };
+
+  [Supplemental] exception DOMException {
+    const unsigned short URL_MISMATCH_ERR = 21;
+    const unsigned short QUOTA_EXCEEDED_ERR = 22;
+    const unsigned short DATA_CLONE_ERR = 25;
   };
 
   [OverrideBuiltins]
@@ -499,8 +506,8 @@ module html5
   };
 
   interface HTMLVideoElement : HTMLMediaElement {
-             attribute DOMString width;
-             attribute DOMString height;
+             attribute unsigned long width;
+             attribute unsigned long height;
     readonly attribute unsigned long videoWidth;
     readonly attribute unsigned long videoHeight;
              attribute DOMString poster;
@@ -576,7 +583,7 @@ module html5
   
     // timed tracks
     readonly attribute TimedTrack[] tracks;
-    MutableTimedTrack addTrack(in DOMString label, in DOMString kind, in DOMString language);
+    MutableTimedTrack addTrack(in DOMString kind, in optional DOMString label, in optional DOMString language);
   
   };
 
