@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.1" xmlns:uml="http://schema.omg.org/spec/UML/2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1">
+	<xmi:Documentation exporter="Bouml" exporterVersion="1.14.1"/>
+	<uml:Model xmi:type="uml:Model" xmi:id="themodel" name="101_browser_bouml">
+		<packagedElement xmi:type="uml:Package" xmi:id="BOUML_0x81_22" name ="101_browser_bouml">
+			<packagedElement xmi:type="uml:StateMachine" xmi:id="BOUML_0x20d82_23" name="PropListParserStateMachine">
+				<region xmi:type="uml:Region" xmi:id="BOUML_IMPLICIT_REGION_0x20d82_23" name="Bouml_Implicit_Region">
+					<subvertex xmi:type="uml:Pseudostate" xmi:id="BOUML_0x20d82_28" kind="initial">
+						<outgoing xmi:idref="BOUML_0x20d82_24"/>
+					</subvertex>
+					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x20e82_23" name="FirstNumber">
+						<incoming xmi:idref="BOUML_0x26002_24"/>
+						<incoming xmi:idref="BOUML_0x20e02_24"/>
+						<region xmi:type="uml:Region" xmi:id="BOUML_IMPLICIT_REGION_0x20e82_23" name="Bouml_Implicit_Region">
+							<outgoing xmi:idref="BOUML_0x22882_24"/>
+							<outgoing xmi:idref="BOUML_0x25e02_24"/>
+							<outgoing xmi:idref="BOUML_0x26002_24"/>
+							<outgoing xmi:idref="BOUML_0x26882_24"/>
+						</region>
+					</subvertex>
+					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x22802_23" name="BeginOfLine">
+						<incoming xmi:idref="BOUML_0x20d82_24"/>
+						<incoming xmi:idref="BOUML_0x24402_24"/>
+						<incoming xmi:idref="BOUML_0x22982_24"/>
+						<region xmi:type="uml:Region" xmi:id="BOUML_IMPLICIT_REGION_0x22802_23" name="Bouml_Implicit_Region">
+							<outgoing xmi:idref="BOUML_0x20e02_24"/>
+							<outgoing xmi:idref="BOUML_0x22782_24"/>
+							<outgoing xmi:idref="BOUML_0x22902_24"/>
+							<outgoing xmi:idref="BOUML_0x24402_24"/>
+							<outgoing xmi:idref="BOUML_0x25d82_24"/>
+						</region>
+					</subvertex>
+					<subvertex xmi:type="uml:FinalState" xmi:id="BOUML_0x24082_30" name="Final">
+						<incoming xmi:idref="BOUML_0x22802_24"/>
+					</subvertex>
+					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x24182_23" name="ProperlyTerminated">
+						<incoming xmi:idref="BOUML_0x22782_24"/>
+						<region xmi:type="uml:Region" xmi:id="BOUML_IMPLICIT_REGION_0x24182_23" name="Bouml_Implicit_Region">
+							<outgoing xmi:idref="BOUML_0x22802_24"/>
+						</region>
+					</subvertex>
+					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x24202_23" name="Separator">
+						<incoming xmi:idref="BOUML_0x22882_24"/>
+						<region xmi:type="uml:Region" xmi:id="BOUML_IMPLICIT_REGION_0x24202_23" name="Bouml_Implicit_Region">
+							<outgoing xmi:idref="BOUML_0x25e82_24"/>
+							<outgoing xmi:idref="BOUML_0x26802_24"/>
+						</region>
+					</subvertex>
+					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x24282_23" name="Comment">
+						<incoming xmi:idref="BOUML_0x22902_24"/>
+						<incoming xmi:idref="BOUML_0x26482_24"/>
+						<region xmi:type="uml:Region" xmi:id="BOUML_IMPLICIT_REGION_0x24282_23" name="Bouml_Implicit_Region">
+							<outgoing xmi:idref="BOUML_0x22982_24"/>
+							<outgoing xmi:idref="BOUML_0x26402_24"/>
+						</region>
+					</subvertex>
+					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x25c02_23" name="Error">
+						<incoming xmi:idref="BOUML_0x26882_24"/>
+						<incoming xmi:idref="BOUML_0x25d82_24"/>
+						<incoming xmi:idref="BOUML_0x26802_24"/>
+						<incoming xmi:idref="BOUML_0x26402_24"/>
+						<incoming xmi:idref="BOUML_0x26282_24"/>
+						<incoming xmi:idref="BOUML_0x25f02_24"/>
+						<incoming xmi:idref="BOUML_0x26102_24"/>
+						<incoming xmi:idref="BOUML_0x26382_24"/>
+						<incoming xmi:idref="BOUML_0x26502_24"/>
+						<incoming xmi:idref="BOUML_0x26582_24"/>
+						<incoming xmi:idref="BOUML_0x26702_24"/>
+						<region xmi:type="uml:Region" xmi:id="BOUML_IMPLICIT_REGION_0x25c02_23" name="Bouml_Implicit_Region">
+							<outgoing xmi:idref="BOUML_0x24382_24"/>
+						</region>
+					</subvertex>
+					<subvertex xmi:type="uml:FinalState" xmi:id="BOUML_0x25a02_30" name="Final">
+						<incoming xmi:idref="BOUML_0x24382_24"/>
+					</subvertex>
+					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x27582_23" name="SpacesAfterNumber">
+						<incoming xmi:idref="BOUML_0x25e02_24"/>
+						<incoming xmi:idref="BOUML_0x26202_24"/>
+						<incoming xmi:idref="BOUML_0x26302_24"/>
+						<region xmi:type="uml:Region" xmi:id="BOUML_IMPLICIT_REGION_0x27582_23" name="Bouml_Implicit_Region">
+							<outgoing xmi:idref="BOUML_0x26182_24"/>
+							<outgoing xmi:idref="BOUML_0x26202_24"/>
+							<outgoing xmi:idref="BOUML_0x26282_24"/>
+						</region>
+					</subvertex>
+					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x27602_23" name="BeforeSecondNumber">
+						<incoming xmi:idref="BOUML_0x25e82_24"/>
+						<region xmi:type="uml:Region" xmi:id="BOUML_IMPLICIT_REGION_0x27602_23" name="Bouml_Implicit_Region">
+							<outgoing xmi:idref="BOUML_0x25f02_24"/>
+							<outgoing xmi:idref="BOUML_0x25f82_24"/>
+						</region>
+					</subvertex>
+					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x27682_23" name="SecondNumber">
+						<incoming xmi:idref="BOUML_0x25f82_24"/>
+						<incoming xmi:idref="BOUML_0x26082_24"/>
+						<region xmi:type="uml:Region" xmi:id="BOUML_IMPLICIT_REGION_0x27682_23" name="Bouml_Implicit_Region">
+							<outgoing xmi:idref="BOUML_0x26082_24"/>
+							<outgoing xmi:idref="BOUML_0x26102_24"/>
+							<outgoing xmi:idref="BOUML_0x26302_24"/>
+						</region>
+					</subvertex>
+					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x27702_23" name="BeforeSpaceBeforeProperty">
+						<incoming xmi:idref="BOUML_0x26182_24"/>
+						<region xmi:type="uml:Region" xmi:id="BOUML_IMPLICIT_REGION_0x27702_23" name="Bouml_Implicit_Region">
+							<outgoing xmi:idref="BOUML_0x26382_24"/>
+							<outgoing xmi:idref="BOUML_0x26602_24"/>
+						</region>
+					</subvertex>
+					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x27782_23" name="SpaceAfterProperty">
+						<incoming xmi:idref="BOUML_0x26782_24"/>
+						<region xmi:type="uml:Region" xmi:id="BOUML_IMPLICIT_REGION_0x27782_23" name="Bouml_Implicit_Region">
+							<outgoing xmi:idref="BOUML_0x26482_24"/>
+							<outgoing xmi:idref="BOUML_0x26502_24"/>
+							<outgoing xmi:idref="BOUML_0x26582_24"/>
+						</region>
+					</subvertex>
+					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x27802_23" name="Property">
+						<incoming xmi:idref="BOUML_0x26602_24"/>
+						<incoming xmi:idref="BOUML_0x26682_24"/>
+						<region xmi:type="uml:Region" xmi:id="BOUML_IMPLICIT_REGION_0x27802_23" name="Bouml_Implicit_Region">
+							<outgoing xmi:idref="BOUML_0x26682_24"/>
+							<outgoing xmi:idref="BOUML_0x26702_24"/>
+							<outgoing xmi:idref="BOUML_0x26782_24"/>
+						</region>
+					</subvertex>
+				</region>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x20d82_24" source="BOUML_0x20d82_28" target="BOUML_0x22802_23">
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x22882_24" source="BOUML_0x20e82_23" target="BOUML_0x24202_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x22882_24" name="'.'"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x25e02_24" source="BOUML_0x20e82_23" target="BOUML_0x27582_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x25e02_24" name="' '"/>
+					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x25e02_24">
+						<body>secondNumber = firstNumber;</body>
+					</effect>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26002_24" source="BOUML_0x20e82_23" target="BOUML_0x20e82_23" kind="internal">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26002_24" name="'0'-'9','A'-'F'"/>
+					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x26002_24">
+						<body>firstNumber = 16*firstNumber + readHexDigit(token);</body>
+					</effect>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26882_24" source="BOUML_0x20e82_23" target="BOUML_0x25c02_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26882_24" name="else"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x20e02_24" source="BOUML_0x22802_23" target="BOUML_0x20e82_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x20e02_24" name="'0'-'9','A'-'F'"/>
+					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x20e02_24">
+						<body>firstNumber = readHexDigit(token);</body>
+					</effect>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x22782_24" source="BOUML_0x22802_23" target="BOUML_0x24182_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x22782_24" name="end of stream"/>
+					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x22782_24">
+						<body>sucess = true;</body>
+					</effect>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x22902_24" source="BOUML_0x22802_23" target="BOUML_0x24282_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x22902_24" name="'#'"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x24402_24" source="BOUML_0x22802_23" target="BOUML_0x22802_23" kind="internal">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x24402_24" name="'\n'"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x25d82_24" source="BOUML_0x22802_23" target="BOUML_0x25c02_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x25d82_24" name="else"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x22802_24" source="BOUML_0x24182_23" target="BOUML_0x24082_30">
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x25e82_24" source="BOUML_0x24202_23" target="BOUML_0x27602_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x25e82_24" name="'.'"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26802_24" source="BOUML_0x24202_23" target="BOUML_0x25c02_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26802_24" name="else"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x22982_24" source="BOUML_0x24282_23" target="BOUML_0x22802_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x22982_24" name="'\n'"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26402_24" source="BOUML_0x24282_23" target="BOUML_0x25c02_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26402_24" name="end of stream"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x24382_24" source="BOUML_0x25c02_23" target="BOUML_0x25a02_30">
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26182_24" source="BOUML_0x27582_23" target="BOUML_0x27702_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26182_24" name="';'"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26202_24" source="BOUML_0x27582_23" target="BOUML_0x27582_23" kind="internal">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26202_24" name="' '"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26282_24" source="BOUML_0x27582_23" target="BOUML_0x25c02_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26282_24" name="else"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x25f02_24" source="BOUML_0x27602_23" target="BOUML_0x25c02_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x25f02_24" name="else"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x25f82_24" source="BOUML_0x27602_23" target="BOUML_0x27682_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x25f82_24" name="'0'-'9','A'-'F'"/>
+					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x25f82_24">
+						<body>secondNumber=readHexDigit(token);</body>
+					</effect>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26082_24" source="BOUML_0x27682_23" target="BOUML_0x27682_23" kind="internal">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26082_24" name="'0'-'9','A'-'F'"/>
+					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x26082_24">
+						<body>secondNumber = 16*secondNumber + readHexDigit(token)</body>
+					</effect>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26102_24" source="BOUML_0x27682_23" target="BOUML_0x25c02_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26102_24" name="else"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26302_24" source="BOUML_0x27682_23" target="BOUML_0x27582_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26302_24" name="' '"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26382_24" source="BOUML_0x27702_23" target="BOUML_0x25c02_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26382_24" name="else"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26602_24" source="BOUML_0x27702_23" target="BOUML_0x27802_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26602_24" name="' '"/>
+					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x26602_24">
+						<body>propertyEquals = true;&#10;propertyPos = in_property;</body>
+					</effect>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26482_24" source="BOUML_0x27782_23" target="BOUML_0x24282_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26482_24" name="'#'"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26502_24" source="BOUML_0x27782_23" target="BOUML_0x25c02_23">
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26582_24" source="BOUML_0x27782_23" target="BOUML_0x25c02_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26582_24" name="else"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26682_24" source="BOUML_0x27802_23" target="BOUML_0x27802_23" kind="internal">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26682_24" name="'A'-'Z','a'-'z'"/>
+					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x26682_24">
+						<body>if (*propertyPos != 0 &amp;&amp; propertyEquals &amp;&amp; token == *propertyPos)&#10;	propertyPos++;&#10;else&#10;	propertyEquals = false;</body>
+					</effect>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26702_24" source="BOUML_0x27802_23" target="BOUML_0x25c02_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26702_24" name="else"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26782_24" source="BOUML_0x27802_23" target="BOUML_0x27782_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26782_24" name="' '"/>
+					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x26782_24">
+						<body>if (*propertyPos != 0)&#10;	propertyEquals = false;</body>
+					</effect>
+				</transition>
+			</packagedElement>
+		</packagedElement>
+	</uml:Model>
+</xmi:XMI>
