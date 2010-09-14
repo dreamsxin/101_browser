@@ -57,7 +57,7 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
 </xsl:text>
       <xsl:for-each select="region[@xmi:type='uml:Region']/outgoing/@xmi:idref">
         <xsl:variable name="current_idref" select="."/>
-        <xsl:variable name="current_transition" select="$root/xmi:XMI/uml:Model/packagedElement/packagedElement[@xmi:type='uml:StateMachine']/transition[@xmi:type='uml:Transition'][@xmi:id=$current_idref]"/>
+        <xsl:variable name="current_transition" select="$root/xmi:XMI/uml:Model/packagedElement/packagedElement[@xmi:type='uml:StateMachine'][@name=$stateMachineName]/transition[@xmi:type='uml:Transition'][@xmi:id=$current_idref]"/>
       </xsl:for-each>
       <xsl:text>				break;
 </xsl:text>
