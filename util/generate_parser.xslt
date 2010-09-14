@@ -8,6 +8,7 @@
     <xsl:call-template name="main">
       <xsl:with-param name="stateMachineName">PropListParserStateMachine</xsl:with-param>
       <xsl:with-param name="enumPrefix">PropListParser</xsl:with-param>
+      <xsl:with-param name="functionName">readPropList</xsl:with-param>
     </xsl:call-template>
   </xsl:template>
 </xsl:stylesheet>
