@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdlib.h> // for NULL
 #include "Algorithm/IterateWhile.h"
 
 void iterateWhile(SingleIterator in_iterator, void* in_iteratorState, void* in_pUserdata,
