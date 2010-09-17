@@ -5,6 +5,8 @@
                 xmlns:exslt="http://exslt.org/common"
                 xmlns:str="http://exslt.org/strings">
   <xsl:import href="replace.xslt"/>
+  <xsl:import href="split.xslt"/>
+  
   <xsl:output method="text"/>
 
   <xsl:template name="create_transition_code">
@@ -150,7 +152,22 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
           <xsl:text>else </xsl:text>
         </xsl:if>
         <xsl:text>if (</xsl:text>
-        <xsl:value-of select="trigger/@name"/>
+        <xsl:variable name="comma-separated-name">
+          <xsl:call-template name="string-split">
+            <xsl:with-param name="text" select="trigger/@name"/>
+            <xsl:with-param name="separator" select="','"/>
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:for-each select="exslt:node-set($comma-separated-name)/token">
+          
+          <xsl:text>(lToken </xsl:text>
+          <xsl:value-of select="."/>
+          <xsl:text>)</xsl:text>
+          
+          <xsl:if test="position() != last()">
+            <xsl:text> || </xsl:text>
+          </xsl:if>
+        </xsl:for-each>
         <xsl:text>)
 				{
 </xsl:text>
