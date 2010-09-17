@@ -2,7 +2,9 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:uml="http://schema.omg.org/spec/UML/2.1"
                 xmlns:xmi="http://schema.omg.org/spec/XMI/2.1"
-                xmlns:exslt="http://exslt.org/common">
+                xmlns:exslt="http://exslt.org/common"
+                xmlns:str="http://exslt.org/strings">
+  <xsl:import href="replace.xslt"/>
   <xsl:output method="text"/>
 
   <xsl:template name="create_transition_code">
@@ -25,7 +27,7 @@
 </xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>// internal transition; no state change
+        <xsl:text>// internal transition - no state change
 </xsl:text>
       </xsl:otherwise>
     </xsl:choose>
@@ -33,9 +35,18 @@
 
   <xsl:template name="create_body">
     <xsl:param name="body"/>
-    
+
     <xsl:if test="$body">
-      <xsl:value-of select="$body"/>
+      <xsl:variable name="splitBody">
+        <xsl:call-template name="string-replace-all">
+          <xsl:with-param name="text" select="$body"/>
+          <xsl:with-param name="replace" select="'&#10;'"/>
+          <xsl:with-param name="by" select="'&#10;&#9;&#9;&#9;&#9;&#9;'"/>
+        </xsl:call-template>
+      </xsl:variable>
+
+      <xsl:text>					</xsl:text>
+      <xsl:value-of select="$splitBody"/>
       <xsl:text>
 </xsl:text>
     </xsl:if>
