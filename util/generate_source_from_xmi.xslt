@@ -2,9 +2,44 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:uml="http://schema.omg.org/spec/UML/2.1"
                 xmlns:xmi="http://schema.omg.org/spec/XMI/2.1"
-                xmlns:msxsl="urn:schemas-microsoft-com:xslt"
                 xmlns:exslt="http://exslt.org/common">
   <xsl:output method="text"/>
+
+  <xsl:template name="create_transition_code">
+    <xsl:param name="enumPrefix"/>
+    <xsl:param name="root"/>
+    <xsl:param name="transition"/>
+
+    <xsl:text>					</xsl:text>
+
+    <xsl:choose>
+      <xsl:when test="not($transition/@kind['internal'] = 'internal')">
+        <xsl:text>lCurrentState = </xsl:text>
+        <xsl:value-of select="$enumPrefix"/>
+        <xsl:text>State</xsl:text>
+
+        <xsl:variable name="targetId" select="$transition/@target"/>
+        
+        <xsl:value-of select="$root/xmi:XMI/uml:Model/packagedElement/packagedElement[@xmi:type='uml:StateMachine']/region/subvertex[@xmi:type='uml:State'][@xmi:id=$targetId]/@name"/>
+        <xsl:text>;
+</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>// internal transition; no state change
+</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="create_body">
+    <xsl:param name="body"/>
+    
+    <xsl:if test="$body">
+      <xsl:value-of select="$body"/>
+      <xsl:text>
+</xsl:text>
+    </xsl:if>
+  </xsl:template>
 
   <xsl:template name="main">
     <xsl:param name="stateMachineName"/>
@@ -66,8 +101,8 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
         </xsl:for-each>
       </xsl:variable>
 
-      <xsl:variable name="end_of_stream_transition" select="msxsl:node-set($transitions)/transition[trigger/@name = 'end of stream']"/>
-      <xsl:variable name="else_transition" select="msxsl:node-set($transitions)/transition[trigger/@name = 'else']"/>
+      <xsl:variable name="end_of_stream_transition" select="exslt:node-set($transitions)/transition[trigger/@name = 'end of stream']"/>
+      <xsl:variable name="else_transition" select="exslt:node-set($transitions)/transition[trigger/@name = 'else']"/>
 
       <xsl:if test="count($end_of_stream_transition) = 1 or count($else_transition) = 1">
         <xsl:text>				if (lEndOfStream)
@@ -83,18 +118,22 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
-        <xsl:value-of select="msxsl:node-set($real_end_of_stream_transition)/transition/effect/body"/>
-        <xsl:text>
-					lCurrentState = </xsl:text>
-        <xsl:text>;
-					break;
+
+        <xsl:call-template name="create_body">
+          <xsl:with-param name="body" select="exslt:node-set($real_end_of_stream_transition)/transition/effect/body"/>
+        </xsl:call-template>
+        
+        <xsl:call-template name="create_transition_code">
+          <xsl:with-param name="enumPrefix" select="$enumPrefix"/>
+          <xsl:with-param name="root" select="$root"/>
+          <xsl:with-param name="transition" select="exslt:node-set($real_end_of_stream_transition)/transition"/>
+        </xsl:call-template>
+        <xsl:text>					break;
 				}
 </xsl:text>
       </xsl:if>
 
-      <!-- Change exslt to msxsl (or the other way round) if necessary (for example
-           for debugging in Visual Studio) -->
-      <xsl:for-each select="msxsl:node-set($transitions)/transition[trigger/@name != 'end of stream'][trigger/@name != 'else']">
+      <xsl:for-each select="exslt:node-set($transitions)/transition[trigger/@name != 'end of stream'][trigger/@name != 'else']">
         <xsl:text>				</xsl:text>
         <xsl:if test="position() != 1">
           <xsl:text>else </xsl:text>
@@ -104,23 +143,35 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
         <xsl:text>)
 				{
 </xsl:text>
-        <xsl:value-of select="effect/body"/>
-        <xsl:text>
-					lCurrentState = </xsl:text>
-        <xsl:text>;
-				}
+        <xsl:call-template name="create_body">
+          <xsl:with-param name="body" select="effect/body"/>
+        </xsl:call-template>
+
+        <xsl:call-template name="create_transition_code">
+          <xsl:with-param name="enumPrefix" select="$enumPrefix"/>
+          <xsl:with-param name="root" select="$root"/>
+          <xsl:with-param name="transition" select="."/>
+        </xsl:call-template>
+        
+        <xsl:text>				}
 </xsl:text>
       </xsl:for-each>
 
-      <xsl:for-each select="msxsl:node-set($transitions)/transition[trigger/@name = 'else']">
+      <xsl:for-each select="exslt:node-set($transitions)/transition[trigger/@name = 'else']">
         <xsl:text>				else
 				{
 </xsl:text>
-        <xsl:value-of select="effect/body"/>
-        <xsl:text>
-					lCurrentState = </xsl:text>
-        <xsl:text>;
-				}
+        <xsl:call-template name="create_body">
+          <xsl:with-param name="body" select="effect/body"/>
+        </xsl:call-template>
+        
+        <xsl:call-template name="create_transition_code">
+          <xsl:with-param name="enumPrefix" select="$enumPrefix"/>
+          <xsl:with-param name="root" select="$root"/>
+          <xsl:with-param name="transition" select="."/>
+        </xsl:call-template>
+        
+        <xsl:text>				}
 </xsl:text>
       </xsl:for-each>
 
