@@ -117,7 +117,7 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
 				}
 </xsl:text>
       </xsl:for-each>
-      
+
       <xsl:text>				break;
 </xsl:text>
     </xsl:for-each>
