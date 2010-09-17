@@ -85,6 +85,8 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
         </xsl:variable>
         <xsl:value-of select="msxsl:node-set($real_end_of_stream_transition)/transition/effect/body"/>
         <xsl:text>
+					lCurrentState = </xsl:text>
+        <xsl:text>;
 					break;
 				}
 </xsl:text>
@@ -104,6 +106,8 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
 </xsl:text>
         <xsl:value-of select="effect/body"/>
         <xsl:text>
+					lCurrentState = </xsl:text>
+        <xsl:text>;
 				}
 </xsl:text>
       </xsl:for-each>
@@ -114,6 +118,8 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
 </xsl:text>
         <xsl:value-of select="effect/body"/>
         <xsl:text>
+					lCurrentState = </xsl:text>
+        <xsl:text>;
 				}
 </xsl:text>
       </xsl:for-each>
