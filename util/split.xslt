@@ -10,7 +10,7 @@
           <xsl:value-of select="substring-before($text, $separator)" />
         </token>
         <xsl:call-template name="string-split">
-          <xsl:with-param name="text" 
+          <xsl:with-param name="text"
                           select="substring-after($text, $separator)" />
           <xsl:with-param name="separator" select="$separator" />
         </xsl:call-template>
