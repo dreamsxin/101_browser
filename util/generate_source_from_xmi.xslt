@@ -70,8 +70,8 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
       <xsl:variable name="else_transition" select="msxsl:node-set($transitions)/transition[trigger/@name = 'else']"/>
 
       <xsl:if test="count($end_of_stream_transition) = 1 or count($else_transition) = 1">
-        <xsl:text>			if (lEndOfStream)
-			{
+        <xsl:text>				if (lEndOfStream)
+				{
 </xsl:text>
         <xsl:variable name="real_end_of_stream_transition">
           <xsl:choose>
@@ -85,26 +85,36 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
         </xsl:variable>
         <xsl:value-of select="msxsl:node-set($real_end_of_stream_transition)/transition/effect/body"/>
         <xsl:text>
-				break;
-			}
+					break;
+				}
 </xsl:text>
       </xsl:if>
 
       <!-- Change exslt to msxsl (or the other way round) if necessary (for example
            for debugging in Visual Studio) -->
-      <xsl:for-each select="msxsl:node-set($transitions)/transition[trigger/@name != 'end of stream']">
-        <xsl:text>			</xsl:text>
+      <xsl:for-each select="msxsl:node-set($transitions)/transition[trigger/@name != 'end of stream'][trigger/@name != 'else']">
+        <xsl:text>				</xsl:text>
         <xsl:if test="position() != 1">
           <xsl:text>else </xsl:text>
         </xsl:if>
         <xsl:text>if (</xsl:text>
-
+        <xsl:value-of select="trigger/@name"/>
         <xsl:text>)
-			{
+				{
 </xsl:text>
         <xsl:value-of select="effect/body"/>
         <xsl:text>
-			}
+				}
+</xsl:text>
+      </xsl:for-each>
+
+      <xsl:for-each select="msxsl:node-set($transitions)/transition[trigger/@name = 'else']">
+        <xsl:text>				else
+				{
+</xsl:text>
+        <xsl:value-of select="effect/body"/>
+        <xsl:text>
+				}
 </xsl:text>
       </xsl:for-each>
       
