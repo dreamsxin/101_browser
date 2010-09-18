@@ -125,6 +125,9 @@
 					</subvertex>
 				</region>
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x20d82_24" source="BOUML_0x20d82_28" target="BOUML_0x22802_23">
+					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x20d82_24">
+						<body>Interval&lt;UnicodeCodePoint&gt;* pIntervals = NULL;&#10;std::list&lt;Interval&lt;UnicodeCodePoint&gt; &gt; listIntervals;&#10;UnicodeCodePoint firstNumber;&#10;UnicodeCodePoint secondNumber;&#10;char* propertyPos;&#10;bool propertyEquals;</body>
+					</effect>
 				</transition>
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x22882_24" source="BOUML_0x20e82_23" target="BOUML_0x24202_23">
 					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x22882_24" name="'.'"/>
