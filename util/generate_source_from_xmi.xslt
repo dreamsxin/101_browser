@@ -82,6 +82,8 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
 	// Declarations of variables
 	</xsl:text><xsl:value-of select="$enumName"/><xsl:text> lCurrentState;
 	fpos_t lPosition;
+	bool lContinueLoop = true;
+	bool lSuccess;
 
 	// Initialization
 	if (fgetpos(in_file, &amp;lPosition) != 0)
@@ -89,7 +91,7 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
 
 	fseek(in_file, 0, SEEK_SET);
 	
-	while (1)
+	while (lContinueLoop)
 	{
 		switch (lCurrentState)
 		{
