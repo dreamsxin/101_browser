@@ -159,10 +159,26 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
           </xsl:call-template>
         </xsl:variable>
         <xsl:for-each select="exslt:node-set($comma-separated-name)/token">
+          <xsl:variable name="hypen-separated-name">
+            <xsl:call-template name="string-split">
+              <xsl:with-param name="text" select="."/>
+              <xsl:with-param name="separator" select="'-'"/>
+            </xsl:call-template>
+          </xsl:variable>
           
-          <xsl:text>(lToken </xsl:text>
-          <xsl:value-of select="."/>
-          <xsl:text>)</xsl:text>
+          <xsl:choose>
+            <xsl:when test="count(exslt:node-set($hypen-separated-name)/token) = 1">
+              <xsl:text>lToken == </xsl:text>
+              <xsl:value-of select="exslt:node-set($hypen-separated-name)/token[1]"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:text>(lToken &gt;= </xsl:text>
+              <xsl:value-of select="exslt:node-set($hypen-separated-name)/token[1]"/>
+              <xsl:text> &amp;&amp; lToken &lt;= </xsl:text>
+              <xsl:value-of select="exslt:node-set($hypen-separated-name)/token[2]"/>
+              <xsl:text>)</xsl:text>
+            </xsl:otherwise>
+          </xsl:choose>
           
           <xsl:if test="position() != last()">
             <xsl:text> || </xsl:text>
