@@ -6,14 +6,14 @@
                 xmlns:str="http://exslt.org/strings">
   <xsl:import href="replace.xslt"/>
   <xsl:import href="split.xslt"/>
-  
+
   <xsl:output method="text"/>
 
   <xsl:template name="write_transition">
     <xsl:param name="enumPrefix"/>
     <xsl:param name="root"/>
     <xsl:param name="id"/>
-    
+
     <xsl:text>lCurrentState = </xsl:text>
     <xsl:value-of select="$enumPrefix"/>
     <xsl:text>State</xsl:text>
@@ -75,6 +75,12 @@
     <xsl:variable name="root" select="."/>
 
     <xsl:text>#include &lt;cstdio&gt;
+#ifdef __cplusplus
+#include &lt;cassert&gt;
+#else
+#include &lt;assert.h&gt;
+#endif
+#include "Util/ParserLoopState.h"
 
 enum </xsl:text><xsl:value-of select="$enumName"/><xsl:text>
 {
@@ -91,8 +97,7 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
 	// Declarations of variables
 	</xsl:text><xsl:value-of select="$enumName"/><xsl:text> lCurrentState;
 	fpos_t lPosition;
-	bool lContinueLoop = true;
-	bool lSuccess;
+	enum ParserLoopState lParserLoopState = ParserLoopStateContinueLoop;
 
 	// Initialization
 	if (fgetpos(in_file, &amp;lPosition) != 0)
@@ -100,14 +105,27 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
 
 	fseek(in_file, 0, SEEK_SET);
 
-	// Initialize initial state
 </xsl:text>
 
     <xsl:for-each select="xmi:XMI/uml:Model/packagedElement/packagedElement[@xmi:type='uml:StateMachine'][@name=$stateMachineName]/region/subvertex[@xmi:type='uml:Pseudostate'][@kind='initial']">
       <xsl:variable name="currentIdref" select="outgoing/@xmi:idref"/>
       <xsl:variable name="currentTransition" select="$root/xmi:XMI/uml:Model/packagedElement/packagedElement[@xmi:type='uml:StateMachine'][@name=$stateMachineName]/transition[@xmi:type='uml:Transition'][@xmi:id=$currentIdref]"/>
+      <xsl:variable name="body" select="$currentTransition/effect/body"/>
 
-      <xsl:text>	</xsl:text>
+      <xsl:if test="count($body) = 1">
+        <xsl:text>	// Transition code
+	</xsl:text>
+        <xsl:call-template name="string-replace-all">
+          <xsl:with-param name="text" select="$body"/>
+          <xsl:with-param name="replace" select="'&#10;'"/>
+          <xsl:with-param name="by" select="'&#10;&#9;'"/>
+        </xsl:call-template>
+        <xsl:text>
+
+</xsl:text>
+      </xsl:if>
+      <xsl:text>	// Initialize initial state
+	</xsl:text>
       <xsl:call-template name="write_transition">
         <xsl:with-param name="enumPrefix" select="$enumPrefix"/>
         <xsl:with-param name="root" select="$root"/>
@@ -115,8 +133,8 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
       </xsl:call-template>
     </xsl:for-each>
 
-      <xsl:text>
-	while (lContinueLoop)
+    <xsl:text>
+	while (lParserLoopState == ParserLoopStateContinueLoop)
 	{
 		switch (lCurrentState)
 		{
@@ -162,7 +180,7 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
         <xsl:call-template name="create_body">
           <xsl:with-param name="body" select="exslt:node-set($real_end_of_stream_transition)/transition/effect/body"/>
         </xsl:call-template>
-        
+
         <xsl:call-template name="create_transition_code">
           <xsl:with-param name="enumPrefix" select="$enumPrefix"/>
           <xsl:with-param name="root" select="$root"/>
@@ -192,7 +210,7 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
               <xsl:with-param name="separator" select="'-'"/>
             </xsl:call-template>
           </xsl:variable>
-          
+
           <xsl:choose>
             <xsl:when test="count(exslt:node-set($hypen-separated-name)/token) = 1">
               <xsl:text>lToken == </xsl:text>
@@ -206,7 +224,7 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
               <xsl:text>)</xsl:text>
             </xsl:otherwise>
           </xsl:choose>
-          
+
           <xsl:if test="position() != last()">
             <xsl:text> || </xsl:text>
           </xsl:if>
@@ -223,7 +241,7 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
           <xsl:with-param name="root" select="$root"/>
           <xsl:with-param name="transition" select="."/>
         </xsl:call-template>
-        
+
         <xsl:text>				}
 </xsl:text>
       </xsl:for-each>
@@ -235,13 +253,13 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
         <xsl:call-template name="create_body">
           <xsl:with-param name="body" select="effect/body"/>
         </xsl:call-template>
-        
+
         <xsl:call-template name="create_transition_code">
           <xsl:with-param name="enumPrefix" select="$enumPrefix"/>
           <xsl:with-param name="root" select="$root"/>
           <xsl:with-param name="transition" select="."/>
         </xsl:call-template>
-        
+
         <xsl:text>				}
 </xsl:text>
       </xsl:for-each>
@@ -251,6 +269,18 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
     </xsl:for-each>
     <xsl:text>		}
 	}
+
+	fsetpos(in_file, &amp;lPosition);
+
+</xsl:text>
+
+    <xsl:text>
+	assert(lParserLoopState == ParserLoopStateBreakLoopSuccess || lParserLoopState == ParserLoopStateBreakLoopFailure);
+
+	if (lParserLoopState == ParserLoopStateBreakLoopSuccess)
+		return true;
+	else
+		return false;
 }
 </xsl:text>
   </xsl:template>
