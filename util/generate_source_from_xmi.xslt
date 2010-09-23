@@ -164,111 +164,117 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
         </xsl:for-each>
       </xsl:variable>
 
-      <xsl:variable name="end_of_stream_transition" select="exslt:node-set($transitions)/transition[trigger/@name = 'end of stream']"/>
-      <xsl:variable name="else_transition" select="exslt:node-set($transitions)/transition[trigger/@name = 'else']"/>
+      <xsl:choose>
+        <xsl:when test="count(exslt:node-set($transitions)/transition) = 1">
+          <!-- TODO -->
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:variable name="end_of_stream_transition" select="exslt:node-set($transitions)/transition[trigger/@name = 'end of stream']"/>
+          <xsl:variable name="else_transition" select="exslt:node-set($transitions)/transition[trigger/@name = 'else']"/>
 
-      <xsl:if test="count($end_of_stream_transition) = 1 or count($else_transition) = 1">
-        <xsl:text>				if (lEndOfStream)
+          <xsl:if test="count($end_of_stream_transition) = 1 or count($else_transition) = 1">
+            <xsl:text>				if (lEndOfStream)
 				{
 </xsl:text>
-        <xsl:variable name="real_end_of_stream_transition">
-          <xsl:choose>
-            <xsl:when test="count($end_of_stream_transition) = 1">
-              <xsl:copy-of select="$end_of_stream_transition"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:copy-of select="$else_transition"/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
+            <xsl:variable name="real_end_of_stream_transition">
+              <xsl:choose>
+                <xsl:when test="count($end_of_stream_transition) = 1">
+                  <xsl:copy-of select="$end_of_stream_transition"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:copy-of select="$else_transition"/>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:variable>
 
-        <xsl:call-template name="create_body">
-          <xsl:with-param name="body" select="exslt:node-set($real_end_of_stream_transition)/transition/effect/body"/>
-        </xsl:call-template>
+            <xsl:call-template name="create_body">
+              <xsl:with-param name="body" select="exslt:node-set($real_end_of_stream_transition)/transition/effect/body"/>
+            </xsl:call-template>
 
-        <xsl:call-template name="create_transition_code">
-          <xsl:with-param name="enumPrefix" select="$enumPrefix"/>
-          <xsl:with-param name="root" select="$root"/>
-          <xsl:with-param name="transition" select="exslt:node-set($real_end_of_stream_transition)/transition"/>
-        </xsl:call-template>
-        <xsl:text>					break;
+            <xsl:call-template name="create_transition_code">
+              <xsl:with-param name="enumPrefix" select="$enumPrefix"/>
+              <xsl:with-param name="root" select="$root"/>
+              <xsl:with-param name="transition" select="exslt:node-set($real_end_of_stream_transition)/transition"/>
+            </xsl:call-template>
+            <xsl:text>					break;
 				}
 </xsl:text>
-      </xsl:if>
-
-      <xsl:for-each select="exslt:node-set($transitions)/transition[trigger/@name != 'end of stream'][trigger/@name != 'else']">
-        <xsl:text>				</xsl:text>
-        <xsl:if test="position() != 1">
-          <xsl:text>else </xsl:text>
-        </xsl:if>
-        <xsl:text>if (</xsl:text>
-        <xsl:variable name="comma-separated-name">
-          <xsl:call-template name="string-split">
-            <xsl:with-param name="text" select="trigger/@name"/>
-            <xsl:with-param name="separator" select="','"/>
-          </xsl:call-template>
-        </xsl:variable>
-        <xsl:for-each select="exslt:node-set($comma-separated-name)/token">
-          <xsl:variable name="hypen-separated-name">
-            <xsl:call-template name="string-split">
-              <xsl:with-param name="text" select="."/>
-              <xsl:with-param name="separator" select="'-'"/>
-            </xsl:call-template>
-          </xsl:variable>
-
-          <xsl:choose>
-            <xsl:when test="count(exslt:node-set($hypen-separated-name)/token) = 1">
-              <xsl:text>lToken == </xsl:text>
-              <xsl:value-of select="exslt:node-set($hypen-separated-name)/token[1]"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:text>(lToken &gt;= </xsl:text>
-              <xsl:value-of select="exslt:node-set($hypen-separated-name)/token[1]"/>
-              <xsl:text> &amp;&amp; lToken &lt;= </xsl:text>
-              <xsl:value-of select="exslt:node-set($hypen-separated-name)/token[2]"/>
-              <xsl:text>)</xsl:text>
-            </xsl:otherwise>
-          </xsl:choose>
-
-          <xsl:if test="position() != last()">
-            <xsl:text> || </xsl:text>
           </xsl:if>
-        </xsl:for-each>
-        <xsl:text>)
+
+          <xsl:for-each select="exslt:node-set($transitions)/transition[trigger/@name != 'end of stream'][trigger/@name != 'else']">
+            <xsl:text>				</xsl:text>
+            <xsl:if test="position() != 1">
+              <xsl:text>else </xsl:text>
+            </xsl:if>
+            <xsl:text>if (</xsl:text>
+            <xsl:variable name="comma-separated-name">
+              <xsl:call-template name="string-split">
+                <xsl:with-param name="text" select="trigger/@name"/>
+                <xsl:with-param name="separator" select="','"/>
+              </xsl:call-template>
+            </xsl:variable>
+            <xsl:for-each select="exslt:node-set($comma-separated-name)/token">
+              <xsl:variable name="hypen-separated-name">
+                <xsl:call-template name="string-split">
+                  <xsl:with-param name="text" select="."/>
+                  <xsl:with-param name="separator" select="'-'"/>
+                </xsl:call-template>
+              </xsl:variable>
+
+              <xsl:choose>
+                <xsl:when test="count(exslt:node-set($hypen-separated-name)/token) = 1">
+                  <xsl:text>lToken == </xsl:text>
+                  <xsl:value-of select="exslt:node-set($hypen-separated-name)/token[1]"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:text>(lToken &gt;= </xsl:text>
+                  <xsl:value-of select="exslt:node-set($hypen-separated-name)/token[1]"/>
+                  <xsl:text> &amp;&amp; lToken &lt;= </xsl:text>
+                  <xsl:value-of select="exslt:node-set($hypen-separated-name)/token[2]"/>
+                  <xsl:text>)</xsl:text>
+                </xsl:otherwise>
+              </xsl:choose>
+
+              <xsl:if test="position() != last()">
+                <xsl:text> || </xsl:text>
+              </xsl:if>
+            </xsl:for-each>
+            <xsl:text>)
 				{
 </xsl:text>
-        <xsl:call-template name="create_body">
-          <xsl:with-param name="body" select="effect/body"/>
-        </xsl:call-template>
+            <xsl:call-template name="create_body">
+              <xsl:with-param name="body" select="effect/body"/>
+            </xsl:call-template>
 
-        <xsl:call-template name="create_transition_code">
-          <xsl:with-param name="enumPrefix" select="$enumPrefix"/>
-          <xsl:with-param name="root" select="$root"/>
-          <xsl:with-param name="transition" select="."/>
-        </xsl:call-template>
+            <xsl:call-template name="create_transition_code">
+              <xsl:with-param name="enumPrefix" select="$enumPrefix"/>
+              <xsl:with-param name="root" select="$root"/>
+              <xsl:with-param name="transition" select="."/>
+            </xsl:call-template>
 
-        <xsl:text>				}
+            <xsl:text>				}
 </xsl:text>
-      </xsl:for-each>
+          </xsl:for-each>
 
-      <xsl:for-each select="exslt:node-set($transitions)/transition[trigger/@name = 'else']">
-        <xsl:text>				else
+          <xsl:for-each select="exslt:node-set($transitions)/transition[trigger/@name = 'else']">
+            <xsl:text>				else
 				{
 </xsl:text>
-        <xsl:call-template name="create_body">
-          <xsl:with-param name="body" select="effect/body"/>
-        </xsl:call-template>
+            <xsl:call-template name="create_body">
+              <xsl:with-param name="body" select="effect/body"/>
+            </xsl:call-template>
 
-        <xsl:call-template name="create_transition_code">
-          <xsl:with-param name="enumPrefix" select="$enumPrefix"/>
-          <xsl:with-param name="root" select="$root"/>
-          <xsl:with-param name="transition" select="."/>
-        </xsl:call-template>
+            <xsl:call-template name="create_transition_code">
+              <xsl:with-param name="enumPrefix" select="$enumPrefix"/>
+              <xsl:with-param name="root" select="$root"/>
+              <xsl:with-param name="transition" select="."/>
+            </xsl:call-template>
 
-        <xsl:text>				}
+            <xsl:text>				}
 </xsl:text>
-      </xsl:for-each>
-
+          </xsl:for-each>
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:text>				break;
 </xsl:text>
     </xsl:for-each>
