@@ -31,12 +31,12 @@
 						</region>
 					</subvertex>
 					<subvertex xmi:type="uml:FinalState" xmi:id="BOUML_0x24082_30" name="Final">
-						<incoming xmi:idref="BOUML_0x22802_24"/>
+						<incoming xmi:idref="BOUML_0x29c02_24"/>
 					</subvertex>
 					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x24182_23" name="ProperlyTerminated">
 						<incoming xmi:idref="BOUML_0x22782_24"/>
 						<region xmi:type="uml:Region" xmi:id="BOUML_IMPLICIT_REGION_0x24182_23" name="Bouml_Implicit_Region">
-							<outgoing xmi:idref="BOUML_0x22802_24"/>
+							<outgoing xmi:idref="BOUML_0x29c82_24"/>
 						</region>
 					</subvertex>
 					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x24202_23" name="Separator">
@@ -67,11 +67,8 @@
 						<incoming xmi:idref="BOUML_0x26582_24"/>
 						<incoming xmi:idref="BOUML_0x26702_24"/>
 						<region xmi:type="uml:Region" xmi:id="BOUML_IMPLICIT_REGION_0x25c02_23" name="Bouml_Implicit_Region">
-							<outgoing xmi:idref="BOUML_0x24382_24"/>
+							<outgoing xmi:idref="BOUML_0x28282_24"/>
 						</region>
-					</subvertex>
-					<subvertex xmi:type="uml:FinalState" xmi:id="BOUML_0x25a02_30" name="Final">
-						<incoming xmi:idref="BOUML_0x24382_24"/>
 					</subvertex>
 					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x27582_23" name="SpacesAfterNumber">
 						<incoming xmi:idref="BOUML_0x25e02_24"/>
@@ -123,6 +120,13 @@
 							<outgoing xmi:idref="BOUML_0x26782_24"/>
 						</region>
 					</subvertex>
+					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x29182_23" name="Terminate">
+						<incoming xmi:idref="BOUML_0x29c82_24"/>
+						<incoming xmi:idref="BOUML_0x28282_24"/>
+						<region xmi:type="uml:Region" xmi:id="BOUML_IMPLICIT_REGION_0x29182_23" name="Bouml_Implicit_Region">
+							<outgoing xmi:idref="BOUML_0x29c02_24"/>
+						</region>
+					</subvertex>
 				</region>
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x20d82_24" source="BOUML_0x20d82_28" target="BOUML_0x22802_23">
 					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x20d82_24">
@@ -155,9 +159,6 @@
 				</transition>
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x22782_24" source="BOUML_0x22802_23" target="BOUML_0x24182_23">
 					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x22782_24" name="end of stream"/>
-					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x22782_24">
-						<body>sucess = true;</body>
-					</effect>
 				</transition>
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x22902_24" source="BOUML_0x22802_23" target="BOUML_0x24282_23">
 					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x22902_24" name="'#'"/>
@@ -168,7 +169,10 @@
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x25d82_24" source="BOUML_0x22802_23" target="BOUML_0x25c02_23">
 					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x25d82_24" name="else"/>
 				</transition>
-				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x22802_24" source="BOUML_0x24182_23" target="BOUML_0x24082_30">
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x29c82_24" source="BOUML_0x24182_23" target="BOUML_0x29182_23">
+					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x29c82_24">
+						<body>lSuccess = true;</body>
+					</effect>
 				</transition>
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x25e82_24" source="BOUML_0x24202_23" target="BOUML_0x27602_23">
 					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x25e82_24" name="'.'"/>
@@ -182,7 +186,10 @@
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26402_24" source="BOUML_0x24282_23" target="BOUML_0x25c02_23">
 					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26402_24" name="end of stream"/>
 				</transition>
-				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x24382_24" source="BOUML_0x25c02_23" target="BOUML_0x25a02_30">
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x28282_24" source="BOUML_0x25c02_23" target="BOUML_0x29182_23">
+					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x28282_24">
+						<body>lSuccess = false;</body>
+					</effect>
 				</transition>
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26182_24" source="BOUML_0x27582_23" target="BOUML_0x27702_23">
 					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26182_24" name="';'"/>
@@ -245,6 +252,8 @@
 					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x26782_24">
 						<body>if (*propertyPos != 0)&#10;	propertyEquals = false;&#10;&#10;if (propertyEquals)&#10;{&#10;	try&#10;	{&#10;		listIntervals.push_back(createInterval&lt;UnicodeCodePoint&gt;(firstNumber, secondNumber));&#10;	}&#10;	catch (bad_alloc&amp;)&#10;	{&#10;		lContinueLoop = false;&#10;		lSuccess = false;&#10;	}&#10;}</body>
 					</effect>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x29c02_24" source="BOUML_0x29182_23" target="BOUML_0x24082_30">
 				</transition>
 			</packagedElement>
 			<packagedElement xmi:type="uml:Component" xmi:id="BOUML_0x20d82_6" name="Algorithm">
