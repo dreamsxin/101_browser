@@ -67,6 +67,7 @@
     <xsl:param name="stateMachineName"/>
     <xsl:param name="enumPrefix"/>
     <xsl:param name="functionName"/>
+    <xsl:param name="parameters"/>
 
     <xsl:variable name="enumName">
       <xsl:value-of select="$enumPrefix"/>
@@ -92,6 +93,10 @@ enum </xsl:text><xsl:value-of select="$enumName"/><xsl:text>
 </xsl:text>
     <xsl:text>
 bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</xsl:text>
+    <xsl:for-each select="exslt:node-set($parameters)/parameter">
+      <xsl:text>, </xsl:text>
+      <xsl:value-of select="."/>
+    </xsl:for-each>
     <xsl:text>)
 {
 	// Declarations of variables
@@ -273,9 +278,9 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
 	fsetpos(in_file, &amp;lPosition);
 
 </xsl:text>
+    
 
-    <xsl:text>
-	assert(lParserLoopState == ParserLoopStateBreakLoopSuccess || lParserLoopState == ParserLoopStateBreakLoopFailure);
+    <xsl:text>assert(lParserLoopState == ParserLoopStateBreakLoopSuccess || lParserLoopState == ParserLoopStateBreakLoopFailure);
 
 	if (lParserLoopState == ParserLoopStateBreakLoopSuccess)
 		return true;
