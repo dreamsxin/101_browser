@@ -9,6 +9,19 @@
   
   <xsl:output method="text"/>
 
+  <xsl:template name="write_transition">
+    <xsl:param name="enumPrefix"/>
+    <xsl:param name="root"/>
+    <xsl:param name="id"/>
+    
+    <xsl:text>lCurrentState = </xsl:text>
+    <xsl:value-of select="$enumPrefix"/>
+    <xsl:text>State</xsl:text>
+    <xsl:value-of select="$root/xmi:XMI/uml:Model/packagedElement/packagedElement[@xmi:type='uml:StateMachine']/region/subvertex[@xmi:type='uml:State'][@xmi:id=$id]/@name"/>
+    <xsl:text>;
+</xsl:text>
+  </xsl:template>
+
   <xsl:template name="create_transition_code">
     <xsl:param name="enumPrefix"/>
     <xsl:param name="root"/>
@@ -18,15 +31,11 @@
 
     <xsl:choose>
       <xsl:when test="not($transition/@kind['internal'] = 'internal')">
-        <xsl:text>lCurrentState = </xsl:text>
-        <xsl:value-of select="$enumPrefix"/>
-        <xsl:text>State</xsl:text>
-
-        <xsl:variable name="targetId" select="$transition/@target"/>
-        
-        <xsl:value-of select="$root/xmi:XMI/uml:Model/packagedElement/packagedElement[@xmi:type='uml:StateMachine']/region/subvertex[@xmi:type='uml:State'][@xmi:id=$targetId]/@name"/>
-        <xsl:text>;
-</xsl:text>
+        <xsl:call-template name="write_transition">
+          <xsl:with-param name="enumPrefix" select="$enumPrefix"/>
+          <xsl:with-param name="root" select="$root"/>
+          <xsl:with-param name="id" select="$transition/@target"/>
+        </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>// internal transition - no state change
@@ -90,7 +99,23 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
 		return false;
 
 	fseek(in_file, 0, SEEK_SET);
-	
+
+	// Initialize initial state
+</xsl:text>
+
+    <xsl:for-each select="xmi:XMI/uml:Model/packagedElement/packagedElement[@xmi:type='uml:StateMachine'][@name=$stateMachineName]/region/subvertex[@xmi:type='uml:Pseudostate'][@kind='initial']">
+      <xsl:variable name="currentIdref" select="outgoing/@xmi:idref"/>
+      <xsl:variable name="currentTransition" select="$root/xmi:XMI/uml:Model/packagedElement/packagedElement[@xmi:type='uml:StateMachine'][@name=$stateMachineName]/transition[@xmi:type='uml:Transition'][@xmi:id=$currentIdref]"/>
+
+      <xsl:text>	</xsl:text>
+      <xsl:call-template name="write_transition">
+        <xsl:with-param name="enumPrefix" select="$enumPrefix"/>
+        <xsl:with-param name="root" select="$root"/>
+        <xsl:with-param name="id" select="$currentTransition/@target"/>
+      </xsl:call-template>
+    </xsl:for-each>
+
+      <xsl:text>
 	while (lContinueLoop)
 	{
 		switch (lCurrentState)
