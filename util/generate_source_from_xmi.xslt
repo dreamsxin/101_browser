@@ -14,12 +14,23 @@
     <xsl:param name="root"/>
     <xsl:param name="id"/>
 
-    <xsl:text>lCurrentState = </xsl:text>
-    <xsl:value-of select="$enumPrefix"/>
-    <xsl:text>State</xsl:text>
-    <xsl:value-of select="$root/xmi:XMI/uml:Model/packagedElement/packagedElement[@xmi:type='uml:StateMachine']/region/subvertex[@xmi:type='uml:State'][@xmi:id=$id]/@name"/>
-    <xsl:text>;
+    <xsl:variable name="subvertex" select="$root/xmi:XMI/uml:Model/packagedElement/packagedElement[@xmi:type='uml:StateMachine']/region/subvertex[@xmi:id=$id]"/>
+
+    <xsl:choose>
+      <xsl:when test="$subvertex/@xmi:type='uml:State'">
+        <xsl:text>lCurrentState = </xsl:text>
+        <xsl:value-of select="$enumPrefix"/>
+        <xsl:text>State</xsl:text>
+        <xsl:value-of select="$subvertex/@name"/>
+        <xsl:text>;
 </xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>lContinueLoop = false;
+</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    
   </xsl:template>
 
   <xsl:template name="create_transition_code">
@@ -79,7 +90,6 @@
 #else
 #include &lt;assert.h&gt;
 #endif
-#include "Util/ParserLoopState.h"
 
 enum </xsl:text><xsl:value-of select="$enumName"/><xsl:text>
 {
@@ -100,7 +110,8 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
 	// Declarations of variables
 	</xsl:text><xsl:value-of select="$enumName"/><xsl:text> lCurrentState;
 	fpos_t lPosition;
-	enum ParserLoopState lParserLoopState = ParserLoopStateContinueLoop;
+	bool lContinueLoop = true;
+	bool lSuccess;
 
 	// Initialization
 	if (fgetpos(in_file, &amp;lPosition) != 0)
@@ -139,7 +150,7 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
 
     <!-- Begin of main loop -->
     <xsl:text>
-	while (lParserLoopState == ParserLoopStateContinueLoop)
+	while (lContinueLoop)
 	{
 		switch (lCurrentState)
 		{
