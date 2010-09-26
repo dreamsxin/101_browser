@@ -182,6 +182,10 @@
 				RelativePath="..\..\..\src\Unicode\PropList.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\src\Unicode\PropListUtil.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"

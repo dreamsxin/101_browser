@@ -1,4 +1,3 @@
-#include "MiniStdlib/safe_free.h"
 #include "Unicode/PropList.h"
 #include "Util/Interval.hpp"
 #include "Util/Unicode.h"
@@ -7,22 +6,6 @@
 #include <stdexcept>
 using namespace std;
 
-/*!
- * Precondition: (token >= '0' && token <= '9') || (token >= 'A' && token <= 'F')
- */
-uint8_t readHexDigit(char token)
-{
-	if (token >= '0' && token <= '9')
-	{
-		return (token-'0');
-	}
-	else
-	{
-		assert(token >= 'A' && token <= 'F');
-
-		return 10+(token - 'A');
-	}
-}
 
 enum PropListState
 {
@@ -262,9 +245,4 @@ bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals, size_
 		fsetpos(in_file, &position);
 		return false;
 	}
-}
-
-void freeIntervalsFromPropList(void* in_ppIntervals)
-{
-	safe_free(in_ppIntervals);
 }
