@@ -171,7 +171,7 @@
 				</transition>
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x29c82_24" source="BOUML_0x24182_23" target="BOUML_0x29182_23">
 					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x29c82_24">
-						<body>lSuccess = true;</body>
+						<body>&#10;&#10;pIntervals = (Interval&lt;UnicodeCodePoint&gt;*) malloc(sizeof(Interval&lt;UnicodeCodePoint&gt;) * listIntervals.size());&#10;&#10;if (pIntervals == NULL)&#10;{&#10;	lSuccess = false;&#10;}&#10;else&#10;{&#10;	size_t index = 0;&#10;&#10;	for (list&lt;Interval&lt;UnicodeCodePoint&gt; &gt;::iterator i = listIntervals.begin(); i != listIntervals.end(); ++i)&#10;	{&#10;		pIntervals[index] = *i;&#10;		index++;&#10;	}&#10;&#10;	*((Interval&lt;UnicodeCodePoint&gt;**) out_ppIntervals) = pIntervals;&#10;	*out_intervalsCount = index;&#10;&#10;	lSuccess = true;&#10;}</body>
 					</effect>
 				</transition>
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x25e82_24" source="BOUML_0x24202_23" target="BOUML_0x27602_23">
