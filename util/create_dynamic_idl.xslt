@@ -4,9 +4,6 @@
   <xsl:import href="replace.xslt"/>
   <xsl:output method="text"/>
 
-  <!-- Source: http://geekswithblogs.net/Erik/archive/2008/04/01/120915.aspx -->
-  
-
   <xsl:template name="main">
     <xsl:param name="moduleName"/>
     <xsl:text>module </xsl:text><xsl:value-of select="$moduleName"/><xsl:text>
