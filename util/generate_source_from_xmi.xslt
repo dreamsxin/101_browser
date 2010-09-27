@@ -55,17 +55,18 @@
 
   <xsl:template name="create_body">
     <xsl:param name="body"/>
+    <xsl:param name="tabs"/>
 
     <xsl:if test="$body">
       <xsl:variable name="splitBody">
         <xsl:call-template name="string-replace-all">
           <xsl:with-param name="text" select="$body"/>
           <xsl:with-param name="replace" select="'&#10;'"/>
-          <xsl:with-param name="by" select="'&#10;&#9;&#9;&#9;&#9;&#9;'"/>
+          <xsl:with-param name="by" select="concat('&#10;', $tabs)"/>
         </xsl:call-template>
       </xsl:variable>
 
-      <xsl:text>					</xsl:text>
+      <xsl:value-of select="$tabs"/>
       <xsl:value-of select="$splitBody"/>
       <xsl:text>
 </xsl:text>
@@ -127,16 +128,14 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
       <xsl:variable name="currentTransition" select="$root/xmi:XMI/uml:Model/packagedElement/packagedElement[@xmi:type='uml:StateMachine'][@name=$stateMachineName]/transition[@xmi:type='uml:Transition'][@xmi:id=$currentIdref]"/>
       <xsl:variable name="body" select="$currentTransition/effect/body"/>
 
-      <xsl:if test="count($body) = 1">
+      <xsl:if test="$body">
         <xsl:text>	// Transition code
-	</xsl:text>
-        <xsl:call-template name="string-replace-all">
-          <xsl:with-param name="text" select="$body"/>
-          <xsl:with-param name="replace" select="'&#10;'"/>
-          <xsl:with-param name="by" select="'&#10;&#9;'"/>
+</xsl:text>
+        <xsl:call-template name="create_body">
+          <xsl:with-param name="body" select="$body"/>
+          <xsl:with-param name="tabs" select="'&#9;'"/>
         </xsl:call-template>
         <xsl:text>
-
 </xsl:text>
       </xsl:if>
       <xsl:text>	// Initialize initial state
@@ -177,13 +176,25 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
 
       <xsl:choose>
         <xsl:when test="count(exslt:node-set($transitions)/transition) = 1">
+          
+          <xsl:variable name="body" select="exslt:node-set($transitions)/transition/effect/body"/>
+          <xsl:if test="$body">
+            <xsl:call-template name="create_body">
+              <xsl:with-param name="body" select="$body"/>
+              <xsl:with-param name="tabs" select="'&#9;&#9;&#9;&#9;'"/>
+            </xsl:call-template>
+          </xsl:if>
+
           <xsl:variable name="target" select="exslt:node-set($transitions)/transition/@target"/>
           <xsl:text>				</xsl:text>
+          
           <xsl:call-template name="create_transition_code">
             <xsl:with-param name="enumPrefix" select="$enumPrefix"/>
             <xsl:with-param name="root" select="$root"/>
             <xsl:with-param name="transition" select="exslt:node-set($transitions)/transition"/>
           </xsl:call-template>
+
+          
         </xsl:when>
         <xsl:otherwise>
           <xsl:variable name="end_of_stream_transition" select="exslt:node-set($transitions)/transition[trigger/@name = 'end of stream']"/>
@@ -206,6 +217,7 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
 
             <xsl:call-template name="create_body">
               <xsl:with-param name="body" select="exslt:node-set($real_end_of_stream_transition)/transition/effect/body"/>
+              <xsl:with-param name="tabs" select="'&#9;&#9;&#9;&#9;&#9;'"/>
             </xsl:call-template>
 
             <xsl:text>					</xsl:text>
@@ -262,6 +274,7 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
 </xsl:text>
             <xsl:call-template name="create_body">
               <xsl:with-param name="body" select="effect/body"/>
+              <xsl:with-param name="tabs" select="'&#9;&#9;&#9;&#9;&#9;'"/>
             </xsl:call-template>
 
             <xsl:text>					</xsl:text>
@@ -281,6 +294,7 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
 </xsl:text>
             <xsl:call-template name="create_body">
               <xsl:with-param name="body" select="effect/body"/>
+              <xsl:with-param name="tabs" select="'&#9;&#9;&#9;&#9;&#9;'"/>
             </xsl:call-template>
 
             <xsl:text>					</xsl:text>
@@ -304,15 +318,10 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
     <!-- End of main loop -->
     
     <xsl:text>
-	// Rset position in the file
+	// Reset position in the file
 	fsetpos(in_file, &amp;lPosition);
 
-	assert(lParserLoopState == ParserLoopStateBreakLoopSuccess || lParserLoopState == ParserLoopStateBreakLoopFailure);
-
-	if (lParserLoopState == ParserLoopStateBreakLoopSuccess)
-		return true;
-	else
-		return false;
+	return lSuccess;
 }
 </xsl:text>
   </xsl:template>
