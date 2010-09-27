@@ -41,12 +41,14 @@ module geo
   
     
 
+    [NoInterfaceObject]
     interface Position {
       readonly attribute Coordinates coords;
       readonly attribute DOMTimeStamp timestamp;
     };
     
 
+    [NoInterfaceObject]
     interface Coordinates {
       readonly attribute double latitude;
       readonly attribute double longitude;
@@ -58,6 +60,7 @@ module geo
     };
     
 
+    [NoInterfaceObject]
     interface PositionError {
       const unsigned short PERMISSION_DENIED = 1;
       const unsigned short POSITION_UNAVAILABLE = 2;
