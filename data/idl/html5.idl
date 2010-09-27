@@ -397,6 +397,7 @@ module html5
   interface HTMLOListElement : HTMLElement {
              attribute boolean reversed;
              attribute long start;
+             attribute DOMString type;
   };
 
   interface HTMLUListElement : HTMLElement {};
@@ -724,7 +725,7 @@ module html5
     void bezierCurveTo(in double cp1x, in double cp1y, in double cp2x, in double cp2y, in double x, in double y);
     void arcTo(in double x1, in double y1, in double x2, in double y2, in double radius);
     void rect(in double x, in double y, in double w, in double h);
-    void arc(in double x, in double y, in double radius, in double startAngle, in double endAngle, in boolean anticlockwise);
+    void arc(in double x, in double y, in double radius, in double startAngle, in double endAngle, in optional boolean anticlockwise);
     void fill();
     void stroke();
     void clip();
@@ -869,6 +870,7 @@ module html5
              attribute DOMString action;
              attribute DOMString autocomplete;
              attribute DOMString enctype;
+             attribute DOMString encoding;
              attribute DOMString method;
              attribute DOMString name;
              attribute boolean noValidate;
@@ -1777,7 +1779,6 @@ module html5
   [Supplemental]
   interface HTMLOListElement {
              attribute boolean compact;
-             attribute DOMString type;
   };
 
   [Supplemental]
