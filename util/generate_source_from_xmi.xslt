@@ -77,6 +77,7 @@
     <xsl:param name="stateMachineName"/>
     <xsl:param name="enumPrefix"/>
     <xsl:param name="functionName"/>
+    <xsl:param name="include_text"/>
     <xsl:param name="parameters"/>
 
     <xsl:variable name="enumName">
@@ -85,12 +86,9 @@
     </xsl:variable>
     <xsl:variable name="root" select="."/>
 
-    <xsl:text>#include &lt;cstdio&gt;
-#ifdef __cplusplus
-#include &lt;cassert&gt;
-#else
-#include &lt;assert.h&gt;
-#endif
+    <xsl:value-of select="$include_text"/>
+    
+    <xsl:text>
 
 enum </xsl:text><xsl:value-of select="$enumName"/><xsl:text>
 {
@@ -151,16 +149,16 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
     <xsl:text>
 	while (lContinueLoop)
 	{
+		// Declarations of variables
+		unsigned char lToken;
+		bool lEndOfStream = false;
+
+		// Parser code
+		if (fread(&amp;lToken, 1, 1, in_file) != 1)
+			lEndOfStream = true;
+
 		switch (lCurrentState)
 		{
-			// Declarations of variables
-			unsigned char lToken;
-			bool lEndOfStream = false;
-
-			// Parser code
-			if (fread(&amp;lToken, 1, 1, in_file) != 1)
-				lEndOfStream = true;
-
 </xsl:text>
     <xsl:for-each select="xmi:XMI/uml:Model/packagedElement/packagedElement[@xmi:type='uml:StateMachine'][@name=$stateMachineName]/region/subvertex[@xmi:type='uml:State']">
       <xsl:text>			case </xsl:text>

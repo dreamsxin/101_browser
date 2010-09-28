@@ -9,6 +9,15 @@
       <xsl:with-param name="stateMachineName">PropListParserStateMachine</xsl:with-param>
       <xsl:with-param name="enumPrefix">PropListParser</xsl:with-param>
       <xsl:with-param name="functionName">readPropList</xsl:with-param>
+      <xsl:with-param name="include_text">
+        <xsl:text>#include "Unicode/PropList.h"
+#include "Util/Interval.hpp"
+#include "Util/Unicode.h"
+#include &lt;cstdlib&gt; // for malloc
+#include &lt;list&gt;
+#include &lt;stdexcept&gt;
+using namespace std;</xsl:text>
+      </xsl:with-param>
       <xsl:with-param name="parameters">
         <parameter>
           <xsl:text>char* in_property</xsl:text>
