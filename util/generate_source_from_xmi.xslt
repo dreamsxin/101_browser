@@ -174,7 +174,6 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
 
       <xsl:choose>
         <xsl:when test="count(exslt:node-set($transitions)/transition) = 1">
-          
           <xsl:variable name="body" select="exslt:node-set($transitions)/transition/effect/body"/>
           <xsl:if test="$body">
             <xsl:call-template name="create_body">
@@ -191,8 +190,6 @@ bool </xsl:text><xsl:value-of select="$functionName"/><xsl:text>(FILE* in_file</
             <xsl:with-param name="root" select="$root"/>
             <xsl:with-param name="transition" select="exslt:node-set($transitions)/transition"/>
           </xsl:call-template>
-
-          
         </xsl:when>
         <xsl:otherwise>
           <xsl:variable name="end_of_stream_transition" select="exslt:node-set($transitions)/transition[trigger/@name = 'end of stream']"/>
