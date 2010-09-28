@@ -39,7 +39,7 @@
 							<outgoing xmi:idref="BOUML_0x29c82_24"/>
 						</region>
 					</subvertex>
-					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x24202_23" name="Separator">
+					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x24202_23" name="InSeparator">
 						<incoming xmi:idref="BOUML_0x22882_24"/>
 						<region xmi:type="uml:Region" xmi:id="BOUML_IMPLICIT_REGION_0x24202_23" name="Bouml_Implicit_Region">
 							<outgoing xmi:idref="BOUML_0x25e82_24"/>
@@ -145,7 +145,7 @@
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26002_24" source="BOUML_0x20e82_23" target="BOUML_0x20e82_23" kind="internal">
 					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26002_24" name="'0'-'9','A'-'F'"/>
 					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x26002_24">
-						<body>firstNumber = 16*firstNumber + readHexDigit(token);</body>
+						<body>firstNumber = 16*firstNumber + readHexDigit(lToken);</body>
 					</effect>
 				</transition>
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26882_24" source="BOUML_0x20e82_23" target="BOUML_0x25c02_23">
@@ -154,7 +154,7 @@
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x20e02_24" source="BOUML_0x22802_23" target="BOUML_0x20e82_23">
 					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x20e02_24" name="'0'-'9','A'-'F'"/>
 					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x20e02_24">
-						<body>firstNumber = readHexDigit(token);</body>
+						<body>firstNumber = readHexDigit(lToken);</body>
 					</effect>
 				</transition>
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x22782_24" source="BOUML_0x22802_23" target="BOUML_0x24182_23">
@@ -206,13 +206,13 @@
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x25f82_24" source="BOUML_0x27602_23" target="BOUML_0x27682_23">
 					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x25f82_24" name="'0'-'9','A'-'F'"/>
 					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x25f82_24">
-						<body>secondNumber = readHexDigit(token);</body>
+						<body>secondNumber = readHexDigit(lToken);</body>
 					</effect>
 				</transition>
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26082_24" source="BOUML_0x27682_23" target="BOUML_0x27682_23" kind="internal">
 					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26082_24" name="'0'-'9','A'-'F'"/>
 					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x26082_24">
-						<body>secondNumber = 16*secondNumber + readHexDigit(token)</body>
+						<body>secondNumber = 16*secondNumber + readHexDigit(lToken);</body>
 					</effect>
 				</transition>
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26102_24" source="BOUML_0x27682_23" target="BOUML_0x25c02_23">
@@ -241,7 +241,7 @@
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26682_24" source="BOUML_0x27802_23" target="BOUML_0x27802_23" kind="internal">
 					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26682_24" name="'A'-'Z','a'-'z'"/>
 					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x26682_24">
-						<body>if (*propertyPos != 0 &amp;&amp; propertyEquals &amp;&amp; token == *propertyPos)&#10;	propertyPos++;&#10;else&#10;	propertyEquals = false;</body>
+						<body>if (*propertyPos != 0 &amp;&amp; propertyEquals &amp;&amp; lToken == *propertyPos)&#10;	propertyPos++;&#10;else&#10;	propertyEquals = false;</body>
 					</effect>
 				</transition>
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26702_24" source="BOUML_0x27802_23" target="BOUML_0x25c02_23">
