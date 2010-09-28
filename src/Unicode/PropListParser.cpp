@@ -114,8 +114,6 @@ bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals, size_
 				}
 				break;
 			case PropListParserStateProperlyTerminated:
-				
-				
 				pIntervals = (Interval<UnicodeCodePoint>*) malloc(sizeof(Interval<UnicodeCodePoint>) * listIntervals.size());
 				
 				if (pIntervals == NULL)
