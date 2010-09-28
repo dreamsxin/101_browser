@@ -1213,7 +1213,7 @@ module html5
     void handleEvent(in ConnectionPeer server, in DOMString configuration);
   };
 
-  [OverrideBuiltins, ReplaceableNamedProperties] 
+  [ReplaceableNamedProperties] 
   interface Window {
     // the current browsing context
     readonly attribute WindowProxy window;
