@@ -5,8 +5,12 @@
 *.obj
 *.embed.manifest
 *.intermediate.manifest
+
+# Programs, static and dynamic libraries under Windows
 *.exe
+*.lib
 *.dll
+
 *.ilk
 *.pdb
 *.idb
@@ -23,21 +27,27 @@ ResolveAssemblyReference.cache
 *.unsuccessfulbuild
 *_manifest.rc
 *~
+
+# Font files
 testfiles/fonts/*.ttf
 testfiles/fonts/*.TTF
 testfiles/fonts/*.fon
 testfiles/fonts/*.FON
+
+# Flash files
 testfiles/swf/*.swf
+
+# PDF files
 testfiles/pdf/*.pdf
 BuildLog.htm
-*.lib
 data/*/*.zip
 data/*/*.doc
 log.txt
-cursor*.bmp
+
+# JPEG images
 *.jpg
 *.JPG
-*.class
+
 *.jcp
 *.jcu
 *.jcw
@@ -72,3 +82,6 @@ Thumbs.db
 # Files produced by LaTeX
 *.aux
 *.dvi
+
+# Java classes
+*.class
