@@ -43,6 +43,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Unicode", "projects\vs2008\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Algorithm", "projects\vs2008\Algorithm\Algorithm.vcproj", "{BDA835AB-4CF3-4582-9AED-CEE06F553729}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeolocationBackendGarminWin", "projects\vs2008\GeolocationBackendGarminWin\GeolocationBackendGarminWin.vcproj", "{AB70DE04-E41B-4950-AF76-0335672C0093}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -477,6 +479,26 @@ Global
 		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.LIB Release|Win32.Build.0 = Release|Win32
 		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.Release|Win32.ActiveCfg = Release|Win32
 		{BDA835AB-4CF3-4582-9AED-CEE06F553729}.Release|Win32.Build.0 = Release|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.Debug|Win32.Build.0 = Debug|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.DLL ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.DLL ASM Debug|Win32.Build.0 = Debug|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.DLL ASM Release|Win32.ActiveCfg = Release|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.DLL ASM Release|Win32.Build.0 = Release|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.DLL Debug|Win32.ActiveCfg = Debug|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.DLL Debug|Win32.Build.0 = Debug|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.DLL Release|Win32.ActiveCfg = Release|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.DLL Release|Win32.Build.0 = Release|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.LIB ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.LIB ASM Debug|Win32.Build.0 = Debug|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.LIB ASM Release|Win32.ActiveCfg = Release|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.LIB ASM Release|Win32.Build.0 = Release|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.LIB Debug|Win32.ActiveCfg = Debug|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.LIB Debug|Win32.Build.0 = Debug|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.LIB Release|Win32.ActiveCfg = Release|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.LIB Release|Win32.Build.0 = Release|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.Release|Win32.ActiveCfg = Release|Win32
+		{AB70DE04-E41B-4950-AF76-0335672C0093}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
