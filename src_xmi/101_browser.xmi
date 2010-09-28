@@ -16,6 +16,7 @@
 							<outgoing xmi:idref="BOUML_0x25e02_24"/>
 							<outgoing xmi:idref="BOUML_0x26002_24"/>
 							<outgoing xmi:idref="BOUML_0x26882_24"/>
+							<outgoing xmi:idref="BOUML_0x2b682_24"/>
 						</region>
 					</subvertex>
 					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x22802_23" name="BeginOfLine">
@@ -94,10 +95,13 @@
 							<outgoing xmi:idref="BOUML_0x26082_24"/>
 							<outgoing xmi:idref="BOUML_0x26102_24"/>
 							<outgoing xmi:idref="BOUML_0x26302_24"/>
+							<outgoing xmi:idref="BOUML_0x2b602_24"/>
 						</region>
 					</subvertex>
 					<subvertex xmi:type="uml:State" xmi:id="BOUML_0x27702_23" name="BeforeSpaceBeforeProperty">
+						<incoming xmi:idref="BOUML_0x2b682_24"/>
 						<incoming xmi:idref="BOUML_0x26182_24"/>
+						<incoming xmi:idref="BOUML_0x2b602_24"/>
 						<region xmi:type="uml:Region" xmi:id="BOUML_IMPLICIT_REGION_0x27702_23" name="Bouml_Implicit_Region">
 							<outgoing xmi:idref="BOUML_0x26382_24"/>
 							<outgoing xmi:idref="BOUML_0x26602_24"/>
@@ -150,6 +154,9 @@
 				</transition>
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26882_24" source="BOUML_0x20e82_23" target="BOUML_0x25c02_23">
 					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26882_24" name="else"/>
+				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x2b682_24" source="BOUML_0x20e82_23" target="BOUML_0x27702_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x2b682_24" name="';'"/>
 				</transition>
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x20e02_24" source="BOUML_0x22802_23" target="BOUML_0x20e82_23">
 					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x20e02_24" name="'0'-'9','A'-'F'"/>
@@ -221,6 +228,9 @@
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26302_24" source="BOUML_0x27682_23" target="BOUML_0x27582_23">
 					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26302_24" name="' '"/>
 				</transition>
+				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x2b602_24" source="BOUML_0x27682_23" target="BOUML_0x27702_23">
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x2b602_24" name="';'"/>
+				</transition>
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26382_24" source="BOUML_0x27702_23" target="BOUML_0x25c02_23">
 					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26382_24" name="else"/>
 				</transition>
@@ -239,7 +249,7 @@
 					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26582_24" name="else"/>
 				</transition>
 				<transition xmi:type="uml:Transition" xmi:id="BOUML_0x26682_24" source="BOUML_0x27802_23" target="BOUML_0x27802_23" kind="internal">
-					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26682_24" name="'A'-'Z','a'-'z'"/>
+					<trigger xmi:type="uml:Trigger" xmi:id="BOUML_TRIGGER_0x26682_24" name="'A'-'Z','a'-'z','_'"/>
 					<effect xmi:type="uml:Activity" xmi:id="BOUML_EFFECT_0x26682_24">
 						<body>if (*propertyPos != 0 &amp;&amp; propertyEquals &amp;&amp; lToken == *propertyPos)&#10;	propertyPos++;&#10;else&#10;	propertyEquals = false;</body>
 					</effect>
