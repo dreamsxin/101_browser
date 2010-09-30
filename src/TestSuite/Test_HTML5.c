@@ -3,9 +3,11 @@
 #include "TestSuite/TestSuite.h"
 #include "HTML5/2_3.h"
 #include "HTML5/2_4_1.h"
+#include "HTML5/2_4_4_1.h"
 #include "HTML5/2_4_5.h"
 #include "HTML5/ASCIIStringUnicodeIterator.h"
-#include "MiniStdlib/MTAx_cstdlib.h"
+#include "MiniStdlib/MTAx_cstdio.h"
+#include "BigNumber/BigInteger.h"
 
 void test2_3()
 {
@@ -199,30 +201,30 @@ void test2_4_1()
 			s = asciiStringUnicodeIteratorState_create(empty);
 			s0 = s;
 			s1 = s;
-			skipWhitespace(it, &s0);
+			test(!skipWhitespace(it, &s0));
 			test((*it.mpfGet)(&s0) == NULL);
-			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			test(!skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
 			test((*it.mpfGet)(&s1) == NULL);
 
 			s = asciiStringUnicodeIteratorState_create(space);
 			s0 = s;
 			s1 = s;
-			skipWhitespace(it, &s0);
+			test(!skipWhitespace(it, &s0));
 			test((*it.mpfGet)(&s0) == NULL);
-			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			test(!skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
 			test((*it.mpfGet)(&s1) == NULL);
 
 			s = asciiStringUnicodeIteratorState_create(A);
 			s0 = s;
 			s1 = s;
-			skipWhitespace(it, &s0);
+			test(skipWhitespace(it, &s0));
 			pCurrentDatum = (*it.mpfGet)(&s0);
 			test(pCurrentDatum != NULL);
 			if (pCurrentDatum != NULL)
 			{
 				test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
 			}
-			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			test(skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
 			pCurrentDatum = (*it.mpfGet)(&s1);
 			test(pCurrentDatum != NULL);
 			if (pCurrentDatum != NULL)
@@ -233,14 +235,14 @@ void test2_4_1()
 			s = asciiStringUnicodeIteratorState_create(spaceA);
 			s0 = s;
 			s1 = s;
-			skipWhitespace(it, &s0);
+			test(skipWhitespace(it, &s0));
 			pCurrentDatum = (*it.mpfGet)(&s0);
 			test(pCurrentDatum != NULL);
 			if (pCurrentDatum != NULL)
 			{
 				test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
 			}
-			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			test(skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
 			pCurrentDatum = (*it.mpfGet)(&s1);
 			test(pCurrentDatum != NULL);
 			if (pCurrentDatum != NULL)
@@ -251,22 +253,22 @@ void test2_4_1()
 			s = asciiStringUnicodeIteratorState_create(tabSpace);
 			s0 = s;
 			s1 = s;
-			skipWhitespace(it, &s0);
+			test(!skipWhitespace(it, &s0));
 			test((*it.mpfGet)(&s0) == NULL);
-			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			test(!skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
 			test((*it.mpfGet)(&s1) == NULL);
 
 			s = asciiStringUnicodeIteratorState_create(tabSpaceA);
 			s0 = s;
 			s1 = s;
-			skipWhitespace(it, &s0);
+			test(skipWhitespace(it, &s0));
 			pCurrentDatum = (*it.mpfGet)(&s0);
 			test(pCurrentDatum != NULL);
 			if (pCurrentDatum != NULL)
 			{
 				test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
 			}
-			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			test(skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
 			pCurrentDatum = (*it.mpfGet)(&s1);
 			test(pCurrentDatum != NULL);
 			if (pCurrentDatum != NULL)
@@ -277,27 +279,27 @@ void test2_4_1()
 			s = asciiStringUnicodeIteratorState_create(tabVert);
 			s0 = s;
 			s1 = s;
-			skipWhitespace(it, &s0);
+			test(skipWhitespace(it, &s0));
 			pCurrentDatum = (*it.mpfGet)(&s0);
 			test(pCurrentDatum != NULL);
 			if (pCurrentDatum != NULL)
 			{
 				test(*((UnicodeCodePoint*) pCurrentDatum) == '\v');
 			}
-			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			test(!skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
 			test((*it.mpfGet)(&s1) == NULL);
 
 			s = asciiStringUnicodeIteratorState_create(tabVertA);
 			s0 = s;
 			s1 = s;
-			skipWhitespace(it, &s0);
+			test(skipWhitespace(it, &s0));
 			pCurrentDatum = (*it.mpfGet)(&s0);
 			test(pCurrentDatum != NULL);
 			if (pCurrentDatum != NULL)
 			{
 				test(*((UnicodeCodePoint*) pCurrentDatum) == '\v');
 			}
-			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			test(skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
 			pCurrentDatum = (*it.mpfGet)(&s1);
 			test(pCurrentDatum != NULL);
 			if (pCurrentDatum != NULL)
@@ -308,27 +310,27 @@ void test2_4_1()
 			s = asciiStringUnicodeIteratorState_create(vertTab);
 			s0 = s;
 			s1 = s;
-			skipWhitespace(it, &s0);
+			test(skipWhitespace(it, &s0));
 			pCurrentDatum = (*it.mpfGet)(&s0);
 			test(pCurrentDatum != NULL);
 			if (pCurrentDatum != NULL)
 			{
 				test(*((UnicodeCodePoint*) pCurrentDatum) == '\v');
 			}
-			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			test(!skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
 			test((*it.mpfGet)(&s1) == NULL);
 
 			s = asciiStringUnicodeIteratorState_create(vertTabA);
 			s0 = s;
 			s1 = s;
-			skipWhitespace(it, &s0);
+			test(skipWhitespace(it, &s0));
 			pCurrentDatum = (*it.mpfGet)(&s0);
 			test(pCurrentDatum != NULL);
 			if (pCurrentDatum != NULL)
 			{
 				test(*((UnicodeCodePoint*) pCurrentDatum) == '\v');
 			}
-			skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount);
+			test(skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
 			pCurrentDatum = (*it.mpfGet)(&s1);
 			test(pCurrentDatum != NULL);
 			if (pCurrentDatum != NULL)
@@ -339,6 +341,84 @@ void test2_4_1()
 
 		freeWhite_SpaceCharacterIntervals(&intervals);
 	}
+}
+
+void test2_4_4_1()
+{
+	char emptyFail[]         = "";
+	char tabsFail[]          = "\t\t\t";
+	char plusFail[]          = "+";
+	char dollarFail[]        = "$";
+	char tabsPlusFail[]      = "\t\t\t+";
+	char tabsPlus0Pass[]     = "\t\t\t+0";
+	char plus9Pass[]         = "+9";
+	char plus0DollarFail[]   = "+0$";
+	char tabsPlus9PlusFail[] = "\t\t\t+9+";
+	char overUint32Pass[] = "00000069876543210";
+	// 2^1024-1
+	char plusVeryLargePass[] = "179769313486231590772930519078902473361797697894230657273430081157732675805500963132708477322407536021120113879871393357658789768814416622492847430639474124377767893424865485276302219601246094119453082952085005768838150682342462881473913110540827237163350510684586298239947245938479716304835356329624224137215";
+
+	SingleIterator it = asciiStringUnicodeIterator_create();
+	ASCIIStringUnicodeIteratorState s;
+	UnsignedBigInteger number;
+
+	s = asciiStringUnicodeIteratorState_create(emptyFail);
+	test(parseNonNegativeInteger(it, &s, &number) == ResultError);
+
+	s = asciiStringUnicodeIteratorState_create(tabsFail);
+	test(parseNonNegativeInteger(it, &s, &number) == ResultError);
+
+	s = asciiStringUnicodeIteratorState_create(plusFail);
+	test(parseNonNegativeInteger(it, &s, &number) == ResultError);
+
+	s = asciiStringUnicodeIteratorState_create(dollarFail);
+	test(parseNonNegativeInteger(it, &s, &number) == ResultError);
+
+	s = asciiStringUnicodeIteratorState_create(tabsPlusFail);
+	test(parseNonNegativeInteger(it, &s, &number) == ResultError);
+
+	s = asciiStringUnicodeIteratorState_create(tabsPlus0Pass);
+	test(parseNonNegativeInteger(it, &s, &number) == ResultOK);
+	test(number.numberSize == 0);
+	freeUnsignedBigInteger(&number);
+
+	s = asciiStringUnicodeIteratorState_create(plus9Pass);
+	test(parseNonNegativeInteger(it, &s, &number) == ResultOK);
+	test(number.numberSize == 1);
+	if (number.numberSize == 1)
+	{
+		test(number.limbs[0] == 9);
+	}
+	freeUnsignedBigInteger(&number);
+
+	s = asciiStringUnicodeIteratorState_create(plus0DollarFail);
+	test(parseNonNegativeInteger(it, &s, &number) == ResultError);
+
+	s = asciiStringUnicodeIteratorState_create(tabsPlus9PlusFail);
+	test(parseNonNegativeInteger(it, &s, &number) == ResultError);
+
+	s = asciiStringUnicodeIteratorState_create(overUint32Pass);
+	test(parseNonNegativeInteger(it, &s, &number) == ResultOK);
+	test(number.numberSize == 2);
+	if (number.numberSize == 2)
+	{
+		test(number.limbs[0] == 1157066474);
+		test(number.limbs[1] == 16);
+	}
+	freeUnsignedBigInteger(&number);
+
+	s = asciiStringUnicodeIteratorState_create(plusVeryLargePass);
+	test(parseNonNegativeInteger(it, &s, &number) == ResultOK);
+	test(number.numberSize == 0x20);
+	if (number.numberSize == 0x20)
+	{
+		unsigned int i;
+		for (i=0; i<0x20; i++)
+		{
+			test(number.limbs[i] == 0xFFFFFFFF);
+		}
+	}
+	freeUnsignedBigInteger(&number);
 }
 
 void test2_4_5()
@@ -387,6 +467,8 @@ void testHTML5()
 	test2_3();
 	wprintf(L"Testing 2.4.1\n");
 	test2_4_1();
+	wprintf(L"Testing 2.4.4.1\n");
+	test2_4_4_1();
 	wprintf(L"Testing 2.4.5\n");
 	test2_4_5();
 }

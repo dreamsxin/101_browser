@@ -35,14 +35,17 @@ template <typename Type, typename NodePropertyType> void testValidPointersInTree
 	BinaryTreeNode<Type, NodePropertyType>* in_pNode)
 {
 	assert(in_pNode);
+
+	if (in_pNode == NULL)
+		return;
 	
-	if (in_pNode->left())
+	if (in_pNode->left() != NULL)
 	{
 		test(in_pNode->left()->parent()==in_pNode);
 		testValidPointersInTreeRecursively(in_pNode->left());
 	}
 
-	if (in_pNode->right())
+	if (in_pNode->right() != NULL)
 	{
 		test(in_pNode->right()->parent()==in_pNode);
 		testValidPointersInTreeRecursively(in_pNode->right());

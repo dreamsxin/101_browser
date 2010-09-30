@@ -26,9 +26,9 @@ bool skipWhitespaceKernel(const void* in_pUnicodeCodePoint, const void* in_pUser
 		return false;
 }
 
-void skipWhitespace(SingleIterator in_iterator, void* in_iteratorState)
+bool skipWhitespace(SingleIterator in_iterator, void* in_iteratorState)
 {
-	iterateWhile(in_iterator, in_iteratorState, NULL, &skipWhitespaceKernel);
+	return iterateWhile(in_iterator, in_iteratorState, NULL, &skipWhitespaceKernel);
 }
 
 struct SkipWhite_SpaceCharactersUserdata
@@ -53,12 +53,12 @@ bool skipWhite_SpaceCharactersKernel(const void* in_pUnicodeCodePoint, const voi
 		return false;
 }
 
-void skipWhite_SpaceCharacters(SingleIterator in_iterator, void* in_iteratorState, 
+bool skipWhite_SpaceCharacters(SingleIterator in_iterator, void* in_iteratorState, 
 							   void* in_pWhitespaceIntervals, size_t in_whitespaceIntervalsCount)
 {
 	struct SkipWhite_SpaceCharactersUserdata userdata;
 	userdata.mpWhitespaceIntervals = in_pWhitespaceIntervals;
 	userdata.mWhitespaceIntervalsCount = in_whitespaceIntervalsCount;
 
-	iterateWhile(in_iterator, in_iteratorState, &userdata, &skipWhite_SpaceCharactersKernel);
+	return iterateWhile(in_iterator, in_iteratorState, &userdata, &skipWhite_SpaceCharactersKernel);
 }

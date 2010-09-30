@@ -8,10 +8,16 @@
 extern "C" {
 #endif
 
+/*!
+ * Return value:
+ * true if there is no situation where we got past the end (the
+ *      iterator stays valid) or the iterator state was already invalid
+ * false otherwise
+ */
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-void iterateWhile(SingleIterator in_iterator, void* in_iteratorState, void* in_pUserdata,
+bool iterateWhile(SingleIterator in_iterator, void* in_iteratorState, void* in_pUserdata,
 				  bool (*in_pConditionFunction)(const void* in_pCurrentElement, const void* in_pUserdata));
 
 #ifdef __cplusplus

@@ -9,6 +9,7 @@
 #endif
 
 #include "MiniStdlib/cstdbool.h"
+#include "MiniStdlib/cstdint.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,6 +32,13 @@ bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals, size_
 __declspec(dllexport)
 #endif
 void freeIntervalsFromPropList(void* in_ppIntervals);
+
+// Internal functions
+
+/*!
+ * Precondition: (token >= '0' && token <= '9') || (token >= 'A' && token <= 'F')
+ */
+uint8_t readHexDigit(char token);
 
 #ifdef __cplusplus
 }

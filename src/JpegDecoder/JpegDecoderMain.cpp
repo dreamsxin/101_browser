@@ -1,4 +1,4 @@
-#include "MiniStdlib/MTAx_cstdlib.h"
+#include "MiniStdlib/MTAx_cstdio.h"
 #include <cstdlib>
 #include <cassert>
 #include "JpegDecoder/JpegDecoder.h"

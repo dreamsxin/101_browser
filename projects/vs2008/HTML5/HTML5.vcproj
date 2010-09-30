@@ -204,6 +204,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\HTML5\2_4_4_1.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\HTML5\2_4_5.c"
 				>
 			</File>
@@ -223,6 +227,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\HTML5\2_4_1.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\HTML5\2_4_4_1.h"
 				>
 			</File>
 			<File
