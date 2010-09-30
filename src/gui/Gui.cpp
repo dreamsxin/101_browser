@@ -1,7 +1,7 @@
 #include <windows.h>
 #include <string>
 #include <cassert>
-#include "MiniStdlib/MTAx_cstdlib.h"
+#include "MiniStdlib/MTAx_cstdio.h"
 #include <tchar.h>
 #include "GuiOpenGL/GuiComponentsDefaults.h"
 #include "GuiOpenGL/GuiOpenGLState.h"

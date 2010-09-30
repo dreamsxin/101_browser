@@ -153,7 +153,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\..\src\MiniStdlib\MTAx_cstdlib.c"
+				RelativePath="..\..\..\src\MiniStdlib\MTAx_cstdio.c"
 				>
 			</File>
 			<File
@@ -179,7 +179,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\MiniStdlib\MTAx_cstdlib.h"
+				RelativePath="..\..\..\include\MiniStdlib\MTAx_cstdio.h"
 				>
 			</File>
 			<File

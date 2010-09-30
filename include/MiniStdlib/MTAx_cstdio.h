@@ -1,5 +1,5 @@
-#ifndef _MTAx_cstdlib_h
-#define _MTAx_cstdlib_h
+#ifndef _MTAx_cstdio_h
+#define _MTAx_cstdio_h
 
 #ifdef __cplusplus
 #include <cstdio>

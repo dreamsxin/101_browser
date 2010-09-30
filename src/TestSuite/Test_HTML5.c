@@ -6,7 +6,7 @@
 #include "HTML5/2_4_4_1.h"
 #include "HTML5/2_4_5.h"
 #include "HTML5/ASCIIStringUnicodeIterator.h"
-#include "MiniStdlib/MTAx_cstdlib.h"
+#include "MiniStdlib/MTAx_cstdio.h"
 #include "BigNumber/BigInteger.h"
 
 void test2_3()
