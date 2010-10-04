@@ -1,5 +1,5 @@
-CHAPTER 1
-Basic Data Types
+# CHAPTER 1
+# Basic Data Types
 
 
 STRING
@@ -93,8 +93,8 @@ AlphaAddTerm	If HasAddTerms = 1,  SB[Nbits]	Transparency addition
 		value 
 
 
-CHAPTER 3
-The Display List
+# CHAPTER 3
+# The Display List
 
 
 PlaceObject
@@ -442,8 +442,8 @@ Field	Type	Comment
 Header	RECORDHEADER	Tag type = 1
 
 
-CHAPTER 4
-Control Tags
+# CHAPTER 4
+# Control Tags
 
 
 SetBackgroundColor
@@ -658,14 +658,14 @@ FrameLabelN	STRING	Frame label string of frame
 		label #N
 
 
-CHAPTER 5
-Actions
+# CHAPTER 5
+# Actions
 
 
 
 
-CHAPTER 6
-Shapes
+# CHAPTER 6
+# Shapes
 
 
 FILLSTYLEARRAY
@@ -888,8 +888,8 @@ UsesScalingStrokes	UB[1]	If 1, the shape contains at least
 Shapes	SHAPEWITHSTYLE	Shape information.
 
 
-CHAPTER 7
-Gradients
+# CHAPTER 7
+# Gradients
 
 
 GRADIENT
@@ -932,8 +932,8 @@ Color	RGB (Shape1 or Shape2)	Color of gradient
 	RGBA (Shape3)
 
 
-CHAPTER 8
-Bitmaps
+# CHAPTER 8
+# Bitmaps
 
 
 DefineBits
@@ -1097,8 +1097,8 @@ BitmapAlphaData	UI8[alpha data size]	ZLIB compressed array of
 		image.
 
 
-CHAPTER 15
-Binary data
+# CHAPTER 15
+# Binary data
 
 
 DefineBinaryData
