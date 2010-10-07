@@ -1,4 +1,5 @@
-#include "GeolocationBackendGarminWin/GeolocationBackendGarminWin.h"
+#include "GeolocationBackendGarminWin/GeolocationBackendGarminWinFrontend.h"
+#include "GeolocationBackendGarminWin/GeolocationBackendGarminWinBackend.h"
 
 #include <windows.h>
 #include <initguid.h>
@@ -9,7 +10,7 @@
 
 DEFINE_GUID(GUID_DEVINTERFACE_GRMNUSB, 0x2c9c45c2L, 0x8e7d, 0x4c08, 0xa1, 0x2d, 0x81, 0x6b, 0xba, 0xe7, 0x22, 0xc0);
 
-HANDLE initializeGeolocationBackendGarmin(DWORD *in_out_pUsbSize)
+HANDLE initializeGeolocationBackendGarmin(WORD *in_out_pUsbSize)
 {
 	DWORD theBytesReturned = 0;
 	HANDLE out_handle = 0;
@@ -25,7 +26,7 @@ HANDLE initializeGeolocationBackendGarmin(DWORD *in_out_pUsbSize)
 
 	if(!SetupDiEnumDeviceInterfaces(theDevInfo,
 		NULL, (GUID*) &GUID_DEVINTERFACE_GRMNUSB, 0, &theInterfaceData ) &&
-		GetLastError() == ERROR_NO_MORE_ITEMS )
+		GetLastError() == ERROR_NO_MORE_ITEMS)
 	{
 		return 0;
 	}
@@ -55,8 +56,43 @@ HANDLE initializeGeolocationBackendGarmin(DWORD *in_out_pUsbSize)
 	}
 
 	// Get the USB packet size, which we need for sending packets
-	DeviceIoControl(out_handle, IOCTL_USB_PACKET_SIZE, 0, 0, &in_out_pUsbSize,
+	DeviceIoControl(out_handle, IOCTL_USB_PACKET_SIZE, 0, 0, in_out_pUsbSize,
 		sizeof(*in_out_pUsbSize), &theBytesReturned, NULL);
 
 	return out_handle;
+}
+
+bool startSession(HANDLE in_garminHandle, WORD in_usbPacketSize)
+{
+	Packet_t theStartSessionPacket = {
+		PacketType_USB_Protocol_Layer,
+		0, 0, // reserved fields
+		Pid_Start_Session,
+		0,    // data size
+		0     // data
+	};
+
+	Packet_t* thePacket = NULL;
+
+	bool sessionStartedPacketReceived = false;
+
+	sendPacket(in_garminHandle, theStartSessionPacket, in_usbPacketSize);
+
+	while (!sessionStartedPacketReceived)
+	{
+		thePacket = receivePacket(in_garminHandle);
+
+		if (thePacket == NULL)
+			return false;
+
+		if (thePacket->mPacketType == PacketType_USB_Protocol_Layer &&
+		thePacket->mPacketId == Pid_Session_Started)
+		{
+			sessionStartedPacketReceived = true;
+		}
+
+		freePacket(&thePacket);
+	}
+
+	return true;
 }
