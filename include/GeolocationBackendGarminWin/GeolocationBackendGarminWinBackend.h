@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-#pragma pack( push, 1)
+#pragma pack(push, 1)
 typedef struct
 {
 	uint8_t  mPacketType;
@@ -42,6 +42,16 @@ enum
 	Pid_Product_Data = 255,
 	Pid_Ext_Product_Data = 248 /* may not be implemented in all devices */
 };
+
+#pragma pack(push, 1)
+typedef struct
+{
+	uint8_t  tag;
+	uint16_t data;
+} Protocol_Data_Type;
+#pragma pack(pop)
+
+typedef Protocol_Data_Type Protocol_Array_Type[];
 
 #ifdef _WIN32
 __declspec(dllexport)

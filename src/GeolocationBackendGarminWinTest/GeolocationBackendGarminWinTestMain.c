@@ -37,6 +37,21 @@ int main()
 		printf("%u %u\n", (unsigned) thePacket->mPacketType, 
 		(unsigned) thePacket->mPacketId);
 
+		if (thePacket->mPacketType == PacketType_Application_Layer &&
+			thePacket->mPacketId == Pid_Protocol_Array)
+		{
+			size_t idx;
+
+			for (idx = 0; idx < thePacket->mDataSize/3; idx++)
+			{
+				Protocol_Data_Type *current_Protocol_Data_Type = 
+					((Protocol_Data_Type*) thePacket->mData)+idx;
+
+				printf("%c%u\n", current_Protocol_Data_Type->tag, 
+					(unsigned) current_Protocol_Data_Type->data);
+			}
+		}
+
 		freePacket(&thePacket);
 
 		receivePacketResult = receivePacket(&receivePacketState,
