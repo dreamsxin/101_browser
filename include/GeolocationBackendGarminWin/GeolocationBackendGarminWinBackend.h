@@ -1,7 +1,9 @@
 #ifndef _GeolocationBackendGarminWinBackend_h
 #define _GeolocationBackendGarminWinBackend_h
 
+#include "GeolocationBackendGarminWin/GeolocationBackendGarminWinCommon.h"
 #include <windows.h>
+#include "MiniStdlib/cstdint.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -10,13 +12,13 @@ extern "C" {
 #pragma pack( push, 1)
 typedef struct
 {
-	unsigned char  mPacketType;
-	unsigned char  mReserved1;
-	unsigned short mReserved2;
-	unsigned short mPacketId;
-	unsigned short mReserved3;
-	unsigned long  mDataSize;
-	BYTE           mData[1];
+	uint8_t  mPacketType;
+	uint8_t  mReserved1;
+	uint16_t mReserved2;
+	uint16_t mPacketId;
+	uint16_t mReserved3;
+	uint32_t mDataSize;
+	uint8_t  mData[1];
 } Packet_t;
 #pragma pack(pop)
 
@@ -41,9 +43,6 @@ enum
 	Pid_Ext_Product_Data = 248 /* may not be implemented in all devices */
 };
 
-/*!
- * Frees the packet and sets the pointer to NULL
- */
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
@@ -54,10 +53,13 @@ __declspec(dllexport)
 #endif
 void sendPacket(HANDLE in_garminHandle, Packet_t in_packet, WORD in_usbPacketSize);
 
+
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-Packet_t* receivePacket(HANDLE in_garminHandle);
+ReceivePacketResult receivePacket(ReceivePacketState *in_pState, 
+								  HANDLE in_garminHandle,
+								  Packet_t** out_ppPacket);
 
 /*!
  * Either returns NULL (in case of error) or a received packet with
@@ -67,7 +69,11 @@ Packet_t* receivePacket(HANDLE in_garminHandle);
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-Packet_t* waitForPacket(HANDLE in_garminHandle, unsigned char in_type, unsigned short in_pid);
+ReceivePacketResult waitForPacket(ReceivePacketState *in_pState, 
+								  HANDLE in_garminHandle, 
+								  Packet_t** out_ppPacket,
+								  unsigned char in_type,
+								  unsigned short in_pid);
 
 #ifdef __cplusplus
 }

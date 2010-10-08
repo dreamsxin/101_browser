@@ -197,6 +197,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\GeolocationBackendGarminWin\GeolocationBackendGarminWinCommon.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\GeolocationBackendGarminWin\GeolocationBackendGarminWinFrontend.h"
 				>
 			</File>

@@ -62,37 +62,39 @@ HANDLE initializeGeolocationBackendGarmin(WORD *in_out_pUsbSize)
 	return out_handle;
 }
 
-bool startSession(HANDLE in_garminHandle, WORD in_usbPacketSize)
+ReceivePacketState getInitialReceivePacketState()
+{
+	return ReceiveByDeviceIoControl;
+}
+
+bool startSession(ReceivePacketState *in_pState, 
+				  HANDLE in_garminHandle,
+				  WORD in_usbPacketSize)
 {
 	Packet_t theStartSessionPacket = {
 		PacketType_USB_Protocol_Layer,
 		0, 0, // reserved fields
 		Pid_Start_Session,
 		0,    // data size
-		0     // data
+		0     // reserved
 	};
 
 	Packet_t* thePacket = NULL;
 
-	bool sessionStartedPacketReceived = false;
+	ReceivePacketResult receivePacketResult;
 
 	sendPacket(in_garminHandle, theStartSessionPacket, in_usbPacketSize);
 
-	while (!sessionStartedPacketReceived)
-	{
-		thePacket = receivePacket(in_garminHandle);
+	receivePacketResult = waitForPacket(in_pState,
+		in_garminHandle, 
+		&thePacket,
+		PacketType_USB_Protocol_Layer,
+		Pid_Session_Started);
 
-		if (thePacket == NULL)
-			return false;
+	if (receivePacketResult == ReceivePacketResultError)
+		return false;
 
-		if (thePacket->mPacketType == PacketType_USB_Protocol_Layer &&
-		thePacket->mPacketId == Pid_Session_Started)
-		{
-			sessionStartedPacketReceived = true;
-		}
-
-		freePacket(&thePacket);
-	}
+	freePacket(&thePacket);
 
 	return true;
 }

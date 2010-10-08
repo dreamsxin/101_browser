@@ -1,6 +1,7 @@
 #ifndef _GeolocationBackendGarminWinFrontend_h
 #define _GeolocationBackendGarminWinFrontend_h
 
+#include "GeolocationBackendGarminWin/GeolocationBackendGarminWinCommon.h"
 #include <windows.h>
 #include "MiniStdlib/cstdbool.h"
 
@@ -16,7 +17,14 @@ HANDLE initializeGeolocationBackendGarmin(WORD *in_out_pUsbSize);
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-bool startSession(HANDLE in_garminHandle, WORD in_usbPacketSize);
+ReceivePacketState getInitialReceivePacketState();
+
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+bool startSession(ReceivePacketState *in_pState,
+				  HANDLE in_garminHandle,
+				  WORD in_usbPacketSize);
 
 #ifdef __cplusplus
 }
