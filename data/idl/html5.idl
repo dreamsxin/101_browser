@@ -172,6 +172,7 @@ module html5
              attribute Function onprogress;
              attribute Function onratechange;
              attribute Function onreadystatechange;
+             attribute Function onreset;
              attribute Function onscroll;
              attribute Function onseeked;
              attribute Function onseeking;
@@ -297,6 +298,7 @@ module html5
              attribute Function onprogress;
              attribute Function onratechange;
              attribute Function onreadystatechange;
+             attribute Function onreset;
              attribute Function onscroll;
              attribute Function onseeked;
              attribute Function onseeking;
@@ -377,6 +379,7 @@ module html5
              attribute Function onpageshow;
              attribute Function onredo;
              attribute Function onresize;
+             attribute Function onscroll;
              attribute Function onstorage;
              attribute Function onundo;
              attribute Function onunload;
@@ -1318,6 +1321,7 @@ module html5
              attribute Function onratechange;
              attribute Function onreadystatechange;
              attribute Function onredo;
+             attribute Function onreset;
              attribute Function onresize;
              attribute Function onscroll;
              attribute Function onseeked;
@@ -1597,6 +1601,7 @@ module html5
              attribute Function onpopstate;
              attribute Function onredo;
              attribute Function onresize;
+             attribute Function onscroll;
              attribute Function onstorage;
              attribute Function onundo;
              attribute Function onunload;
