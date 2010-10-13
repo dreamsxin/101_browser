@@ -111,7 +111,6 @@ module html5
   
     // user interaction
     readonly attribute WindowProxy defaultView;
-    Selection getSelection();
     readonly attribute Element activeElement;
     boolean hasFocus();
              attribute DOMString designMode;
@@ -228,8 +227,6 @@ module html5
     // user interaction
              attribute boolean hidden;
     void click();
-    void scrollIntoView();
-    void scrollIntoView(in boolean top);
              attribute long tabIndex;
     void focus();
     void blur();
@@ -1008,8 +1005,8 @@ module html5
   
     readonly attribute HTMLOptionsCollection options;
              attribute unsigned long length;
-    caller getter any item(in unsigned long index);
-    caller getter any namedItem(in DOMString name);
+    getter any item(in unsigned long index);
+    any namedItem(in DOMString name);
     void add(in HTMLElement element, in optional HTMLElement before);
     void add(in HTMLElement element, in long before);
     void remove(in long index);
@@ -1226,7 +1223,6 @@ module html5
     [PutForwards=href] readonly attribute Location location;
     readonly attribute History history;
     readonly attribute UndoManager undoManager;
-    Selection getSelection();
     [Replaceable] readonly attribute BarProp locationbar;
     [Replaceable] readonly attribute BarProp menubar;
     [Replaceable] readonly attribute BarProp personalbar;
@@ -1464,25 +1460,6 @@ module html5
     void registerProtocolHandler(in DOMString scheme, in DOMString url, in DOMString title);
     void registerContentHandler(in DOMString mimeType, in DOMString url, in DOMString title);
     void yieldForStorageUpdates();
-  };
-
-  interface Selection {
-    readonly attribute Node anchorNode;
-    readonly attribute long anchorOffset;
-    readonly attribute Node focusNode;
-    readonly attribute long focusOffset;
-    readonly attribute boolean isCollapsed;
-    void collapse(in Node parentNode, in long offset);
-    void collapseToStart();
-    void collapseToEnd();
-    void selectAllChildren(in Node parentNode);
-    void deleteFromDocument();
-    readonly attribute long rangeCount;
-    Range getRangeAt(in long index);
-    void addRange(in Range range);
-    void removeRange(in Range range);
-    void removeAllRanges();
-    stringifier DOMString ();
   };
 
   interface DragEvent : MouseEvent {
