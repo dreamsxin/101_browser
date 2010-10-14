@@ -878,8 +878,8 @@ module html5
   
     readonly attribute HTMLFormControlsCollection elements;
     readonly attribute long length;
-    caller getter any item(in unsigned long index);
-    caller getter any namedItem(in DOMString name);
+    caller getter any (in unsigned long index);
+    caller getter any (in DOMString name);
   
     void submit();
     void reset();
