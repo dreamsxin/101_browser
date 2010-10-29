@@ -13,10 +13,11 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\include\MiniStdlib\climits.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\cstdint.h" />
-    <ClInclude Include="..\..\..\include\MiniStdlib\MTAx_fopen.h" />
+    <ClInclude Include="..\..\..\include\MiniStdlib\MTAx_cstdio.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\MiniStdlib\MTAx_fopen.c" />
+    <ClCompile Include="..\..\..\src\MiniStdlib\MTAx_cstdio.c" />
+    <ClCompile Include="..\..\..\src\MiniStdlib\safe_free.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6C7C9FBB-39B4-42CC-A000-C0FF2F61388E}</ProjectGuid>

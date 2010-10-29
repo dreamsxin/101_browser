@@ -15,15 +15,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\Html5Reader\Html5ReaderMain.cpp">
+    <ClCompile Include="..\..\..\src\Algorithm\BinarySearch.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Algorithm\IterateWhile.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\Html5Reader\2_3.h">
+    <ClInclude Include="..\..\..\include\Algorithm\BinarySearch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\Html5Reader\2_4_1.h">
+    <ClInclude Include="..\..\..\include\Algorithm\CompareResult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\Algorithm\IterateWhile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

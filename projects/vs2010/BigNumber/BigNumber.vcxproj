@@ -11,18 +11,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{41164D62-6A66-4CCF-891D-F550B52BCF8C}</ProjectGuid>
+    <ProjectGuid>{D090E174-4129-4500-A265-20A5FD191604}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Html5Reader</RootNamespace>
+    <RootNamespace>BigNumber</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
@@ -51,12 +51,14 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;BIGNUMBER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>MiniStdlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -67,22 +69,37 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;BIGNUMBER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>MiniStdlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\Html5Reader\Html5ReaderMain.cpp" />
+    <ClInclude Include="..\..\..\include\BigNumber\BigInteger.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\Html5Reader\2_3.h" />
-    <ClInclude Include="..\..\..\include\Html5Reader\2_4_1.h" />
+    <ClCompile Include="..\..\..\src\BigNumber\addUBUC.cpp" />
+    <ClCompile Include="..\..\..\src\BigNumber\addUBUCKernel.c" />
+    <ClCompile Include="..\..\..\src\BigNumber\applyCarry.c" />
+    <ClCompile Include="..\..\..\src\BigNumber\freeUnsignedBigInteger.c" />
+    <ClCompile Include="..\..\..\src\BigNumber\incUB.c" />
+    <ClCompile Include="..\..\..\src\BigNumber\initUnsignedBigInteger.c" />
+    <ClCompile Include="..\..\..\src\BigNumber\isZero.c" />
+    <ClCompile Include="..\..\..\src\BigNumber\modUBUC.cpp" />
+    <ClCompile Include="..\..\..\src\BigNumber\modUBUCKernel.c" />
+    <ClCompile Include="..\..\..\src\BigNumber\mulUBUC.cpp" />
+    <ClCompile Include="..\..\..\src\BigNumber\mulUBUCKernel.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MiniStdlib\MiniStdlib.vcxproj">
+      <Project>{6c7c9fbb-39b4-42cc-a000-c0ff2f61388e}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

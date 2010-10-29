@@ -114,7 +114,6 @@
     <ClInclude Include="..\..\..\include\BasicDataStructures\VirtualMachine\VirtualMachineContext.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\BasicDataStructures\BigNumber\BigInteger.cpp" />
     <ClCompile Include="..\..\..\src\BasicDataStructures\Parser\ParserUnicodeEncodings.cpp" />
     <ClCompile Include="..\..\..\src\BasicDataStructures\Parser\StringParser.cpp" />
     <ClCompile Include="..\..\..\src\BasicDataStructures\Parser\UnionParser.cpp" />

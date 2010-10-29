@@ -31,9 +31,6 @@
     <Filter Include="Header Files\VirtualMachine">
       <UniqueIdentifier>{0d72d1b1-a8ee-411e-b19c-829300fcb687}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\BigNumber">
-      <UniqueIdentifier>{3ad4a25a-fbee-4318-abdd-9d1ff0681b80}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Parser">
       <UniqueIdentifier>{abe2178b-9f86-4969-a575-ac1f85136439}</UniqueIdentifier>
     </Filter>
@@ -149,9 +146,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\BasicDataStructures\BigNumber\BigInteger.cpp">
-      <Filter>Source Files\BigNumber</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\BasicDataStructures\Parser\UnionParser.cpp">
       <Filter>Source Files\Parser</Filter>
     </ClCompile>

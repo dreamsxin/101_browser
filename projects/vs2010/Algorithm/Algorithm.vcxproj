@@ -11,18 +11,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{CA71DFC8-3FEC-41B2-B927-9FD0669A8293}</ProjectGuid>
+    <ProjectGuid>{98C64CA2-13F9-461B-B271-7CD09F048491}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>TestSuite</RootNamespace>
+    <RootNamespace>Algorithm</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
@@ -49,80 +49,42 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;ALGORITHM_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <Profile>true</Profile>
-      <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;HTML5.lib;MiniStdlib.lib;rfc1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;ALGORITHM_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <Profile>true</Profile>
-      <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;HTML5.lib;MiniStdlib.lib;rfc1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\TestSuite\IteratorTestUtil.cpp" />
-    <ClCompile Include="..\..\..\src\TestSuite\TestSuiteMain.cpp" />
-    <ClCompile Include="..\..\..\src\TestSuite\TestSuiteTest.c" />
-    <ClCompile Include="..\..\..\src\TestSuite\Test_Algorithm.cpp" />
-    <ClCompile Include="..\..\..\src\TestSuite\Test_ASCIIStringUnicodeIterator.c" />
-    <ClCompile Include="..\..\..\src\TestSuite\Test_BasicDataStructures_Tree.cpp" />
-    <ClCompile Include="..\..\..\src\TestSuite\Test_BigNumber.c" />
-    <ClCompile Include="..\..\..\src\TestSuite\Test_HTML5.c" />
-    <ClCompile Include="..\..\..\src\TestSuite\Test_Interval.cpp" />
-    <ClCompile Include="..\..\..\src\TestSuite\Test_IteratorInstances.cpp" />
-    <ClCompile Include="..\..\..\src\TestSuite\Test_OuterBorderIterator.cpp" />
-    <ClCompile Include="..\..\..\src\TestSuite\Test_rfc1950.cpp" />
-    <ClCompile Include="..\..\..\src\TestSuite\Test_TriangleStripBorderIterator.cpp" />
-    <ClCompile Include="..\..\..\src\TestSuite\Test_Unicode.cpp" />
+    <ClCompile Include="..\..\..\src\Algorithm\BinarySearch.c" />
+    <ClCompile Include="..\..\..\src\Algorithm\IterateWhile.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\TestSuite\IteratorTestUtil.h" />
-    <ClInclude Include="..\..\..\include\TestSuite\Tests.h" />
-    <ClInclude Include="..\..\..\include\TestSuite\TestSuite.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Algorithm\Algorithm.vcxproj">
-      <Project>{98c64ca2-13f9-461b-b271-7cd09f048491}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\BigNumber\BigNumber.vcxproj">
-      <Project>{d090e174-4129-4500-a265-20a5fd191604}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\HTML5\HTML5.vcxproj">
-      <Project>{806e90f2-9b9c-4c45-82ff-71cbd076013c}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\MiniStdlib\MiniStdlib.vcxproj">
-      <Project>{6c7c9fbb-39b4-42cc-a000-c0ff2f61388e}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\rfc1950\rfc1950.vcxproj">
-      <Project>{111e4bc7-3e41-491b-b749-c10bcc290c02}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Unicode\Unicode.vcxproj">
-      <Project>{dcc383e7-20ee-4cf5-8491-22f24c5772db}</Project>
-    </ProjectReference>
+    <ClInclude Include="..\..\..\include\Algorithm\BinarySearch.h" />
+    <ClInclude Include="..\..\..\include\Algorithm\CompareResult.h" />
+    <ClInclude Include="..\..\..\include\Algorithm\IterateWhile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -22,8 +22,8 @@ bool universalCompare(SingleIterator in_it, void* in_iteratorState0, void* in_it
 {
 	while (1)
 	{
-		UnicodeCodePoint* cp0 = (*in_it.mpfGet)(in_iteratorState0);
-		UnicodeCodePoint* cp1 = (*in_it.mpfGet)(in_iteratorState1);
+		UnicodeCodePoint* cp0 = (UnicodeCodePoint*) (*in_it.mpfGet)(in_iteratorState0);
+		UnicodeCodePoint* cp1 = (UnicodeCodePoint*) (*in_it.mpfGet)(in_iteratorState1);
 
 		if ((cp0 == NULL && cp1 != NULL) || (cp0 != NULL && cp1 == NULL))
 		{
@@ -102,8 +102,8 @@ bool prefixMatch(SingleIterator in_it, void* in_patternState, void* in_stringSta
 {
 	while (true)
 	{
-		UnicodeCodePoint* pPatternPoint = (*in_it.mpfGet)(in_patternState);
-		UnicodeCodePoint* pStringPoint = (*in_it.mpfGet)(in_stringState);
+		UnicodeCodePoint* pPatternPoint = (UnicodeCodePoint*) (*in_it.mpfGet)(in_patternState);
+		UnicodeCodePoint* pStringPoint = (UnicodeCodePoint*) (*in_it.mpfGet)(in_stringState);
 
 		if (pPatternPoint == NULL)
 			return true;
