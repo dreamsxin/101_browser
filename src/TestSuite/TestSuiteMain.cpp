@@ -27,6 +27,8 @@ int main()
 	testUnicode();
 	wprintf(L"Testing HTML5\n");
 	testHTML5();
+	wprintf(L"Testing CPU\n");
+	testCPU();
 
 	return 0;
 }

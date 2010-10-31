@@ -10,10 +10,16 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\CPU\X86.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\CPU\X86.c" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{806E90F2-9B9C-4C45-82FF-71CBD076013C}</ProjectGuid>
+    <ProjectGuid>{8BB562B5-9A8F-475B-8CC8-E305454CBD05}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>HTML5</RootNamespace>
+    <RootNamespace>CPU</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -49,27 +55,25 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;HTML5_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;CPU_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;HTML5_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;CPU_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -77,36 +81,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\..\src\HTML5\2_3.c" />
-    <ClCompile Include="..\..\..\src\HTML5\2_4_1_c.c" />
-    <ClCompile Include="..\..\..\src\HTML5\2_4_1_cpp.cpp" />
-    <ClCompile Include="..\..\..\src\HTML5\2_4_4_1.c" />
-    <ClCompile Include="..\..\..\src\HTML5\2_4_5.c" />
-    <ClCompile Include="..\..\..\src\HTML5\ASCIIStringUnicodeIterator.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\include\HTML5\2_3.h" />
-    <ClInclude Include="..\..\..\include\HTML5\2_4_1.h" />
-    <ClInclude Include="..\..\..\include\HTML5\2_4_4_1.h" />
-    <ClInclude Include="..\..\..\include\HTML5\2_4_5.h" />
-    <ClInclude Include="..\..\..\include\HTML5\ASCIIStringUnicodeIterator.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Algorithm\Algorithm.vcxproj">
-      <Project>{98c64ca2-13f9-461b-b271-7cd09f048491}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\BigNumber\BigNumber.vcxproj">
-      <Project>{d090e174-4129-4500-a265-20a5fd191604}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Unicode\Unicode.vcxproj">
-      <Project>{dcc383e7-20ee-4cf5-8491-22f24c5772db}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

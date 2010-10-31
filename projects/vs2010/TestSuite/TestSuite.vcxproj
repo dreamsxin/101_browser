@@ -59,7 +59,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <Profile>true</Profile>
       <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;HTML5.lib;MiniStdlib.lib;rfc1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;CPU.lib;HTML5.lib;MiniStdlib.lib;rfc1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -80,7 +80,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <Profile>true</Profile>
       <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;HTML5.lib;MiniStdlib.lib;rfc1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;CPU.lib;HTML5.lib;MiniStdlib.lib;rfc1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -91,6 +91,7 @@
     <ClCompile Include="..\..\..\src\TestSuite\Test_ASCIIStringUnicodeIterator.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_BasicDataStructures_Tree.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_BigNumber.c" />
+    <ClCompile Include="..\..\..\src\TestSuite\Test_CPU.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_HTML5.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_Interval.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_IteratorInstances.cpp" />
@@ -110,6 +111,9 @@
     </ProjectReference>
     <ProjectReference Include="..\BigNumber\BigNumber.vcxproj">
       <Project>{d090e174-4129-4500-a265-20a5fd191604}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\CPU\CPU.vcxproj">
+      <Project>{8bb562b5-9a8f-475b-8cc8-e305454cbd05}</Project>
     </ProjectReference>
     <ProjectReference Include="..\HTML5\HTML5.vcxproj">
       <Project>{806e90f2-9b9c-4c45-82ff-71cbd076013c}</Project>
