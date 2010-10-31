@@ -1463,12 +1463,6 @@ module html5
     void yieldForStorageUpdates();
   };
 
-  interface DragEvent : MouseEvent {
-    readonly attribute DataTransfer dataTransfer;
-  
-    void initDragEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in any dummyArg, in long detailArg, in long screenXArg, in long screenYArg, in long clientXArg, in long clientYArg, in boolean ctrlKeyArg, in boolean altKeyArg, in boolean shiftKeyArg, in boolean metaKeyArg, in unsigned short buttonArg, in EventTarget relatedTargetArg, in DataTransfer dataTransferArg);
-  };
-
   interface DataTransfer {
              attribute DOMString dropEffect;
              attribute DOMString effectAllowed;
@@ -1481,6 +1475,34 @@ module html5
   
     void setDragImage(in Element image, in long x, in long y);
     void addElement(in Element element);
+  };
+
+  interface DataTransferItems {
+    readonly attribute unsigned long length;
+    getter DataTransferItem (in unsigned long index);
+    deleter void (in unsigned long index);
+    void clear();
+  
+    DataTransferItem add(in DOMString data, in DOMString type);
+    DataTransferItem add(in File data);
+  };
+
+  interface DataTransferItem {
+      readonly attribute DOMString kind;
+      readonly attribute DOMString type;
+      void getAsString(in FunctionStringCallback callback);
+      File getAsFile();
+  };
+  
+  [Callback=FunctionOnly, NoInterfaceObject]
+  interface FunctionStringCallback {
+    void handleEvent(in DOMString data);
+  };
+
+  interface DragEvent : MouseEvent {
+    readonly attribute DataTransfer dataTransfer;
+  
+    void initDragEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in any dummyArg, in long detailArg, in long screenXArg, in long screenYArg, in long clientXArg, in long clientYArg, in boolean ctrlKeyArg, in boolean altKeyArg, in boolean shiftKeyArg, in boolean metaKeyArg, in unsigned short buttonArg, in EventTarget relatedTargetArg, in DataTransfer dataTransferArg);
   };
 
   interface UndoManager {
