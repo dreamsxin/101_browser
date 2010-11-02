@@ -5,8 +5,7 @@
 
 int main()
 {
-	char filename[] = //"testfiles/JPEG_example_JPG_RIP_100.jpg";
-		"testfiles/T83/A1.jpg";
+	char filename[] = "testfiles/T083/A1.jpg";
 
 	char mode[] = "rb";
 
