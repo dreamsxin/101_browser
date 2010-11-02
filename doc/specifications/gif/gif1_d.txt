@@ -1,0 +1,216 @@
+Datei GIF1_D.TXT - Das GIF-Format (Datei Nr. 1 von 4)                      JB
+-----------------------------------------------------------------------------
+
+Darstellung in diesem Manual: ###############################################
+
+  Strings in "Anfuehrungszeichen".
+  Hexadezimal-Bytes in 'Hochkommas'.
+  Dezimalzahlen ohne Klammern oder in {geschwungenen Klammern}.
+  Bits in <spitzen Klammern> (beginnend mit dem Most Significant Bit).
+  Beispiel: "JB" = '4A 42' = 74 66 = {74 66} = <01001010 01000010>
+
+Das GIF87a-Dokument #########################################################
+
+  Ein GIF87a-Dokument besteht aus den Teilen 1 bis 4:
+    (1.) Header
+    (2.) globale Farbtabelle
+    (3.) Einzelbild
+    (4.) Trailer
+  wobei Teil 3 (Einzelbild) beliebig oft wiederholt werden
+  kann, sodass ein GIF-Dokument aus mehreren uebereinandergelegten
+  unterschiedlich grossen Einzelbildern bestehen kann.
+  Ein GIF-Dokument muss keine globale Farbtabelle haben. In diesem Fall wird
+  die globale Farbtabelle des zuletzt uebertragenen GIF-Dokuments benutzt.
+  Das spart Bytes bei der Uebertragung vieler kleiner GIF-Dokumente.
+  Aus diesem Grund ist es auch moeglich, dass ein GIF-Dokument nur eine
+  globale Farbtabelle und gar kein Bild enthaelt.
+
+Das GIF89a-Dokument #########################################################
+
+  Statt eines Einzelbildes (Teil 3) kann bei GIF89a auch ein Text-Bild,
+  ein Kommentar oder ein Application Block uebertragen werden.
+  Ausserdem kann vor jedem Einzelbild und vor jedem Text-Bild ein
+  Bild-Modifikator gesendet werden, der spezielle Angaben darueber enthaelt,
+  wie das folgende Bild erscheinen soll. Dies kann die Definition einer
+  transparenten Farbe sein oder die Anweisung an den Decoder, nach dem Aufbau
+  des folgenden Einzelbildes zu warten, bis ein User-Input erfolgt, oder eine
+  definierte Zeit verstrichen ist. Dadurch ist es theoretisch moeglich,
+  einen Film als GIF-Dokument zu speichern, was aber nicht zu empfehlen ist.
+
+Teil 1 ############ Header ##################################################
+
+  ----Position------Beispiel---Erklaerung--------------------------------
+
+  Byte Nr. 0 - 5:   "GIF87a"   Version. Bislang gibt es GIF87a und GIF89a.
+  Byte Nr. 6 - 7:    '40 01'   Gesamt-Breite (hier: 320 bzw. 140hex)
+  Byte Nr. 8 - 9:    'C8 00'   Gesamt-Hoehe (hier: 200 bzw. C8hex)
+  Byte Nr. 10:    <1 111 0 111>
+    Bit Nr. 1:           <1>   Zeigt, ob globale Farbtabelle folgt (hier ja).
+    Bit Nr. 2 - 4:     <111>   Bit/Pixel minus 1 (hier: 8 Bit/Pixel)
+    Bit Nr. 5:           <0>   Zeigt, ob die globale Farbtabelle sortiert
+                                 (haeufigste Farbe zuerst) ist (hier nein).
+    Bit Nr. 6 - 8:     <111>   Groesse der Farbtabelle nach der Formel
+                                 Bytes = 2 ^ (Bit6bis8 + 1) * 3.
+                                 Es gibt 8 Moeglichkeiten: <000>=6 Byte,
+                                 <001>=12, <010>=24, <011>=48, <100>=96,
+                                 <101>=192, <110>=384, <111>=768 Byte.
+  Byte Nr. 11:          '00'   Nummer der Hintergrundfarbe.
+  Byte Nr. 12:          '00'   Pixel Aspect Ratio. Wenn Byte12 = '00', dann
+                                 sind die Bildpixel quadratisch, sonst gilt
+                                 B/H = 0.25 + (Byte12 / 64)
+  (Die Formel zur Pixel-Aspect-Ratio ist moeglicherweise falsch, weil an
+  anderer Stelle behauptet wird, das Verhaeltnis Pixelbreite zu Pixelhoehe
+  koenne im Bereich 1/4 bis 4/1 liegen. Dies widerspricht der Formel.)
+
+Teil 2 ########### globale Farbtabelle (optional) ###########################
+
+  Byte Nr.  0 - 2: '00 00 08' R- G- und B-Wert der Farbe 0 (hier Dunkelblau).
+  Byte Nr.  3 - 5: 'FF FF 00' RGB-Werte der Farbe 1 (hier Gelb)
+  ...
+  Byte Nr. ...- n: 'FF FF FF' RGB-Werte der letzten Farbe (hier Weiss).
+  (Bei einem Schwarzweiss-GIF ist die glob. Farbtabelle '00 00 00 FF FF FF').
+
+Teil 3a ########### Einzelbild-Header #######################################
+
+  Byte Nr. 0:          '2C'    Block-Label, immer '2C'.
+  Byte Nr. 1 - 2:    '00 00'   X-Position bezueglich Gesamtbild (hier 0)
+  Byte Nr. 3 - 4:    '00 00'   Y-Position (von oben gerechnet)
+  Byte Nr. 5 - 6:    '40 01'   Einzelbild-Breite (hier: 320)
+  Byte Nr. 7 - 8:    'C8 00'   Einzelbild-Hoehe (hier: 200)
+  Byte Nr. 9:    <0 0 0 00 000>
+    Bit Nr. 1:        <0> Zeigt, ob lokale Farbtabelle folgt (hier nein).
+    Bit Nr. 2:        <0> Zeigt, ob das Bild interlaced (siehe Erklaerungen
+                            am Ende) uebertragen wird (hier nein).
+    Bit Nr. 3:        <0> Zeigt, ob die lokale Farbtabelle sortiert ist.
+    Bit Nr. 4 - 5:   <00> unbenutzt.
+    Bit Nr. 6 - 8:  <000> Groesse der Farbtabelle nach derselben Regel, wie
+                            bei der globalen Farbtabelle (hier: <000>, weil
+                            keine lokale Farbtabelle folgt.
+
+Teil 3b ########## lokale Farbtabelle (optional) ############################
+
+  Syntax wie globale Farbtabelle. (hier: keine lokale Farbtabelle)
+
+Teil 3c ########### Einzelbild-Daten ########################################
+
+  Byte Nr. 0:          '08'    Bit/Pixel, maximal 8.
+  Danach folgen beliebig viele Pascal-Strings (Definition "Pascal-String"
+    siehe Erklaerungen am Ende), die keine Leer-Strings sein duerfen. Der
+    aneinandergereihte Inhalt der Pascal-Strings (natuerlich jeweils ohne
+    das erste Byte) wird als LZW-Data-Stream interpretiert. Dieser wird in
+    einen speziellen LZW-Decoder geschoben, welcher dann die Pixel des
+    Bildes liefert (von links nach rechts, beginnend in der obersten Zeile).
+    Dabei liefert der Decoder fuer jedes Pixel ein Byte (Auch bei Schwarz-
+    Weiss-Bildern), aus dem dann anhand der Farbtabelle die Farbe des Pixels
+    bestimmt wird. Ist ein vom LZW-Decoder geliefertes Byte groesser als die
+    Groesse der Farbtabelle, dann ist das Bild fehlerhaft.
+    Die Funktionsweise des LZW-Decoders wird spaeter erklaert.
+    Dem LZW-Decoder muss ausserdem die Bit/Pixel-Anzahl mitgeteilt werden.
+  Als letzter Pascal-String folgt ein Leerstring als Terminator des
+    Einzelbildes.
+
+Teil 4 ########### Trailer ##################################################
+
+  Nur 1 Byte: '3B'     Der Trailer ist das letzte Byte des GIF-Dokuments.
+
+Bild-Modifikator ############# (nur bei GIF89a) #############################
+
+  Byte Nr. 0 - 2: '21 F9 04'  Block-Label, immer '21 F9 04'.
+  Byte Nr. 3:  <000 000 0 0>
+    Bit Nr. 1 - 3:   <000>    Unbenutzt
+    Bit Nr. 4 - 6:   <000>    Disposal Method. Folgende Varianten sind
+                                moeglich: <000>=keine Disposal Method
+                                definiert. <001>=Bild bleibt. <010>=Bild wird
+                                ueberschrieben mit Hintergrundfarbe. <011>=
+                                Bild wird ueberschrieben mit dem vorherigen
+                                Bild. <100> bis <111>: noch nicht definiert.
+    Bit Nr. 7:         <0>    User-Input Flag.
+    Bit Nr. 8:         <0>    Zeigt, ob es eine transparente Farbe gibt.
+  Byte Nr. 4 - 5:    '00 00'  Pause nach Aufbau des naechsten Einzelbildes
+                                in Hundertstel-Sekunden. Wenn das User-
+                                Input-Flag gesetzt ist, kann die Pause durch
+                                einen User-Input (zB. Mausklick) abgebrochen
+                                werden. Bei Pause = '00 00' und User-Input-
+                                Flag = <1> wartet der Decoder auf den User-
+                                Input bis ans Ende des Universums.
+  Byte Nr. 6:           '00'  Nummer der transparenten Farbe.
+  Byte Nr. 7:           '00'  Terminator, immer '00'.
+
+Text-Bild ############ (nur bei GIF89a) #####################################
+
+  Der Text wird mit irgendeinem Font mit konstantem Buchstabenabstand in
+    einem (unsichtbaren) Rahmen dargestellt.
+  Byte Nr. 0 - 2: '21 01 0C'  Block-Label, immer '21 01 0C'.
+  Byte Nr. 3 - 4:    '00 00'  X-Position des Rahmens bezueglich Gesamtbild.
+  Byte Nr. 5 - 6:    '00 00'  Y-Position (von oben gerechnet)
+  Byte Nr. 7 - 8:    '40 01'  Textrahmen-Breite (hier: 320)
+  Byte Nr. 9 - 10:   'C8 00'  Textrahmen-Hoehe (hier: 200)
+  Byte Nr. 11:          '08'  Buchstaben-Breite (hier: 8)
+  Byte Nr. 12:          '10'  Buchstaben-Hoehe (hier: 16)
+  Byte Nr. 13:          '01'  Text-Farbe
+  Byte Nr. 14:          '00'  Hintergrund-Farbe. Einen transparenten Hinter-
+                                grund kann man erreichen, indem man dem
+                                Text-Bild einen Bild-Modifikator voranstellt.
+  Danach folgt der Text als beliebig viele Pascal-Strings. ASCII-Zeichen
+    32 bis 127 sind erlaubt, andere werden durch Leerzeichen ersetzt.
+  Zum Schluss kommt ein Leer-String als Terminator.
+  (Als Buchstabenbreite/-hoehe sollte moeglichst nur 8x8 oder 8x16 benutzt
+    werden. Die Textrahmen-Breite/-Hoehe sollte ein exaktes Vielfaches der
+    Buchstaben-Breite/-Hoehe sein. In jede Zeile werden soviele Buchstaben
+    geschrieben, wie passen. Danach (auch mitten im Wort) wird in der
+    folgenden Zeile fortgefahren.)
+ 
+Application Block ############## (nur bei GIF89a) ###########################
+
+  Byte Nr. 0 - 2:  '21 FF 0B'  Block-Label, immer '21 FF 0B'.
+  Byte Nr. 3 -10:  "????????"  Application
+  Byte Nr. 11-13:       "???"  Authentication
+  Danach folgt Application Data als beliebig viele Pascal-Strings.
+  Zum Schluss kommt ein Leer-String als Terminator.
+  Der Sinn eines solchen Blocks blieb mir leider noch verborgen.
+  Nachtrag: Ein sehr wichtiger Application Block ist der Netscape-Block.
+  Er wird vor dem Bild-Modifikator des ersten Einzelbildes eingeschoben und
+  bewirkt, dass die Folge der Einzelbilder nach dem letzten Einzelbild nicht
+  stehen bleibt, sondern wieder von vorn beginnt als Endlos-Schleife.
+  Daten des Netscape-Blocks:
+  - Application = "NETSCAPE"
+  - Authentication = "2.0"
+  - Data = '01 00 00'
+  Der ganze Application Block sieht also so aus:
+    21 FF 0B 4E 45 54 53 43 41 50 45 32 2E 30 03 01 00 00 00
+
+Kommentar ############## (nur bei GIF89a) ###################################
+
+  Byte Nr. 0 - 1:  '21 FE'  Block-Label, immer '21 FE'.
+  Danach folgt der Kommentar als beliebig viele Pascal-Strings. Er sollte
+    nur lesbaren englischen 7-Bit-Text enthalten und nicht zur Uebertragung
+    von Daten missbraucht werden.
+  Zum Schluss kommt ein Leer-String als Terminator.
+  (Kommentare sollten am Schluss des GIF-Dokumentes untergebracht werden.)
+
+Erklaerungen ################################################################
+
+  Interlaced: Nach der nullten Bildzeile folgt nicht die erste, sondern die
+    achte, dann die 16. usw. bis Ende, dann folgen die Zeilen 4, 12, 20 usw.,
+    dann 2, 6, 10, 14, 18 usw., dann zum Schluss 1, 3, 5, 7, 9 usw. Dadurch
+    ist das Aussehen des Bildes schon nach 13% der Daten grob erkennbar.
+
+  Pascal-String: Ein Pascal-String besteht aus einem Count-Byte, in dem die
+    Laenge n des Strings angegeben ist, gefolgt von n Daten-Bytes. Der
+    String "HELLO" mit der Laenge 5 ergibt folgenden Pascal-String: '05 48
+    45 4C 4C 4F'. Die Laenge eines Pascal-Strings kann maximal 255 sein.
+
+  Leer-String: Pascal-String der Laenge 0. Er besteht nur aus dem Byte '00'.
+
+Diese Datei #################################################################
+
+  HTTP://WWW.SERVE.COM/JB/GIF1_D.TXT wurde erstellt von Joerg Buchwitz im
+    Maerz 1996. Letzte Aenderung: 04/96 (Achtung: In der alten Version befand
+    sich ein Fehler in Teil 3c - Einzelbild-Daten).
+  Die Datei ist verfuegbar auf JBs HomePage http://www.serve.com/jb
+
+  Zu dieser Datei gehoeren noch drei weitere Dateien:
+
+    GIF2_D.TXT - Der LZW-Decoder.
+    GIF3_D.TXT - Programm-Beispiele.
+    GIF4_D.TXT - Sichern als GIF.

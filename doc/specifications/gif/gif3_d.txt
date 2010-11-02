@@ -1,0 +1,276 @@
+Datei GIF3_D.TXT - Programm-Beispiele (Datei Nr. 3 von 4)                  JB
+-----------------------------------------------------------------------------
+
+Ein LZW-Decoder ############# als Beispiel ##################################
+
+  Die folgende Pascal-Prozedur LZW_TO_OUT liest eine LZW-Datei ein und
+  haengt das Ergebnis an eine bereits existierende OUT-Datei an.
+  Damit der Parameter Bit/Pixel, den der Decoder unbedingt benoetigt,
+  nicht zusaetzlich uebergeben werden muss, ist er als einzelnes Byte
+  (8 Bit) dem LZW-Data-Stream in der LZW-Datei vorangestellt.
+  Der Sinn dieser Prozedur ist es, kurz, einigermassen sicher und vor allem
+  verstaendlich zu sein. Dafuer wird in Kauf genommen, dass sie extrem
+  ineffizient und folglich langsam ist.
+  Effiziente Algorithmen speichern die Phrasen in einer rekursiven Baum-
+  struktur im Arbeitsspeicher. Das nicht ganz einfache Verfahren wird in
+  "Datenkompression, Effiziente Algorithmen in C" beschrieben.
+  Die folgende Prozedur geht einen anderen Weg: An Stelle der Phrasen merkt
+  sich das Programm die Position der entsprechenden Phrase in der Ausgabe-
+  datei, die ja nichts anderes ist, als die Aneinanderreihung aller Phrasen.
+  Um auf eine alte Phrase zurueckzugreifen, wird die Ausgabedatei (fout)
+  einfach erneut geoeffnet (frecall).
+  Die Prozedur LZW_TO_OUT wird vom Programm LZW_DEC aufgerufen.
+
+  program LZW_DEC;
+  uses crt;
+  procedure LZW_TO_OUT(lzw_name,out_name:string); {reads in a LZW file
+      and concats the output to an always existing OUT file}
+    const pmax=4099;
+    var
+      flzw,fout,frecall:file of byte; ready:boolean;
+      nbit,nbitstart:byte;
+      counter,token:word;
+      predator:word;               {control code "Exit Loop"}
+      terminator:word;             {control Code "End of LZW document"}
+      {$M 30000,0,655360}          {30K Stack, needed for variable p}
+      p:array[1..pmax] of longint; {FilePositions of the phrases}
+    procedure ERROR(s:string); var c:char; begin write(#13#10#10+s
+      +#13#10#10'Press any Key...'); c:=readkey; ready:=true; end;
+    function NEXTTOKEN(nbit:byte):word; var w:longint; b:byte;
+      const buf:longint=0; p:integer=0; mask:array[1..16]of longint=(1,3,7,
+        15,31,63,127,255,511,1023,2047,4095,8191,16383,32767,65535);
+      begin
+        while p<nbit do begin
+          read(flzw,b); if eof(flzw) then ready:=true; w:=b;
+          buf:=buf or (w shl p); p:=p+8; end;
+        w:=buf and mask[nbit]; p:=p-nbit; buf:=buf shr nbit; nexttoken:=w;
+      end;
+    procedure TOTAL_RECALL(token:word);
+      var i:longint; b4096:array[1..4098]of byte; b:byte;
+      begin
+        if token<predator then begin b:=token;
+          write(fout,b); end
+        else begin
+          if token>=counter then error('Invalid Token.');
+          seek(frecall,p[token]);
+          for i:=1 to p[token+1]-p[token] do read(frecall,b4096[i]);
+          for i:=1 to p[token+1]-p[token] do write(fout,b4096[i]);
+          read(frecall,b); write(fout,b);
+        end;
+        p[counter+1]:=filepos(fout);
+      end;
+    procedure NEWSTART;
+      begin counter:=terminator; seek(fout,filesize(fout));
+        p[counter+1]:=filesize(fout); nbit:=nbitstart+1; ready:=false;
+      end;
+  begin {LZW_TO_OUT}
+    assign(flzw,lzw_name); reset(flzw); assign(fout,out_name); reset(fout);
+    assign(frecall,out_name); reset(frecall);
+    nbitstart:=nexttoken(8); predator:=1 shl(nbitstart);
+    terminator:=predator+1; newstart;
+    repeat
+      counter:=counter+1; if counter and 511=260 then begin
+        gotoxy(1,1); write(filepos(flzw)*100 div filesize(flzw),'%'); end;
+      if counter>pmax-2 then error('cannot cache more than 4096 phrases');
+      if counter=3 then nbit:=2;    if counter=5 then nbit:=3;
+      if counter=9 then nbit:=4;    if counter=17 then nbit:=5;
+      if counter=33 then nbit:=6;   if counter=65 then nbit:=7;
+      if counter=129 then nbit:=8;  if counter=257 then nbit:=9;
+      if counter=513 then nbit:=10; if counter=1025 then nbit:=11;
+      if counter=2049 then nbit:=12;
+      token:=nexttoken(nbit);
+      if token=predator then newstart
+      else if token=terminator then ready:=true
+      else if token>=counter then error('forward recall')
+      else total_recall(token);
+    until ready;
+    close(flzw); close(fout); close(frecall);
+  end; {LZW_TO_OUT}
+  BEGIN; {program LZW_DEC}
+    clrscr;
+    if paramcount<>2 then begin
+      writeln('Syntax: LZW_DEC <LzwFile> <OutFile>'); halt; end;
+    lzw_to_out(paramstr(1),paramstr(2));
+  END. {program LZW_DEC}
+
+Ein GIF-Converter ############ als Beispiel #################################
+
+  Das Programm GIF2PIX wandelt das erste Einzelbild eines GIF-Dokuments in
+  eine PIX-Datei um, wobei PIX ein sehr einfaches 265-Farb-Grafikformat ist.
+  Das PIX-Format ist selbsterklaerend, man muss eine PIX-Datei nur mit einem
+  Text-Editor aufrufen, um  das Format zu verstehen.
+  Der Uebersichtlickeit halber vollzieht sich das Programm in 3 Schritten:
+  1.: Header der GIF-Datei --> Header der PIX-Datei
+  2.: LZW-Code aus GIF     --> temporaere LZW-Puffer-Datei
+  3.: LZW-Puffer-Datei     --> Daten der PIX-Datei
+
+  Die Prozedur GIF_TO_PIX_AND_LZW erledigt die Schritte 1 und 2. Dabei wird
+  der LZW-Code, der im GIF-File noch in Pascal-Strings verpackt ist, netto
+  in ein Zwischenpuffer-File kopiert.
+  Schritt 3 fuehrt die schon bekannte Prozedur LZW_TO_OUT durch.
+
+  program GIF2PIX;
+  uses crt;
+  Procedure LZW_TO_OUT must be inserted here!
+  procedure GIF_TO_PIX_AND_LZW(gif_name,pix_name,lzw_name:string);
+    var fgif,flzw,fpix:file; ft:text; s:string;
+      b,bgcol,aratio:byte; w,nw,ncol:word;
+      i,width,height,x1,x2,y1,y2,pal_pos,lzw_pos:longint;
+    procedure ERR(s:string); var c:char; begin
+      write(#13#10#10+s+#13#10#10'Press Key...'); c:=readkey; halt; end;
+    function NEXTBYTE:word; var b:byte; nr:word; begin
+      blockread(fgif,b,1,nr); if nr=1 then nextbyte:=b else nextbyte:=0; end;
+  begin {GIF_TO_PIX_AND_LZW}
+    assign(fgif,gif_name); {$I-}reset(fgif,1){$I+};
+    if ioresult<>0 then err('File "'+gif_name+'" not found');
+    s:=''; for i:=1 to 6 do s:=s+chr(nextbyte);
+    if s<>'GIF87a' then begin close(fgif); err('GIF version "'+copy(s,4,3)+
+      '" not supported.'); end;
+    for i:=1 to 5 do b:=nextbyte;
+    if b and 128=128 then pal_pos:=13 else pal_pos:=0;
+    ncol:=6; for i:=1 to b and 7 do ncol:=ncol*2;
+    bgcol:=nextbyte; aratio:=nextbyte;
+    if pal_pos>0 then for i:=1 to ncol do b:=nextbyte; b:=nextbyte;
+    if b<>$2C then begin close(fgif); err('GIF contains no Picture'); end;
+    x1:=nextbyte; x1:=x1+nextbyte*256; y1:=nextbyte; y1:=y1+nextbyte*256;
+    x2:=nextbyte; x2:=x2+nextbyte*256; y2:=nextbyte; y2:=y2+nextbyte*256;
+    width:=x2-x1; height:=y2-y1;
+    b:=nextbyte; if b and 64=64 then begin close(fgif);
+      err('Interlaced GIF not supported.'); end;
+    if b and 128=128 then begin pal_pos:=filepos(fgif);
+      ncol:=6; for i:=1 to b and 7 do ncol:=ncol*2;
+      for i:=1 to ncol do b:=nextbyte; end;
+    lzw_pos:=filepos(fgif);
+    assign(ft,pix_name); rewrite(ft);
+    writeln(ft,'PixelGraphics:'#13#10'FilePos BA:Width(2 Bytes,LowByte'+
+      'first)'#13#10'BC:Height'#13#10'BE:T-Flag(if 1 then watch T-Color)'+
+      #13#10'BF:T-Color(transparent)'#13#10'C0:ColorTable(256x3 Bytes RGB)'+
+      #13#10'3C0:Picture(1Byte/Pixel)');
+    close(ft);
+    assign(fpix,pix_name); reset(fpix,1);
+    seek(fpix,$BA);
+    blockwrite(fpix,width,2,nw); blockwrite(fpix,height,2,nw);
+    w:=0; blockwrite(fpix,w,2,nw);
+    if pal_pos=0 then begin b:=0; for i:=1 to 3 do blockwrite(fpix,b,1,nw);
+      b:=255; for i:=1 to 3 do  blockwrite(fpix,b,1,nw);
+      b:=0; for i:=1 to 762 do  blockwrite(fpix,b,1,nw); end
+    else begin seek(fgif,pal_pos);
+      for i:=0 to 767 do begin if i<ncol then b:=nextbyte else b:=0;
+        blockwrite(fpix,b,1,nw); end; end;
+    close(fpix);
+    seek(fgif,lzw_pos); b:=nextbyte; if b>8 then begin close(fgif);
+      err('LZW-Startbits > 8'); end;
+    assign(flzw,lzw_name); rewrite(flzw,1);
+    blockwrite(flzw,b,1,nw);
+    repeat b:=nextbyte; if b>0 then begin
+      blockread(fgif,s,b,nw); blockwrite(flzw,s,b,nw); end;
+    until b=0;
+    b:=nextbyte;
+    close(fgif); close(flzw);
+    if b<>$3B then err('Trailer missing');
+  end; {GIF_TO_PIX_AND_LZW}
+  BEGIN; {program GIF2PIX}
+    clrscr;
+    if paramcount<>2 then begin
+      writeln('Syntax: GIF2PIX <GIF file> <PIX file>'); halt; end;
+    gif_to_pix_and_lzw( paramstr(1),paramstr(2),'C:\GIF2PIX.TMP');
+    lzw_to_out('C:\GIF2PIX.TMP',paramstr(2));
+  END. {program GIF2PIX}
+
+  Hinweis: Die Prozedur LZW_TO_OUT muss auch in dieses Programm eingefuegt
+           werden.
+
+Ein GIF-Viewer ############### als Beispiel #################################
+
+  Das Programm JGIF stellt ein GIF-Dokument im niedrigaufloesenden 256-Farb-
+  Videomodus (320x200 Pixel) dar, der von jeder VGA-Karte unterstuetzt wird.
+  Grosse Bilder lassen sich per Cursortasten scrollen. Mit der Escape-Taste
+  wird die Anzeige beendet. 
+  Der Uebersichtlickeit halber vollzieht sich das Programm in 2 Schritten:
+  1.: Das GIF-Dokument wird in eine PIX-Datei konvertiert.
+  2.: Die PIX-Datei wird angezeigt.
+
+  Die Prozedur PAINT_PIX erledigt Schritt 2. Der Rest ist bereits bekannt.
+
+  program JGIF;
+  uses crt,dos;
+  CONST tmp='C:\'; {directory for temporary files jgif.tmp and jgif.pix}
+  Procedure LZW_TO_OUT must be inserted here!
+  Procedure GIF_TO_PIX_AND_LZW must be inserted here! 
+  procedure PAINT_PIX(fnam:string);
+    var nr:word; pal:array[1..768]of byte; s:string; e:integer; c:char;
+      f:file;
+      w,wd,ht,y,nrest:word; tr,tc,textmod:byte;
+      r:registers{uses dos!};
+      x1,y1,x2,y2,d:longint;
+    procedure PAINT(x1,y1,x2,y2:longint); var y:word;
+      begin seek(f,y1*wd+$3C0);
+        for y:=0 to y2-y1 do begin
+          if wd<=320 then blockread(f,mem[$a000:320*y],wd,nr)
+          else begin nrest:=x1;
+            while nrest>768 do begin blockread(f,pal,768,nr);
+              nrest:=nrest-768; end;
+            if nrest>0 then blockread(f,pal,nrest,nr);
+            blockread(f,mem[$a000:320*y],x2-x1+1,nr); nrest:=wd-x2-1;
+            while nrest>768 do begin blockread(f,pal,768,nr);
+              nrest:=nrest-768; end;
+            if nrest>0 then blockread(f,pal,nrest,nr);
+          end;
+        end;
+      end;
+  begin {PAINT_PIX}
+    assign(f,fnam); reset(f,1); seek(f,$BA); blockread(f,wd,2,nr);
+    blockread(f,ht,2,nr); blockread(f,tr,1,nr); blockread(f,tc,1,nr);
+    blockread(f,pal,768,nr); for w:=1 to 768 do pal[w]:=pal[w]div 4;
+    {follows entering the graphics modus}
+    r.ah:=$0f; intr($10,r); textmod:=r.al; {keep in mind type of text modus}
+    r.ah:=0; r.al:=$13; intr($10,r);       {video modus 320x200x256}
+    {follows setting of all color registers}
+    r.ah:=$10; r.al:=$12;           {function 10h, subfunction 12h}
+    r.bx:=0;                        {first color register}
+    r.cx:=256;                      {number of color registers}
+    r.es:=seg(pal); r.dx:=ofs(pal); {address of the buffer}
+    intr($10,r);                    {INT10h sets the color registers}
+    x1:=0; x2:=wd-1; if x2>319 then x2:=319;
+    y1:=0; y2:=ht-1; if y2>199 then y2:=199;
+    repeat
+      paint(x1,y1,x2,y2); c:=readkey; if c=#0 then c:=readkey;
+      case c of
+        #77:begin d:=20; if x2+20>wd-1 then d:=wd-1-x2; if wd<320 then d:=0;
+              x1:=x1+d; x2:=x2+d; end; {cursor key right}
+        #75:begin d:=-20; if x1-20<0 then d:=-x1; if wd<320 then d:=0;
+              x1:=x1+d; x2:=x2+d; end; {cursor key left}
+        #80:begin d:=20; if y2+20>ht-1 then d:=ht-1-y2; if ht<200 then d:=0;
+              y1:=y1+d; y2:=y2+d; end; {cursor key down}
+        #72:begin d:=-20; if y1-20<0 then d:=-y1; if ht<200 then d:=0;
+              y1:=y1+d; y2:=y2+d; end; {cursor key up}
+      end; {case}
+    until c=#27; {Escape key}
+    close(f);
+    r.ah:=0; r.al:=textmod; intr($10,r); {restore kept text modus}
+  end; {PAINT_PIX}
+  BEGIN; {program JGIF}
+    clrscr;
+    if paramcount<>1 then begin
+      writeln('Syntax: JGIF <GIF file>'); halt; end;
+    gif_to_pix_and_lzw(paramstr(1),tmp+'JGIF.PIX',tmp+'JGIF.TMP');
+    lzw_to_out(tmp+'JGIF.TMP',tmp+'JGIF.PIX');
+    paint_pix(tmp+'JGIF.PIX');
+  END. {program JGIF}
+
+  Hinweis: Die Prozeduren LZW_TO_OUT und GIF_TO_PIX_AND_LZW muessen auch in
+           dieses Programm eingefuegt werden.
+  Hinweis: Das Programm loescht hinterher nicht die temporaeren Dateien 
+           JGIF.TMP und JGIF.PIX.
+
+Diese Datei #################################################################
+
+  HTTP://WWW.SERVE.COM/JB/GIF3_D.TXT wurde erstellt von Joerg Buchwitz im
+    Maerz 1996. Letzte Aenderung: 04/96.
+  Die Datei ist verfuegbar auf JBs HomePage http://www.serve.com/jb
+
+  Zu dieser Datei gehoeren noch drei weitere Dateien:
+
+    GIF1_D.TXT - Das GIF-Format.
+    GIF2_D.TXT - Der LZW-Decoder.
+    GIF4_D.TXT - Sichern als GIF.

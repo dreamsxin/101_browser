@@ -1,0 +1,137 @@
+Datei GIF2_D.TXT - Der LZW-Decoder (Datei Nr. 2 von 4)                     JB
+-----------------------------------------------------------------------------
+
+Der LZW-Decoder #############################################################
+
+  Der von Lempel und Ziv erfundene und im Heft Mai 1977 der Reihe "IEEE
+  Transactions on Information Theory" unter dem Titel "A Universal Algorithm
+  for Sequential Data Compression" vorgestellte Algorithmus beruhte darauf,
+  dass es in einem Dokument immer Phrasen (Zeichenfolgen) gibt, die mehrfach
+  auftreten. Beim zweiten Auftreten einer Phrase braucht diese deshalb nicht
+  mehr uebertragen zu werden, sondern es wird nur ein Zeiger gesendet, der
+  auf die Stelle im Dokument zeigt, an der die Phrase schon einmal auftrat.
+  
+  Dieses System wurde mehrmals verbessert (LZ77 --> LZSS --> LZ78) und 1984 
+  von Terry Welch unter dem Namen LZW etabliert. Der oben genannte Zeiger
+  zeigt nun nicht mehr auf eine Datei-Position, sondern auf die laufende
+  Nummer einer frueheren Phrase. Dadurch kann man mit einem wenige Bit
+  grossen Zeiger auf wesentlich weiter zurueckliegende Phrasen verweisen.
+
+  Der Decoder liest die LZW-Daten nicht byteweise, sondern tokenweise ein,
+  wobei die Laenge eines Tokens unterschiedlich sein kann. Bei GIF wird
+  mit Tokens der Laenge 4 bis 12 Bit gearbeitet. Es wird ein 32-Bit grosser
+  Eingangspuffer benutzt, in den von links die Bytes des LZW-Dokuments
+  hineingeschoben werden, waehrend man rechts jeweils ein n-Bit-Token
+  ausliest und dann den Puffer um n Bit nach rechts weiterschiebt.
+
+  Eigentlich waere es notwendig, dass jedes Token ein Flag-Bit enthaelt, aus
+  dem man erkennt, ob das Token echte Daten oder einen Zeiger enthaelt.
+  Dies umgeht man, indem festgelegt ist, dass ein Token immer dann einen
+  Zeiger enthaelt, wenn sein Wert groesser ist, als der groesstmoegliche
+  Datenwert. Beispiel: Will man 8-Bit-Daten uebertragen (groesstmoeglicher
+  Datenwert 255), dann ist ein Token 75 ein Daten-Token, waehrend ein Token
+  des Wertes 325 einen Zeiger auf die Phrase Nr.325 darstellt.
+  Dazu muss das Token mindestens 9 Bit gross sein, weshalb 8-Bit-Bilder
+  stets mit 9-Bit-Tokens beginnen. Dieses System hat den Nachteil, dass
+  keine Zeiger auf die Phrasen Nr. 1 bis 255 moeglich sind. Deshalb
+  numeriert man die Phrasen einfach nicht ab 1, sondern ab 258 (bzw.
+  allgemein ab (2 hoch nBit)+2. Die Werte (2 hoch nBit) und (2 hoch nBit)+1
+  sind fuer Steuerzwecke reserviert.
+
+  Fuer 8-Bit-Daten sieht der Decodier-Algorithmus so aus:
+
+  Ergebnis := leer
+  repeat
+    nBit:=9
+    For i := 258 to 4096
+      t := naechstes nBit-Token
+      case      
+        t<256   -->   Phrase[i] := t
+        t=256   -->   Steuerzeichen "For-Schleife vorzeitig abbrechen"
+        t=257   -->   Steuerzeichen "Ende des LZW-Dokuments"
+        t>257   -->   Phrase[i] := Phrase[t]+Erstes Zeichen von Phrase[t+1]
+      end_case
+      Ergebnis := Ergebnis + Phrase[i]
+      nBit auf 10, 11 oder 12 erhoehen, falls noetig.
+    end_for
+  until Ende des LZW-Dokuments
+  
+  Die Variable nBit wird immer dann um 1 erhoeht, wenn i nicht mehr mit
+  n Bit darstellbar ist.
+
+  Dem Decoder muss vorher unbedingt mitgeteilt werden, wieviele Bit/Zeichen
+  die Daten haben, sonst liefert er ein voellig falsches Ergebnis.
+
+Beispiel: ########## LZW --> Text ###########################################
+
+  Gegeben: folgender LZW-Datenstrom in Bytes: 
+    0, 145, 20, 97, 33, 144, 9, 147, 39, 8, 19, 42, 76, 24, 34, 32.
+  Gegeben: Bit/Pixel: 8
+
+  Da es sich hier um 8-Bit-Daten handelt, muessen alle LZW-Bytes
+  als 9-Bit-Tokens eingelesen werden.
+
+  Diese 9-Bit-Tokens erhaelt man mit Hilfe des oben erwaehnten 32-Bit-
+  Puffers oder, indem man die Eingangs-Bytes von rechts beginnend binaer
+  nebeneinander schreibt und dann ebenfalls von rechts beginnend 9-bit-
+  weise liest:
+                                                <--- eingelesene Bytes|
+      { 147  }{  9   }{ 144  }{  33  }{  97  }{  20  }{  145 }{  0   }|
+      1001001100001001100100000010000101100001000101001001000100000000|
+       {  76   }{  76   }{  258  }{  44   }{  69   }{  72   }{  256  }|
+                                                     <--- 9-Bit-Tokens|
+
+  Man erhaelt diese Token-Folge:
+  256, 72, 69, 44, 258, 76, 76, 79, 264, 265, 266, 265, 33, 257, 0.
+
+  Nun werden die Tokens der Reihe nach in Phrasen uebersetzt:
+
+  Token Uebersetzung                                         Ausgabe
+  ---   ------------------------------------------------     -------
+  256   Phrase[258]:=Steuercode "Erneut bei 258 starten"
+  72    Phrase[258]:=           72                        =  "H"
+  69    Phrase[259]:=           69                        =  "E"
+  44    Phrase[260]:=           44                        =  ","
+  258   Phrase[261]:=Phrase[258]+1.Zeichen v.Phrase[259]  =  "HE"
+  76    Phrase[262]:=           76                        =  "L"
+  76    Phrase[263]:=           76                        =  "L"
+  79    Phrase[264]:=           79                        =  "O"
+  264   Phrase[265]:=Phrase[264]+1.Zeichen v.Phrase[265]  =  "OO"
+  265   Phrase[266]:=Phrase[265]+1.Zeichen v.Phrase[266]  =  "OOO"
+  266   Phrase[267]:=Phrase[266]+1.Zeichen v.Phrase[267]  =  "OOOO"
+  265   Phrase[268]:=Phrase[265]+1.Zeichen v.Phrase[266]  =  "OOO"
+  33    Phrase[269]:=           33                        =  "!"
+  257   Phrase[270]:=Steuercode "Ende des LZW-Dokuments"           
+
+  Das Ergebnis ist der Text "HE,HELLOOOOOOOOOOOOO!".
+  Hierbei faellt auf, dass zB. zur Erzeugung der Phrase[265] das erste
+  Zeichen der Phrase[265] benoetigt wird, welche eigentlich noch gar nicht
+  existiert, weil sie ja gerade erst erzeugt wird. Dies ist im Prinzip kein
+  Problem, weil der benoetigte Buchstabe gleichzeitig der erste Buchstabe
+  der Phrase[264] und somit bekannt ist. Man darf es aber bei der Program-
+  mierung eines Decoders nicht vergessen, sonst bekommt das GIF-Bild bunte
+  Sommersprossen.
+
+Achtung, Patente! ###########################################################
+
+  Soweit mir bekannt, ist das LZW-Verfahren patentrechtlich geschuetzt,
+  jedoch nur der VERschluesselungs-Teil, nicht aber die ENTschluesselung.
+  Die Patent-Rechte hat die Firma Unisys, die vor allem Lizenzen an Modem-
+  Hersteller vergibt, weil das LZW-Verfahren Bestandteil des Uebertragungs-
+  Protokolls "V-42 bis" ist.
+  Das GIF-Grafikformat wurde von CompuServe zum Zwecke der Online-Uebertra-
+  gung von Bildern entwickelt. Da es keine Uebertragung von Echtfarben
+  gestattet, wird ihm keine grosse Zukunft vorausgesagt. Ob sich jedoch die
+  Entwicklung an diese Voraussage haelt, laesst sich kaum voraussagen.
+
+Diese Datei #################################################################
+
+  HTTP://WWW.SERVE.COM/JB/GIF2_D.TXT wurde erstellt von Joerg Buchwitz im
+    Maerz 1996. Letzte Aenderung: 11/96.
+  Die Datei ist verfuegbar auf JBs HomePage http://www.serve.com/jb
+
+  Zu dieser Datei gehoeren noch drei weitere Dateien:
+
+    GIF1_D.TXT - Das GIF-Format.
+    GIF3_D.TXT - Programm-Beispiele.
+    GIF4_D.TXT - Sichern als GIF.

@@ -1,0 +1,185 @@
+Datei GIF4_D.TXT - Sichern als GIF (Datei Nr. 4 von 4)                     JB
+-----------------------------------------------------------------------------
+
+Vorbemerkung ################################################################
+
+  Um es vorwegzunehmen: Der unten beschriebene GIF-Encoder ist kein
+  ordentlicher Algorithmus.
+
+  Der Komprimierungs-Faktor, den ein GIF-Encoder leistet, haengt zum einen
+  von der Struktur der zu komprimierenden Daten ab, und zum anderen von der
+  Kunst des Programmierers.
+  Ersteres ist Schicksal, letzteres war fuer mich vor allem eine Zeitfrage.
+  Mein Ziel war es lediglich, ein Bild ueberhaupt als GIF speichern zu
+  koennen. Der Kompressionsfaktor war mir so egal, dass ich sogar einen
+  Expansionsfaktor von 40% in Kauf zu nehmen bereit war (und in Kauf nahm).
+  
+  Und dann war es ploetzlich recht einfach. Während man, um eine Kompression
+  zu erreichen, nicht um die Programmierung einer Baum-Struktur herumkommt,
+  kann man ein Bild nun direkt und ziemlich schnell als GIF speichern, wenn
+  man bewusst auf jegliche Kompression verzichtet.
+
+  Eine weitere Moeglichkeit, ein GIF-Dokument drastisch zu verkleinern,
+  besteht darin, nicht mit 256 Farben, sondern - wenn es das Bild zulaesst -
+  mit einer kleineren Farbtabelle zu arbeiten. Auch hierauf habe ich
+  verzichtet, wenngleich der Aufwand dafuer nicht besonders hoch gewesen
+  waere.
+
+Die GIF87a-Datei ############################################################
+ 
+  Die Speicherung erfolgt als GIG87a. Um aus einem GIF87a-Dokument ein
+  GIF89a-Dokument zu machen, braucht man nur im Header die 7 durch eine 9 zu
+  ersetzen. Aber genau das wird nicht empfohlen, weil dann naemlich der
+  Kreis der Programme, die das Dokument lesen koennen, auf solche einge-
+  schraenkt wird, die GIF89a-faehig sind. Deshalb sollte man ein Bild
+  wirklich nur dann als GIF89a speichern, wenn es Features enthaelt, die
+  GIF87a nicht unterstuetzt, wie z.B. einen transparenten Hintergrund.
+
+  Das zu erzeugende GIF-Dokument besteht aus mehreren Teilen, die bereits im
+  Dokument GIF1_D.TXT beschrieben wurden:
+    - Teil 1 : Header
+    - Teil 2 : Globale Farbtabelle
+    - Teil 3a: Einzelbild-Header
+    - Teil 3c: Einzelbild-Daten
+    - Teil 4 : Trailer.
+  Die benoetigten Daten sind folgende:
+    - Breite des Bildes
+    - Hoehe des Bildes
+    - Farbtabelle (256 Farben, exakt 768 Byte)
+    - Die Bild-Pixel.
+  Die Erstellung der Teile 1, 2, 3a und 4 kann man anhand der Beschreibung
+  in GIF1_D.TXT nachvollziehen.
+
+Teil 3c ########### Einzelbild-Daten ########################################
+
+  Der eigentliche Bild-Teil beginnt mit einem Byte '08', weil es sich um
+  8-Bit-Daten handelt.
+  Danach folgen in einem ordentlichen GIF-Dokument viele Pascal-Strings der
+  Laenge 255, zum Schluss ein kuerzerer Pascal-String und als Terminator ein
+  Leerstring.
+  
+  Bei meinem Verfahren haben die Strings nicht die Laenge 255, sondern die
+  Laenge 9. Und der String vor dem Terminator ist nicht kuerzer, als die
+  uebrigen, sondern er wird einfach mit LZW-Ende-Tokens (Nr.257) aufgefuellt.
+  Ausserdem beginnt jeder dieser 9er Strings intern mit dem Token 256, also
+  dem Steuerzeichen fuer LZW-Neubeginn.
+  Auf diese Art wird das Bild nicht durch einen, sondern durch viele
+  tausende einzelne winzige LZW-Data-Streams beschrieben.
+
+  Alle soeben beschriebenen Besonderheiten sind zulaessig. Sie wirken sich
+  zwar verheerend auf die Kompressionsrate aus, bedingen aber eine recht
+  einfache Erzeugung der einzelnen LZW-Data-Streams.
+
+Der Mini-LZW-Data-Stream ####################################################
+
+  In einem String von 9 Byte Laenge (72 Bit) lassen sich genau 8 Tokens der
+  Groesse 9 unterbringen. Damit diese 8 Tokens einen kompletten LZW-Data-
+  Stream bilden, muss das erste Token den Wert 256 haben (Steuerzeichen
+  "Neubeginn"). Die folgenden 7 Tokens enthalten dann jeweils ein Bild-Pixel.
+  Wenn die Pixelzahl des Bildes nicht durch 7 teilbar ist, koennen die 7
+  Tokens des letzten LZW-Streams nicht komplett mit Pixeln gefuellt werden.
+  Die ueberzaehligen Tokens erhalten dann den Wert 257 (Steuerzeichen "LZW-
+  Ende"). Ist die Bildpixelzahl jedoch durch 7 teilbar, dann muss kein 257er
+  Token aufgefuellt werden. Weil jedoch am Ende des LZW-Teils unbedingt ein
+  LZW-Ende-Token stehen muss, muss man in diesem Fall noch einen kompletten
+  Mini-LZW-Stream anhaengen, der nur aus dem 256er und sieben 257er Tokens
+  besteht.
+  
+Ein GIF-Converter ############ als Beispiel #################################
+
+  Das Programm PIX2GIF wandelt eine PIX-Datei in ein GIF-Dokuments um, wobei
+  PIX ein sehr einfaches 265-Farb-Grafikformat ist.
+  Das PIX-Format ist selbsterklaerend, man muss eine PIX-Datei nur mit einem
+  Text-Editor aufrufen, um  das Format zu verstehen.
+
+  Die Prozedur PIX_TO_GIF erledigt die Umwandlung und wird vom Programm
+  PIX2GIF aufgerufen.
+
+  program PIX2GIF;
+  uses crt;
+  procedure PIX_TO_GIF(pix_name,gif_name:string);
+      {reads a PIX file *.PIX and creates a GIF document *.GIF from it.}
+    var
+      fpix,fgif:file;
+      nr,nw,wd,ht,w:word;
+      b,tr,tc:byte;
+      pal:array[1..768]of byte;
+      s:string;
+      c:char;
+    function NEXTLZWSTRING:string; {creates the next mini LZW string}
+      var
+        a1:array[1..7]of byte;            {7 Pixel}
+        a2:array[1..8]of word;            {8 Tokens}
+        w1,w2,w3,w4,w5,w6,w7,w8,w9:word;  {9 "Bytes" of the result string}
+        i:integer;
+      begin blockread(fpix,a1,7,nr); a2[1]:=256;
+      for i:=1 to 7 do if i<=nr then a2[i+1]:=a1[i] else a2[i+1]:=257;
+      w1:=a2[1];
+      w2:=a2[2] shl 1 or (a2[1] shr 8);
+      w3:=a2[3] shl 2 or (a2[2] shr 7);
+      w4:=a2[4] shl 3 or (a2[3] shr 6);
+      w5:=a2[5] shl 4 or (a2[4] shr 5);
+      w6:=a2[6] shl 5 or (a2[5] shr 4);
+      w7:=a2[7] shl 6 or (a2[6] shr 3);
+      w8:=a2[8] shl 7 or (a2[7] shr 2);
+      w9:=a2[8] shr 1;
+      s:=chr(w1 and 255)+chr(w2 and 255)+chr(w3 and 255)+chr(w4 and 255);
+      s:=s+chr(w5 and 255)+chr(w6 and 255)+chr(w7 and 255)+chr(w8 and 255);
+      s:=s+chr(w9 and 255); if nr=0 then s:='';
+      nextlzwstring:=s; end;
+    begin {PIX_TO_GIF}
+      assign(fpix,pix_name); reset(fpix,1);
+      seek(fpix,$BA); blockread(fpix,wd,2,nr);                {Picture Width}
+      blockread(fpix,ht,2,nr);                               {Picture Height}
+      blockread(fpix,tr,1,nr); blockread(fpix,tc,1,nr);   {transparent Color}
+      If tr=1 then begin clrscr; write(#10#10'GIF87a does not support '+
+        'transparent backgr.'#13#10#10'Press any Key...'); c:=readkey; end;
+      blockread(fpix,pal,768,nr);                               {Color Table}
+      assign(fgif,gif_name); {$I-}rewrite(fgif,1){$I+};
+      if ioresult<>0 then begin clrscr; write('File could not be created'+
+        #13#10#10'Press any Key...'); c:=readkey; close(fpix); end
+      else begin
+        s:='IF87a'; s[0]:='G'; blockwrite(fgif,s,6,nw);              {GIF87a}
+        blockwrite(fgif,wd,2,nw);                               {Whole Width}
+        blockwrite(fgif,ht,2,nw);                              {Whole Height}
+        b:=$F7; blockwrite(fgif,b,1,nw);           {announce Glob.ColorTable}
+        blockwrite(fgif,tc,1,nw);                          {Background Color}
+        b:=0; blockwrite(fgif,b,1,nw);                          {AspectRatio}
+        blockwrite(fgif,pal,768,nw);                             {ColorTable}
+        b:=$2C; blockwrite(fgif,b,1,nw);              {Single Picture Header}
+        w:=0; blockwrite(fgif,w,2,nw);                 {Single Pic.-X-Pos.=0}
+        blockwrite(fgif,w,2,nw);                       {Single Pic.-Y-Pos.=0}
+        blockwrite(fgif,wd,2,nw);               {Single Pic.Width=WholeWidth}
+        blockwrite(fgif,ht,2,nw);             {Single Pic.Height=WholeHeight}
+        b:=0; blockwrite(fgif,b,1,nw);         {announce NO local ColorTable}
+        b:=8; blockwrite(fgif,b,1,nw);         {SinglePic.data is 8 bit data}
+        seek(fpix,$3C0);                         {Pos of Picture in PIX file}
+        repeat
+          s:=nextlzwstring;              {Pascal string with mini LZW stream}
+          blockwrite(fgif,s,length(s)+1,nw);
+          gotoxy(1,1); write(filepos(fpix)*100 div filesize(fpix),'%');
+        until s='';                              {Empty string as Terminator}
+        b:=$3B; blockwrite(fgif,b,1,nw);                            {Trailer}
+        close(fpix); close(fgif);
+      end;
+    end;   {PIX_TO_GIF}
+  BEGIN; {program PIX2GIF}
+    clrscr;
+    if paramcount<>1 then begin
+      writeln('Syntax: PIX2GIF <PixFile>'); halt; end;
+    if pos('.',paramstr(1))<1 then begin
+      writeln('PIX2GIF Error: Filename does not contain a "."'); halt; end;
+    pix_to_gif(paramstr(1),copy(paramstr(1),1,pos('.',paramstr(1)))+'GIF');
+  END. {program PIX2GIF}
+
+Diese Datei #################################################################
+
+  HTTP://WWW.SERVE.COM/JB/GIF4_D.TXT wurde erstellt von Joerg Buchwitz im
+    April 1996. Letzte Aenderung: 04/96.
+  Die Datei ist verfuegbar auf JBs HomePage http://www.serve.com/jb
+
+  Zu dieser Datei gehoeren noch drei weitere Dateien:
+
+    GIF1_D.TXT - Das GIF-Format.
+    GIF2_D.TXT - Der LZW-Decoder.
+    GIF3_D.TXT - Programm-Beispiele.

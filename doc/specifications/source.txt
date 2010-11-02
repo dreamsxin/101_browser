@@ -1,0 +1,6 @@
+GIF:
+http://www.w3.org/Graphics/GIF/spec-gif87.txt
+http://www.w3.org/Graphics/GIF/spec-gif89a.txt
+
+GIF[number]_D.TXT
+http://www.serve.com/jb/gif_d.htm
