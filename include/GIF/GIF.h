@@ -21,6 +21,20 @@ typedef struct
 
 typedef struct
 {
+	uint8_t Image_Separator;
+	uint16_t Image_Left_Position;
+	uint16_t Image_Top_Position;
+	uint16_t Image_Width;
+	uint16_t Image_Height;
+	uint8_t Size_of_Local_Color_Table : 3;
+	uint8_t Reserved : 2;
+	uint8_t Sort_Flag : 1;
+	uint8_t Interlace_Flag : 1;
+	uint8_t Local_Color_Table_Flag : 1;
+} Image_Descriptor;
+
+typedef struct
+{
 	uint8_t Block_Size;
 	uint8_t Transparent_Color_Flag : 1;
 	uint8_t User_Input_Flag : 1;
@@ -87,7 +101,7 @@ ReadResult read_Logical_Screen_Descriptor(FILE* in_gifFile);
 ReadResult read_Global_Color_Table(FILE* in_gifFile);
 ReadResult read_Graphic_Control_Extension(FILE* in_gifFile, bool in_is89a);
 ReadResult read_Plain_Text_Extension(FILE* in_gifFile);
-ReadResult read_Image_Descriptor(FILE* in_gifFile);
+ReadResult read_Image_Descriptor(FILE* in_gifFile, Image_Descriptor* in_pImageDescriptor);
 ReadResult read_Local_Color_Table(FILE* in_gifFile);
 ReadResult read_Image_Data(FILE* in_gifFile);
 ReadResult read_Application_Extension(FILE* in_gifFile);

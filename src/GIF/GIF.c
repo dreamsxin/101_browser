@@ -113,6 +113,27 @@ ReadResult read_Graphic_Block(FILE* in_gifFile)
 
 ReadResult read_GraphicRendering_Block(FILE* in_gifFile)
 {
+	uint8_t lSeparator;
+
+	if (fread(&lSeparator, sizeof(lSeparator), 1, in_gifFile) != 1)
+		return ReadResultPrematureEndOfStream;
+
+	if (lSeparator == 0x2C)
+	{
+		ReadResult readResult;
+		Image_Descriptor imageDescriptor;
+		imageDescriptor.Image_Separator = lSeparator;
+
+		readResult = read_Image_Descriptor(in_gifFile, &imageDescriptor);
+
+		if (readResult != ReadResultOK)
+			return readResult;
+
+		// TODO
+	}
+
+	// TODO
+
 	return ReadResultOK;
 }
 
@@ -144,6 +165,17 @@ ReadResult read_Graphic_Control_Extension(FILE* in_gifFile, bool in_is89a)
 	}
 
 	return read_Graphic_Block(in_gifFile);
+}
+
+ReadResult read_Image_Descriptor(FILE* in_gifFile, Image_Descriptor* in_pImageDescriptor)
+{
+	if (fread(&in_pImageDescriptor->Image_Left_Position, sizeof(*in_pImageDescriptor)-1, 1, in_gifFile) != 1)
+		return ReadResultPrematureEndOfStream;
+
+	if (in_pImageDescriptor->Reserved != 0)
+		return ReadResultInvalidData;
+
+	return ReadResultOK;
 }
 
 ReadResult read_Application_Extension(FILE* in_gifFile)
