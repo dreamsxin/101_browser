@@ -108,13 +108,32 @@ ReadResult read_Data(FILE* in_gifFile, bool in_is89a)
 
 ReadResult read_Graphic_Control_Extension(FILE* in_gifFile, bool in_is89a)
 {
+	Graphic_Control_Extension graphicControlExtension;
+	uint8_t terminator;
+	
 	if (!in_is89a)
 	{
 		return ReadResultInvalidVersion;
 	}
 
-	// because it is not yet implemented
-	return ReadResultInvalidData;
+	if (fread(&graphicControlExtension, sizeof(graphicControlExtension), 1, in_gifFile) != 1)
+		return ReadResultPrematureEndOfStream;
+
+	if (graphicControlExtension.Block_Size != 4)
+		return ReadResultInvalidData;
+
+	if (graphicControlExtension.Reserved != 0)
+		return ReadResultInvalidData;
+
+	if (fread(&terminator, sizeof(terminator), 1, in_gifFile) != 1)
+		return ReadResultPrematureEndOfStream;
+
+	if (terminator != 0)
+	{
+		return ReadResultInvalidData;
+	}
+
+	return ReadResultOK;
 }
 
 ReadResult read_Application_Extension(FILE* in_gifFile)

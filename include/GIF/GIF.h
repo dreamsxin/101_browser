@@ -21,6 +21,17 @@ typedef struct
 
 typedef struct
 {
+	uint8_t Block_Size;
+	uint8_t Transparent_Color_Flag : 1;
+	uint8_t User_Input_Flag : 1;
+	uint8_t Disposal_Method : 3;
+	uint8_t Reserved : 3;
+	uint16_t Delay_Time;
+	uint8_t Transparent_Color_Index;
+} Graphic_Control_Extension;
+
+typedef struct
+{
 	Logical_Screen_Descriptor logicalScreenDescriptor;
 	uint8_t *globalColorTable;
 } Logical_Screen;
