@@ -1,0 +1,2 @@
+#include "GIF/GIF.h"
+

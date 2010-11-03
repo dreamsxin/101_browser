@@ -38,7 +38,7 @@ size_t globalColorTableColorCount(LogicalScreenDescriptor logScrDescr)
 
 int main()
 {
-	char filename[] = "testfiles/gif/GifSample.gif";
+	char filename[] = "testfiles/gif/GifSampleSmall.gif";
 	FILE* imgFile = MTAx_fopen(filename, "rb");
 
 	if (imgFile == NULL)
