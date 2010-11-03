@@ -92,6 +92,7 @@
     <ClCompile Include="..\..\..\src\TestSuite\Test_BasicDataStructures_Tree.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_BigNumber.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_CPU.c" />
+    <ClCompile Include="..\..\..\src\TestSuite\Test_GIF.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_HTML5.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_Interval.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_IteratorInstances.cpp" />

@@ -6,6 +6,7 @@ extern "C" {
 #endif
 void testAlgorithm();
 void testCPU();
+void testGIF();
 #ifdef __cplusplus
 }
 #endif

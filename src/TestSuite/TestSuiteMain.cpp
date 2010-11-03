@@ -29,6 +29,8 @@ int main()
 	testHTML5();
 	wprintf(L"Testing CPU\n");
 	testCPU();
+	wprintf(L"Testing GIF\n");
+	testGIF();
 
 	return 0;
 }
