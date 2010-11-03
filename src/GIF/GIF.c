@@ -106,6 +106,16 @@ ReadResult read_Data(FILE* in_gifFile, bool in_is89a)
 	return ReadResultInvalidData;
 }
 
+ReadResult read_Graphic_Block(FILE* in_gifFile)
+{
+	return read_GraphicRendering_Block(in_gifFile);
+}
+
+ReadResult read_GraphicRendering_Block(FILE* in_gifFile)
+{
+	return ReadResultOK;
+}
+
 ReadResult read_Graphic_Control_Extension(FILE* in_gifFile, bool in_is89a)
 {
 	Graphic_Control_Extension graphicControlExtension;
@@ -133,7 +143,7 @@ ReadResult read_Graphic_Control_Extension(FILE* in_gifFile, bool in_is89a)
 		return ReadResultInvalidData;
 	}
 
-	return ReadResultOK;
+	return read_Graphic_Block(in_gifFile);
 }
 
 ReadResult read_Application_Extension(FILE* in_gifFile)
