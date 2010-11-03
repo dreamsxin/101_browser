@@ -24,7 +24,7 @@ void readRestartInterval(FILE* jpegFile, RestartInterval* in_pRestartInterval)
 void readScanHeader(FILE* jpegFile, ScanHeader* in_pScanHeader)
 {
 	if (fread(&in_pScanHeader->Ls, 
-		sizeof(in_pScanHeader->Ls)+sizeof(in_pScanHeader->Ns), 1, jpegFile)!=1)
+		sizeof(in_pScanHeader->Ls)+sizeof(in_pScanHeader->Ns), 1, jpegFile) != 1)
 	{
 		fprintf(stderr, "In readRestartInterval: preliminary end of file\n");
 		exit(1);
