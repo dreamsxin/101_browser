@@ -233,6 +233,7 @@ module html5
              attribute DOMString accessKey;
     readonly attribute DOMString accessKeyLabel;
              attribute boolean draggable;
+    [PutForwards=value] attribute DOMSettableTokenList dropzone;
              attribute DOMString contentEditable;
     readonly attribute boolean isContentEditable;
              attribute HTMLMenuElement contextMenu;
@@ -512,7 +513,7 @@ module html5
     readonly attribute unsigned long videoWidth;
     readonly attribute unsigned long videoHeight;
              attribute DOMString poster;
-             attribute boolean audio; 
+    [PutForwards=value attribute DOMSettableTokenList audio; 
   };
 
   [NamedConstructor=Audio(),
