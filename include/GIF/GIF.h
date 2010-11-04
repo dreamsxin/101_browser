@@ -68,6 +68,13 @@ typedef struct
 	uint8_t *Data_Values;
 } Data_SubBlock;
 
+typedef struct
+{
+	uint8_t Block_Size;
+	char Application_Identifier[8];
+	char Application_Authentication_Code[3];
+} Application_Extension;
+
 #pragma pack(pop)
 
 typedef enum

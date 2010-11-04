@@ -258,11 +258,49 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 
 ReadResult read_Application_Extension(FILE* in_gifFile, bool in_is89a)
 {
+	Application_Extension applExt;
+	Data_SubBlock subBlock;
+	
 	if (!in_is89a)
 		return ReadResultInvalidVersion;
 
-	// because it is not yet implemented
-	return ReadResultNotImplemented;
+	if (fread(&applExt, sizeof(applExt), 1, in_gifFile) != 1)
+	{
+		return ReadResultPrematureEndOfStream;
+	}
+
+	if (applExt.Block_Size != 11)
+	{
+		return ReadResultInvalidData;
+	}
+
+	if (strncmp(applExt.Application_Identifier, "NETSCAPE", 8) == 0 && 
+		strncmp(applExt.Application_Authentication_Code, "2.0", 3) == 0)
+	{
+		// TODO
+	}
+
+	while (1)
+	{
+		if (fread(&subBlock.Block_Size, sizeof(subBlock.Block_Size), 1, in_gifFile) != 1)
+			return ReadResultPrematureEndOfStream;
+
+		if (subBlock.Block_Size == 0)
+			break;
+
+		subBlock.Data_Values = (uint8_t*) malloc(subBlock.Block_Size);
+
+		if (fread(subBlock.Data_Values, subBlock.Block_Size, 1, in_gifFile) != 1)
+		{
+			return ReadResultPrematureEndOfStream;
+		}
+
+		// TODO: Interprete read block
+
+		free(subBlock.Data_Values);
+	}
+
+	return ReadResultOK;
 }
 
 ReadResult read_Comment_Extension(FILE* in_gifFile, bool in_is89a)
