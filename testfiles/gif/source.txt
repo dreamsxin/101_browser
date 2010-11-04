@@ -1,15 +1,15 @@
-a_image.gif:
+a_image.gif
 ????
 
-GifSample.gif:
+GifSample.gif
 http://en.wikipedia.org/wiki/File:GifSample.gif
 (more exactly: http://upload.wikimedia.org/wikipedia/en/1/19/GifSample.gif)
 
-GifSampleSmall.gif:
+GifSampleSmall.gif
 Creation is explained under
 http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=394783182#Example_GIF_file
 
-Newtons_cradle_animation_book_2.gif:
+Newtons_cradle_animation_book_2.gif
 http://en.wikipedia.org/wiki/File:Newtons_cradle_animation_book_2.gif
 (or more exactly: http://upload.wikimedia.org/wikipedia/commons/d/d3/Newtons_cradle_animation_book_2.gif)
 Referenced in http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=394783182#Usage
@@ -18,6 +18,11 @@ Rotating_earth_(small).gif
 http://en.wikipedia.org/wiki/File:Rotating_earth_(small).gif
 (or more exactly: http://upload.wikimedia.org/wikipedia/commons/7/70/Rotating_earth_%28small%29.gif)
 Referenced in http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=394783182
+
+Rotating_earth_(large).gif
+http://en.wikipedia.org/wiki/File:Rotating_earth_(large).gif
+(or more exactly: http://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif)
+Referenced in http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=394783182#Animated_GIF
 
 Sunflower_as_gif_small.gif
 http://en.wikipedia.org/wiki/File:Sunflower_as_gif_small.gif
