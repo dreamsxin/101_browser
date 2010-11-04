@@ -95,11 +95,11 @@ size_t bytesOfColorTable(unsigned char in_sizeOfColorTable);
 // Grammar words
 ReadResult read_GIF_Data_Stream(FILE* in_gifFile, GIF_Data_Stream *in_pDataStream);
 ReadResult read_Logical_Screen(FILE* in_gifFile, Logical_Screen *in_pLogicalScreen);
-ReadResult read_Data(FILE* in_gifFile, bool in_is89a, uint8_t in_introducer);
-ReadResult read_Graphic_Block(FILE* in_gifFile);
-ReadResult read_GraphicRendering_Block(FILE* in_gifFile);
+ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a);
+ReadResult read_Graphic_Block(FILE* in_gifFile, uint8_t in_separator);
+ReadResult read_GraphicRendering_Block(FILE* in_gifFile, uint8_t in_separator);
 ReadResult read_TableBased_Image(FILE* in_gifFile);
-ReadResult read_SpecialPurpose_Block(FILE* in_gifFile);
+ReadResult read_SpecialPurpose_Block(FILE* in_gifFile, uint8_t in_label, bool in_is89a);
 
 // Terminal symbols
 ReadResult read_Header(FILE* in_gifFile, Header *in_pHeader, bool *out_pIs89a);
@@ -111,8 +111,8 @@ ReadResult read_Plain_Text_Extension(FILE* in_gifFile);
 ReadResult read_Image_Descriptor(FILE* in_gifFile, Image_Descriptor* in_pImageDescriptor);
 ReadResult read_Local_Color_Table(FILE* in_gifFile);
 ReadResult read_Image_Data(FILE* in_gifFile);
-ReadResult read_Application_Extension(FILE* in_gifFile);
-ReadResult read_Comment_Extension(FILE* in_gifFile);
+ReadResult read_Application_Extension(FILE* in_gifFile, bool in_is89a);
+ReadResult read_Comment_Extension(FILE* in_gifFile, bool in_is89a);
 #ifdef __cplusplus
 }
 #endif

@@ -12,8 +12,7 @@ ReadResult read_GIF_Data_Stream(FILE* in_gifFile, GIF_Data_Stream *in_pDataStrea
 {
 	bool is89a;
 	ReadResult readResult = read_Header(in_gifFile, &in_pDataStream->header, &is89a);
-	uint8_t lIntroducer;
-
+	
 	if (readResult != ReadResultOK)
 		return readResult;
 
@@ -24,6 +23,8 @@ ReadResult read_GIF_Data_Stream(FILE* in_gifFile, GIF_Data_Stream *in_pDataStrea
 
 	while (1)
 	{
+		uint8_t lIntroducer;
+
 		if (fread(&lIntroducer, sizeof(lIntroducer), 1, in_gifFile) != 1)
 			return ReadResultPrematureEndOfStream;
 
@@ -33,7 +34,7 @@ ReadResult read_GIF_Data_Stream(FILE* in_gifFile, GIF_Data_Stream *in_pDataStrea
 			break;
 		}
 
-		readResult = read_Data(in_gifFile, is89a, lIntroducer);
+		readResult = read_Data(in_gifFile, lIntroducer, is89a);
 
 		if (readResult != ReadResultOK)
 			return readResult;
@@ -65,6 +66,19 @@ ReadResult read_Header(FILE* in_gifFile, Header *in_pHeader, bool *out_pIs89a)
 	return ReadResultInvalidData;
 }
 
+ReadResult read_SpecialPurpose_Block(FILE* in_gifFile, uint8_t in_label, bool in_is89a)
+{
+	switch (in_label)
+	{
+	case 0xFF:
+		return read_Application_Extension(in_gifFile, in_is89a);
+	case 0xFE:
+		return read_Comment_Extension(in_gifFile, in_is89a);
+	default:
+		return ReadResultInvalidData;
+	}
+}
+
 ReadResult read_Logical_Screen(FILE* in_gifFile, Logical_Screen *in_pLogicalScreen)
 {
 	if (fread(&in_pLogicalScreen->logicalScreenDescriptor, sizeof(Logical_Screen_Descriptor), 1, in_gifFile) != 1)
@@ -90,7 +104,7 @@ ReadResult read_Logical_Screen(FILE* in_gifFile, Logical_Screen *in_pLogicalScre
 	return ReadResultOK;
 }
 
-ReadResult read_Data(FILE* in_gifFile, bool in_is89a, uint8_t in_introducer)
+ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a)
 {
 	uint8_t lLabel;
 
@@ -99,35 +113,42 @@ ReadResult read_Data(FILE* in_gifFile, bool in_is89a, uint8_t in_introducer)
 		if (fread(&lLabel, sizeof(lLabel), 1, in_gifFile) != 1)
 			return ReadResultPrematureEndOfStream;
 
-		switch (lLabel)
+		if (0xFF == lLabel || 0xFE == lLabel)
 		{
-			// Graphic Block
-		case 0xF9:
-			return read_Graphic_Control_Extension(in_gifFile, in_is89a);
-			// Special-Purpose Block
-		case 0xFF:
-			return read_Application_Extension(in_gifFile);
-		case 0xFE:
-			return read_Comment_Extension(in_gifFile);
+			return read_SpecialPurpose_Block(in_gifFile, lLabel, in_is89a);
 		}
+		else
+		{
+			switch (lLabel)
+			{
+				// Graphic Block
+			case 0xF9:
+				return read_Graphic_Control_Extension(in_gifFile, in_is89a);
+			}
+		}
+	}
+	else if (in_introducer == 0x2C)
+	{
+
 	}
 
 	return ReadResultInvalidData;
 }
 
-ReadResult read_Graphic_Block(FILE* in_gifFile)
+ReadResult read_Graphic_Block(FILE* in_gifFile, uint8_t in_separator)
 {
-	return read_GraphicRendering_Block(in_gifFile);
+	if (in_separator == 0x2C)
+	{
+		return read_GraphicRendering_Block(in_gifFile, in_separator);
+	}
+
+	// TODO
+	return ReadResultNotImplemented;
 }
 
-ReadResult read_GraphicRendering_Block(FILE* in_gifFile)
+ReadResult read_GraphicRendering_Block(FILE* in_gifFile, uint8_t in_separator)
 {
-	uint8_t lSeparator;
-
-	if (fread(&lSeparator, sizeof(lSeparator), 1, in_gifFile) != 1)
-		return ReadResultPrematureEndOfStream;
-
-	if (lSeparator == 0x2C)
+	if (in_separator == 0x2C)
 	{
 		return read_TableBased_Image(in_gifFile);
 	}
@@ -177,12 +198,19 @@ ReadResult read_Graphic_Control_Extension(FILE* in_gifFile, bool in_is89a)
 	if (fread(&terminator, sizeof(terminator), 1, in_gifFile) != 1)
 		return ReadResultPrematureEndOfStream;
 
-	if (terminator != 0)
+	if (terminator != 0x00)
 	{
 		return ReadResultInvalidData;
 	}
 
-	return read_Graphic_Block(in_gifFile);
+	{
+		uint8_t lSeparator;
+
+		if (fread(&lSeparator, sizeof(lSeparator), 1, in_gifFile) != 1)
+			return ReadResultPrematureEndOfStream;
+
+		return read_Graphic_Block(in_gifFile, lSeparator);
+	}
 }
 
 ReadResult read_Image_Descriptor(FILE* in_gifFile, Image_Descriptor* in_pImageDescriptor)
@@ -228,14 +256,20 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 	return ReadResultOK;
 }
 
-ReadResult read_Application_Extension(FILE* in_gifFile)
+ReadResult read_Application_Extension(FILE* in_gifFile, bool in_is89a)
 {
+	if (in_is89a)
+		return ReadResultInvalidVersion;
+
 	// because it is not yet implemented
 	return ReadResultNotImplemented;
 }
 
-ReadResult read_Comment_Extension(FILE* in_gifFile)
+ReadResult read_Comment_Extension(FILE* in_gifFile, bool in_is89a)
 {
+	if (in_is89a)
+		return ReadResultInvalidVersion;
+
 	// because it is not yet implemented
 	return ReadResultNotImplemented;
 }

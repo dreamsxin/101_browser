@@ -1,0 +1,24 @@
+Application Extension (89a): 0x21 0xFF
+Comment Extension (89a): 0x21 0xFE
+Image Descriptor: 0x2C
+Graphic Control Extension: 0x21 0xF9
+Plain Text Extension: 0x21 0x01
+
+
+<GIF Data Stream> ::=     Header <Logical Screen> <Data>* Trailer
+
+<Logical Screen> ::=      Logical Screen Descriptor [Global Color Table]
+
+<Data> ::=                <Graphic Block>  |
+                          <Special-Purpose Block>
+
+<Graphic Block> ::=       [Graphic Control Extension] <Graphic-Rendering Block>
+
+<Graphic-Rendering Block> ::=  <Table-Based Image>  |
+                               Plain Text Extension
+
+<Table-Based Image> ::=   Image Descriptor [Local Color Table] Image Data
+
+<Special-Purpose Block> ::=    Application Extension  |
+                               Comment Extension
+							   
