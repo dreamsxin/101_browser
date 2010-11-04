@@ -1,0 +1,30 @@
+a_image.gif:
+????
+
+GifSample.gif:
+http://en.wikipedia.org/wiki/File:GifSample.gif
+(more exactly: http://upload.wikimedia.org/wikipedia/en/1/19/GifSample.gif)
+
+GifSampleSmall.gif:
+Creation is explained under
+http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=394783182#Example_GIF_file
+
+Newtons_cradle_animation_book_2.gif:
+http://en.wikipedia.org/wiki/File:Newtons_cradle_animation_book_2.gif
+(or more exactly: http://upload.wikimedia.org/wikipedia/commons/d/d3/Newtons_cradle_animation_book_2.gif)
+Referenced in http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=394783182#Usage
+
+Rotating_earth_(small).gif
+http://en.wikipedia.org/wiki/File:Rotating_earth_(small).gif
+(or more exactly: http://upload.wikimedia.org/wikipedia/commons/7/70/Rotating_earth_%28small%29.gif)
+Referenced in http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=394783182
+
+Sunflower_as_gif_small.gif
+http://en.wikipedia.org/wiki/File:Sunflower_as_gif_small.gif
+(or more exactly: http://upload.wikimedia.org/wikipedia/commons/e/e2/Sunflower_as_gif_small.gif)
+Referenced in http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=394783182#History
+
+tc217.gif:
+http://phil.ipal.org/tc.html
+(more exactly: http://phil.ipal.org/tc217.gif)
+Referenced in http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=394783182#cite_ref-8
