@@ -15,8 +15,12 @@ struct GlobalColorTable
 
 int main()
 {
-	char filename[] = // "testfiles/gif/GifSampleSmall.gif";
-		"testfiles/gif/a_image.gif";
+	char filename[] = 
+		// "testfiles/gif/GifSampleSmall.gif";
+		// "testfiles/gif/a_image.gif";
+		// "testfiles/gif/GifSample.gif";
+		"testfiles/gif/Newtons_cradle_animation_book_2.gif"; // does not work at the moment
+		// "testfiles/gifRotating_earth_(small).gif"; // does not work at the moment
 
 	FILE* imgFile = MTAx_fopen(filename, "rb");
 	GIF_Data_Stream dataStream;

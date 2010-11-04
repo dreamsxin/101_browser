@@ -258,7 +258,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 
 ReadResult read_Application_Extension(FILE* in_gifFile, bool in_is89a)
 {
-	if (in_is89a)
+	if (!in_is89a)
 		return ReadResultInvalidVersion;
 
 	// because it is not yet implemented
@@ -267,7 +267,7 @@ ReadResult read_Application_Extension(FILE* in_gifFile, bool in_is89a)
 
 ReadResult read_Comment_Extension(FILE* in_gifFile, bool in_is89a)
 {
-	if (in_is89a)
+	if (!in_is89a)
 		return ReadResultInvalidVersion;
 
 	// because it is not yet implemented
