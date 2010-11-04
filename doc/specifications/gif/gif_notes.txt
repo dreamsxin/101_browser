@@ -21,4 +21,3 @@ Plain Text Extension: 0x21 0x01
 
 <Special-Purpose Block> ::=    Application Extension  |
                                Comment Extension
-							   
