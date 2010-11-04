@@ -12,6 +12,7 @@ ReadResult read_GIF_Data_Stream(FILE* in_gifFile, GIF_Data_Stream *in_pDataStrea
 {
 	bool is89a;
 	ReadResult readResult = read_Header(in_gifFile, &in_pDataStream->header, &is89a);
+	uint8_t lIntroducer;
 
 	if (readResult != ReadResultOK)
 		return readResult;
@@ -21,10 +22,22 @@ ReadResult read_GIF_Data_Stream(FILE* in_gifFile, GIF_Data_Stream *in_pDataStrea
 	if (readResult != ReadResultOK)
 		return readResult;
 
-	readResult = read_Data(in_gifFile, is89a);
+	while (1)
+	{
+		if (fread(&lIntroducer, sizeof(lIntroducer), 1, in_gifFile) != 1)
+			return ReadResultPrematureEndOfStream;
 
-	if (readResult != ReadResultOK)
-		return readResult;
+		// Trailer
+		if (0x3B == lIntroducer)
+		{
+			break;
+		}
+
+		readResult = read_Data(in_gifFile, is89a, lIntroducer);
+
+		if (readResult != ReadResultOK)
+			return readResult;
+	}
 
 	return ReadResultOK;
 }
@@ -77,15 +90,11 @@ ReadResult read_Logical_Screen(FILE* in_gifFile, Logical_Screen *in_pLogicalScre
 	return ReadResultOK;
 }
 
-ReadResult read_Data(FILE* in_gifFile, bool in_is89a)
+ReadResult read_Data(FILE* in_gifFile, bool in_is89a, uint8_t in_introducer)
 {
-	uint8_t lIntroducer;
 	uint8_t lLabel;
 
-	if (fread(&lIntroducer, sizeof(lIntroducer), 1, in_gifFile) != 1)
-		return ReadResultPrematureEndOfStream;
-
-	if (lIntroducer == 0x21)
+	if (in_introducer == 0x21)
 	{
 		if (fread(&lLabel, sizeof(lLabel), 1, in_gifFile) != 1)
 			return ReadResultPrematureEndOfStream;
@@ -178,6 +187,7 @@ ReadResult read_Graphic_Control_Extension(FILE* in_gifFile, bool in_is89a)
 
 ReadResult read_Image_Descriptor(FILE* in_gifFile, Image_Descriptor* in_pImageDescriptor)
 {
+	// sizeof(*in_pImageDescriptor)-1 since we have already read the first byte
 	if (fread(&in_pImageDescriptor->Image_Left_Position, sizeof(*in_pImageDescriptor)-1, 1, in_gifFile) != 1)
 		return ReadResultPrematureEndOfStream;
 
@@ -189,9 +199,33 @@ ReadResult read_Image_Descriptor(FILE* in_gifFile, Image_Descriptor* in_pImageDe
 
 ReadResult read_Image_Data(FILE* in_gifFile)
 {
+	uint8_t LZW_code_size;
+	Data_SubBlock subBlock;
+
+	if (fread(&LZW_code_size, sizeof(LZW_code_size), 1, in_gifFile) != 1)
+		return ReadResultPrematureEndOfStream;
+
+	while (1)
+	{
+		if (fread(&subBlock.Block_Size, sizeof(subBlock.Block_Size), 1, in_gifFile) != 1)
+			return ReadResultPrematureEndOfStream;
+
+		if (subBlock.Block_Size == 0)
+			break;
+
+		subBlock.Data_Values = (uint8_t*) malloc(subBlock.Block_Size);
+
+		if (fread(subBlock.Data_Values, subBlock.Block_Size, 1, in_gifFile) != 1)
+		{
+			return ReadResultPrematureEndOfStream;
+		}
+
+		// TODO: Interprete read block
+
+		free(subBlock.Data_Values);
+	}
+
 	return ReadResultOK;
-	// because it is not yet implemented
-	return ReadResultNotImplemented;
 }
 
 ReadResult read_Application_Extension(FILE* in_gifFile)

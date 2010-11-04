@@ -62,6 +62,12 @@ typedef struct
 	Logical_Screen logicalScreen;
 } GIF_Data_Stream;
 
+typedef struct
+{
+	uint8_t Block_Size;
+	uint8_t *Data_Values;
+} Data_SubBlock;
+
 #pragma pack(pop)
 
 typedef enum
@@ -89,7 +95,7 @@ size_t bytesOfColorTable(unsigned char in_sizeOfColorTable);
 // Grammar words
 ReadResult read_GIF_Data_Stream(FILE* in_gifFile, GIF_Data_Stream *in_pDataStream);
 ReadResult read_Logical_Screen(FILE* in_gifFile, Logical_Screen *in_pLogicalScreen);
-ReadResult read_Data(FILE* in_gifFile, bool in_is89a);
+ReadResult read_Data(FILE* in_gifFile, bool in_is89a, uint8_t in_introducer);
 ReadResult read_Graphic_Block(FILE* in_gifFile);
 ReadResult read_GraphicRendering_Block(FILE* in_gifFile);
 ReadResult read_TableBased_Image(FILE* in_gifFile);

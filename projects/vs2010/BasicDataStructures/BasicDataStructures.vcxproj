@@ -123,6 +123,11 @@
     <ClCompile Include="..\..\..\src\BasicDataStructures\Stream\ZReadStream.cpp" />
     <ClCompile Include="..\..\..\src\BasicDataStructures\VirtualMachine\VirtualMachineContext.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\zlib\zlib.vcxproj">
+      <Project>{0039884e-1af1-4ffd-b864-7a386353c88f}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
