@@ -75,6 +75,13 @@ typedef struct
 	char Application_Authentication_Code[3];
 } Application_Extension;
 
+typedef struct
+{
+	Image_Descriptor imageDescriptor;
+	uint8_t *localColorTable;
+	uint8_t *imageData;
+} TableBased_Image;
+
 #pragma pack(pop)
 
 typedef enum
@@ -105,7 +112,7 @@ ReadResult read_Logical_Screen(FILE* in_gifFile, Logical_Screen *in_pLogicalScre
 ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a);
 ReadResult read_Graphic_Block(FILE* in_gifFile, uint8_t in_separator);
 ReadResult read_GraphicRendering_Block(FILE* in_gifFile, uint8_t in_separator);
-ReadResult read_TableBased_Image(FILE* in_gifFile);
+ReadResult read_TableBased_Image(FILE* in_gifFile, TableBased_Image *in_pTableBasedImage);
 ReadResult read_SpecialPurpose_Block(FILE* in_gifFile, uint8_t in_label, bool in_is89a);
 
 // Terminal symbols

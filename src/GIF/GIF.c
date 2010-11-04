@@ -155,29 +155,42 @@ ReadResult read_Graphic_Block(FILE* in_gifFile, uint8_t in_separator)
 
 ReadResult read_GraphicRendering_Block(FILE* in_gifFile, uint8_t in_separator)
 {
+	TableBased_Image tableBasedImage;
+
 	if (in_separator == 0x2C)
 	{
-		return read_TableBased_Image(in_gifFile);
+		return read_TableBased_Image(in_gifFile, &tableBasedImage);
 	}
 
 	// TODO
 	return ReadResultNotImplemented;
 }
 
-ReadResult read_TableBased_Image(FILE* in_gifFile)
+ReadResult read_TableBased_Image(FILE* in_gifFile, TableBased_Image *in_pTableBasedImage)
 {
 	ReadResult readResult;
-	Image_Descriptor imageDescriptor;
-	imageDescriptor.Image_Separator = 0x2C;
+	in_pTableBasedImage->imageDescriptor.Image_Separator = 0x2C;
 
-	readResult = read_Image_Descriptor(in_gifFile, &imageDescriptor);
+	readResult = read_Image_Descriptor(in_gifFile, &in_pTableBasedImage->imageDescriptor);
 
 	if (readResult != ReadResultOK)
 		return readResult;
 
-	if (imageDescriptor.Local_Color_Table_Flag)
+	if (in_pTableBasedImage->imageDescriptor.Local_Color_Table_Flag)
 	{
-		return ReadResultNotImplemented;
+		size_t bytesOfGlobalColorTable = bytesOfColorTable(in_pTableBasedImage->imageDescriptor.Size_of_Local_Color_Table);
+
+		in_pTableBasedImage->localColorTable = (uint8_t*) malloc(bytesOfGlobalColorTable);
+
+		if (in_pTableBasedImage->localColorTable == NULL)
+			return ReadResultAllocationFailure;
+
+		if (fread(in_pTableBasedImage->localColorTable, bytesOfGlobalColorTable, 1, in_gifFile) != 1)
+			return ReadResultPrematureEndOfStream;
+	}
+	else
+	{
+		in_pTableBasedImage->localColorTable = NULL;
 	}
 
 	return read_Image_Data(in_gifFile);
