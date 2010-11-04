@@ -11,39 +11,50 @@ h2. 1. Basic information
 |Website|http://github.com/nubok/101_browser|
 |Description|A small web browser (or more precise: a small yet-to-become web browser)|
 
-h2. 2. System requirements
+h2. 2. What will make 101_browser special?
 
-h3. 2.1 Operation System
+There are lots of existing browsers around. Why would you need another one?
+* Current web browsers tend to get optimized for consuming and not for adding abilities to hack or reverse-engineer websites. Especially in areas of analyzing downloaded binary files (most browsers rely on external libraries there). So there is a gap to fill.
+* I (Wolfgang) do not believe that the browser vendors put enough emphasis on security and privacy. It is planned (if time allows) to do correctness proofs of critical parts. Additionally sometimes it is approved to risk security holes for compliance with outdated websites (for example: content negotiation or cross-side Javascript). 101_browser will break standards in these cases (but in a very well-documented way, so that web developers won't have to fear of "another browser hell")
+* Many different standards (HTML+JS, PDF, SWF) tend to converge in delivered features. Why not write the browser as a unified runtime engine for all of them?
 
-h4. 2.1.1 Windows
+h2. 3. System requirements
 
-Windows XP/Server 2003/Vista/Server 2008/7 (only tested under XP, but the other ones should work)
+h3. 3.1 Operation System
 
-h4. 2.1.2 Linux
+h4. 3.1.1 Windows
 
-An up-to-date Linux distribution (I'm only testing under the most current Ubuntu (10.4 at the moment))
+Windows XP/Server 2003/Vista/Server 2008/7 (currently mostly tested under Windows 7, but the other ones should work)
 
-h4. 2.1.3 Other Operation Systems
+h4. 3.1.2 Linux
+
+An up-to-date Linux distribution (I'm only testing under the most current Ubuntu (10.10 at the moment))
+
+h4. 3.1.3 Other Operation Systems
 
 There is *no* port to crApple MacOS X (and *none* is planned at the moment; if crApple is willing to donate a Mac, I'll think about reconsidering)
 
-h3. 2.2 Required software for building
+h3. 3.2 Required software for building
 
-h4. 2.2.1 Windows
+h4. 3.2.1 Windows
 
-Visual Studio 2008/2010 (the former is strongly recommended since I don't do regular updates of the Visual Studio 2010 projects at the moment)
+Visual Studio 2008/2010.
 
-h4. 2.2.2 Linux
+At the moment it is not obvious which one is better to choose: on the one hand I'm currently working 
+with VS 2010 and don't update the VS 2008 solutions regularly anymore. On the other hand not all projects have been ported
+to the new version. So at least for beginners VS 2010 should be the better choice.
+
+h4. 3.2.2 Linux
 
 g++, scons, XLib
 
-h2. 3. Building
+h2. 4. Building
 
-h3. 3.1 Windows
+h3. 4.1 Windows
 
 Use the 101_browser_vs2008.sln/101_browser_vs2010.sln file in the root folder.
 
-h3. 3.2 Linux
+h3. 4.2 Linux
 
 Type on your prompt (without the '$ '):
 
