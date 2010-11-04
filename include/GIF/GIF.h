@@ -9,14 +9,14 @@
 
 typedef struct
 {
-	unsigned short Logical_Screen_Width;
-	unsigned short Logical_Screen_Height;
-	unsigned char Size_Of_Global_Color_Table : 3;
-	unsigned char Sort_Flag : 1;
-	unsigned char Color_Resolution : 3;
-	unsigned char Global_Color_Table_Flag : 1;
-    unsigned char Background_Color_Index;
-    unsigned char Pixel_Aspect_Ratio;
+	uint16_t Logical_Screen_Width;
+	uint16_t Logical_Screen_Height;
+	uint8_t Size_Of_Global_Color_Table : 3;
+	uint8_t Sort_Flag : 1;
+	uint8_t Color_Resolution : 3;
+	uint8_t Global_Color_Table_Flag : 1;
+    uint8_t Background_Color_Index;
+    uint8_t Pixel_Aspect_Ratio;
 } Logical_Screen_Descriptor;
 
 typedef struct
@@ -75,7 +75,8 @@ typedef enum
 	 * too old
 	 */
 	ReadResultInvalidVersion,
-	ReadResultAllocationFailure
+	ReadResultAllocationFailure,
+	ReadResultNotImplemented
 } ReadResult;
 
 #ifdef __cplusplus

@@ -120,21 +120,30 @@ ReadResult read_GraphicRendering_Block(FILE* in_gifFile)
 
 	if (lSeparator == 0x2C)
 	{
-		ReadResult readResult;
-		Image_Descriptor imageDescriptor;
-		imageDescriptor.Image_Separator = lSeparator;
-
-		readResult = read_Image_Descriptor(in_gifFile, &imageDescriptor);
-
-		if (readResult != ReadResultOK)
-			return readResult;
-
-		// TODO
+		return read_TableBased_Image(in_gifFile);
 	}
 
 	// TODO
+	return ReadResultNotImplemented;
+}
 
-	return ReadResultOK;
+ReadResult read_TableBased_Image(FILE* in_gifFile)
+{
+	ReadResult readResult;
+	Image_Descriptor imageDescriptor;
+	imageDescriptor.Image_Separator = 0x2C;
+
+	readResult = read_Image_Descriptor(in_gifFile, &imageDescriptor);
+
+	if (readResult != ReadResultOK)
+		return readResult;
+
+	if (imageDescriptor.Local_Color_Table_Flag)
+	{
+		return ReadResultNotImplemented;
+	}
+
+	return read_Image_Data(in_gifFile);
 }
 
 ReadResult read_Graphic_Control_Extension(FILE* in_gifFile, bool in_is89a)
@@ -178,14 +187,21 @@ ReadResult read_Image_Descriptor(FILE* in_gifFile, Image_Descriptor* in_pImageDe
 	return ReadResultOK;
 }
 
+ReadResult read_Image_Data(FILE* in_gifFile)
+{
+	return ReadResultOK;
+	// because it is not yet implemented
+	return ReadResultNotImplemented;
+}
+
 ReadResult read_Application_Extension(FILE* in_gifFile)
 {
 	// because it is not yet implemented
-	return ReadResultInvalidData;
+	return ReadResultNotImplemented;
 }
 
 ReadResult read_Comment_Extension(FILE* in_gifFile)
 {
 	// because it is not yet implemented
-	return ReadResultInvalidData;
+	return ReadResultNotImplemented;
 }
