@@ -119,11 +119,11 @@ ReadResult read_SpecialPurpose_Block(FILE* in_gifFile, uint8_t in_label, bool in
 ReadResult read_Header(FILE* in_gifFile, Header *in_pHeader, bool *out_pIs89a);
 ReadResult read_Trailer(FILE* in_gifFile);
 ReadResult read_Logical_Screen_Descriptor(FILE* in_gifFile);
-ReadResult read_Global_Color_Table(FILE* in_gifFile);
+//ReadResult read_Global_Color_Table(FILE* in_gifFile);
 ReadResult read_Graphic_Control_Extension(FILE* in_gifFile, bool in_is89a);
 //ReadResult read_Plain_Text_Extension(FILE* in_gifFile);
 ReadResult read_Image_Descriptor(FILE* in_gifFile, Image_Descriptor* in_pImageDescriptor);
-ReadResult read_Local_Color_Table(FILE* in_gifFile);
+//ReadResult read_Local_Color_Table(FILE* in_gifFile);
 ReadResult read_Image_Data(FILE* in_gifFile);
 ReadResult read_Application_Extension(FILE* in_gifFile, bool in_is89a);
 ReadResult read_Comment_Extension(FILE* in_gifFile, bool in_is89a);
