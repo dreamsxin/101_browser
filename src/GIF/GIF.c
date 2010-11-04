@@ -305,9 +305,30 @@ ReadResult read_Application_Extension(FILE* in_gifFile, bool in_is89a)
 
 ReadResult read_Comment_Extension(FILE* in_gifFile, bool in_is89a)
 {
+	Data_SubBlock subBlock;
+
 	if (!in_is89a)
 		return ReadResultInvalidVersion;
 
-	// because it is not yet implemented
-	return ReadResultNotImplemented;
+	while (1)
+	{
+		if (fread(&subBlock.Block_Size, sizeof(subBlock.Block_Size), 1, in_gifFile) != 1)
+			return ReadResultPrematureEndOfStream;
+
+		if (subBlock.Block_Size == 0)
+			break;
+
+		subBlock.Data_Values = (uint8_t*) malloc(subBlock.Block_Size);
+
+		if (fread(subBlock.Data_Values, subBlock.Block_Size, 1, in_gifFile) != 1)
+		{
+			return ReadResultPrematureEndOfStream;
+		}
+
+		// TODO: Interprete read block
+
+		free(subBlock.Data_Values);
+	}
+
+	return ReadResultOK;
 }

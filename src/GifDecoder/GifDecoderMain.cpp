@@ -22,8 +22,8 @@ int main()
 		// "testfiles/gif/Newtons_cradle_animation_book_2.gif";
 		// "testfiles/gif/Rotating_earth_(large).gif";
 		// "testfiles/gif/Rotating_earth_(small).gif";
-		"testfiles/gif/Sunflower_as_gif_small.gif"; // does not work at the moment
-		// "testfiles/gif/tc217.gif"; // does not work at the moment
+		// "testfiles/gif/Sunflower_as_gif_small.gif";
+		"testfiles/gif/tc217.gif"; // does not work at the moment
 
 	FILE* imgFile = MTAx_fopen(filename, "rb");
 	GIF_Data_Stream dataStream;
