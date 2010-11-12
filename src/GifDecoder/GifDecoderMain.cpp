@@ -1,17 +1,7 @@
 #include "MiniStdlib/MTAx_cstdio.h"
 #include "GIF/GIF.h"
-#include <cstdlib>
-#include <cstring>
-#include <vector>
-#include "GraphicsDataStructures/Color.h"
+#include <cstdlib> // for exit/(
 using namespace std;
-
-
-
-struct GlobalColorTable
-{
-	vector<Color3<unsigned char> > colors;
-};
 
 int main()
 {

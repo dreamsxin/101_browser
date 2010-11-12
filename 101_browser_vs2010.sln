@@ -37,6 +37,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Algorithm", "projects\vs201
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CPU", "projects\vs2010\CPU\CPU.vcxproj", "{8BB562B5-9A8F-475B-8CC8-E305454CBD05}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeolocationBackendGarminWin", "projects\vs2010\GeolocationBackendGarminWin\GeolocationBackendGarminWin.vcxproj", "{18895099-5250-444C-AEEA-B896033A5408}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeolocationBackendGarminWinTest", "projects\vs2010\GeolocationBackendGarminWinTest\GeolocationBackendGarminWinTest.vcxproj", "{77F8F942-8609-4FD2-BA5E-50F3E5462BAF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoroutineWin", "projects\vs2010\CoroutineWin\CoroutineWin.vcxproj", "{A6EA98FE-D4CA-4D80-A963-D84A3233651D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -263,6 +269,42 @@ Global
 		{8BB562B5-9A8F-475B-8CC8-E305454CBD05}.LIB Release|Win32.Build.0 = Release|Win32
 		{8BB562B5-9A8F-475B-8CC8-E305454CBD05}.Release|Win32.ActiveCfg = Release|Win32
 		{8BB562B5-9A8F-475B-8CC8-E305454CBD05}.Release|Win32.Build.0 = Release|Win32
+		{18895099-5250-444C-AEEA-B896033A5408}.Debug|Win32.ActiveCfg = Debug|Win32
+		{18895099-5250-444C-AEEA-B896033A5408}.Debug|Win32.Build.0 = Debug|Win32
+		{18895099-5250-444C-AEEA-B896033A5408}.LIB ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{18895099-5250-444C-AEEA-B896033A5408}.LIB ASM Debug|Win32.Build.0 = Debug|Win32
+		{18895099-5250-444C-AEEA-B896033A5408}.LIB ASM Release|Win32.ActiveCfg = Release|Win32
+		{18895099-5250-444C-AEEA-B896033A5408}.LIB ASM Release|Win32.Build.0 = Release|Win32
+		{18895099-5250-444C-AEEA-B896033A5408}.LIB Debug|Win32.ActiveCfg = Debug|Win32
+		{18895099-5250-444C-AEEA-B896033A5408}.LIB Debug|Win32.Build.0 = Debug|Win32
+		{18895099-5250-444C-AEEA-B896033A5408}.LIB Release|Win32.ActiveCfg = Release|Win32
+		{18895099-5250-444C-AEEA-B896033A5408}.LIB Release|Win32.Build.0 = Release|Win32
+		{18895099-5250-444C-AEEA-B896033A5408}.Release|Win32.ActiveCfg = Release|Win32
+		{18895099-5250-444C-AEEA-B896033A5408}.Release|Win32.Build.0 = Release|Win32
+		{77F8F942-8609-4FD2-BA5E-50F3E5462BAF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{77F8F942-8609-4FD2-BA5E-50F3E5462BAF}.Debug|Win32.Build.0 = Debug|Win32
+		{77F8F942-8609-4FD2-BA5E-50F3E5462BAF}.LIB ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{77F8F942-8609-4FD2-BA5E-50F3E5462BAF}.LIB ASM Debug|Win32.Build.0 = Debug|Win32
+		{77F8F942-8609-4FD2-BA5E-50F3E5462BAF}.LIB ASM Release|Win32.ActiveCfg = Release|Win32
+		{77F8F942-8609-4FD2-BA5E-50F3E5462BAF}.LIB ASM Release|Win32.Build.0 = Release|Win32
+		{77F8F942-8609-4FD2-BA5E-50F3E5462BAF}.LIB Debug|Win32.ActiveCfg = Debug|Win32
+		{77F8F942-8609-4FD2-BA5E-50F3E5462BAF}.LIB Debug|Win32.Build.0 = Debug|Win32
+		{77F8F942-8609-4FD2-BA5E-50F3E5462BAF}.LIB Release|Win32.ActiveCfg = Release|Win32
+		{77F8F942-8609-4FD2-BA5E-50F3E5462BAF}.LIB Release|Win32.Build.0 = Release|Win32
+		{77F8F942-8609-4FD2-BA5E-50F3E5462BAF}.Release|Win32.ActiveCfg = Release|Win32
+		{77F8F942-8609-4FD2-BA5E-50F3E5462BAF}.Release|Win32.Build.0 = Release|Win32
+		{A6EA98FE-D4CA-4D80-A963-D84A3233651D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A6EA98FE-D4CA-4D80-A963-D84A3233651D}.Debug|Win32.Build.0 = Debug|Win32
+		{A6EA98FE-D4CA-4D80-A963-D84A3233651D}.LIB ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{A6EA98FE-D4CA-4D80-A963-D84A3233651D}.LIB ASM Debug|Win32.Build.0 = Debug|Win32
+		{A6EA98FE-D4CA-4D80-A963-D84A3233651D}.LIB ASM Release|Win32.ActiveCfg = Release|Win32
+		{A6EA98FE-D4CA-4D80-A963-D84A3233651D}.LIB ASM Release|Win32.Build.0 = Release|Win32
+		{A6EA98FE-D4CA-4D80-A963-D84A3233651D}.LIB Debug|Win32.ActiveCfg = Debug|Win32
+		{A6EA98FE-D4CA-4D80-A963-D84A3233651D}.LIB Debug|Win32.Build.0 = Debug|Win32
+		{A6EA98FE-D4CA-4D80-A963-D84A3233651D}.LIB Release|Win32.ActiveCfg = Release|Win32
+		{A6EA98FE-D4CA-4D80-A963-D84A3233651D}.LIB Release|Win32.Build.0 = Release|Win32
+		{A6EA98FE-D4CA-4D80-A963-D84A3233651D}.Release|Win32.ActiveCfg = Release|Win32
+		{A6EA98FE-D4CA-4D80-A963-D84A3233651D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
