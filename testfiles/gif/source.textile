@@ -1,32 +1,39 @@
 h2. Subfolder fileformat.info
+
 All images are taken from http://www.fileformat.info/format/gif/sample/index.htm
 
 h2. Subfolder wikipedia
 
 h3. GifSample.gif
+
 http://en.wikipedia.org/wiki/File:GifSample.gif
 (more exactly: http://upload.wikimedia.org/wikipedia/en/1/19/GifSample.gif)
 
 h3. GifSampleSmall.gif
+
 Creation is explained under
 http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=394783182#Example_GIF_file
 
 h3. Newtons_cradle_animation_book_2.gif
+
 http://en.wikipedia.org/wiki/File:Newtons_cradle_animation_book_2.gif
 (or more exactly: http://upload.wikimedia.org/wikipedia/commons/d/d3/Newtons_cradle_animation_book_2.gif)
 Referenced in http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=394783182#Usage
 
 h3. Rotating_earth_(small).gif
+
 http://en.wikipedia.org/wiki/File:Rotating_earth_(small).gif
 (or more exactly: http://upload.wikimedia.org/wikipedia/commons/7/70/Rotating_earth_%28small%29.gif)
 Referenced in http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=394783182
 
 h3. Rotating_earth_(large).gif
+
 http://en.wikipedia.org/wiki/File:Rotating_earth_(large).gif
 (or more exactly: http://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif)
 Referenced in http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=394783182#Animated_GIF
 
 h3. Sunflower_as_gif_small.gif
+
 http://en.wikipedia.org/wiki/File:Sunflower_as_gif_small.gif
 (or more exactly: http://upload.wikimedia.org/wikipedia/commons/e/e2/Sunflower_as_gif_small.gif)
 Referenced in http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=394783182#History
@@ -35,8 +42,10 @@ Referenced in http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_For
 h2. Other files
 
 h3. a_image.gif
+
 http://www-eng-x.llnl.gov/documents/a_image.gif (linked from http://www-eng-x.llnl.gov/documents/tests/gif.html)
 
 h3. tc217.gif:
+
 http://phil.ipal.org/tc217.gif (linked from http://phil.ipal.org/tc.html)
 Referenced in http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=394783182#cite_ref-8
