@@ -24,7 +24,9 @@ h3. 3.1 Operation System
 
 h4. 3.1.1 Windows
 
-Windows XP/Server 2003/Vista/Server 2008/7 (currently mostly tested under Windows 7, but the other ones should work)
+Windows Vista/Server 2008/7 (currently only tested under Windows 7, but the other ones should work). At the moment it should still work under 
+Windows XP, but it is highly probably that in near future it won't run these anymore because of using APIs that were introduced with Vista that 
+simply the code.
 
 h4. 3.1.2 Linux
 
@@ -42,7 +44,7 @@ Visual Studio 2008/2010.
 
 At the moment it is not obvious which one is better to choose: on the one hand I'm currently working 
 with VS 2010 and don't update the VS 2008 solutions regularly anymore. On the other hand not all projects have been ported
-to the new version. So at least for beginners VS 2010 should be the better choice.
+to the new version. At least for beginners VS 2010 should be the better choice.
 
 h4. 3.2.2 Linux
 
