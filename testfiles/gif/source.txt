@@ -1,5 +1,5 @@
 a_image.gif
-????
+http://www-eng-x.llnl.gov/documents/a_image.gif (linked from http://www-eng-x.llnl.gov/documents/tests/gif.html)
 
 GifSample.gif
 http://en.wikipedia.org/wiki/File:GifSample.gif
