@@ -130,8 +130,11 @@ namespace Gui
 
 		BITMAPINFOHEADER bih;
 		bih.biSize = sizeof (BITMAPINFOHEADER);
+		// the fields bih.biWidth have to be filled later
+#if 0
 		bih.biWidth = andMap.width;
 		bih.biHeight = maskBitmap.bmHeight;
+#endif
 		bih.biPlanes = 1;
 		// a byte has 8 bits, so we do <<3, which multiplies by 8
 		bih.biBitCount = (WORD) colorModePixelBytesCount(andMap.colorMode)<<3;
@@ -144,6 +147,8 @@ namespace Gui
 
 		int retVal;
 		
+		bih.biWidth = andMap.width;
+		bih.biHeight = maskBitmap.bmHeight;
 		retVal = GetDIBits(hDC, iconInfo.hbmMask,
 			!isColorIcon ? xorColorMap.height : 0, andMap.height,
 			andMap.data, (BITMAPINFO*) &bih, 
@@ -156,6 +161,10 @@ namespace Gui
 				DeleteObject(iconInfo.hbmColor);
 			return false;
 		}
+
+#if 0
+		createBMP("andmap.bmp", hDC, bih, iconInfo.hbmMask);
+#endif
 		
 		if (!isColorIcon)
 		{
@@ -166,8 +175,10 @@ namespace Gui
 		}
 		else
 		{
+			bih.biWidth = colorBitmap.bmWidth;
+			bih.biHeight = colorBitmap.bmHeight;
 			retVal = GetDIBits(hDC, iconInfo.hbmColor,
-				0, xorColorMap.height,
+				0, bih.biHeight,
 				xorColorMap.data, (BITMAPINFO*) &bih, 
 				DIB_RGB_COLORS);
 		}
@@ -180,6 +191,10 @@ namespace Gui
 				DeleteObject(iconInfo.hbmColor);
 			return false;
 		}
+
+#if 0
+		createBMP("colormap.bmp", hDC, bih, iconInfo.hbmColor);
+#endif
 
 		in_pCursor->hotspot  = Vertex2<DWORD>(iconInfo.xHotspot, iconInfo.yHotspot);
 		in_pCursor->colored  = isColorIcon;
