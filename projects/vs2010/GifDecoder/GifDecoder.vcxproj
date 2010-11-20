@@ -83,6 +83,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\GifDecoder\GifDecoderMain.cpp" />
+    <ClCompile Include="..\..\..\src\GifDecoder\LZW_Tree.c" />
     <ClCompile Include="..\..\..\src\GIF\GIF.c" />
   </ItemGroup>
   <ItemGroup>
@@ -92,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\GIF\GIF.h" />
+    <ClInclude Include="..\..\..\include\GIF\LZW_Tree.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

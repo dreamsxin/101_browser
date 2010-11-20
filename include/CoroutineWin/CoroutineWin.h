@@ -8,6 +8,7 @@ typedef LPVOID CoroutineDescriptor;
 CoroutineDescriptor createCoroutine(size_t in_stackSize,  void (__stdcall * in_pFiberFunc)(void*), void* in_pParam);
 void switchToCoroutine(CoroutineDescriptor in_coroutine);
 CoroutineDescriptor convertThreadToCoroutine();
+CoroutineDescriptor getCurrentCoroutine();
 void deleteCoroutine(CoroutineDescriptor in_coroutine);
 
 #endif

@@ -3,7 +3,12 @@
 
 #include "Algorithm/CompareResult.h"
 #include "MiniStdlib/cstdint.h"
-#include <stddef.h> // for size_t
+ // for size_t
+#ifdef __cplusplus
+#include <cstddef>
+#else
+#include <stddef.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {

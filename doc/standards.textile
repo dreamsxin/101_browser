@@ -30,3 +30,15 @@ h3. GIF
 h4. Where can I find the specification of GIF files?
 
 Look at http://www.w3.org/Graphics/GIF/spec-gif87.txt (GIF87A) or http://www.w3.org/Graphics/GIF/spec-gif89a.txt (GIF89A).
+
+h2. Markup languages
+
+h3. WPF
+
+h4. Where can I find specifications of WPF?
+
+http://msdn.microsoft.com/en-us/library/ff629155(PROT.10).aspx
+
+h4. Where can I find a test suite for WPF?
+
+http://blogs.msdn.com/b/llobo/archive/2010/07/07/xaml-compliance-suite-v1.aspx

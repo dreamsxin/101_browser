@@ -10,10 +10,23 @@ void switchToCoroutine(CoroutineDescriptor in_coroutine)
 	SwitchToFiber(in_coroutine);
 }
 
+CoroutineDescriptor getCurrentCoroutine()
+{
+	if (IsThreadAFiber())
+		return GetCurrentFiber();
+	else
+		return NULL;
+}
+
 CoroutineDescriptor convertThreadToCoroutine()
 {
-	// we pass no data since this is not necessary
-	return ConvertThreadToFiber(NULL);
+	CoroutineDescriptor lCoroutineDescriptor = getCurrentCoroutine();
+
+	if (!lCoroutineDescriptor)
+		// we pass no data since this is not necessary
+		return ConvertThreadToFiber(NULL);
+	else
+		return lCoroutineDescriptor;
 }
 
 void deleteCoroutine(CoroutineDescriptor in_coroutine)

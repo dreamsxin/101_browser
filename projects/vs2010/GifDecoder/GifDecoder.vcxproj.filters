@@ -21,9 +21,15 @@
     <ClCompile Include="..\..\..\src\GIF\GIF.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\GifDecoder\LZW_Tree.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\GIF\GIF.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\GIF\LZW_Tree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
