@@ -92,7 +92,7 @@ namespace Gui
 		 * a color icon, this mask only defines the AND bitmask 
 		 * of the icon.
 		 */
-		Texture andMap, xorMap, colorMap;
+		Texture andMap, xorColorMap;
 
 		assert(maskBitmap.bmPlanes == 1);
 		assert(maskBitmap.bmBitsPixel == 1);
@@ -104,18 +104,18 @@ namespace Gui
 		{
 			assert(maskBitmap.bmHeight%2 == 0);
 			andMap.height = maskBitmap.bmHeight/2;
-			xorMap.colorMode = ColorModeRGBA;
-			xorMap.width = maskBitmap.bmWidth;
-			xorMap.height = maskBitmap.bmHeight/2;
-			allocateTextureMemory(&xorMap);
+			xorColorMap.colorMode = ColorModeRGBA;
+			xorColorMap.width = maskBitmap.bmWidth;
+			xorColorMap.height = maskBitmap.bmHeight/2;
+			allocateTextureMemory(&xorColorMap);
 		}
 		else
 		{
 			andMap.height=maskBitmap.bmHeight;
-			colorMap.colorMode = ColorModeRGBA;
-			colorMap.width = colorBitmap.bmWidth;
-			colorMap.height = colorBitmap.bmHeight;
-			allocateTextureMemory(&colorMap);
+			xorColorMap.colorMode = ColorModeRGBA;
+			xorColorMap.width = colorBitmap.bmWidth;
+			xorColorMap.height = colorBitmap.bmHeight;
+			allocateTextureMemory(&xorColorMap);
 		}
 
 		allocateTextureMemory(&andMap);
@@ -144,13 +144,8 @@ namespace Gui
 
 		int retVal;
 		
-		retVal = GetDIBits(hDC, iconInfo.hbmMask, 
-			// if we have no color icon: xorMap.height=0
-			// otherwise it has a sensible value
-			// so we can shorten
-			// !isColorIcon ? xorMap.height : 0
-			// to xorMap.height
-			xorMap.height, andMap.height,
+		retVal = GetDIBits(hDC, iconInfo.hbmMask,
+			!isColorIcon ? xorColorMap.height : 0, andMap.height,
 			andMap.data, (BITMAPINFO*) &bih, 
 			DIB_RGB_COLORS);
 
@@ -165,42 +160,31 @@ namespace Gui
 		if (!isColorIcon)
 		{
 			retVal  = GetDIBits(hDC, iconInfo.hbmMask, 
-				0, xorMap.height, 
-				xorMap.data, (BITMAPINFO*) &bih, 
+				0, xorColorMap.height, 
+				xorColorMap.data, (BITMAPINFO*) &bih, 
 				DIB_RGB_COLORS);
-
-			if (retVal < 0 || ((unsigned long) retVal) != xorMap.height)
-			{
-				DeleteObject(iconInfo.hbmMask);
-
-				assert(isColorIcon);
-				if (isColorIcon)
-					DeleteObject(iconInfo.hbmColor);
-				return false;
-			}
 		}
 		else
 		{
 			retVal = GetDIBits(hDC, iconInfo.hbmColor,
-				0, colorMap.height,
-				colorMap.data, (BITMAPINFO*) &bih, 
+				0, xorColorMap.height,
+				xorColorMap.data, (BITMAPINFO*) &bih, 
 				DIB_RGB_COLORS);
+		}
 
-			if (retVal < 0 || ((unsigned long) retVal) != colorMap.height)
-			{
+		if (retVal < 0 || ((unsigned long) retVal) != xorColorMap.height)
+		{
+			DeleteObject(iconInfo.hbmMask);
+
+			if (isColorIcon)
 				DeleteObject(iconInfo.hbmColor);
-
-				assert(isColorIcon);
-				if (isColorIcon)
-					DeleteObject(iconInfo.hbmColor);
-				return false;
-			}
+			return false;
 		}
 
 		in_pCursor->hotspot  = Vertex2<DWORD>(iconInfo.xHotspot, iconInfo.yHotspot);
 		in_pCursor->colored  = isColorIcon;
 		in_pCursor->andMap   = andMap;
-		in_pCursor->xorColorMap   = !isColorIcon ? xorMap : colorMap;
+		in_pCursor->xorColorMap   = xorColorMap;
 
 		DeleteObject(iconInfo.hbmMask);
 		if (isColorIcon)
