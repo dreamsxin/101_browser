@@ -13,8 +13,9 @@ namespace Gui
 		bool colored; // if colored is false, andMap and xorMap are valid
 		              // if colored is true, andMap and colorMap are valid
 		Texture andMap;
-		Texture xorMap;
-		Texture colorMap;
+		// if the cursor is not colored it is used as xor map; else it is used as
+		// color map
+		Texture xorColorMap;
 	};
 
 	/*

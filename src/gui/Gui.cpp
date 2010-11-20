@@ -392,10 +392,10 @@ int WINAPI WinMain(	HINSTANCE	hInstance,			// Instance
 	}
 
 	createOpenGLTexture(&cursor.andMap);
-	createOpenGLTexture(&cursor.xorMap);
+	createOpenGLTexture(&cursor.xorColorMap);
 
 	freeTextureMemory(&cursor.andMap);
-	freeTextureMemory(&cursor.xorMap);
+	freeTextureMemory(&cursor.xorColorMap);
 
 	window.rawMice = ArrayBlock<Gui::Mouse::RawMouse>();
 

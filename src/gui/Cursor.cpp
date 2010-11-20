@@ -1,13 +1,41 @@
 #include "gui/Cursor.h"
 #include "gui/Texture.h"
 #include <cassert>
-#if 0
 // for creating a BMP file for testing purposes
 #include <cstdio>
-#endif
 
 namespace Gui
 {
+	void createBMP(char *filename, HDC hDC, BITMAPINFOHEADER bih, HBITMAP hBitmap)
+	{
+		Texture out=Texture();
+		out.width = bih.biWidth;
+		out.height = bih.biHeight;
+		out.colorMode = ColorModeRGBA;
+		allocateTextureMemory(&out);
+		GetDIBits(hDC, hBitmap, 
+			0, out.height, 
+			out.data, (BITMAPINFO*) &bih, 
+			DIB_RGB_COLORS);
+		
+		// Write the result to a BMP file for testing
+		BITMAPFILEHEADER bmfHeader;
+		bmfHeader.bfType = 0x4D42;
+		bmfHeader.bfSize = textureBytesCount(&out)
+			+ sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+		bmfHeader.bfReserved1 = 0;
+		bmfHeader.bfReserved2 = 0;
+		bmfHeader.bfOffBits = (DWORD)sizeof(BITMAPFILEHEADER) + (DWORD)sizeof(BITMAPINFOHEADER);
+
+		FILE* bmpFile;
+		bmpFile = fopen(filename, "w+b");
+		fwrite(&bmfHeader, sizeof(BITMAPFILEHEADER), 1, bmpFile);
+		fwrite(&bih, sizeof(BITMAPINFOHEADER), 1, bmpFile);
+		fwrite(out.data, textureBytesCount(&out), 1, bmpFile);
+			
+		fclose(bmpFile);
+	}
+
 	bool createCursor(Cursor* in_pCursor)
 	{
 		HCURSOR hCursor;
@@ -64,7 +92,7 @@ namespace Gui
 		 * a color icon, this mask only defines the AND bitmask 
 		 * of the icon.
 		 */
-		Texture andMap, xorMap;
+		Texture andMap, xorMap, colorMap;
 
 		assert(maskBitmap.bmPlanes == 1);
 		assert(maskBitmap.bmBitsPixel == 1);
@@ -84,6 +112,10 @@ namespace Gui
 		else
 		{
 			andMap.height=maskBitmap.bmHeight;
+			colorMap.colorMode = ColorModeRGBA;
+			colorMap.width = colorBitmap.bmWidth;
+			colorMap.height = colorBitmap.bmHeight;
+			allocateTextureMemory(&colorMap);
 		}
 
 		allocateTextureMemory(&andMap);
@@ -140,23 +172,35 @@ namespace Gui
 			if (retVal < 0 || ((unsigned long) retVal) != xorMap.height)
 			{
 				DeleteObject(iconInfo.hbmMask);
+
+				assert(isColorIcon);
+				if (isColorIcon)
+					DeleteObject(iconInfo.hbmColor);
+				return false;
+			}
+		}
+		else
+		{
+			retVal = GetDIBits(hDC, iconInfo.hbmColor,
+				0, colorMap.height,
+				colorMap.data, (BITMAPINFO*) &bih, 
+				DIB_RGB_COLORS);
+
+			if (retVal < 0 || ((unsigned long) retVal) != colorMap.height)
+			{
+				DeleteObject(iconInfo.hbmColor);
+
+				assert(isColorIcon);
 				if (isColorIcon)
 					DeleteObject(iconInfo.hbmColor);
 				return false;
 			}
 		}
 
-		// TODO: handling for color cursors
-
 		in_pCursor->hotspot  = Vertex2<DWORD>(iconInfo.xHotspot, iconInfo.yHotspot);
 		in_pCursor->colored  = isColorIcon;
 		in_pCursor->andMap   = andMap;
-		in_pCursor->xorMap   = !isColorIcon ? xorMap : Texture();
-		/*
-		 * Since handling of color cursors is not yet implemented, we simply
-		 * assign an empty texture
-		 */
-		in_pCursor->colorMap = Texture();
+		in_pCursor->xorColorMap   = !isColorIcon ? xorMap : colorMap;
 
 		DeleteObject(iconInfo.hbmMask);
 		if (isColorIcon)
