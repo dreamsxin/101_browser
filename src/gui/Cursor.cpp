@@ -4,6 +4,8 @@
 // for creating a BMP file for testing purposes
 #include <cstdio>
 
+#define CREATE_CURSOR_BMPS 0
+
 namespace Gui
 {
 	void createBMP(char *filename, HDC hDC, BITMAPINFOHEADER bih, HBITMAP hBitmap)
@@ -131,7 +133,7 @@ namespace Gui
 		BITMAPINFOHEADER bih;
 		bih.biSize = sizeof (BITMAPINFOHEADER);
 		// the fields bih.biWidth have to be filled later
-#if 0
+#if CREATE_CURSOR_BMPS
 		bih.biWidth = andMap.width;
 		bih.biHeight = maskBitmap.bmHeight;
 #endif
@@ -162,7 +164,7 @@ namespace Gui
 			return false;
 		}
 
-#if 0
+#if CREATE_CURSOR_BMPS
 		createBMP("andmap.bmp", hDC, bih, iconInfo.hbmMask);
 #endif
 		
@@ -192,7 +194,7 @@ namespace Gui
 			return false;
 		}
 
-#if 0
+#if CREATE_CURSOR_BMPS
 		createBMP("colormap.bmp", hDC, bih, iconInfo.hbmColor);
 #endif
 

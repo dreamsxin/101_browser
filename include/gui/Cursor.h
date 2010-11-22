@@ -21,7 +21,7 @@ namespace Gui
 	/*
 	 * Tries to create a cursor texture. 
 	 * Return value:
-	 * true: then *in_pAndMap was changed and *either*  *in_pXorMap or *in_pColorMap 
+	 * true: then *in_pAndMap was changed and *xorColorMap
 	 *       will become changed but this need not be the case
 	 * false: something wrong happened
 	 */
