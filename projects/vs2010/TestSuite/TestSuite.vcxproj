@@ -88,6 +88,8 @@
     <ClCompile Include="..\..\..\src\TestSuite\TestSuiteMain.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\TestSuiteTest.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_Algorithm.cpp" />
+    <ClCompile Include="..\..\..\src\TestSuite\Test_Algorithm_BinarySearch.cpp" />
+    <ClCompile Include="..\..\..\src\TestSuite\Test_Algorithm_BitRead.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_ASCIIStringUnicodeIterator.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_BasicDataStructures_Tree.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_BigNumber.c" />
@@ -103,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\TestSuite\IteratorTestUtil.h" />
+    <ClInclude Include="..\..\..\include\TestSuite\TestAlgorithm.h" />
     <ClInclude Include="..\..\..\include\TestSuite\Tests.h" />
     <ClInclude Include="..\..\..\include\TestSuite\TestSuite.h" />
   </ItemGroup>

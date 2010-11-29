@@ -6,7 +6,7 @@ using namespace std;
 int main()
 {
 	char filename[] = 
-		// "testfiles/gif/wikipedia/GifSampleSmall.gif";
+		"testfiles/gif/wikipedia/GifSampleSmall.gif";
 		// "testfiles/gif/wikipedia/GifSample.gif";
 		// "testfiles/gif/wikipedia/Newtons_cradle_animation_book_2.gif";
 		// "testfiles/gif/wikipedia/Rotating_earth_(large).gif";
@@ -15,7 +15,7 @@ int main()
 
 		// "testfiles/gif/a_image.gif";
 		// "testfiles/gif/tc217.gif";
-		"testfiles/gif/worms.gif";
+		// "testfiles/gif/worms.gif";
 		
 		// "testfiles/gif/fileformat.info/GMARBLES.GIF";
 		// "testfiles/gif/fileformat.info/MARBLES.GIF";
