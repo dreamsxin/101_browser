@@ -1,6 +1,11 @@
 #include "Algorithm/BitRead.h"
 #include <assert.h>
 
+void initBitReadState(BitReadState *in_pBitReadState)
+{
+	in_pBitReadState->bitCountInBuffer = 0;
+}
+
 bool readBits(BitReadState *in_pBitReadState, void* in_pBuffer, size_t in_bitsCount, FILE* in_file)
 {
 	fpos_t lPosBackup;
@@ -15,6 +20,7 @@ bool readBits(BitReadState *in_pBitReadState, void* in_pBuffer, size_t in_bitsCo
 	for (currentBitIndex = 0; currentBitIndex < in_bitsCount; ++currentBitIndex)
 	{
 		uint8_t currentBit;
+		uint8_t position;
 
 		if (in_pBitReadState->bitCountInBuffer == 0)
 		{
@@ -35,10 +41,10 @@ bool readBits(BitReadState *in_pBitReadState, void* in_pBuffer, size_t in_bitsCo
 			*currentBufferElement = 0;
 		}
 
-		currentBit = in_pBitReadState->buffer & 1;
-		in_pBitReadState->buffer >>= 1;
-		*currentBufferElement <<= 1;
-		*currentBufferElement |= currentBit;
+		position = (8-in_pBitReadState->bitCountInBuffer) % 8;
+		currentBit = (in_pBitReadState->buffer >> position) & 1;
+		*currentBufferElement |= (currentBit<<(currentBitIndex % 8));
+		in_pBitReadState->bitCountInBuffer--;
 
 		if ((currentBitIndex+1) % 8 == 0)
 		{

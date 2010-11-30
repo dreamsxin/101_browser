@@ -1,5 +1,6 @@
 #include "GIF/GIF.h"
 #include "GIF/LZW_Tree.h"
+#include "Algorithm/BitRead.h"
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
@@ -239,35 +240,15 @@ ReadResult read_Image_Descriptor(FILE* in_gifFile, Image_Descriptor* in_pImageDe
 	return ReadResultOK;
 }
 
-bool readBitsLittleEndian(FILE* in_file, uint8_t* out_pBuffer,
-	uint8_t* in_out_pTempBuffer, uint8_t* in_out_pBitsInBuffer, uint8_t bitCountToRead)
-{
-	assert(*in_out_pBitsInBuffer <= 8);
-	assert(bitCountToRead <= 8);
-
-	*out_pBuffer = 0;
-
-	if (*in_out_pBitsInBuffer >= bitCountToRead)
-	{
-		*out_pBuffer |= ((1<<bitCountToRead)-1) & *in_out_pTempBuffer;
-		*in_out_pTempBuffer >>= bitCountToRead;
-		*in_out_pBitsInBuffer -= bitCountToRead;
-
-		return true;
-	}
-
-	return true;
-}
-
 ReadResult read_Image_Data(FILE* in_gifFile)
 {
-	uint8_t LZW_code_size;
+	uint8_t LZW_Minimum_Code_Size;
 	Data_SubBlock subBlock;
 
-	if (fread(&LZW_code_size, sizeof(LZW_code_size), 1, in_gifFile) != 1)
+	if (fread(&LZW_Minimum_Code_Size, sizeof(LZW_Minimum_Code_Size), 1, in_gifFile) != 1)
 		return ReadResultPrematureEndOfStream;
 
-	if (LZW_code_size < 2 || LZW_code_size > 8)
+	if (LZW_Minimum_Code_Size < 2 || LZW_Minimum_Code_Size > 8)
 		return ReadResultInvalidData;
 
 	while (1)
@@ -279,10 +260,8 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 			break;
 		
 		{
-			uint16_t currentToken;
-			uint8_t currentByte;
-
-			uint16_t bitsCount = 8*(uint16_t) subBlock.Block_Size;
+			// the number of bits in the block
+			uint16_t bitsInBlockCount = 8*(uint16_t) subBlock.Block_Size;
 
 			LZW_Tree *pTree = (LZW_Tree *) malloc(sizeof(LZW_Tree));
 
@@ -293,9 +272,77 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 			
 			initLZW_Tree(pTree);
 
+			// Here comes the decompression
+
+			{
+				uint16_t startCode = 1<<LZW_Minimum_Code_Size;
+				uint16_t stopCode = startCode + 1;
+
+				uint8_t currentCodeBitCount = LZW_Minimum_Code_Size+1;
+
+				uint16_t bitsRead = 0;
+				uint16_t currentTableIndex;
+
+				uint8_t currentCodeWordLength = LZW_Minimum_Code_Size+1;
+
+				BitReadState bitReadState;
+				initBitReadState(&bitReadState);
+
+				for (currentTableIndex = stopCode + 1; currentTableIndex<4096; currentTableIndex++)
+				{
+					/*
+					 * Q: Why is it necessary to set currentCodeWord to 0?
+					 * A: Since the code word can have 8 or less bits, the higher nibble would
+					 *    not be initialized correctly.
+					 */
+					uint16_t currentCodeWord = 0;
+
+					if (!readBits(&bitReadState, &currentCodeWord, currentCodeWordLength, in_gifFile))
+					{
+						free(pTree);
+						return ReadResultPrematureEndOfStream;
+					}
+
+					bitsRead += currentCodeWordLength;
+
+					if (currentCodeWord == startCode)
+					{
+						currentCodeWordLength = LZW_Minimum_Code_Size+1;
+						/*
+						 * currentTableIndex will be incremented when using continue, so
+						 * we set it to stopCode and not stopCode+1
+						 */
+						currentTableIndex = stopCode;
+						continue;
+					}
+					else if (currentCodeWord == stopCode)
+					{
+						break;
+					}
+
+					switch (currentTableIndex)
+					{
+					case (1<<3)-1:
+					case (1<<4)-1:
+					case (1<<5)-1:
+					case (1<<6)-1:
+					case (1<<7)-1:
+					case (1<<8)-1:
+					case (1<<9)-1:
+					case (1<<10)-1:
+					case (1<<11)-1:
+						currentCodeWordLength++;
+						break;
+					}
+				}
+			}
+
+			// Here ends the decompression
+
 			free(pTree);
 		}
 
+#if 0
 		subBlock.Data_Values = (uint8_t*) malloc(subBlock.Block_Size);
 
 		if (fread(subBlock.Data_Values, subBlock.Block_Size, 1, in_gifFile) != 1)
@@ -303,11 +350,10 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 			return ReadResultPrematureEndOfStream;
 		}
 
-
-
 		// TODO: Interprete read block
 
 		free(subBlock.Data_Values);
+#endif
 	}
 
 	return ReadResultOK;

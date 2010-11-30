@@ -35,7 +35,11 @@ typedef struct
 	uint8_t buffer;
 } BitReadState;
 
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 void initBitReadState(BitReadState *in_pBitReadState);
+
 /*!
  * Reads in_bitsCount bits from the file.
  * 
@@ -43,6 +47,9 @@ void initBitReadState(BitReadState *in_pBitReadState);
  * true if successful
  * false if not
  */
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 bool readBits(BitReadState *in_pBitReadState, void* in_pBuffer, size_t in_bitsCount, FILE* in_file);
 
 #ifdef __cplusplus
