@@ -64,6 +64,13 @@ module html5
     deleter void (in DOMString name);
   };
 
+  interface DOMElementMap {
+    getter DOMString (in DOMString name);
+    setter void (in DOMString name, in Element value);
+    creator void (in DOMString name, in Element value);
+    deleter void (in DOMString name);
+  };
+
   [Supplemental] exception DOMException {
     const unsigned short URL_MISMATCH_ERR = 21;
     const unsigned short QUOTA_EXCEEDED_ERR = 22;
@@ -100,6 +107,7 @@ module html5
     NodeList getElementsByName(in DOMString elementName);
     NodeList getElementsByClassName(in DOMString classNames);
     NodeList getItems(in optional DOMString typeNames); // microdata 
+    readonly attribute DOMElementMap cssElementMap;
   
     // dynamic markup insertion
              attribute DOMString innerHTML;
@@ -633,7 +641,9 @@ module html5
     TimedTrackCue getCueById(in DOMString id);
   };
 
+  
   [Constructor(in DOMString id, in double startTime, in double endTime, in DOMString text, in optional DOMString settings, in optional DOMString voice, in optional boolean pauseOnExit)]
+  
   interface TimedTrackCue {
     readonly attribute TimedTrack track;
     readonly attribute DOMString id;
@@ -642,12 +652,14 @@ module html5
     readonly attribute double endTime;
     readonly attribute boolean pauseOnExit;
   
+  
     readonly attribute DOMString direction;
     readonly attribute boolean snapToLines;
     readonly attribute long linePosition;
     readonly attribute long textPosition;
     readonly attribute long size;
     readonly attribute DOMString alignment;
+  
   
     readonly attribute DOMString voice;
     DOMString getCueAsSource();
