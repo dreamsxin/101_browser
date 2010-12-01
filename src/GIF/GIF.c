@@ -275,8 +275,6 @@ bool read_Image_Data_Byte(void *in_pStreamState, uint8_t* in_pBuffer)
 		}
 
 		pStreamState->Read_Bytes = 0;
-
-		return true;
 	}
 
 	if (fread(in_pBuffer, 1, 1, pStreamState->file) != 1)
@@ -330,18 +328,18 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 	
 	while (1)
 	{
+		if (currentTableIndex >= 4096)
+		{
+			free(pTree);
+			return ReadResultInvalidData;
+		}
+
 		/*
 		 * Q: Why is it necessary to set currentCodeWord to 0?
 		 * A: Since the code word can have 8 or less bits, the higher nibble would
 		 *    not be initialized correctly.
 		 */
 		currentCodeWord = 0;
-
-		if (currentTableIndex >= 4096)
-		{
-			free(pTree);
-			return ReadResultInvalidData;
-		}
 
 		if (!readBits(&bitReadState, &streamState, read_Image_Data_Byte, &currentCodeWord, currentCodeWordBitCount))
 		{
@@ -351,8 +349,8 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 
 		if (currentCodeWord == startCode)
 		{
-			currentCodeWordBitCount = LZW_Minimum_Code_Size+1;
 			currentTableIndex = stopCode + 1;
+			currentCodeWordBitCount = LZW_Minimum_Code_Size+1;
 
 			initLZW_Tree(pTree);
 
