@@ -327,12 +327,6 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 	
 	while (1)
 	{
-		if (currentTableIndex >= 4096)
-		{
-			free(pTree);
-			return ReadResultInvalidData;
-		}
-
 		/*
 		 * Q: Why is it necessary to set currentCodeWord to 0?
 		 * A: Since the code word can have 8 or less bits, the higher nibble would
@@ -381,7 +375,8 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 			break;
 		}
 
-		currentTableIndex++;
+		if (currentTableIndex < 4096)
+			currentTableIndex++;
 	}
 
 	// If there is no terminator block return failure
