@@ -309,6 +309,52 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 	if (LZW_Minimum_Code_Size < 2 || LZW_Minimum_Code_Size > 8)
 		return ReadResultInvalidData;
 
+	// This code is left for testing
+#if 0
+	while (1)
+ 	{
+		size_t i, j;
+
+		if (fread(&subBlock.Block_Size, sizeof(subBlock.Block_Size), 1, in_gifFile) != 1)
+			return ReadResultPrematureEndOfStream;
+
+		printf("%u\n", subBlock.Block_Size);
+
+		if (subBlock.Block_Size == 0)
+			break;
+
+		subBlock.Data_Values = (uint8_t*) malloc(subBlock.Block_Size);
+ 
+		if (fread(subBlock.Data_Values, subBlock.Block_Size, 1, in_gifFile) != 1)
+		{
+			free(subBlock.Data_Values);
+			return ReadResultPrematureEndOfStream;
+		}
+
+		for (i=0; i<subBlock.Block_Size; i++)
+		{
+			for (j=0; j<8; j++)
+			{
+				if (subBlock.Data_Values[i] & (1<<(7-j)))
+				{
+					printf("1");
+				}
+				else
+				{
+					printf("0");
+				}
+			}
+
+			printf("\n");
+		}
+		
+		printf("\n", subBlock.Block_Size);
+
+		free(subBlock.Data_Values);
+	}
+#endif
+
+#if 1
 	initBitReadState(&bitReadState);
 	init_Image_Data_StreamState(&streamState, in_gifFile);
 
@@ -347,6 +393,16 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 			return ReadResultPrematureEndOfStream;
 		}
 
+#if 0
+		printf("%u: %u\n", currentTableIndex, currentCodeWord);
+#endif
+
+		if (currentCodeWord >= currentTableIndex)
+		{
+			free(pTree);
+			return ReadResultInvalidData;
+		}
+
 		if (currentCodeWord == startCode)
 		{
 			currentTableIndex = stopCode + 1;
@@ -363,15 +419,15 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 
 		switch (currentTableIndex)
 		{
-		case (1<<3)-1:
-		case (1<<4)-1:
-		case (1<<5)-1:
-		case (1<<6)-1:
-		case (1<<7)-1:
-		case (1<<8)-1:
-		case (1<<9)-1:
-		case (1<<10)-1:
-		case (1<<11)-1:
+		case 1<<3:
+		case 1<<4:
+		case 1<<5:
+		case 1<<6:
+		case 1<<7:
+		case 1<<8:
+		case 1<<9:
+		case 1<<10:
+		case 1<<11:
 			currentCodeWordBitCount++;
 			break;
 		}
@@ -386,6 +442,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 	}
 
 	free(pTree);
+#endif
 
 	return ReadResultOK;
 }
