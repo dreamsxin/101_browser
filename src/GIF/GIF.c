@@ -259,6 +259,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		if (subBlock.Block_Size == 0)
 			break;
 		
+#if 1
 		{
 			// the number of bits in the block
 			uint16_t bitsInBlockCount = 8*(uint16_t) subBlock.Block_Size;
@@ -278,12 +279,10 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 				uint16_t startCode = 1<<LZW_Minimum_Code_Size;
 				uint16_t stopCode = startCode + 1;
 
-				uint8_t currentCodeBitCount = LZW_Minimum_Code_Size+1;
-
 				uint16_t bitsRead = 0;
 				uint16_t currentTableIndex;
 
-				uint8_t currentCodeWordLength = LZW_Minimum_Code_Size+1;
+				uint8_t currentCodeWordBitCount = LZW_Minimum_Code_Size+1;
 
 				BitReadState bitReadState;
 				initBitReadState(&bitReadState);
@@ -297,22 +296,30 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 					 */
 					uint16_t currentCodeWord = 0;
 
-					if (!readBits(&bitReadState, &currentCodeWord, currentCodeWordLength, in_gifFile))
+					if (bitsInBlockCount - bitsRead < currentCodeWordBitCount)
+					{
+						break;
+					}
+
+					if (!readBits(&bitReadState, &currentCodeWord, currentCodeWordBitCount, in_gifFile))
 					{
 						free(pTree);
 						return ReadResultPrematureEndOfStream;
 					}
 
-					bitsRead += currentCodeWordLength;
+					bitsRead += currentCodeWordBitCount;
 
 					if (currentCodeWord == startCode)
 					{
-						currentCodeWordLength = LZW_Minimum_Code_Size+1;
+						currentCodeWordBitCount = LZW_Minimum_Code_Size+1;
 						/*
 						 * currentTableIndex will be incremented when using continue, so
 						 * we set it to stopCode and not stopCode+1
 						 */
 						currentTableIndex = stopCode;
+
+						initLZW_Tree(pTree);
+
 						continue;
 					}
 					else if (currentCodeWord == stopCode)
@@ -331,9 +338,14 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 					case (1<<9)-1:
 					case (1<<10)-1:
 					case (1<<11)-1:
-						currentCodeWordLength++;
+						currentCodeWordBitCount++;
 						break;
 					}
+				}
+
+				if (bitsRead > bitsInBlockCount || bitsInBlockCount-bitsRead >= 8)
+				{
+					return ReadResultInvalidData;
 				}
 			}
 
@@ -341,7 +353,9 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 
 			free(pTree);
 		}
+#endif
 
+		// This code is left for testing
 #if 0
 		subBlock.Data_Values = (uint8_t*) malloc(subBlock.Block_Size);
 
@@ -350,10 +364,9 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 			return ReadResultPrematureEndOfStream;
 		}
 
-		// TODO: Interprete read block
-
 		free(subBlock.Data_Values);
 #endif
+
 	}
 
 	return ReadResultOK;

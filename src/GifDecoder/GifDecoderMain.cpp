@@ -6,9 +6,9 @@ using namespace std;
 int main()
 {
 	char filename[] = 
-		"testfiles/gif/wikipedia/GifSampleSmall.gif";
+		// "testfiles/gif/wikipedia/GifSampleSmall.gif";
 		// "testfiles/gif/wikipedia/GifSample.gif";
-		// "testfiles/gif/wikipedia/Newtons_cradle_animation_book_2.gif";
+		"testfiles/gif/wikipedia/Newtons_cradle_animation_book_2.gif";
 		// "testfiles/gif/wikipedia/Rotating_earth_(large).gif";
 		// "testfiles/gif/wikipedia/Rotating_earth_(small).gif";
 		// "testfiles/gif/wikipedia/Sunflower_as_gif_small.gif";
@@ -28,6 +28,7 @@ int main()
 
 	FILE* imgFile = MTAx_fopen(filename, "rb");
 	GIF_Data_Stream dataStream;
+	ReadResult readResult;
 
 	if (imgFile == NULL)
 	{
@@ -35,7 +36,9 @@ int main()
 		exit(1);
 	}
 
-	if (read_GIF_Data_Stream(imgFile, &dataStream) != ReadResultOK)
+	readResult = read_GIF_Data_Stream(imgFile, &dataStream);
+
+	if (readResult != ReadResultOK)
 	{
 		fprintf(stderr, "Could not read GIF file\n");
 		exit(1);
