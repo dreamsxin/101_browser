@@ -6,16 +6,13 @@ void initBitReadState(BitReadState *in_pBitReadState)
 	in_pBitReadState->bitCountInBuffer = 0;
 }
 
-bool readBits(BitReadState *in_pBitReadState, void* in_pBuffer, size_t in_bitsCount, FILE* in_file)
+bool readBits(BitReadState *in_pBitReadState, void* in_pReaderState,  bool (*in_pReadByte)(void*, uint8_t*), 
+	void* in_pBuffer, size_t in_bitsCount)
 {
-	fpos_t lPosBackup;
 	uint8_t *currentBufferElement = (uint8_t *) in_pBuffer;
 	size_t currentBitIndex; // counter in the loop
 
 	assert(in_bitsCount < SIZE_MAX);
-	
-	if (fgetpos(in_file, &lPosBackup) != 0)
-		return false;
 
 	for (currentBitIndex = 0; currentBitIndex < in_bitsCount; ++currentBitIndex)
 	{
@@ -24,9 +21,8 @@ bool readBits(BitReadState *in_pBitReadState, void* in_pBuffer, size_t in_bitsCo
 
 		if (in_pBitReadState->bitCountInBuffer == 0)
 		{
-			if (fread(&in_pBitReadState->buffer, 1, 1, in_file) != 1)
+			if (!in_pReadByte(in_pReaderState, &in_pBitReadState->buffer))
 			{
-				fsetpos(in_file, &lPosBackup);
 				return false;
 			}
 

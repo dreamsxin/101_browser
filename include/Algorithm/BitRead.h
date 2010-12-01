@@ -50,7 +50,8 @@ void initBitReadState(BitReadState *in_pBitReadState);
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-bool readBits(BitReadState *in_pBitReadState, void* in_pBuffer, size_t in_bitsCount, FILE* in_file);
+bool readBits(BitReadState *in_pBitReadState, void* in_pReaderState,  bool (*in_pReadByte)(void*, uint8_t*), 
+void* in_pBuffer, size_t in_bitsCount);
 
 #ifdef __cplusplus
 }

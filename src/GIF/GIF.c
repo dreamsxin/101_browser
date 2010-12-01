@@ -240,11 +240,70 @@ ReadResult read_Image_Descriptor(FILE* in_gifFile, Image_Descriptor* in_pImageDe
 	return ReadResultOK;
 }
 
+typedef struct
+{
+	FILE* file;
+	uint8_t Block_Size_Bytes;
+	uint8_t Read_Bytes;
+	bool endOfStream;
+} Image_Data_StreamState;
+
+void init_Image_Data_StreamState(Image_Data_StreamState *in_pStreamState, FILE* in_file)
+{
+	in_pStreamState->file = in_file;
+	in_pStreamState->Block_Size_Bytes = 0;
+	in_pStreamState->Read_Bytes = 0;
+	in_pStreamState->endOfStream = false;
+}
+
+bool read_Image_Data_Byte(void *in_pStreamState, uint8_t* in_pBuffer)
+{
+	Image_Data_StreamState *pStreamState = (Image_Data_StreamState*) in_pStreamState;
+
+	if (pStreamState->endOfStream)
+		return false;
+
+	if (pStreamState->Read_Bytes == pStreamState->Block_Size_Bytes)
+	{
+		if (fread(&pStreamState->Block_Size_Bytes, sizeof(pStreamState->Block_Size_Bytes), 1, pStreamState->file) != 1)
+			return false;
+
+		if (pStreamState->Block_Size_Bytes == 0)
+		{
+			pStreamState->endOfStream = true;
+			return false;
+		}
+
+		pStreamState->Read_Bytes = 0;
+
+		return true;
+	}
+
+	if (fread(in_pBuffer, 1, 1, pStreamState->file) != 1)
+	{
+		pStreamState->endOfStream = true;
+		return false;
+	}
+
+	pStreamState->Read_Bytes++;
+
+	return true;
+}
+
 ReadResult read_Image_Data(FILE* in_gifFile)
 {
 	uint8_t LZW_Minimum_Code_Size;
 	Data_SubBlock subBlock;
 	BitReadState bitReadState;
+	Image_Data_StreamState streamState;
+	LZW_Tree *pTree;
+
+	uint16_t startCode;
+	uint16_t stopCode;
+	uint16_t currentTableIndex;
+	uint8_t currentCodeWordBitCount;
+
+	uint16_t currentCodeWord;
 
 	if (fread(&LZW_Minimum_Code_Size, sizeof(LZW_Minimum_Code_Size), 1, in_gifFile) != 1)
 		return ReadResultPrematureEndOfStream;
@@ -253,121 +312,82 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		return ReadResultInvalidData;
 
 	initBitReadState(&bitReadState);
+	init_Image_Data_StreamState(&streamState, in_gifFile);
 
+	pTree = (LZW_Tree *) malloc(sizeof(LZW_Tree));
+
+	if (pTree == NULL)
+	{
+		return ReadResultAllocationFailure;
+	}
+
+	initLZW_Tree(pTree);
+
+	startCode = 1<<LZW_Minimum_Code_Size;
+	stopCode = startCode+1;
+	currentTableIndex = stopCode + 1;
+	currentCodeWordBitCount = LZW_Minimum_Code_Size+1;
+	
 	while (1)
 	{
-		if (fread(&subBlock.Block_Size, sizeof(subBlock.Block_Size), 1, in_gifFile) != 1)
-			return ReadResultPrematureEndOfStream;
+		/*
+		 * Q: Why is it necessary to set currentCodeWord to 0?
+		 * A: Since the code word can have 8 or less bits, the higher nibble would
+		 *    not be initialized correctly.
+		 */
+		currentCodeWord = 0;
 
-		if (subBlock.Block_Size == 0)
-			break;
-		
-#if 1
+		if (currentTableIndex >= 4096)
 		{
-			// the number of bits in the block
-			uint16_t bitsInBlockCount = 8*(uint16_t) subBlock.Block_Size;
+			free(pTree);
+			return ReadResultInvalidData;
+		}
 
-			LZW_Tree *pTree = (LZW_Tree *) malloc(sizeof(LZW_Tree));
+		if (!readBits(&bitReadState, &streamState, read_Image_Data_Byte, &currentCodeWord, currentCodeWordBitCount))
+		{
+			free(pTree);
+			return ReadResultPrematureEndOfStream;
+		}
 
-			if (pTree == NULL)
-			{
-				return ReadResultAllocationFailure;
-			}
-			
+		if (currentCodeWord == startCode)
+		{
+			currentCodeWordBitCount = LZW_Minimum_Code_Size+1;
+			currentTableIndex = stopCode + 1;
+
 			initLZW_Tree(pTree);
 
-			// Here comes the decompression
-
-			{
-				uint16_t startCode = 1<<LZW_Minimum_Code_Size;
-				uint16_t stopCode = startCode + 1;
-
-				uint16_t bitsRead = 0;
-				uint16_t currentTableIndex;
-
-				uint8_t currentCodeWordBitCount = LZW_Minimum_Code_Size+1;
-
-				for (currentTableIndex = stopCode + 1; currentTableIndex<4096; currentTableIndex++)
-				{
-					/*
-					 * Q: Why is it necessary to set currentCodeWord to 0?
-					 * A: Since the code word can have 8 or less bits, the higher nibble would
-					 *    not be initialized correctly.
-					 */
-					uint16_t currentCodeWord = 0;
-
-					if (bitsInBlockCount - bitsRead < currentCodeWordBitCount)
-					{
-						break;
-					}
-
-					if (!readBits(&bitReadState, &currentCodeWord, currentCodeWordBitCount, in_gifFile))
-					{
-						free(pTree);
-						return ReadResultPrematureEndOfStream;
-					}
-
-					bitsRead += currentCodeWordBitCount;
-
-					if (currentCodeWord == startCode)
-					{
-						currentCodeWordBitCount = LZW_Minimum_Code_Size+1;
-						/*
-						 * currentTableIndex will be incremented when using continue, so
-						 * we set it to stopCode and not stopCode+1
-						 */
-						currentTableIndex = stopCode;
-
-						initLZW_Tree(pTree);
-
-						continue;
-					}
-					else if (currentCodeWord == stopCode)
-					{
-						break;
-					}
-
-					switch (currentTableIndex)
-					{
-					case (1<<3)-1:
-					case (1<<4)-1:
-					case (1<<5)-1:
-					case (1<<6)-1:
-					case (1<<7)-1:
-					case (1<<8)-1:
-					case (1<<9)-1:
-					case (1<<10)-1:
-					case (1<<11)-1:
-						currentCodeWordBitCount++;
-						break;
-					}
-				}
-
-				if (bitsRead > bitsInBlockCount || bitsInBlockCount-bitsRead >= 8)
-				{
-					return ReadResultInvalidData;
-				}
-			}
-
-			// Here ends the decompression
-
-			free(pTree);
+			continue;
 		}
-#endif
-
-		// This code is left for testing
-#if 0
-		subBlock.Data_Values = (uint8_t*) malloc(subBlock.Block_Size);
-
-		if (fread(subBlock.Data_Values, subBlock.Block_Size, 1, in_gifFile) != 1)
+		else if (currentCodeWord == stopCode)
 		{
-			return ReadResultPrematureEndOfStream;
+			break;
 		}
 
-		free(subBlock.Data_Values);
-#endif
+		switch (currentTableIndex)
+		{
+		case (1<<3)-1:
+		case (1<<4)-1:
+		case (1<<5)-1:
+		case (1<<6)-1:
+		case (1<<7)-1:
+		case (1<<8)-1:
+		case (1<<9)-1:
+		case (1<<10)-1:
+		case (1<<11)-1:
+			currentCodeWordBitCount++;
+			break;
+		}
 
+		currentTableIndex++;
 	}
+
+	// If there there is no terminator block return failure
+	if (readBits(&bitReadState, &streamState, read_Image_Data_Byte, &currentCodeWord, currentCodeWordBitCount))
+	{
+		return ReadResultInvalidData;
+	}
+
+	free(pTree);
 
 	return ReadResultOK;
 }
@@ -394,6 +414,10 @@ ReadResult read_Application_Extension(FILE* in_gifFile, bool in_is89a)
 		strncmp(applExt.Application_Authentication_Code, "2.0", 3) == 0)
 	{
 		// TODO
+	}
+	else
+	{
+		return ReadResultNotImplemented;
 	}
 
 	while (1)
