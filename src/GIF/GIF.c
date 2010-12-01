@@ -244,12 +244,15 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 {
 	uint8_t LZW_Minimum_Code_Size;
 	Data_SubBlock subBlock;
+	BitReadState bitReadState;
 
 	if (fread(&LZW_Minimum_Code_Size, sizeof(LZW_Minimum_Code_Size), 1, in_gifFile) != 1)
 		return ReadResultPrematureEndOfStream;
 
 	if (LZW_Minimum_Code_Size < 2 || LZW_Minimum_Code_Size > 8)
 		return ReadResultInvalidData;
+
+	initBitReadState(&bitReadState);
 
 	while (1)
 	{
@@ -283,9 +286,6 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 				uint16_t currentTableIndex;
 
 				uint8_t currentCodeWordBitCount = LZW_Minimum_Code_Size+1;
-
-				BitReadState bitReadState;
-				initBitReadState(&bitReadState);
 
 				for (currentTableIndex = stopCode + 1; currentTableIndex<4096; currentTableIndex++)
 				{
