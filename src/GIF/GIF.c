@@ -294,6 +294,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 	BitReadState bitReadState;
 	Image_Data_StreamState streamState;
 	LZW_Tree *pTree;
+	LZW_Stack *pStack;
 
 	uint16_t startCode;
 	uint16_t stopCode;
@@ -307,6 +308,9 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 
 	if (LZW_Minimum_Code_Size < 2 || LZW_Minimum_Code_Size > 8)
 		return ReadResultInvalidData;
+	
+	startCode = 1<<LZW_Minimum_Code_Size;
+	stopCode = startCode+1;
 
 	initBitReadState(&bitReadState);
 	init_Image_Data_StreamState(&streamState, in_gifFile);
@@ -318,10 +322,15 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		return ReadResultAllocationFailure;
 	}
 
-	initLZW_Tree(pTree);
+	pStack = (LZW_Stack *) malloc(sizeof(LZW_Stack));
 
-	startCode = 1<<LZW_Minimum_Code_Size;
-	stopCode = startCode+1;
+	if (pStack == NULL)
+	{
+		free(pTree);
+		return ReadResultAllocationFailure;
+	}
+
+	initLZW_Tree(pTree, 1<<LZW_Minimum_Code_Size);
 	currentTableIndex = stopCode + 1;
 	currentCodeWordBitCount = LZW_Minimum_Code_Size+1;
 	
@@ -337,27 +346,40 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		if (!readBits(&bitReadState, &streamState, read_Image_Data_Byte, &currentCodeWord, currentCodeWordBitCount))
 		{
 			free(pTree);
+			free(pStack);
 			return ReadResultPrematureEndOfStream;
 		}
 
 		if (currentCodeWord >= currentTableIndex)
 		{
 			free(pTree);
+			free(pStack);
 			return ReadResultInvalidData;
 		}
 
 		if (currentCodeWord == startCode)
 		{
+			// This is not necessary, so it is commented
+#if 0
+			initLZW_Tree(pTree);
+#endif
 			currentTableIndex = stopCode + 1;
 			currentCodeWordBitCount = LZW_Minimum_Code_Size+1;
-
-			initLZW_Tree(pTree);
 
 			continue;
 		}
 		else if (currentCodeWord == stopCode)
 		{
 			break;
+		}
+		else
+		{
+			if (currentCodeWord < startCode)
+			{
+				pTree->nodes[currentTableIndex].code = (uint8_t) currentCodeWord;
+			}
+
+			printf("%u %u\n", currentTableIndex, currentCodeWord);
 		}
 
 		switch (currentTableIndex)
@@ -375,7 +397,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 			break;
 		}
 
-		if (currentTableIndex < 4096)
+		if (currentTableIndex < 4096+1)
 			currentTableIndex++;
 	}
 
@@ -385,6 +407,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		return ReadResultInvalidData;
 	}
 
+	free(pStack);
 	free(pTree);
 
 	return ReadResultOK;
