@@ -1,5 +1,5 @@
-#ifndef _LZW_Tree_h
-#define _LZW_Tree_h
+#ifndef _LZW_h
+#define _LZW_h
 
 #include "MiniStdlib/cstdint.h"
 

@@ -1,4 +1,4 @@
-#include "GIF/LZW_Tree.h"
+#include "GIF/LZW.h"
 #include <assert.h>
 #include <stdlib.h>
 

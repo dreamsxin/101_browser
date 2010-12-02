@@ -1,5 +1,5 @@
 #include "GIF/GIF.h"
-#include "GIF/LZW_Tree.h"
+#include "GIF/LZW.h"
 #include "Algorithm/BitRead.h"
 #include <assert.h>
 #include <string.h>
