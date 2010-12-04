@@ -288,8 +288,6 @@ bool read_Image_Data_Byte(void *in_pStreamState, uint8_t* in_pBuffer)
 	return true;
 }
 
-#define PRINT_IMAGE 1
-
 ReadResult read_Image_Data(FILE* in_gifFile)
 {
 	uint8_t LZW_Minimum_Code_Size;
@@ -424,32 +422,12 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 				pCurrentNode = pStack->pNodes[pStack->stackSize-1];
 				pStack->stackSize--;
 
-#if PRINT_IMAGE == 0
+#if 0
 				printf("%u ", pCurrentNode->lastCode);
 #endif
 
-#if PRINT_IMAGE == 1
-				if (pCurrentNode->firstCode == 40)
-				{
-					printf("Û");
-				}
-				else if (pCurrentNode->firstCode == 255)
-				{
-					printf(" ");
-				}
-#endif
-
 				pixelsWritten++;
-
-#if PRINT_IMAGE == 1
-				if (pixelsWritten % 32 == 0)
-					printf("\n");
-#endif
 			}
-
-#if PRINT_IMAGE == 0
-			printf("\n");
-#endif
 		}
 
 		switch (currentTableIndex)
