@@ -132,19 +132,19 @@ ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a)
 				if (fread(&lSeparator, sizeof(lSeparator), 1, in_gifFile) != 1)
 					return ReadResultPrematureEndOfStream;
 
-				return read_Graphic_Block(in_gifFile, lSeparator);
+				return read_Graphic_Block(in_gifFile, lSeparator, 0);
 			}
 		}
 	}
 	else if (0x2C == in_introducer)
 	{
-		return read_Graphic_Block(in_gifFile, in_introducer);
+		return read_Graphic_Block(in_gifFile, in_introducer, 0);
 	}
 
 	return ReadResultInvalidData;
 }
 
-ReadResult read_Graphic_Block(FILE* in_gifFile, uint8_t in_separator)
+ReadResult read_Graphic_Block(FILE* in_gifFile, uint8_t in_separator, uint8_t lLabel)
 {
 	if (0x2C == in_separator)
 	{
