@@ -149,10 +149,9 @@ ReadResult read_Graphic_Block(FILE* in_gifFile, uint8_t in_separator, uint8_t in
 	{
 		return read_GraphicRendering_Block(in_gifFile, in_separator);
 	}
-	else
-	{
-		return ReadResultInvalidData;
-	}
+	
+	// TODO
+	return ReadResultNotImplemented;
 }
 
 ReadResult read_GraphicRendering_Block(FILE* in_gifFile, uint8_t in_separator)
