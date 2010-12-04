@@ -110,7 +110,7 @@ ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a)
 {
 	uint8_t lLabel;
 
-	if (in_introducer == 0x21)
+	if (0x21 == in_introducer)
 	{
 		if (fread(&lLabel, sizeof(lLabel), 1, in_gifFile) != 1)
 			return ReadResultPrematureEndOfStream;
@@ -136,7 +136,7 @@ ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a)
 			}
 		}
 	}
-	else if (in_introducer == 0x2C)
+	else if (0x2C == in_introducer)
 	{
 		return read_Graphic_Block(in_gifFile, in_introducer);
 	}
@@ -146,7 +146,7 @@ ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a)
 
 ReadResult read_Graphic_Block(FILE* in_gifFile, uint8_t in_separator)
 {
-	if (in_separator == 0x2C)
+	if (0x2C == in_separator)
 	{
 		return read_GraphicRendering_Block(in_gifFile, in_separator);
 	}
