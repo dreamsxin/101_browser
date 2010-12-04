@@ -5,8 +5,8 @@
 
 typedef struct _LZW_Tree_Node
 {
-	struct _LZW_Tree_Node *pFirst;
-	uint8_t code;
+	struct _LZW_Tree_Node *pPrev;
+	uint8_t firstCode;
 }  LZW_Tree_Node;
 
 /*!

@@ -303,6 +303,8 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 
 	uint16_t currentCodeWord;
 
+	size_t pixelsWritten = 0;
+
 	if (fread(&LZW_Minimum_Code_Size, sizeof(LZW_Minimum_Code_Size), 1, in_gifFile) != 1)
 		return ReadResultPrematureEndOfStream;
 
@@ -359,14 +361,25 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 
 		if (currentCodeWord == startCode)
 		{
-			// This is not necessary, so it is commented
-#if 0
-			initLZW_Tree(pTree);
-#endif
+			/*
+			 * Reiniting the tree is not (!) necessary - but if you change the implementation
+			 * it could become...
+			 */
+
 			currentTableIndex = stopCode + 1;
 			currentCodeWordBitCount = LZW_Minimum_Code_Size+1;
 
 			continue;
+		}
+		/*
+		 * Table indices > 4096 are not allowed. So if this occures,
+		 * we have an invalid stream.
+		 */
+		else if (currentTableIndex > 4096 && currentCodeWord != startCode)
+		{
+			free(pTree);
+			free(pStack);
+			return ReadResultInvalidData;
 		}
 		else if (currentCodeWord == stopCode)
 		{
@@ -374,12 +387,51 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		}
 		else
 		{
+			LZW_Tree_Node *pCurrentNode;
+
 			if (currentCodeWord < startCode)
 			{
-				pTree->nodes[currentTableIndex].code = (uint8_t) currentCodeWord;
+				pTree->nodes[currentTableIndex].firstCode = (uint8_t) currentCodeWord;
+				pTree->nodes[currentTableIndex].pPrev = NULL;
+			}
+			else
+			{
+				assert(currentCodeWord > stopCode);
+
+				pTree->nodes[currentTableIndex].pPrev = pTree->nodes+currentCodeWord;
+
+				if (currentTableIndex == currentCodeWord+1)
+				{
+					pTree->nodes[currentTableIndex].firstCode = pTree->nodes[currentTableIndex].pPrev->firstCode;
+				}
+				else
+				{
+					pTree->nodes[currentTableIndex].firstCode = pTree->nodes[currentCodeWord+1].firstCode;
+				}
+				
 			}
 
-			printf("%u %u\n", currentTableIndex, currentCodeWord);
+			initLZW_Stack(pStack);
+
+			pCurrentNode = pTree->nodes+currentTableIndex;
+
+			while (pCurrentNode != NULL)
+			{
+				pStack->pNodes[pStack->stackSize] = pCurrentNode;
+				pStack->stackSize++;
+				pCurrentNode = pCurrentNode->pPrev;
+			}
+
+			while (pStack->stackSize != 0)
+			{
+				pCurrentNode = pStack->pNodes[pStack->stackSize-1];
+				pStack->stackSize--;
+
+				printf("%u ", pCurrentNode->firstCode);
+				pixelsWritten++;
+			}
+
+			printf("\n");
 		}
 
 		switch (currentTableIndex)
@@ -397,8 +449,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 			break;
 		}
 
-		if (currentTableIndex < 4096+1)
-			currentTableIndex++;
+		currentTableIndex++;
 	}
 
 	// If there is no terminator block return failure
@@ -406,6 +457,8 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 	{
 		return ReadResultInvalidData;
 	}
+
+	printf("Pixels written: %u\n", pixelsWritten);
 
 	free(pStack);
 	free(pTree);
