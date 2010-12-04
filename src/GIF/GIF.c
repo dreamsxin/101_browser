@@ -1,4 +1,4 @@
-#include "GIF/GIF.h"
+﻿#include "GIF/GIF.h"
 #include "GIF/LZW.h"
 #include "Algorithm/BitRead.h"
 #include <assert.h>
@@ -288,6 +288,8 @@ bool read_Image_Data_Byte(void *in_pStreamState, uint8_t* in_pBuffer)
 	return true;
 }
 
+#define PRINT_IMAGE 1
+
 ReadResult read_Image_Data(FILE* in_gifFile)
 {
 	uint8_t LZW_Minimum_Code_Size;
@@ -362,7 +364,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		if (currentCodeWord == startCode)
 		{
 			/*
-			 * Reiniting the tree is not (!) necessary - but if you change the implementation
+			 * Reiniting the tree is not (!) necessary - but if we change the implementation
 			 * it could become...
 			 */
 
@@ -389,9 +391,12 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		{
 			LZW_Tree_Node *pCurrentNode;
 
+			//printf("%u %u\n", currentTableIndex, currentCodeWord);
+
 			if (currentCodeWord < startCode)
 			{
 				pTree->nodes[currentTableIndex].firstCode = (uint8_t) currentCodeWord;
+				pTree->nodes[currentTableIndex].lastCode = (uint8_t) currentCodeWord;
 				pTree->nodes[currentTableIndex].pPrev = NULL;
 			}
 			else
@@ -399,16 +404,8 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 				assert(currentCodeWord > stopCode);
 
 				pTree->nodes[currentTableIndex].pPrev = pTree->nodes+currentCodeWord;
-
-				if (currentTableIndex == currentCodeWord+1)
-				{
-					pTree->nodes[currentTableIndex].firstCode = pTree->nodes[currentTableIndex].pPrev->firstCode;
-				}
-				else
-				{
-					pTree->nodes[currentTableIndex].firstCode = pTree->nodes[currentCodeWord+1].firstCode;
-				}
-				
+				pTree->nodes[currentTableIndex].firstCode = pTree->nodes[currentTableIndex].pPrev->firstCode;
+				pTree->nodes[currentTableIndex].lastCode = pTree->nodes[currentCodeWord+1].firstCode;
 			}
 
 			initLZW_Stack(pStack);
@@ -427,11 +424,32 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 				pCurrentNode = pStack->pNodes[pStack->stackSize-1];
 				pStack->stackSize--;
 
-				printf("%u ", pCurrentNode->firstCode);
+#if PRINT_IMAGE == 0
+				printf("%u ", pCurrentNode->lastCode);
+#endif
+
+#if PRINT_IMAGE == 1
+				if (pCurrentNode->firstCode == 40)
+				{
+					printf("Û");
+				}
+				else if (pCurrentNode->firstCode == 255)
+				{
+					printf(" ");
+				}
+#endif
+
 				pixelsWritten++;
+
+#if PRINT_IMAGE == 1
+				if (pixelsWritten % 32 == 0)
+					printf("\n");
+#endif
 			}
 
+#if PRINT_IMAGE == 0
 			printf("\n");
+#endif
 		}
 
 		switch (currentTableIndex)
