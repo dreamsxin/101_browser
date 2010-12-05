@@ -392,9 +392,9 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 
 			if (currentCodeWord < startCode)
 			{
+				pTree->nodes[currentTableIndex].pPrev = NULL;
 				pTree->nodes[currentTableIndex].firstCode = (uint8_t) currentCodeWord;
 				pTree->nodes[currentTableIndex].lastCode = (uint8_t) currentCodeWord;
-				pTree->nodes[currentTableIndex].pPrev = NULL;
 			}
 			else
 			{
