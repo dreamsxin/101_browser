@@ -400,9 +400,11 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 			{
 				assert(currentCodeWord > stopCode);
 
-				pTree->nodes[currentTableIndex].pPrev = pTree->nodes+currentCodeWord;
-				pTree->nodes[currentTableIndex].firstCode = pTree->nodes[currentTableIndex].pPrev->firstCode;
-				pTree->nodes[currentTableIndex].lastCode = pTree->nodes[currentCodeWord+1].firstCode;
+				pCurrentNode = pTree->nodes+currentCodeWord;
+
+				pTree->nodes[currentTableIndex].pPrev = pCurrentNode;
+				pTree->nodes[currentTableIndex].firstCode = pCurrentNode->firstCode;
+				pTree->nodes[currentTableIndex].lastCode = (pCurrentNode+1)->firstCode;
 			}
 
 			initLZW_Stack(pStack);
