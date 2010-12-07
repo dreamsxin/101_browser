@@ -339,7 +339,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 	{
 		/*
 		 * Q: Why is it necessary to set currentCodeWord to 0?
-		 * A: Since the code word can have 8 or less bits, the higher nibble would
+		 * A: Since the code word can have 8 or less bits, the higher byte would
 		 *    not be initialized correctly.
 		 */
 		currentCodeWord = 0;
