@@ -13,7 +13,7 @@ void Decode_scan(FILE* jpegFile, RestartInterval in_ri);
 // E.2.4 Control procedure for decoding a restart interval
 void Decode_restart_interval(FILE* jpegFile, RestartInterval in_ri);
 void Reset_decoder();
-// // E.2.5 Control procedure for decoding a minimum coded unit (MCU)
+// E.2.5 Control procedure for decoding a minimum coded unit (MCU)
 void Decode_MCU();
 void Decode_data_unit();
 
