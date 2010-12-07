@@ -7,9 +7,7 @@ int main()
 {
 	char filename[] = "testfiles/T083/A1.jpg";
 
-	char mode[] = "rb";
-
-	FILE* jpegFile = MTAx_fopen(filename, mode);
+	FILE* jpegFile = MTAx_fopen(filename, "rb");
 
 	if (jpegFile == NULL)
 	{
