@@ -57,6 +57,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>MiniStdlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -75,12 +77,17 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>MiniStdlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\PNGTestSuite\PNGTestSuiteMain.c" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MiniStdlib\MiniStdlib.vcxproj">
+      <Project>{6c7c9fbb-39b4-42cc-a000-c0ff2f61388e}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\PNG\PNG.vcxproj">
       <Project>{1940c115-b73b-4d30-871a-7eb8421ddadf}</Project>
     </ProjectReference>

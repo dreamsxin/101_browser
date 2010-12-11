@@ -51,6 +51,10 @@ h4. tc217.gif:
 http://phil.ipal.org/tc217.gif (linked from http://phil.ipal.org/tc.html)
 Referenced in http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=394783182#cite_ref-8
 
+h2. Subfolder "png"
+
+All images are taken from PngSuite by Willem van Schaik. See http://www.schaik.com/pngsuite/ (on http://www.libpng.org/pub/png/pngsuite.html it is mirrored).
+
 h2. Subfolder "Unicode"
 
 h4. UTF-8-test.txt
