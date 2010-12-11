@@ -1,6 +1,7 @@
 #include "MiniStdlib/MTAx_cstdio.h"
 #include <string.h>
 #include <stdlib.h>
+#include "PNG/PNG.h"
 
 int main()
 {
@@ -61,6 +62,7 @@ int main()
 	for (i=0; i<testCaseCount; i++)
 	{
 		FILE* imgFile;
+		ReadResult readResult;
 		
 		folderWithFilename[folderLen] = 0;
 		strcat(folderWithFilename, filenames[i]);
@@ -72,6 +74,23 @@ int main()
 		{
 			fprintf(stderr, "Could not open file %s\n", folderWithFilename);
 			exit(1);
+		}
+
+		readResult = read_PNG(imgFile);
+
+		if (i<testCaseCount-3)
+		{
+			if (readResult != ReadResultOK)
+			{
+				printf("Error in %s - expected OK\n", folderWithFilename);
+			}
+		}
+		else
+		{
+			if (readResult != ReadResultInvalidData)
+			{
+				printf("Error in %s - expected InvalidData\n", folderWithFilename);
+			}
 		}
 
 		fclose(imgFile);
