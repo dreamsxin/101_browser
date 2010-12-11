@@ -1,6 +1,7 @@
 #ifndef _GIF_h
 #define _GIF_h
 
+#include "Util/ReadResult.h"
 #include "MiniStdlib/MTAx_cstdio.h"
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstdbool.h"
@@ -83,21 +84,6 @@ typedef struct
 } TableBased_Image;
 
 #pragma pack(pop)
-
-typedef enum
-{
-	ReadResultOK,
-	ReadResultPrematureEndOfStream,
-	ReadResultInvalidData,
-	/*
-	 * ReadResultInvalidVersion is returned when it could perhaps
-	 * be correct, but the claimed version of the file format is
-	 * too old
-	 */
-	ReadResultInvalidVersion,
-	ReadResultAllocationFailure,
-	ReadResultNotImplemented
-} ReadResult;
 
 #ifdef __cplusplus
 extern "C" {
