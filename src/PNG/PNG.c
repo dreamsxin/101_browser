@@ -16,3 +16,8 @@ ReadResult read_PNG(FILE* in_pngFile)
 
 	return ReadResultOK;
 }
+
+ReadResult read_PNG_Chunk(PNG_Chunk *out_pPNG_Chunk, FILE* in_pngFile)
+{
+	return ReadResultNotImplemented;
+}

@@ -6,9 +6,36 @@
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstdbool.h"
 
+#pragma pack(push, 1)
+
+/*
+ * Compare section
+ * 5.3 Chunk layout
+ * of the PNG specification
+ */
+typedef struct
+{
+	uint32_t length;
+	uint8_t chunkType[4];
+	uint8_t *chunkData;
+	uint32_t crc;
+} PNG_Chunk;
+
+#pragma pack(pop)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
 ReadResult read_PNG(FILE* in_pngFile);
+
+ReadResult read_PNG_Chunk(PNG_Chunk *out_pPNG_Chunk, FILE* in_pngFile);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
