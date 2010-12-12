@@ -531,6 +531,11 @@ ReadResult read_Comment_Extension(FILE* in_gifFile, bool in_is89a)
 
 		subBlock.Data_Values = (uint8_t*) malloc(subBlock.Block_Size);
 
+		if (subBlock.Data_Values == NULL)
+		{
+			return ReadResultAllocationFailure;
+		}
+
 		if (fread(subBlock.Data_Values, subBlock.Block_Size, 1, in_gifFile) != 1)
 		{
 			return ReadResultPrematureEndOfStream;

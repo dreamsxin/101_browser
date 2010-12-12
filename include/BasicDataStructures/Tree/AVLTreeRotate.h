@@ -175,10 +175,16 @@ template <typename Type> BinaryTreeNode<Type, AVLTreeNodePropertyType>* rotateAV
 	BinaryTreeNode<Type, AVLTreeNodePropertyType>* in_pNode)
 {
 	BinaryTreeNode<Type, AVLTreeNodePropertyType>* pNode3=in_pNode;
-	assert(pNode3);
+	assert(pNode3 != NULL);
+
+	if (pNode3 == NULL)
+		return NULL;
 
 	BinaryTreeNode<Type, AVLTreeNodePropertyType>* pNode1=in_pNode->left();
-	assert(pNode1);
+	assert(pNode1 != NULL);
+
+	if (pNode1 == NULL)
+		return NULL;
 
 	generateRotateRightBalances(&pNode1->nodeProperty(), &pNode3->nodeProperty());
 
@@ -190,10 +196,16 @@ template <typename Type> BinaryTreeNode<Type, AVLTreeNodePropertyType>* rotateAV
 	BinaryTreeNode<Type, AVLTreeNodePropertyType>* in_pNode)
 {
 	BinaryTreeNode<Type, AVLTreeNodePropertyType>* pNode1=in_pNode;
-	assert(pNode1);
+	assert(pNode1 != NULL);
+
+	if (pNode1 == NULL)
+		return NULL;
 
 	BinaryTreeNode<Type, AVLTreeNodePropertyType>* pNode3=in_pNode->right();
-	assert(pNode1);
+	assert(pNode3 != NULL);
+
+	if (pNode3 == NULL)
+		return NULL;
 
 	generateRotateLeftBalances(&pNode1->nodeProperty(), &pNode3->nodeProperty());
 

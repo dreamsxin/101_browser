@@ -12,7 +12,7 @@ template <typename Type, typename NodePropertyType> bool isRoot(
 {
 	assert(in_pNode);
 
-	return in_pNode->parent()==NULL;
+	return in_pNode->parent() == NULL;
 }
 
 template <typename Type, typename NodePropertyType> bool isLeftChild(
@@ -21,19 +21,25 @@ template <typename Type, typename NodePropertyType> bool isLeftChild(
 	assert(in_pNode);
 	assert(!isRoot(in_pNode));
 
-	return in_pNode->parent()->left()==in_pNode;
+	return in_pNode->parent()->left() == in_pNode;
 }
 
 // If this function does not return NULL, the return value
 // is the new root of the tree
 template <typename Type, typename NodePropertyType> BinaryTreeNode<Type, NodePropertyType>* rotateRight(
 	BinaryTreeNode<Type, NodePropertyType>* in_pNode)
-{
-	BinaryTreeNode<Type, NodePropertyType>* pNode3=in_pNode;
-	assert(pNode3);
+{	
+	BinaryTreeNode<Type, NodePropertyType>* pNode3 = in_pNode;
+	assert(pNode3 != NULL);
+
+	if (pNode3 == NULL)
+		return NULL;
 
 	BinaryTreeNode<Type, NodePropertyType>* pNode1=in_pNode->left();
-	assert(pNode1);
+	assert(pNode1 != NULL);
+
+	if (pNode1 == NULL)
+		return NULL;
 
 	/*
 	Original:
@@ -70,23 +76,23 @@ template <typename Type, typename NodePropertyType> BinaryTreeNode<Type, NodePro
 
 	// it is already rotated, so pNode1->right() changes to pNode3->left()
 	// the single = is correct
-	if (BinaryTreeNode<Type, NodePropertyType>* pNode2=pNode3->left())
+	if (BinaryTreeNode<Type, NodePropertyType>* pNode2 = pNode3->left())
 	{
 		pNode2->parent()=pNode3;
 	}
 
 	// it is already rotated, so pNode3->parent() changes to pNode1->parent()
 	// the single = is correct
-	if (BinaryTreeNode<Type, NodePropertyType>* pNodeRoot=pNode1->parent())
+	if (BinaryTreeNode<Type, NodePropertyType>* pNodeRoot = pNode1->parent())
 	{
-		if (pNodeRoot->left()==pNode3)
+		if (pNodeRoot->left() == pNode3)
 		{
-			pNodeRoot->left()=pNode1;
+			pNodeRoot->left() = pNode1;
 		}
 		else
 		{
-			assert(pNodeRoot->right()==pNode3);
-			pNodeRoot->right()=pNode1;
+			assert(pNodeRoot->right() == pNode3);
+			pNodeRoot->right() = pNode1;
 		}
 	}
 	else
@@ -102,11 +108,17 @@ template <typename Type, typename NodePropertyType> BinaryTreeNode<Type, NodePro
 template <typename Type, typename NodePropertyType> BinaryTreeNode<Type, NodePropertyType>* rotateLeft(
 	BinaryTreeNode<Type, NodePropertyType>* in_pNode)
 {
-	BinaryTreeNode<Type, NodePropertyType>* pNode1=in_pNode;
-	assert(pNode1);
+	BinaryTreeNode<Type, NodePropertyType>* pNode1 = in_pNode;
+	assert(pNode1 != NULL);
 
-	BinaryTreeNode<Type, NodePropertyType>* pNode3=in_pNode->right();
-	assert(pNode1);
+	if (pNode1 == NULL)
+		return NULL;
+
+	BinaryTreeNode<Type, NodePropertyType>* pNode3 = in_pNode->right();
+	assert(pNode3 != NULL);
+	
+	if (pNode3 == NULL)
+		return NULL;
 
 	/*
 	Original:
@@ -145,21 +157,21 @@ template <typename Type, typename NodePropertyType> BinaryTreeNode<Type, NodePro
 	// the single = is correct
 	if (BinaryTreeNode<Type, NodePropertyType>* pNode2=pNode1->right())
 	{
-		pNode2->parent()=pNode1;
+		pNode2->parent() = pNode1;
 	}
 
 	// it is already rotated, so pNode1->parent() changes to pNode3->parent()
 	// the single = is correct
-	if (BinaryTreeNode<Type, NodePropertyType>* pNodeRoot=pNode3->parent())
+	if (BinaryTreeNode<Type, NodePropertyType>* pNodeRoot = pNode3->parent())
 	{
-		if (pNodeRoot->left()==pNode1)
+		if (pNodeRoot->left() == pNode1)
 		{
-			pNodeRoot->left()=pNode3;
+			pNodeRoot->left() = pNode3;
 		}
 		else
 		{
-			assert(pNodeRoot->right()==pNode1);
-			pNodeRoot->right()=pNode3;
+			assert(pNodeRoot->right() == pNode1);
+			pNodeRoot->right() = pNode3;
 		}
 	}
 	else

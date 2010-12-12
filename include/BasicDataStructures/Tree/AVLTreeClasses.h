@@ -15,13 +15,17 @@ template <typename Type> BinaryTreeNode<Type, AVLTreeNodePropertyType>* avlTreeI
 {
 	assert(in_pNode);
 
-	in_pNode->nodeProperty()=0;
+	if (in_pNode == NULL)
+		return NULL;
+
+	in_pNode->nodeProperty() = 0;
 
 	BinaryTreeNode<Type, AVLTreeNodePropertyType>* pActNode = in_pNode;
 
 	while (!isRoot(pActNode))
 	{
-		assert((pActNode->parent()->nodeProperty()==-1) || (pActNode->parent()->nodeProperty()==0) || (pActNode->parent()->nodeProperty()==1));
+		assert((pActNode->parent()->nodeProperty() == -1) || (pActNode->parent()->nodeProperty() == 0) || 
+			(pActNode->parent()->nodeProperty() == 1));
 		
 		if (isLeftChild(pActNode))
 		{
@@ -34,23 +38,26 @@ template <typename Type> BinaryTreeNode<Type, AVLTreeNodePropertyType>* avlTreeI
 
 		pActNode=pActNode->parent();
 
-		if (pActNode->nodeProperty()==0)
+		if (pActNode->nodeProperty() == 0)
 			return NULL;
 		// if it is -1 or 1 -> simply continue
-		else if (pActNode->nodeProperty()==-2)
+		else if (pActNode->nodeProperty() == -2)
 		{
 			BinaryTreeNode<Type, AVLTreeNodePropertyType>* pChild = pActNode->left();
 			assert(pChild);
 
-			assert(pChild->nodeProperty()==-1 || pChild->nodeProperty()==1);
+			if (pChild == NULL)
+				return NULL;
 
-			if (pChild->nodeProperty()==-1)
+			assert(pChild->nodeProperty() == -1 || pChild->nodeProperty() == 1);
+
+			if (pChild->nodeProperty() == -1)
 			{
 				return rotateAVLTreeRight(pActNode);
 			}
 			else 
 			{
-				assert(pChild->nodeProperty()==1);
+				assert(pChild->nodeProperty() == 1);
 
 				BinaryTreeNode<Type, AVLTreeNodePropertyType>* res = rotateAVLTreeLeft(pChild);
 
@@ -61,20 +68,23 @@ template <typename Type> BinaryTreeNode<Type, AVLTreeNodePropertyType>* avlTreeI
 			}
 			break;
 		}
-		else if (pActNode->nodeProperty()==2)
+		else if (pActNode->nodeProperty() == 2)
 		{
 			BinaryTreeNode<Type, AVLTreeNodePropertyType>* pChild = pActNode->right();
 			assert(pChild);
 
-			assert(pChild->nodeProperty()==-1 || pChild->nodeProperty()==1);
+			if (pChild == NULL)
+				return NULL;
 
-			if (pChild->nodeProperty()==1)
+			assert(pChild->nodeProperty() == -1 || pChild->nodeProperty() == 1);
+
+			if (pChild->nodeProperty() == 1)
 			{
 				return rotateAVLTreeLeft(pActNode);
 			}
 			else
 			{
-				assert(pChild->nodeProperty()==-1);
+				assert(pChild->nodeProperty() == -1);
 
 				BinaryTreeNode<Type, AVLTreeNodePropertyType>* res = rotateAVLTreeRight(pChild);
 
