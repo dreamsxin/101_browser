@@ -33,6 +33,18 @@ Look at http://www.w3.org/Graphics/GIF/spec-gif87.txt (GIF87A) or http://www.w3.
 
 h2. Markup languages
 
+h3. PNG
+
+h4. Where can I find the specification for PNG?
+
+http://www.w3.org/TR/PNG/
+
+h4. Where can I find a test suite for PNG?
+
+http://www.schaik.com/pngsuite/
+also mirrored on
+http://www.libpng.org/pub/png/pngsuite.html
+
 h3. WPF
 
 h4. Where can I find specifications of WPF?
