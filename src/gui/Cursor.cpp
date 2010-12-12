@@ -2,7 +2,7 @@
 #include "gui/Texture.h"
 #include <cassert>
 // for creating a BMP file for testing purposes
-#include <cstdio>
+#include "MiniStdlib/MTAx_cstdio.h"
 
 #define CREATE_CURSOR_BMPS 0
 
@@ -30,7 +30,7 @@ namespace Gui
 		bmfHeader.bfOffBits = (DWORD)sizeof(BITMAPFILEHEADER) + (DWORD)sizeof(BITMAPINFOHEADER);
 
 		FILE* bmpFile;
-		bmpFile = fopen(filename, "w+b");
+		bmpFile = MTAx_fopen(filename, "w+b");
 		fwrite(&bmfHeader, sizeof(BITMAPFILEHEADER), 1, bmpFile);
 		fwrite(&bih, sizeof(BITMAPINFOHEADER), 1, bmpFile);
 		fwrite(out.data, textureBytesCount(&out), 1, bmpFile);
