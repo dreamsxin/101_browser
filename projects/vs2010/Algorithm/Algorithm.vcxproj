@@ -82,12 +82,14 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Algorithm\BinarySearch.c" />
     <ClCompile Include="..\..\..\src\Algorithm\BitRead.c" />
+    <ClCompile Include="..\..\..\src\Algorithm\Endianness.c" />
     <ClCompile Include="..\..\..\src\Algorithm\IterateWhile.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\Algorithm\BinarySearch.h" />
     <ClInclude Include="..\..\..\include\Algorithm\BitRead.h" />
     <ClInclude Include="..\..\..\include\Algorithm\CompareResult.h" />
+    <ClInclude Include="..\..\..\include\Algorithm\Endianness.h" />
     <ClInclude Include="..\..\..\include\Algorithm\IterateWhile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
