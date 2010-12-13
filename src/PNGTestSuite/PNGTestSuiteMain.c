@@ -75,6 +75,8 @@ int main()
 			fprintf(stderr, "Could not open file %s\n", folderWithFilename);
 			exit(1);
 		}
+		
+		printf("%s\n", folderWithFilename);
 
 		readResult = read_PNG(imgFile);
 
