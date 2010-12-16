@@ -10,6 +10,7 @@ ReadResult read_PNG(FILE* in_pngFile)
 {
 	uint8_t readPngSignature[8];
 	PNG_Chunk pngChunk;
+	size_t readHeaderBytes;
 
 	if (fread(readPngSignature, 1, 8, in_pngFile) != 8)
 		return ReadResultPrematureEndOfStream;
@@ -17,29 +18,41 @@ ReadResult read_PNG(FILE* in_pngFile)
 	if (memcmp(readPngSignature, PNG_signature, 8) != 0)
 		return ReadResultInvalidData;
 
-	while (read_PNG_Chunk(&pngChunk, in_pngFile) != ReadResultPrematureEndOfStream)
+	while (1)
 	{
-		printf("%c%c%c%c: %u\n", pngChunk.chunkType[0], pngChunk.chunkType[1], pngChunk.chunkType[2], pngChunk.chunkType[3], pngChunk.length);
+		uint64_t index64;
+
+		readHeaderBytes = fread(&pngChunk.header, 1, sizeof(pngChunk.header), in_pngFile);
+
+		if (0 == readHeaderBytes)
+		{
+			return ReadResultOK;
+		}
+		else if (sizeof(pngChunk.header) != readHeaderBytes)
+		{
+			return ReadResultPrematureEndOfStream;
+		}
+
+		flipEndianness(&pngChunk.header.length, sizeof(pngChunk.header.length));
+
+		printf("%c%c%c%c: %u\n", 
+			pngChunk.header.chunkType[0], 
+			pngChunk.header.chunkType[1], 
+			pngChunk.header.chunkType[2], 
+			pngChunk.header.chunkType[3], 
+			pngChunk.header.length);
+
+		for (index64 = 0; index64 < pngChunk.header.length; index64++)
+		{
+			uint8_t aByte;
+
+			if (fread(&aByte, 1, 1, in_pngFile) != 1)
+				return ReadResultPrematureEndOfStream;
+		}
+
+		if (fread(&pngChunk.crc, 4, 1, in_pngFile) != 1)
+			return ReadResultPrematureEndOfStream;
 	}
-
-	return ReadResultOK;
-}
-
-ReadResult read_PNG_Chunk(PNG_Chunk *out_pPNG_Chunk, FILE* in_pngFile)
-{
-	if (fread(out_pPNG_Chunk, offsetof(PNG_Chunk, chunkData), 1, in_pngFile) != 1)
-	{
-		return ReadResultPrematureEndOfStream;
-	}
-	
-	flipEndianness(&out_pPNG_Chunk->length, sizeof(out_pPNG_Chunk->length));
-
-	// this is not a good idea...
-	if (fseek(in_pngFile, out_pPNG_Chunk->length, SEEK_CUR) != 0)
-		return ReadResultPrematureEndOfStream;
-
-	if (fread(&out_pPNG_Chunk->crc, sizeof(out_pPNG_Chunk->crc), 1, in_pngFile) != 1)
-		return ReadResultPrematureEndOfStream;
 
 	return ReadResultOK;
 }

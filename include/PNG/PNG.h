@@ -17,6 +17,11 @@ typedef struct
 {
 	uint32_t length;
 	uint8_t chunkType[4];
+} PNG_Chunk_Header;
+
+typedef struct
+{
+	PNG_Chunk_Header header;
 	uint8_t *chunkData;
 	uint32_t crc;
 } PNG_Chunk;
