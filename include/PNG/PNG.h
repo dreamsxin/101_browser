@@ -26,6 +26,22 @@ typedef struct
 	uint32_t crc;
 } PNG_Chunk;
 
+/*
+ * See section
+ * 11.2.2 IHDR Image header
+ * of the PNG specification
+ */
+typedef struct
+{
+	uint32_t Width; // 4 bytes
+	uint32_t Height; // 4 bytes
+	uint8_t Bit_depth; // 1 byte
+	uint8_t Colour_type; // 1 byte
+	uint8_t Compression_method; // 1 byte
+	uint8_t Filter_method; // 1 byte
+	uint8_t Interlace_method; // 1 byte
+} PNG_Chunk_Data_IHDR;
+
 #pragma pack(pop)
 
 #ifdef __cplusplus

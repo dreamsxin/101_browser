@@ -10,6 +10,9 @@ ReadResult read_PNG(FILE* in_pngFile)
 {
 	uint8_t readPngSignature[8];
 	PNG_Chunk pngChunk;
+	bool isEndOfStream;
+	ReadResult readResult;
+	PNG_Chunk_Data_IHDR pngChunkDataIHDR;
 
 	if (fread(readPngSignature, 1, 8, in_pngFile) != 8)
 		return ReadResultPrematureEndOfStream;
@@ -17,12 +20,37 @@ ReadResult read_PNG(FILE* in_pngFile)
 	if (memcmp(readPngSignature, PNG_signature, 8) != 0)
 		return ReadResultInvalidData;
 
+	readResult = read_PNG_Chunk_Header(&pngChunk.header, &isEndOfStream, in_pngFile);
+	if (readResult != ReadResultOK)
+		return readResult;
+	if (isEndOfStream)
+		return readResult;
+
+	if (strncmp("IHDR", (const char*) pngChunk.header.chunkType, 4) != 0)
+	{
+		return ReadResultInvalidData;
+	}
+
+	if (sizeof(PNG_Chunk_Data_IHDR) != pngChunk.header.length)
+	{
+		return ReadResultPrematureEndOfStream;
+	}
+
+	if (fread(&pngChunkDataIHDR, sizeof(pngChunkDataIHDR), 1, in_pngFile) != 1)
+	{
+		return ReadResultPrematureEndOfStream;
+	}
+
+	if (fread(&pngChunk.crc, sizeof(pngChunk.crc), 1, in_pngFile) != 1)
+	{
+		return ReadResultPrematureEndOfStream;
+	}
+
 	while (1)
 	{
 		uint64_t index64;
-		bool isEndOfStream;
 
-		ReadResult readResult = read_PNG_Chunk_Header(&pngChunk.header, &isEndOfStream, in_pngFile);
+		readResult = read_PNG_Chunk_Header(&pngChunk.header, &isEndOfStream, in_pngFile);
 
 		if (readResult != ReadResultOK)
 			return readResult;
