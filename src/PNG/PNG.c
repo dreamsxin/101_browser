@@ -44,6 +44,59 @@ ReadResult read_PNG(FILE* in_pngFile)
 	pngChunkDataIHDR.Width = _byteswap_ulong(pngChunkDataIHDR.Width);
 	pngChunkDataIHDR.Height = _byteswap_ulong(pngChunkDataIHDR.Height);
 
+	// See Table 11.1 — Allowed combinations of colour type and bit depth
+	switch (pngChunkDataIHDR.Colour_type)
+	{
+	case 0:
+		switch (pngChunkDataIHDR.Bit_depth)
+		{
+		case 1:
+		case 2:
+		case 4:
+		case 8:
+		case 16:
+			break;
+		default:
+			return ReadResultInvalidData;
+		}
+		break;
+	case 2:
+		switch (pngChunkDataIHDR.Bit_depth)
+		{
+		case 8:
+		case 16:
+			break;
+		default:
+			return ReadResultInvalidData;
+		}
+		break;
+	case 3:
+		switch (pngChunkDataIHDR.Bit_depth)
+		{
+		case 1:
+		case 2:
+		case 4:
+		case 8:
+			break;
+		default:
+			return ReadResultInvalidData;
+		}
+		break;
+	case 4:
+	case 6:
+		switch (pngChunkDataIHDR.Bit_depth)
+		{
+		case 8:
+		case 16:
+			break;
+		default:
+			return ReadResultInvalidData;
+		}
+		break;
+	default:
+		return ReadResultInvalidData;
+	}
+
 	if (fread(&pngChunk.crc, sizeof(pngChunk.crc), 1, in_pngFile) != 1)
 	{
 		return ReadResultPrematureEndOfStream;
