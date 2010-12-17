@@ -41,6 +41,9 @@ ReadResult read_PNG(FILE* in_pngFile)
 		return ReadResultPrematureEndOfStream;
 	}
 
+	pngChunkDataIHDR.Width = _byteswap_ulong(pngChunkDataIHDR.Width);
+	pngChunkDataIHDR.Height = _byteswap_ulong(pngChunkDataIHDR.Height);
+
 	if (fread(&pngChunk.crc, sizeof(pngChunk.crc), 1, in_pngFile) != 1)
 	{
 		return ReadResultPrematureEndOfStream;
