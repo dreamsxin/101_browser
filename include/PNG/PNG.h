@@ -37,8 +37,6 @@ __declspec(dllexport)
 #endif
 ReadResult read_PNG(FILE* in_pngFile);
 
-ReadResult read_PNG_Chunk(PNG_Chunk *out_pPNG_Chunk, FILE* in_pngFile);
-
 #ifdef __cplusplus
 }
 #endif

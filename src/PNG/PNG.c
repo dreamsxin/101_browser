@@ -1,7 +1,7 @@
 #include "PNG/PNG.h"
 #include <string.h>
 #include <stddef.h> // for offsetof
-#include "Algorithm/Endianness.h"
+#include "MiniStdlib/MTAx_cstdlib.h" // for the conversation functions for endianness
 
 // See http://www.w3.org/TR/PNG/#5PNG-file-signature
 const uint8_t PNG_signature[8] = { 137, 80, 78, 71, 13, 10, 26, 10 };
@@ -33,7 +33,7 @@ ReadResult read_PNG(FILE* in_pngFile)
 			return ReadResultPrematureEndOfStream;
 		}
 
-		flipEndianness(&pngChunk.header.length, sizeof(pngChunk.header.length));
+		pngChunk.header.length = _byteswap_ulong(pngChunk.header.length);
 
 		printf("%c%c%c%c: %u\n", 
 			pngChunk.header.chunkType[0], 
