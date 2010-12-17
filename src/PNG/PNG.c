@@ -10,7 +10,6 @@ ReadResult read_PNG(FILE* in_pngFile)
 {
 	uint8_t readPngSignature[8];
 	PNG_Chunk pngChunk;
-	size_t readHeaderBytes;
 
 	if (fread(readPngSignature, 1, 8, in_pngFile) != 8)
 		return ReadResultPrematureEndOfStream;
@@ -21,20 +20,15 @@ ReadResult read_PNG(FILE* in_pngFile)
 	while (1)
 	{
 		uint64_t index64;
+		bool isEndOfStream;
 
-		readHeaderBytes = fread(&pngChunk.header, 1, sizeof(pngChunk.header), in_pngFile);
+		ReadResult readResult = read_PNG_Chunk_Header(&pngChunk.header, &isEndOfStream, in_pngFile);
 
-		if (0 == readHeaderBytes)
-		{
-			return ReadResultOK;
-		}
-		else if (sizeof(pngChunk.header) != readHeaderBytes)
-		{
-			return ReadResultPrematureEndOfStream;
-		}
-
-		pngChunk.header.length = _byteswap_ulong(pngChunk.header.length);
-
+		if (readResult != ReadResultOK)
+			return readResult;
+		if (isEndOfStream)
+			return readResult;
+		
 		printf("%c%c%c%c: %u\n", 
 			pngChunk.header.chunkType[0], 
 			pngChunk.header.chunkType[1], 
@@ -53,6 +47,28 @@ ReadResult read_PNG(FILE* in_pngFile)
 		if (fread(&pngChunk.crc, 4, 1, in_pngFile) != 1)
 			return ReadResultPrematureEndOfStream;
 	}
+
+	return ReadResultOK;
+}
+
+ReadResult read_PNG_Chunk_Header(PNG_Chunk_Header *out_pHeader, bool *out_isEndOfStream, FILE* in_pngFile)
+{
+	size_t readHeaderBytes = fread(out_pHeader, 1, sizeof(*out_pHeader), in_pngFile);
+
+	if (0 == readHeaderBytes)
+	{
+		*out_isEndOfStream = true;
+		return ReadResultOK;
+	}
+	else if (sizeof(*out_pHeader) != readHeaderBytes)
+	{
+		*out_isEndOfStream = true;
+		return ReadResultPrematureEndOfStream;
+	}
+
+	out_pHeader->length = _byteswap_ulong(out_pHeader->length);
+
+	*out_isEndOfStream = false;
 
 	return ReadResultOK;
 }
