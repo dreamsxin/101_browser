@@ -55,6 +55,8 @@ ReadResult read_PNG(FILE* in_pngFile);
 
 ReadResult read_PNG_Chunk_Header(PNG_Chunk_Header *out_pHeader, bool *out_isEndOfStream, FILE* in_pngFile);
 
+ReadResult read_PNG_Chunk_Data_IHDR(PNG_Chunk_Data_IHDR *out_pChunkData, FILE* in_pngFile);
+
 #ifdef __cplusplus
 }
 #endif

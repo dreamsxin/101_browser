@@ -36,66 +36,8 @@ ReadResult read_PNG(FILE* in_pngFile)
 		return ReadResultPrematureEndOfStream;
 	}
 
-	if (fread(&pngChunkDataIHDR, sizeof(pngChunkDataIHDR), 1, in_pngFile) != 1)
-	{
-		return ReadResultPrematureEndOfStream;
-	}
-
-	pngChunkDataIHDR.Width = _byteswap_ulong(pngChunkDataIHDR.Width);
-	pngChunkDataIHDR.Height = _byteswap_ulong(pngChunkDataIHDR.Height);
-
-	// See Table 11.1 — Allowed combinations of colour type and bit depth
-	switch (pngChunkDataIHDR.Colour_type)
-	{
-	case 0:
-		switch (pngChunkDataIHDR.Bit_depth)
-		{
-		case 1:
-		case 2:
-		case 4:
-		case 8:
-		case 16:
-			break;
-		default:
-			return ReadResultInvalidData;
-		}
-		break;
-	case 2:
-		switch (pngChunkDataIHDR.Bit_depth)
-		{
-		case 8:
-		case 16:
-			break;
-		default:
-			return ReadResultInvalidData;
-		}
-		break;
-	case 3:
-		switch (pngChunkDataIHDR.Bit_depth)
-		{
-		case 1:
-		case 2:
-		case 4:
-		case 8:
-			break;
-		default:
-			return ReadResultInvalidData;
-		}
-		break;
-	case 4:
-	case 6:
-		switch (pngChunkDataIHDR.Bit_depth)
-		{
-		case 8:
-		case 16:
-			break;
-		default:
-			return ReadResultInvalidData;
-		}
-		break;
-	default:
-		return ReadResultInvalidData;
-	}
+	if ((readResult = read_PNG_Chunk_Data_IHDR(&pngChunkDataIHDR, in_pngFile)) != ReadResultOK)
+		return readResult;
 
 	if (fread(&pngChunk.crc, sizeof(pngChunk.crc), 1, in_pngFile) != 1)
 	{
@@ -153,6 +95,72 @@ ReadResult read_PNG_Chunk_Header(PNG_Chunk_Header *out_pHeader, bool *out_isEndO
 	out_pHeader->length = _byteswap_ulong(out_pHeader->length);
 
 	*out_isEndOfStream = false;
+
+	return ReadResultOK;
+}
+
+ReadResult read_PNG_Chunk_Data_IHDR(PNG_Chunk_Data_IHDR *out_pChunkData, FILE* in_pngFile)
+{
+	if (fread(out_pChunkData, sizeof(*out_pChunkData), 1, in_pngFile) != 1)
+	{
+		return ReadResultPrematureEndOfStream;
+	}
+
+	out_pChunkData->Width = _byteswap_ulong(out_pChunkData->Width);
+	out_pChunkData->Height = _byteswap_ulong(out_pChunkData->Height);
+
+	// See Table 11.1 — Allowed combinations of colour type and bit depth
+	switch (out_pChunkData->Colour_type)
+	{
+	case 0:
+		switch (out_pChunkData->Bit_depth)
+		{
+		case 1:
+		case 2:
+		case 4:
+		case 8:
+		case 16:
+			break;
+		default:
+			return ReadResultInvalidData;
+		}
+		break;
+	case 2:
+		switch (out_pChunkData->Bit_depth)
+		{
+		case 8:
+		case 16:
+			break;
+		default:
+			return ReadResultInvalidData;
+		}
+		break;
+	case 3:
+		switch (out_pChunkData->Bit_depth)
+		{
+		case 1:
+		case 2:
+		case 4:
+		case 8:
+			break;
+		default:
+			return ReadResultInvalidData;
+		}
+		break;
+	case 4:
+	case 6:
+		switch (out_pChunkData->Bit_depth)
+		{
+		case 8:
+		case 16:
+			break;
+		default:
+			return ReadResultInvalidData;
+		}
+		break;
+	default:
+		return ReadResultInvalidData;
+	}
 
 	return ReadResultOK;
 }
