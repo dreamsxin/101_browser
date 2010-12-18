@@ -74,15 +74,19 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				}
 
 				ReshapeGL(window->width, window->height);
-				// A WM_PAINT will be called automatically - so there is no need for
-				// InvalidateRect(window->hWnd, NULL, FALSE);
+				/*
+				 * A WM_PAINT will be called automatically - so there is no need for
+				 * InvalidateRect(window->hWnd, NULL, FALSE);
+				 */
 				return 0;
 		}
 		break;
 	case WM_PAINT:
-		// I know many say should not put OpenGL code into this
-		// handler - but what should be done else
-		// for drawing the window *while* resizing, moving etc.
+		/*
+		 * I know many say should not put OpenGL code into this
+		 * handler - but what should be done else
+		 * for drawing the window *while* resizing, moving etc.
+		 */
 		UpdateGuiState();
 		drawGui(gMultipleMice ? &window->rawMice : NULL);
 		SwapBuffers(window->hDC);
