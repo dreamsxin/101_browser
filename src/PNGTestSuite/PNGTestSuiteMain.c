@@ -89,9 +89,19 @@ int main()
 		}
 		else
 		{
-			if (readResult != ReadResultInvalidData)
+			if (i == testCaseCount-3)
 			{
-				printf("Error in %s - expected InvalidData\n", folderWithFilename);
+				if (readResult != ReadResultPrematureEndOfStream)
+				{
+					printf("Error in %s - expected PrematureEndOfStream\n", folderWithFilename);
+				}
+			}
+			else
+			{
+				if (readResult != ReadResultInvalidData)
+				{
+					printf("Error in %s - expected InvalidData\n", folderWithFilename);
+				}
 			}
 		}
 
