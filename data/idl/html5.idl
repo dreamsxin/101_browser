@@ -537,9 +537,9 @@ module html5
   interface HTMLTrackElement : HTMLElement {
              attribute DOMString kind;
              attribute DOMString src;
-             attribute DOMString charset;
              attribute DOMString srclang;
              attribute DOMString label;
+             attribute boolean default;
   
     readonly attribute TimedTrack track;
   };
@@ -642,7 +642,7 @@ module html5
   };
 
   
-  [Constructor(in DOMString id, in double startTime, in double endTime, in DOMString text, in optional DOMString settings, in optional DOMString voice, in optional boolean pauseOnExit)]
+  [Constructor(in DOMString id, in double startTime, in double endTime, in DOMString text, in optional DOMString settings, in optional boolean pauseOnExit)]
   
   interface TimedTrackCue {
     readonly attribute TimedTrack track;
@@ -661,7 +661,6 @@ module html5
     readonly attribute DOMString alignment;
   
   
-    readonly attribute DOMString voice;
     DOMString getCueAsSource();
     DocumentFragment getCueAsHTML();
   
