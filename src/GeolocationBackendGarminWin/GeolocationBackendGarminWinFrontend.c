@@ -91,7 +91,7 @@ bool startSession(ReceivePacketState *in_pState,
 		PacketType_USB_Protocol_Layer,
 		Pid_Session_Started);
 
-	if (receivePacketResult == ReceivePacketResultError)
+	if (isErrorResult(receivePacketResult))
 		return false;
 
 	freePacket(&thePacket);

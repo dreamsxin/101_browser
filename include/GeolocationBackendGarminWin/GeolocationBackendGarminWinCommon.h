@@ -1,16 +1,24 @@
 #ifndef _GeolocationBackendGarminWinCommon_h
 #define _GeolocationBackendGarminWinCommon_h
 
-typedef enum _ReceivePacketState
+typedef enum
 {
 	ReceiveByDeviceIoControl,
 	ReceiveByReadFile
 } ReceivePacketState;
 
 
-typedef enum _ReceivePacketResult
+typedef enum
 {
+	/*
+	 * ReceivePacketResultNoPacket is returned when no additional packet is received. 
+	 * This means as a corollary that we can start sending packages.
+	 */
 	ReceivePacketResultNoPacket,
+	/*
+	 * ReceivePacketResultPacket is returned when a packet is received after which we 
+	 * can send packages.
+	 */
 	ReceivePacketResultPacket,
 	/*
 	 * ReceivePacketResultPacketContinueRead
@@ -18,7 +26,11 @@ typedef enum _ReceivePacketResult
 	 * before sending another packet
 	 */
 	ReceivePacketResultPacketContinueRead,
-	ReceivePacketResultError
+
+	ReceivePacketResultErrorAllocation,
+	ReceivePacketResultErrorReadFile,
+	ReceivePacketResultErrorInvalidData,
+	ReceivePacketResultErrorInvalidState
 } ReceivePacketResult;
 
 #endif

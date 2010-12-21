@@ -77,7 +77,6 @@ ReceivePacketResult receivePacket(ReceivePacketState *in_pState,
 	{
 	case ReceiveByDeviceIoControl:
 		{
-			
 			Packet_t* thePacket = NULL;
 			DWORD theBufferSize = 0;
 			theBytesReturned = ASYNC_DATA_SIZE;
@@ -89,7 +88,7 @@ ReceivePacketResult receivePacket(ReceivePacketState *in_pState,
 
 				if (!reallocBufferAndItsSizeAndDeleteIfFailure(&theBuffer, theBufferSize, ASYNC_DATA_SIZE))
 				{
-					return ReceivePacketResultError;
+					return ReceivePacketResultErrorAllocation;
 				}
 
 				DeviceIoControl(in_garminHandle,
@@ -108,13 +107,15 @@ ReceivePacketResult receivePacket(ReceivePacketState *in_pState,
 
 			thePacket = (Packet_t*) theBuffer;
 
+			printf("Async: concrete data size=%u\n", thePacket->mDataSize);
+
 			if (PacketType_USB_Protocol_Layer != thePacket->mPacketType || 
 				Pid_Data_Available != thePacket->mPacketId)
 			{
 				if (!isPacketBufferLargeEnough((Packet_t*) theBuffer, theBufferSize))
 				{
 					safe_free(&theBuffer);
-					return ReceivePacketResultError;
+					return ReceivePacketResultErrorInvalidData;
 				}
 				else
 				{
@@ -136,14 +137,17 @@ ReceivePacketResult receivePacket(ReceivePacketState *in_pState,
 
 			if (theBuffer == NULL)
 			{
-				return ReceivePacketResultError;
+				return ReceivePacketResultErrorAllocation;
 			}
 
-			ReadFile(in_garminHandle,
+			if (!ReadFile(in_garminHandle,
 				theBuffer,
 				MAX_BUFFER_SIZE,
 				&theBytesReturned,
-				NULL);
+				NULL))
+			{
+				return ReceivePacketResultErrorReadFile;
+			}
 
 			if (theBytesReturned == 0)
 			{
@@ -161,7 +165,7 @@ ReceivePacketResult receivePacket(ReceivePacketState *in_pState,
 				if (!isPacketBufferLargeEnough((Packet_t*) theBuffer, theBytesReturned))
 				{
 					safe_free(&theBuffer);
-					return ReceivePacketResultError;
+					return ReceivePacketResultErrorInvalidData;
 				}
 				else
 				{
@@ -172,7 +176,7 @@ ReceivePacketResult receivePacket(ReceivePacketState *in_pState,
 		}
 		break;
 	default:
-		return ReceivePacketResultError;
+		return ReceivePacketResultErrorInvalidState;
 	}
 }
 
@@ -188,9 +192,9 @@ ReceivePacketResult waitForPacket(ReceivePacketState *in_pState,
 	{
 		ReceivePacketResult result = receivePacket(in_pState, in_garminHandle, &thePacket);
 
-		if (ReceivePacketResultError == result)
+		if (isErrorResult(result))
 		{
-			return ReceivePacketResultError;
+			return result;
 		}
 		else if (ReceivePacketResultNoPacket == result)
 		{
@@ -210,4 +214,9 @@ ReceivePacketResult waitForPacket(ReceivePacketState *in_pState,
 			freePacket(&thePacket);
 		}		
 	} while (1);
+}
+
+bool isErrorResult(ReceivePacketResult in_result)
+{
+	return in_result > ReceivePacketResultPacketContinueRead;
 }

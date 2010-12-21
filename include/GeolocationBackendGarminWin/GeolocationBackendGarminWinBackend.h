@@ -4,6 +4,7 @@
 #include "GeolocationBackendGarminWin/GeolocationBackendGarminWinCommon.h"
 #include <windows.h>
 #include "MiniStdlib/cstdint.h"
+#include "MiniStdlib/cstdbool.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -84,6 +85,11 @@ ReceivePacketResult waitForPacket(ReceivePacketState *in_pState,
 								  Packet_t** out_ppPacket,
 								  unsigned char in_type,
 								  unsigned short in_pid);
+
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+bool isErrorResult(ReceivePacketResult in_result);
 
 #ifdef __cplusplus
 }

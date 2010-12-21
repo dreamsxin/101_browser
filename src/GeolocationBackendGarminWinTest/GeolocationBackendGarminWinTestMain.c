@@ -8,11 +8,13 @@
 int main()
 {
 	WORD lUsbSize;
-	HANDLE lGarminHandle = initializeGeolocationBackendGarmin(&lUsbSize);
+	HANDLE lGarminHandle;
 	Packet_t theProductDataPacket = { PacketType_Application_Layer, 0, 0, Pid_Product_Rqst, 0 , 0 };
 	Packet_t* thePacket;
 	ReceivePacketState receivePacketState;
 	ReceivePacketResult receivePacketResult;
+
+	lGarminHandle = initializeGeolocationBackendGarmin(&lUsbSize);
 
 	if (!lGarminHandle)
 	{
@@ -34,7 +36,7 @@ int main()
 
 	while (ReceivePacketResultPacketContinueRead == receivePacketResult)
 	{
-		printf("%u %u\n", (unsigned) thePacket->mPacketType, 
+		printf("Type: %u\tId: %u\n", (unsigned) thePacket->mPacketType, 
 		(unsigned) thePacket->mPacketId);
 
 		if (thePacket->mPacketType == PacketType_Application_Layer &&
@@ -58,7 +60,7 @@ int main()
 			lGarminHandle,
 			&thePacket);
 
-		if (ReceivePacketResultError == receivePacketResult)
+		if (isErrorResult(receivePacketResult))
 		{
 			fprintf(stderr, "An error occured.\n");
 			exit(EXIT_FAILURE);
