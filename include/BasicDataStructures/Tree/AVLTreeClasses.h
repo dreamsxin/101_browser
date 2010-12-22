@@ -13,8 +13,6 @@ typedef signed char AVLTreeNodePropertyType;
 template <typename Type> BinaryTreeNode<Type, AVLTreeNodePropertyType>* avlTreeInserted(
 	BinaryTreeNode<Type, AVLTreeNodePropertyType>* in_pNode)
 {
-	assert(in_pNode);
-
 	if (in_pNode == NULL)
 		return NULL;
 
@@ -22,17 +20,18 @@ template <typename Type> BinaryTreeNode<Type, AVLTreeNodePropertyType>* avlTreeI
 
 	BinaryTreeNode<Type, AVLTreeNodePropertyType>* pActNode = in_pNode;
 
-	while (!isRoot(pActNode))
+	while (getNodePointerType(pActNode) != NodePointerTypeRoot)
 	{
 		assert((pActNode->parent()->nodeProperty() == -1) || (pActNode->parent()->nodeProperty() == 0) || 
 			(pActNode->parent()->nodeProperty() == 1));
 		
-		if (isLeftChild(pActNode))
+		if (getNodePointerType(pActNode) == NodePointerTypeLeftChild)
 		{
 			pActNode->parent()->nodeProperty()--;
 		}
 		else
 		{
+			assert(getNodePointerType(pActNode) == NodePointerTypeRightChild);
 			pActNode->parent()->nodeProperty()++;
 		}
 

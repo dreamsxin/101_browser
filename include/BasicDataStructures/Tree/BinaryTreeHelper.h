@@ -7,21 +7,28 @@
 #include "BasicDataStructures/Tree/BinaryTree.h"
 #include "BasicDataStructures/Permuter.h"
 
-template <typename Type, typename NodePropertyType> bool isRoot(
+enum NodePointerType
+{
+	NodePointerTypeNULL,
+	NodePointerTypeRoot,
+	NodePointerTypeLeftChild,
+	NodePointerTypeRightChild
+};
+
+template <typename Type, typename NodePropertyType> NodePointerType getNodePointerType(
 	BinaryTreeNode<Type, NodePropertyType>* in_pNode)
 {
-	assert(in_pNode);
-
-	return in_pNode->parent() == NULL;
-}
-
-template <typename Type, typename NodePropertyType> bool isLeftChild(
-	BinaryTreeNode<Type, NodePropertyType>* in_pNode)
-{
-	assert(in_pNode);
-	assert(!isRoot(in_pNode));
-
-	return in_pNode->parent()->left() == in_pNode;
+	if (NULL == in_pNode)
+		return NodePointerTypeNULL;
+	else if (NULL == in_pNode->parent())
+		return NodePointerTypeRoot;
+	else if (in_pNode->parent()->left() == in_pNode)
+		return NodePointerTypeLeftChild;
+	else
+	{
+		assert(in_pNode->parent()->right() == in_pNode);
+		return NodePointerTypeRightChild;
+	}
 }
 
 // If this function does not return NULL, the return value
