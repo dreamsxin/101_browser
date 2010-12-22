@@ -79,8 +79,11 @@ Thumbs.db
 *.~vsd
 
 # Files produced by LaTeX
-*.aux
-*.dvi
+doc/*.aux
+doc/*.dvi
+doc/*.pdf
+doc/*.log
+doc/*.toc
 
 # Java classes
 *.class
