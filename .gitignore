@@ -1,6 +1,5 @@
 *.ncb
 *.suo
-*.user
 *.dep
 *.obj
 *.embed.manifest
