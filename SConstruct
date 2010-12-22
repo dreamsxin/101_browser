@@ -33,8 +33,11 @@ Unicode.SharedLibrary('bin/Unicode', Glob('src/Unicode/*.c')+Glob('src/Unicode/*
 HTML5 = env.Clone()
 HTML5.SharedLibrary('bin/HTML5', Glob('src/HTML5/*.c')+Glob('src/HTML5/*.cpp'))
 
+CPU = env.Clone()
+CPU.SharedLibrary('bin/CPU', Glob('src/CPU/*.c'))
+
 testsuite = env.Clone()
 # testsuite.Append(CCFLAGS = '-fprofile-arcs -ftest-coverage', LIBS = ['gcov'])
-testsuite.Append(LIBS = ['MiniStdlib', 'BigNumber', 'rfc1950', 'Unicode', 'HTML5', 'Algorithm'])
+testsuite.Append(LIBS = ['MiniStdlib', 'BigNumber', 'rfc1950', 'Unicode', 'HTML5', 'Algorithm', 'CPU'])
 testsuite.Program('bin/TestSuite', Glob('src/TestSuite/*.cpp')+Glob('src/TestSuite/*.c'), LIBPATH = ['#/bin','#/lib'])
 
