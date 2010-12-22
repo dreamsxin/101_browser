@@ -4,6 +4,6 @@
 int Check_CPU_support_AES()
 {
 	int CPUInfo[4] = {-1};
-	__cpuid(CPUInfo, 0);
+	__cpuid(CPUInfo, 1);
 	return (CPUInfo[2] & 0x2000000);
 }
