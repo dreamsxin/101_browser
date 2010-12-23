@@ -358,11 +358,25 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 			return ReadResultInvalidData;
 		}
 
-		if (currentCodeWord == startCode)
+		/*! 
+		 * Q: Why do we first check whether
+		 * startCode == currentCodeWord or
+		 * stopCode == currentCodeWord
+		 * and then check if
+		 * currentTableIndex > 4096 ?
+		 * 
+		 * A: Because 
+		 * startCode == currentCodeWord or
+		 * stopCode == currentCodeWord
+		 * can also occur at table index 4097. For example the file
+		 * "testfiles/gif/wikipedia/Rotating_earth_(small).gif"
+		 * provides such a test case.
+		 */
+		if (startCode == currentCodeWord)
 		{
 			/*
-			 * Reiniting the tree is not (!) necessary - but if we change the implementation
-			 * it could become...
+			 * Reiniting the tree is not (!) necessary at the moment - 
+			 * but if we change the implementation it could become...
 			 */
 
 			currentTableIndex = stopCode + 1;
@@ -370,25 +384,27 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 
 			continue;
 		}
+		else if (stopCode == currentCodeWord)
+		{
+			break;
+		}
 		/*
 		 * Table indices > 4096 are not allowed. So if this occures,
 		 * we have an invalid stream.
 		 */
-		else if (currentTableIndex > 4096 && currentCodeWord != startCode)
+		else if (currentTableIndex > 4096)
 		{
 			free(pTree);
 			free(pStack);
 			return ReadResultInvalidData;
 		}
-		else if (currentCodeWord == stopCode)
-		{
-			break;
-		}
 		else
 		{
 			LZW_Tree_Node *pCurrentNode;
 
-			//printf("%u %u\n", currentTableIndex, currentCodeWord);
+#if 0
+			printf("%u %u\n", currentTableIndex, currentCodeWord);
+#endif
 
 			if (currentCodeWord < startCode)
 			{
@@ -455,7 +471,9 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		return ReadResultInvalidData;
 	}
 
+#if 0
 	printf("Pixels written: %u\n", pixelsWritten);
+#endif
 
 	free(pStack);
 	free(pTree);

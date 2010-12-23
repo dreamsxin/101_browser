@@ -9,8 +9,8 @@ int main()
 		// "testfiles/gif/wikipedia/GifSampleSmall.gif";
 		// "testfiles/gif/wikipedia/GifSample.gif";
 		// "testfiles/gif/wikipedia/Newtons_cradle_animation_book_2.gif";
-		"testfiles/gif/wikipedia/Rotating_earth_(large).gif";
-		// "testfiles/gif/wikipedia/Rotating_earth_(small).gif";
+		// "testfiles/gif/wikipedia/Rotating_earth_(large).gif";
+		"testfiles/gif/wikipedia/Rotating_earth_(small).gif";
 		// "testfiles/gif/wikipedia/Sunflower_as_gif_small.gif";
 
 		// "testfiles/gif/a_image.gif";

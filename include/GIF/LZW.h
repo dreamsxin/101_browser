@@ -19,8 +19,15 @@ typedef struct
 	LZW_Tree_Node nodes[4097];
 } LZW_Tree;
 
+/*!
+ * Initializes the terminal nodes (color table entries) in the LZW tree
+ */
 void initLZW_Tree(LZW_Tree *out_pLZW_Tree, size_t in_tableSize);
 
+/*!
+ * You should not allocate this on a stack. Use the heap or
+ * a global variable instead.
+ */
 typedef struct
 {
 	size_t stackSize;

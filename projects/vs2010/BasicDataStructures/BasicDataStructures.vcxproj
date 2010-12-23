@@ -78,9 +78,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\..\..\include\BasicDataStructures\BigNumber\BigInteger.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\Collections.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\Comparator.h" />

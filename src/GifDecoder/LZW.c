@@ -12,11 +12,9 @@ void initLZW_Tree(LZW_Tree *out_pLZW_Tree, size_t in_tableSize)
 		out_pLZW_Tree->nodes[i].firstCode = (uint8_t) i;
 		out_pLZW_Tree->nodes[i].lastCode = (uint8_t) i;
 	}
-
 }
 
 void initLZW_Stack(LZW_Stack *out_pLZW_Stack)
 {
 	out_pLZW_Stack->stackSize = 0;
 }
-
