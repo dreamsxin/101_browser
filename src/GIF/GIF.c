@@ -311,6 +311,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		return ReadResultInvalidData;
 	
 	startCode = 1<<LZW_Minimum_Code_Size;
+	// ASGN:GIF_314
 	stopCode = startCode+1;
 
 	initBitReadState(&bitReadState);
@@ -372,6 +373,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		 * "testfiles/gif/wikipedia/Rotating_earth_(small).gif"
 		 * provides such a test case.
 		 */
+		// CND:GIF_375
 		if (startCode == currentCodeWord)
 		{
 			/*
@@ -384,6 +386,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 
 			continue;
 		}
+		// CND:GIF_388
 		else if (stopCode == currentCodeWord)
 		{
 			break;
@@ -392,6 +395,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		 * Table indices > 4096 are not allowed. So if this occures,
 		 * we have an invalid stream.
 		 */
+		// CND:GIF_395
 		else if (currentTableIndex > 4096)
 		{
 			free(pTree);
@@ -402,10 +406,13 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		{
 			LZW_Tree_Node *pCurrentNode;
 
+			// Follows from CND:GIF_395
+			assert(currentTableIndex <= 4096);
+
 #if 0
 			printf("%u %u\n", currentTableIndex, currentCodeWord);
 #endif
-
+			// CND:GIF_415
 			if (currentCodeWord < startCode)
 			{
 				pTree->nodes[currentTableIndex].pPrev = NULL;
@@ -414,6 +421,16 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 			}
 			else
 			{
+				/*
+				 * From CND:GIF_375 and CND:GIF_388 it follows that
+				 * currentCodeWord != startCode
+				 * and
+				 * currentCodeWord != stopCode
+				 * From ASGN:GIF_314 and because there is no subsequent assignment to
+				 * either startCode, stopCode or currentCodeWord we get:
+				 * currentCodeWord > stopCode or currentCodeWord < startCode
+				 * But the second case can't occur because of CND:GIF_415.
+				 */
 				assert(currentCodeWord > stopCode);
 
 				pCurrentNode = pTree->nodes+currentCodeWord;
