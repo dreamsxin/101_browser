@@ -5,7 +5,7 @@
 
 void* asciiStringUnicodeIterator_get(void* in_pIteratorState)
 {
-	ASCIIStringUnicodeIteratorState* pIteratorState = in_pIteratorState;
+	ASCIIStringUnicodeIteratorState* pIteratorState = (ASCIIStringUnicodeIteratorState*) in_pIteratorState;
 
 	assert(*pIteratorState->characterPointer >= 0);
 	assert(*pIteratorState->characterPointer <= 127);
@@ -20,7 +20,7 @@ void* asciiStringUnicodeIterator_get(void* in_pIteratorState)
 
 IterateResult asciiStringUnicodeIterator_next(void* in_pIteratorState)
 {
-	ASCIIStringUnicodeIteratorState* pIteratorState = in_pIteratorState;
+	ASCIIStringUnicodeIteratorState* pIteratorState = (ASCIIStringUnicodeIteratorState*) in_pIteratorState;
 
 	assert(*pIteratorState->characterPointer >= 0);
 	assert(*pIteratorState->characterPointer <= 127);
