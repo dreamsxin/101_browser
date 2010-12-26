@@ -26,7 +26,10 @@
     <ClCompile Include="..\..\..\src\PNG\PNG.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\PNG\CRC.c">
+    <ClCompile Include="..\..\..\src\PNG\CRC_c.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\PNG\CRC_cpp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

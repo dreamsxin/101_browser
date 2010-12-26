@@ -3,12 +3,12 @@
 const uint32_t cInitialCRC = 0xFFFFFFFF;
 const uint32_t cCRC_polynomial = 0xedb88320;
 
-uint32_t initCRC()
+uint32_t CRC_init()
 {
 	return cInitialCRC;
 }
 
-uint32_t updateCRC(uint32_t in_currentCRC, uint8_t in_currentByte)
+uint32_t CRC_update(uint32_t in_currentCRC, uint8_t in_currentByte)
 {
 	uint8_t currentBitIdx;
 	uint32_t byteCRC = (in_currentCRC ^ in_currentByte) & 0xFF;
@@ -28,7 +28,12 @@ uint32_t updateCRC(uint32_t in_currentCRC, uint8_t in_currentByte)
 	return (in_currentCRC >> 8) ^ byteCRC;
 }
 
-uint32_t terminateCRC(uint32_t in_currentCRC)
+uint32_t CRC_terminate(uint32_t in_currentCRC)
 {
 	return in_currentCRC ^ 0xFFFFFFFF;
+}
+
+uint32_t CRC_compute(uint8_t *in_buffer, size_t in_bufferSize)
+{
+	return CRC_foldl(CRC_init(), in_buffer, in_bufferSize);
 }

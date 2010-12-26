@@ -88,7 +88,8 @@
     <ClInclude Include="..\..\..\include\PNG\PNG.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\PNG\CRC.c" />
+    <ClCompile Include="..\..\..\src\PNG\CRC_c.c" />
+    <ClCompile Include="..\..\..\src\PNG\CRC_cpp.cpp" />
     <ClCompile Include="..\..\..\src\PNG\PNG.c" />
   </ItemGroup>
   <ItemGroup>

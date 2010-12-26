@@ -5,14 +5,20 @@
 
 void test_PNG_CRC()
 {
-	// First a manual computing
-	uint32_t currentCRC = initCRC();
-	currentCRC = updateCRC(currentCRC, 'I');
-	currentCRC = updateCRC(currentCRC, 'E');
-	currentCRC = updateCRC(currentCRC, 'N');
-	currentCRC = updateCRC(currentCRC, 'D');
-	currentCRC = terminateCRC(currentCRC);
+	uint8_t buffer[] = {'I', 'E', 'N', 'D'};
+	uint32_t currentCRC;
 
+	// First a manual computing
+	currentCRC = CRC_init();
+	currentCRC = CRC_update(currentCRC, buffer[0]);
+	currentCRC = CRC_update(currentCRC, buffer[1]);
+	currentCRC = CRC_update(currentCRC, buffer[2]);
+	currentCRC = CRC_update(currentCRC, buffer[3]);
+	currentCRC = CRC_terminate(currentCRC);
+	test(currentCRC == 0xAE426082);
+
+	// Now an automatic computation
+	currentCRC = CRC_compute(buffer, 4);
 	test(currentCRC == 0xAE426082);
 }
 
