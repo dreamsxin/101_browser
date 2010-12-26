@@ -80,10 +80,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\IO\IO.h" />
+    <ClInclude Include="..\..\..\include\IO\fread.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\IO\IO_File.cpp" />
+    <ClCompile Include="..\..\..\src\IO\fread.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

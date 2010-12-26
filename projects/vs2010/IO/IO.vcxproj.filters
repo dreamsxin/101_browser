@@ -15,12 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\IO\IO.h">
+    <ClInclude Include="..\..\..\include\IO\fread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\IO\IO_File.cpp">
+    <ClCompile Include="..\..\..\src\IO\fread.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
