@@ -69,6 +69,9 @@
     <ClCompile Include="..\..\..\src\TestSuite\Test_Algorithm_BinarySearch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\TestSuite\Test_PNG.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\TestSuite\IteratorTestUtil.h">

@@ -24,6 +24,7 @@ extern "C" {
 void testBigNumber();
 void testASCIIStringUnicodeIterator();
 void testHTML5();
+void test_PNG();
 
 #ifdef __cplusplus
 }

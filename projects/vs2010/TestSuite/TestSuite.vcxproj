@@ -60,7 +60,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <Profile>true</Profile>
       <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;CPU.lib;HTML5.lib;MiniStdlib.lib;rfc1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;CPU.lib;HTML5.lib;MiniStdlib.lib;PNG.lib;rfc1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -82,7 +82,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <Profile>true</Profile>
       <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;CPU.lib;HTML5.lib;MiniStdlib.lib;rfc1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;CPU.lib;HTML5.lib;MiniStdlib.lib;PNG.lib;rfc1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -101,6 +101,7 @@
     <ClCompile Include="..\..\..\src\TestSuite\Test_Interval.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_IteratorInstances.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_OuterBorderIterator.cpp" />
+    <ClCompile Include="..\..\..\src\TestSuite\Test_PNG.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_rfc1950.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_TriangleStripBorderIterator.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_Unicode.cpp" />
@@ -126,6 +127,9 @@
     </ProjectReference>
     <ProjectReference Include="..\MiniStdlib\MiniStdlib.vcxproj">
       <Project>{6c7c9fbb-39b4-42cc-a000-c0ff2f61388e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\PNG\PNG.vcxproj">
+      <Project>{1940c115-b73b-4d30-871a-7eb8421ddadf}</Project>
     </ProjectReference>
     <ProjectReference Include="..\rfc1950\rfc1950.vcxproj">
       <Project>{111e4bc7-3e41-491b-b749-c10bcc290c02}</Project>

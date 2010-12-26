@@ -84,9 +84,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\PNG\CRC.h" />
     <ClInclude Include="..\..\..\include\PNG\PNG.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\PNG\CRC.c" />
     <ClCompile Include="..\..\..\src\PNG\PNG.c" />
   </ItemGroup>
   <ItemGroup>
