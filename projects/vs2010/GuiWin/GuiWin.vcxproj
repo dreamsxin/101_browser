@@ -87,7 +87,7 @@
     <ClCompile Include="..\..\..\src\GuiOpenGL\GuiComponentsTextBox.cpp" />
     <ClCompile Include="..\..\..\src\GuiOpenGL\GuiOpenGLState.cpp" />
     <ClCompile Include="..\..\..\src\gui\Cursor.cpp" />
-    <ClCompile Include="..\..\..\src\gui\Gui.cpp" />
+    <ClCompile Include="..\..\..\src\gui\GuiMain.cpp" />
     <ClCompile Include="..\..\..\src\gui\GuiComponentsCursor.cpp" />
     <ClCompile Include="..\..\..\src\gui\MultiMouse.cpp" />
     <ClCompile Include="..\..\..\src\gui\Texture.cpp" />

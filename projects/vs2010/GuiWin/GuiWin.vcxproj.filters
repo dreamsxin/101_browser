@@ -27,9 +27,6 @@
     <ClCompile Include="..\..\..\src\gui\Cursor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\Gui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\GuiOpenGL\GuiComponentsBasic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -40,6 +37,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\GuiOpenGL\GuiOpenGLState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\GuiMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
