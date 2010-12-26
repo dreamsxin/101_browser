@@ -2,12 +2,12 @@
 
 #define BASE 65521 /* largest prime smaller than 65536 */
 
-uint32_t rfc1950_adler32(void *in_buffer, size_t in_bufferSize)
+uint32_t rfc1950_adler32_compute(void *in_buffer, size_t in_bufferSize)
 {
-	return rfc1950_adler32_update(1ul, (uint8_t*) in_buffer, in_bufferSize);
+	return rfc1950_adler32_foldl(1ul, (uint8_t*) in_buffer, in_bufferSize);
 }
 
-uint32_t rfc1950_adler32_fold_fun(uint32_t in_adler, uint8_t in_currentByte)
+uint32_t rfc1950_adler32_update(uint32_t in_adler, uint8_t in_currentByte)
 {
 	uint32_t s1 = in_adler & 0xffff;
 	uint32_t s2 = (in_adler >> 16) & 0xffff;

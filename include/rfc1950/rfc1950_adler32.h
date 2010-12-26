@@ -21,17 +21,17 @@ extern "C" {
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-uint32_t rfc1950_adler32(void *in_buffer, size_t in_bufferSize);
+uint32_t rfc1950_adler32_compute(void *in_buffer, size_t in_bufferSize);
 
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-uint32_t rfc1950_adler32_update(uint32_t in_adler, uint8_t *in_buffer, size_t in_bufferSize);
+uint32_t rfc1950_adler32_foldl(uint32_t in_adler, uint8_t *in_buffer, size_t in_bufferSize);
 
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-uint32_t rfc1950_adler32_fold_fun(uint32_t in_adler, uint8_t in_currentByte);
+uint32_t rfc1950_adler32_update(uint32_t in_adler, uint8_t in_currentByte);
 
 #ifdef __cplusplus
 }
