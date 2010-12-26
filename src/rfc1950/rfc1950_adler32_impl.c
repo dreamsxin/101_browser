@@ -4,7 +4,7 @@
 
 uint32_t rfc1950_adler32(void *in_buffer, size_t in_bufferSize)
 {
-	return rfc1950_adler32_update(1ul, in_buffer, in_bufferSize);
+	return rfc1950_adler32_update(1ul, (uint8_t*) in_buffer, in_bufferSize);
 }
 
 uint32_t rfc1950_adler32_fold_fun(uint32_t in_adler, uint8_t in_currentByte)
