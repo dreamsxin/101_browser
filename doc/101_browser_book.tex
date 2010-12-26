@@ -37,6 +37,30 @@ Unluckily the project server of the university which he used at the beginning di
 
 Since "`101"' is not a valid namespace in C++, "`MTAx"' was used, which is "`101"' encoded in Base64.
 
+\chapter{Principles of 101\_browser}
+
+\section{Avoid lookup tables}
+
+Although some algorithms can be made faster by using lookup tables, we try to avoid to make use of them since they add additional complexity.
+
+\section{Use as few additional libraries as possible}
+
+For many features there are existing libraries. But in 101\_browser we avoid to make use of them. Why?
+
+\begin{itemize}
+\item You never know how well they are maintained
+\item It is a goal of 101\_browser to provide an \emph{independent} implementation of web standards (this implies that it hopefully doesn't have \emph{the same} security bugs as in the commonly used implementation)
+\item Since it should be easy to add support for experimental features, we can make our own implementation very similar in style -- this makes them easier to learn if you have already read into other parts of the source code
+\end{itemize}
+
+So: when is it OK to use an existing library?
+\begin{itemize}
+\item It has to be cross-platform
+\item It has to be widely used
+\item If it is an abstration of platform-specific details it should be the most low-level abstration that is available
+\end{itemize}
+At the time of writing (26th of December 2010) only the Standard library of C/C++ and OpenGL are accepted in this topic. Despite zlib is still used, it is planned to replace it by an own implementation soon.
+
 \part{User documentation}
 
 \part{Reference documentation}
@@ -84,7 +108,7 @@ where you can get the test vectors.
 
 \paragraph{Where can I find the specification for PNG?} \verb|http://www.w3.org/TR/PNG/|
 
-\paragraph{Where can I find a test suite for PNG?} \verb|http://www.schaik.com/pngsuite/| also mirrored on \verb|http://www.libpng.org/pub/png/pngsuite.html|
+\paragraph{Where can I find a test suite for PNG?} \verb|http://www.schaik.com/pngsuite/| also mirrored at \verb|http://www.libpng.org/pub/png/pngsuite.html|
 
 \subsection{Markup languages}
 
