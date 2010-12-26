@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\rfc1950\rfc1950_adler32_update.cpp">
+    <ClCompile Include="..\..\..\src\rfc1950\rfc1950_adler32_c.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\rfc1950\rfc1950_adler32_impl.c">
+    <ClCompile Include="..\..\..\src\rfc1950\rfc1950_adler32_cpp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

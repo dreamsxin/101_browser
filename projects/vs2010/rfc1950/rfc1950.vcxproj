@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\rfc1950\rfc1950_adler32_impl.c" />
-    <ClCompile Include="..\..\..\src\rfc1950\rfc1950_adler32_update.cpp" />
+    <ClCompile Include="..\..\..\src\rfc1950\rfc1950_adler32_c.c" />
+    <ClCompile Include="..\..\..\src\rfc1950\rfc1950_adler32_cpp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\rfc1950\rfc1950_adler32.h" />

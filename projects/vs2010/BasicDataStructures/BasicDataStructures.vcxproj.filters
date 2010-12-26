@@ -51,9 +51,6 @@
     <ClInclude Include="..\..\..\include\BasicDataStructures\Maybe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\BasicDataStructures\HigherOrderFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\BasicDataStructures\Permuter.h">
       <Filter>Header Files</Filter>
     </ClInclude>

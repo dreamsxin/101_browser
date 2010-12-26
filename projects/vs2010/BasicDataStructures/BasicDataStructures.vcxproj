@@ -81,7 +81,6 @@
     <ClInclude Include="..\..\..\include\BasicDataStructures\BigNumber\BigInteger.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\Collections.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\Comparator.h" />
-    <ClInclude Include="..\..\..\include\BasicDataStructures\HigherOrderFunctions.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\Interval.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\Iterator.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\Maybe.h" />
