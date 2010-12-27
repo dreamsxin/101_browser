@@ -17,6 +17,16 @@ ReadResult read_PNG(FILE* in_pngFile)
 	PNG_Chunk_Data_IHDR pngChunkDataIHDR;
 	uint32_t readChecksum;
 
+	/*
+	 * Meaning of this variable:
+	 * read_IDAT_State == 0: before reading IDAT chunk
+	 * read_IDAT_State == 1: having read/reading at least one IDAT, but not seen
+	 *                       another following chunk of not IDAT type
+	 * read_IDAT_State == 2: having read IDAT chunk(s) and read/reading another 
+	 *                       chunk after
+	 */
+	uint8_t read_IDAT_State = 0;
+
 	if (fread(readPngSignature, 1, 8, in_pngFile) != 8)
 		return ReadResultPrematureEndOfStream;
 
@@ -66,6 +76,19 @@ ReadResult read_PNG(FILE* in_pngFile)
 			return readResult;
 		if (isEndOfStream)
 			return readResult;
+
+		{
+			int IDAT_compareResult = strncmp((char*) pngChunk.header.chunkType, "IDAT", 4);
+
+			if (0 == IDAT_compareResult && 0 == read_IDAT_State)
+			{
+				read_IDAT_State = 1;
+			}
+			else if (0 != IDAT_compareResult && 1 == read_IDAT_State)
+			{
+				read_IDAT_State = 2;
+			}
+		}
 
 		printf("%c%c%c%c: %u\n", 
 			pngChunk.header.chunkType[0], 
