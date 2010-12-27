@@ -1,5 +1,5 @@
 #include "PNG/PNG.h"
-#include <string.h>
+#include <string.h> // for memcmp
 #include "MiniStdlib/MTAx_cstdlib.h" // for the conversation functions for endianness
 #include "PNG/CRC.h"
 #include "IO/fread.h"
@@ -39,7 +39,7 @@ ReadResult read_PNG(FILE* in_pngFile)
 	if (isEndOfStream)
 		return readResult;
 
-	if (strncmp("IHDR", (const char*) pngChunk.header.chunkType, 4) != 0)
+	if (memcmp("IHDR", pngChunk.header.chunkType, 4) != 0)
 	{
 		return ReadResultInvalidData;
 	}
@@ -75,7 +75,7 @@ ReadResult read_PNG(FILE* in_pngFile)
 			return readResult;
 
 		{
-			int IDAT_compareResult = strncmp((char*) pngChunk.header.chunkType, "IDAT", 4);
+			int IDAT_compareResult = memcmp(pngChunk.header.chunkType, "IDAT", 4);
 
 			if (0 == IDAT_compareResult && 0 == read_IDAT_State)
 			{
@@ -94,7 +94,7 @@ ReadResult read_PNG(FILE* in_pngFile)
 			pngChunk.header.chunkType[3], 
 			pngChunk.header.length);
 
-		if (0 == strncmp((char*) pngChunk.header.chunkType, "gAMA", 4))
+		if (0 == memcmp(pngChunk.header.chunkType, "gAMA", 4))
 		{
 			if (read_IDAT_State == 0)
 			{
@@ -105,7 +105,7 @@ ReadResult read_PNG(FILE* in_pngFile)
 				return ReadResultInvalidData;
 			}
 		}
-		else if (0 == strncmp((char*) pngChunk.header.chunkType, "IDAT", 4))
+		else if (0 == memcmp(pngChunk.header.chunkType, "IDAT", 4))
 		{
 			if (1 != read_IDAT_State)
 				return ReadResultInvalidData;
