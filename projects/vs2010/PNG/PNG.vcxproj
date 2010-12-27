@@ -58,7 +58,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>IO.lib;MiniStdlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>IO.lib;MiniStdlib.lib;RFC1950.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -79,7 +79,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>IO.lib;MiniStdlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>IO.lib;MiniStdlib.lib;RFC1950.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -98,6 +98,9 @@
     </ProjectReference>
     <ProjectReference Include="..\MiniStdlib\MiniStdlib.vcxproj">
       <Project>{6c7c9fbb-39b4-42cc-a000-c0ff2f61388e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\RFC1950\RFC1950.vcxproj">
+      <Project>{28bfb0ab-dcec-4383-a146-f32756b31677}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
