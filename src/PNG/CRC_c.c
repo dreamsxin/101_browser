@@ -38,7 +38,7 @@ uint32_t CRC_compute(uint8_t *in_buffer, size_t in_bufferSize)
 	return CRC_terminate(CRC_foldl(CRC_init(), in_buffer, in_bufferSize));
 }
 
-void CRC_stateUpdate(void *in_pState, void *in_pBuffer, size_t in_count)
+void CRC_stateUpdate(void *in_pState, const void *in_pBuffer, size_t in_count)
 {
 	uint32_t *pState = (uint32_t*) in_pState;
 	*pState = CRC_foldl(*pState, (uint8_t*) in_pBuffer, in_count);

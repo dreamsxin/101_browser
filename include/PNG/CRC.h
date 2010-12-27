@@ -38,7 +38,7 @@ uint32_t CRC_compute(uint8_t *in_buffer, size_t in_bufferSize);
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-void CRC_stateUpdate(void *in_pState, void *in_pBuffer, size_t in_count);
+void CRC_stateUpdate(void *in_pState, const void *in_pBuffer, size_t in_count);
 
 #ifdef __cplusplus
 }
