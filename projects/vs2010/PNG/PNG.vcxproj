@@ -58,7 +58,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>IO.lib;MiniStdlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -79,7 +79,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>IO.lib;MiniStdlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -93,6 +93,9 @@
     <ClCompile Include="..\..\..\src\PNG\PNG.c" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\IO\IO.vcxproj">
+      <Project>{13a1ed8a-63a2-4eae-88dd-3f8811a4b673}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\MiniStdlib\MiniStdlib.vcxproj">
       <Project>{6c7c9fbb-39b4-42cc-a000-c0ff2f61388e}</Project>
     </ProjectReference>
