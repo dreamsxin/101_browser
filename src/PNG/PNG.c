@@ -99,16 +99,23 @@ ReadResult read_PNG(FILE* in_pngFile)
 		{
 			if (read_IDAT_State == 0)
 			{
-				read_PNG_Chunk_Data_Default(&pngChunk, in_pngFile, &readChecksum);
+				read_PNG_Chunk_Data_Default(&pngChunk.header, in_pngFile, &readChecksum);
 			}
 			else
 			{
 				return ReadResultInvalidData;
 			}
 		}
+		else if (0 == strncmp((char*) pngChunk.header.chunkType, "IDAT", 4))
+		{
+			if (1 != read_IDAT_State)
+				return ReadResultInvalidData;
+			else
+				read_PNG_Chunk_Data_Default(&pngChunk.header, in_pngFile, &readChecksum);
+		}
 		else
 		{
-			read_PNG_Chunk_Data_Default(&pngChunk, in_pngFile, &readChecksum);
+			read_PNG_Chunk_Data_Default(&pngChunk.header, in_pngFile, &readChecksum);
 		}
 
 		readChecksum = CRC_terminate(readChecksum);
@@ -157,11 +164,11 @@ ReadResult read_PNG_Chunk_Header(PNG_Chunk_Header *out_pHeader, bool *out_isEndO
 	return ReadResultOK;
 }
 
-ReadResult read_PNG_Chunk_Data_Default(const PNG_Chunk* in_pPNG_Chunk, FILE* in_pngFile, uint32_t *in_pCurrentCRC)
+ReadResult read_PNG_Chunk_Data_Default(const PNG_Chunk_Header *in_pHeader, FILE* in_pngFile, uint32_t *in_pCurrentCRC)
 {
 	uint64_t index64;
 
-	for (index64 = 0; index64 < in_pPNG_Chunk->header.length; index64++)
+	for (index64 = 0; index64 < in_pHeader->length; index64++)
 	{
 		uint8_t aByte;
 		
