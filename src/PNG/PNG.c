@@ -67,8 +67,6 @@ ReadResult read_PNG(FILE* in_pngFile)
 
 	while (1)
 	{
-		uint64_t index64;
-
 		readChecksum = CRC_init();
 		readResult = read_PNG_Chunk_Header(&pngChunk.header, &isEndOfStream, in_pngFile, &readChecksum);
 
@@ -97,15 +95,12 @@ ReadResult read_PNG(FILE* in_pngFile)
 			pngChunk.header.chunkType[3], 
 			pngChunk.header.length);
 
-		for (index64 = 0; index64 < pngChunk.header.length; index64++)
+		if (0 == strncmp((char*) pngChunk.header.chunkType, "gAMA", 4))
 		{
-			uint8_t aByte;
-
-			if (fread(&aByte, 1, 1, in_pngFile) != 1)
-				return ReadResultPrematureEndOfStream;
-
-			readChecksum = CRC_update(readChecksum, aByte);
+			
 		}
+
+		read_PNG_Chunk_Data_Default(&pngChunk, in_pngFile, &readChecksum);
 
 		readChecksum = CRC_terminate(readChecksum);
 
@@ -149,6 +144,23 @@ ReadResult read_PNG_Chunk_Header(PNG_Chunk_Header *out_pHeader, bool *out_isEndO
 	}
 
 	*out_isEndOfStream = false;
+
+	return ReadResultOK;
+}
+
+ReadResult read_PNG_Chunk_Data_Default(const PNG_Chunk* in_pPNG_Chunk, FILE* in_pngFile, uint32_t *in_pCurrentCRC)
+{
+	uint64_t index64;
+
+	for (index64 = 0; index64 < in_pPNG_Chunk->header.length; index64++)
+	{
+		uint8_t aByte;
+		
+		if (fread(&aByte, 1, 1, in_pngFile) != 1)
+			return ReadResultPrematureEndOfStream;
+
+		*in_pCurrentCRC = CRC_update(*in_pCurrentCRC, aByte);
+	}
 
 	return ReadResultOK;
 }
