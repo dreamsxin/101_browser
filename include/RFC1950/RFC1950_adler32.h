@@ -21,6 +21,11 @@ extern "C" {
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
+uint32_t RFC1950_adler32_init();
+
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 uint32_t RFC1950_adler32_compute(void *in_buffer, size_t in_bufferSize);
 
 #ifdef _WIN32
