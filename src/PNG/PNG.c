@@ -1,6 +1,5 @@
 #include "PNG/PNG.h"
 #include <string.h>
-#include <stddef.h> // for offsetof
 #include "MiniStdlib/MTAx_cstdlib.h" // for the conversation functions for endianness
 #include "PNG/CRC.h"
 #include "IO/fread.h"
