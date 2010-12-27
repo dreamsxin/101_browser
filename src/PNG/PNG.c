@@ -97,10 +97,19 @@ ReadResult read_PNG(FILE* in_pngFile)
 
 		if (0 == strncmp((char*) pngChunk.header.chunkType, "gAMA", 4))
 		{
-			
+			if (read_IDAT_State == 0)
+			{
+				read_PNG_Chunk_Data_Default(&pngChunk, in_pngFile, &readChecksum);
+			}
+			else
+			{
+				return ReadResultInvalidData;
+			}
 		}
-
-		read_PNG_Chunk_Data_Default(&pngChunk, in_pngFile, &readChecksum);
+		else
+		{
+			read_PNG_Chunk_Data_Default(&pngChunk, in_pngFile, &readChecksum);
+		}
 
 		readChecksum = CRC_terminate(readChecksum);
 
