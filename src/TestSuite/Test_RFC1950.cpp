@@ -3,7 +3,7 @@
 #include "RFC1950/RFC1950_adler32.h"
 #include <cstring>
 
-void testRfc1950()
+void test_RFC1950()
 {
 	/*
 	 * Test case taken from

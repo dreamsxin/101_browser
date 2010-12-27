@@ -19,8 +19,8 @@ int main()
 	testOuterBorderIterator();
 	wprintf(L"Testing BigNumber\n");
 	testBigNumber();
-	wprintf(L"Testing rfc1950\n");
-	testRfc1950();
+	wprintf(L"Testing RFC 1950\n");
+	test_RFC1950();
 	wprintf(L"Testing ASCIIStringUnicodeIterator\n");
 	testASCIIStringUnicodeIterator();
 	wprintf(L"Testing Unicode\n");

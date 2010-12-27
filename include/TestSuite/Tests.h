@@ -30,7 +30,7 @@ void test_PNG();
 }
 #endif
 
-void testRfc1950();
+void test_RFC1950();
 void testUnicode();
 
 #endif
