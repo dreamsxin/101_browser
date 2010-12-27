@@ -15,18 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\rfc1950\rfc1950_adler32_c.c">
+    <ClCompile Include="..\..\..\src\RFC1950\RFC1950_adler32_c.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\rfc1950\rfc1950_adler32_cpp.cpp">
+    <ClCompile Include="..\..\..\src\RFC1950\RFC1950_adler32_cpp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\rfc1950\rfc1950_zlib.h">
+    <ClInclude Include="..\..\..\include\RFC1950\RFC1950_adler32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\rfc1950\rfc1950_adler32.h">
+    <ClInclude Include="..\..\..\include\RFC1950\RFC1950_zlib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

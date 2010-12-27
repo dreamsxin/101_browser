@@ -33,9 +33,6 @@
     <ClCompile Include="..\..\..\src\TestSuite\Test_IteratorInstances.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\TestSuite\Test_rfc1950.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\TestSuite\Test_Algorithm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -70,6 +67,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\TestSuite\Test_PNG.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\TestSuite\Test_RFC1950.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
