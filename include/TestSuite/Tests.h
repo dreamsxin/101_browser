@@ -25,12 +25,12 @@ void testBigNumber();
 void testASCIIStringUnicodeIterator();
 void testHTML5();
 void test_PNG();
+void test_RFC1950();
 
 #ifdef __cplusplus
 }
 #endif
 
-void test_RFC1950();
 void testUnicode();
 
 #endif

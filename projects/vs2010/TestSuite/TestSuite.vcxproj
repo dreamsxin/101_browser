@@ -102,7 +102,7 @@
     <ClCompile Include="..\..\..\src\TestSuite\Test_IteratorInstances.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_OuterBorderIterator.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_PNG.c" />
-    <ClCompile Include="..\..\..\src\TestSuite\Test_RFC1950.cpp" />
+    <ClCompile Include="..\..\..\src\TestSuite\Test_RFC1950.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_TriangleStripBorderIterator.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_Unicode.cpp" />
   </ItemGroup>
