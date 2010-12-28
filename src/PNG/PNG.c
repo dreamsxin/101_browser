@@ -115,8 +115,8 @@ ReadResult read_PNG(FILE* in_pngFile)
 	return ReadResultOK;
 }
 
-ReadResult read_PNG_Chunk_Header(PNG_Chunk_Header *out_pHeader, bool *out_isEndOfStream, FILE* in_pngFile, 
-	uint32_t *in_pCurrentCRC)
+ReadResult read_PNG_Chunk_Header(PNG_Chunk_Header *out_pHeader, 
+	bool *out_isEndOfStream, FILE* in_pngFile, uint32_t *in_pCurrentCRC)
 {
 	size_t readHeaderBytes = fread(&out_pHeader->length, 1, sizeof(out_pHeader->length), in_pngFile);
 
@@ -173,7 +173,8 @@ ReadResult read_PNG_Chunk_Data_and_CRC(const PNG_Chunk_Header *in_pHeader,
 	return ReadResultOK;
 }
 
-ReadResult read_PNG_Chunk_Data_Default(const PNG_Chunk_Header *in_pHeader, FILE* in_pngFile, uint32_t *in_pCurrentCRC)
+ReadResult read_PNG_Chunk_Data_Default(const PNG_Chunk_Header *in_pHeader, 
+	FILE* in_pngFile, uint32_t *in_pCurrentCRC)
 {
 	uint64_t index64;
 
