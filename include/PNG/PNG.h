@@ -63,8 +63,8 @@ ReadResult read_PNG_Chunk_Data_and_CRC(const PNG_Chunk_Header *in_pHeader,
 ReadResult read_PNG_Chunk_Data_Default(const PNG_Chunk_Header *in_pHeader, 
 	FILE* in_pngFile, uint32_t *in_pCurrentCRC);
 
-ReadResult read_PNG_Chunk_Data_IHDR(const PNG_Chunk_Header *in_pHeader,  void *out_pChunkDataIHDR, 
-	FILE* in_pngFile, uint32_t *in_pCurrentCRC);
+ReadResult read_PNG_Chunk_Data_IHDR(const PNG_Chunk_Header *in_pHeader, 
+	void *out_pChunkDataIHDR, FILE* in_pngFile, uint32_t *in_pCurrentCRC);
 
 #ifdef __cplusplus
 }

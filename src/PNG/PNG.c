@@ -191,8 +191,8 @@ ReadResult read_PNG_Chunk_Data_Default(const PNG_Chunk_Header *in_pHeader,
 	return ReadResultOK;
 }
 
-ReadResult read_PNG_Chunk_Data_IHDR(const PNG_Chunk_Header *in_pHeader,  void *out_pChunkDataIHDR, 
-	FILE* in_pngFile, uint32_t *in_pCurrentCRC)
+ReadResult read_PNG_Chunk_Data_IHDR(const PNG_Chunk_Header *in_pHeader, 
+	void *out_pChunkDataIHDR, FILE* in_pngFile, uint32_t *in_pCurrentCRC)
 {
 	PNG_Chunk_Data_IHDR *pChunkDataIHDR = (PNG_Chunk_Data_IHDR *) out_pChunkDataIHDR;
 
