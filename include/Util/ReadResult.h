@@ -5,17 +5,10 @@ typedef enum
 {
 	ReadResultOK,
 	ReadResultPrematureEndOfStream,
-#if 0
 	/*
-	 * This is returned if the data is invalid, but we can continue
-	 * with probably no problems (for example: wrong checksum)
-	 */
-	ReadResultInvalidDataButRecoverable,
-#endif
-	/*
-	 * ReadResultInvalidVersion is returned when it could perhaps
-	 * be correct, but the claimed version of the file format is
-	 * too old
+	 * ReadResultInvalidVersion is returned when the read data could 
+	 * be correct, but the claimed version of the file format does not
+	 * fit
 	 */
 	ReadResultInvalidVersion,
 	ReadResultInvalidData,
