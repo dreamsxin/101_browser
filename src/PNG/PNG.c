@@ -44,12 +44,7 @@ ReadResult read_PNG(FILE* in_pngFile)
 		return ReadResultInvalidData;
 	}
 
-	if (sizeof(PNG_Chunk_Data_IHDR) != pngChunk.header.length)
-	{
-		return ReadResultInvalidData;
-	}
-
-	if ((readResult = read_PNG_Chunk_Data_IHDR(&pngChunkDataIHDR, in_pngFile, &readChecksum)) != ReadResultOK)
+	if ((readResult = read_PNG_Chunk_Data_IHDR(&pngChunk.header, &pngChunkDataIHDR, in_pngFile, &readChecksum)) != ReadResultOK)
 		return readResult;
 
 	readChecksum = CRC_terminate(readChecksum);
@@ -180,8 +175,14 @@ ReadResult read_PNG_Chunk_Data_Default(const PNG_Chunk_Header *in_pHeader, FILE*
 	return ReadResultOK;
 }
 
-ReadResult read_PNG_Chunk_Data_IHDR(PNG_Chunk_Data_IHDR *out_pChunkData, FILE* in_pngFile, uint32_t *in_pCurrentCRC)
+ReadResult read_PNG_Chunk_Data_IHDR(const PNG_Chunk_Header *in_pHeader,  PNG_Chunk_Data_IHDR *out_pChunkData, 
+	FILE* in_pngFile, uint32_t *in_pCurrentCRC)
 {
+	if (sizeof(PNG_Chunk_Data_IHDR) != in_pHeader->length)
+	{
+		return ReadResultInvalidData;
+	}
+
 	if (fread_withState(out_pChunkData, sizeof(*out_pChunkData), 1, in_pngFile, in_pCurrentCRC, &CRC_stateUpdate) != 1)
 	{
 		return ReadResultPrematureEndOfStream;
