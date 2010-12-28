@@ -46,7 +46,7 @@ ReadResult read_PNG(FILE* in_pngFile)
 
 	if (sizeof(PNG_Chunk_Data_IHDR) != pngChunk.header.length)
 	{
-		return ReadResultPrematureEndOfStream;
+		return ReadResultInvalidData;
 	}
 
 	if ((readResult = read_PNG_Chunk_Data_IHDR(&pngChunkDataIHDR, in_pngFile, &readChecksum)) != ReadResultOK)
