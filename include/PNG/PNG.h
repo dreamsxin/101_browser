@@ -19,13 +19,6 @@ typedef struct
 	uint8_t chunkType[4];
 } PNG_Chunk_Header;
 
-typedef struct
-{
-	PNG_Chunk_Header header;
-	uint8_t *chunkData;
-	uint32_t crc;
-} PNG_Chunk;
-
 /*
  * See section
  * 11.2.2 IHDR Image header
@@ -58,10 +51,10 @@ ReadResult read_PNG_Chunk_Header(PNG_Chunk_Header *out_pHeader,
 
 ReadResult read_PNG_Chunk_Data_and_CRC(const PNG_Chunk_Header *in_pHeader,
 	void *in_out_pData, FILE* in_pngFile, uint32_t *in_pCurrentCRC,
-	ReadResult (*in_pRead_PNG_Chunk_Data_Fun)(const PNG_Chunk_Header*, void*, FILE*, uint32_t*));
+	ReadResult (*in_pRead_PNG_Chunk_Data_Fun)(const PNG_Chunk_Header*, void * _pData, FILE*, uint32_t*));
 
 ReadResult read_PNG_Chunk_Data_Default(const PNG_Chunk_Header *in_pHeader, 
-	FILE* in_pngFile, uint32_t *in_pCurrentCRC);
+	void *, FILE* in_pngFile, uint32_t *in_pCurrentCRC);
 
 ReadResult read_PNG_Chunk_Data_IHDR(const PNG_Chunk_Header *in_pHeader, 
 	void *out_pChunkDataIHDR, FILE* in_pngFile, uint32_t *in_pCurrentCRC);

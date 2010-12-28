@@ -10,20 +10,20 @@ const uint8_t PNG_signature[8] = { 137, 80, 78, 71, 13, 10, 26, 10 };
 ReadResult read_PNG(FILE* in_pngFile)
 {
 	uint8_t readPngSignature[8];
-	PNG_Chunk pngChunk;
+	PNG_Chunk_Header pngChunkHeader;
 	bool isEndOfStream;
 	ReadResult readResult;
 	PNG_Chunk_Data_IHDR pngChunkDataIHDR;
 	uint32_t readChecksum;
 
 	/*
-	 * Meaning of this variable:
-	 * read_IDAT_State == 0: before reading IDAT chunk
-	 * read_IDAT_State == 1: having read/reading at least one IDAT, but not seen
-	 *                       another following chunk of not IDAT type
-	 * read_IDAT_State == 2: having read IDAT chunk(s) and read/reading another 
-	 *                       chunk after
-	 */
+	* Meaning of this variable:
+	* read_IDAT_State == 0: before reading IDAT chunk
+	* read_IDAT_State == 1: having read/reading at least one IDAT, but not seen
+	*                       another following chunk of not IDAT type
+	* read_IDAT_State == 2: having read IDAT chunk(s) and read/reading another 
+	*                       chunk after
+	*/
 	uint8_t read_IDAT_State = 0;
 
 	if (fread(readPngSignature, 1, 8, in_pngFile) != 8)
@@ -33,25 +33,25 @@ ReadResult read_PNG(FILE* in_pngFile)
 		return ReadResultInvalidData;
 
 	readChecksum = CRC_init();
-	readResult = read_PNG_Chunk_Header(&pngChunk.header, &isEndOfStream, in_pngFile, &readChecksum);
+	readResult = read_PNG_Chunk_Header(&pngChunkHeader, &isEndOfStream, in_pngFile, &readChecksum);
 	if (readResult != ReadResultOK)
 		return readResult;
 	if (isEndOfStream)
 		return readResult;
 
-	if (memcmp("IHDR", pngChunk.header.chunkType, 4) != 0)
+	if (memcmp("IHDR", pngChunkHeader.chunkType, 4) != 0)
 	{
 		return ReadResultInvalidData;
 	}
 
-	if ((readResult = read_PNG_Chunk_Data_and_CRC(&pngChunk.header, &pngChunkDataIHDR, in_pngFile, &readChecksum, 
+	if ((readResult = read_PNG_Chunk_Data_and_CRC(&pngChunkHeader, &pngChunkDataIHDR, in_pngFile, &readChecksum, 
 		&read_PNG_Chunk_Data_IHDR)) != ReadResultOK)
 		return readResult;
 
 	while (1)
 	{
 		readChecksum = CRC_init();
-		readResult = read_PNG_Chunk_Header(&pngChunk.header, &isEndOfStream, in_pngFile, &readChecksum);
+		readResult = read_PNG_Chunk_Header(&pngChunkHeader, &isEndOfStream, in_pngFile, &readChecksum);
 
 		if (readResult != ReadResultOK)
 			return readResult;
@@ -59,7 +59,7 @@ ReadResult read_PNG(FILE* in_pngFile)
 			return readResult;
 
 		{
-			int IDAT_compareResult = memcmp(pngChunk.header.chunkType, "IDAT", 4);
+			int IDAT_compareResult = memcmp(pngChunkHeader.chunkType, "IDAT", 4);
 
 			if (0 == IDAT_compareResult && 0 == read_IDAT_State)
 			{
@@ -72,44 +72,40 @@ ReadResult read_PNG(FILE* in_pngFile)
 		}
 
 		printf("%c%c%c%c: %u\n", 
-			pngChunk.header.chunkType[0], 
-			pngChunk.header.chunkType[1], 
-			pngChunk.header.chunkType[2], 
-			pngChunk.header.chunkType[3], 
-			pngChunk.header.length);
+			pngChunkHeader.chunkType[0], 
+			pngChunkHeader.chunkType[1], 
+			pngChunkHeader.chunkType[2], 
+			pngChunkHeader.chunkType[3], 
+			pngChunkHeader.length);
 
-		if (0 == memcmp(pngChunk.header.chunkType, "gAMA", 4))
+		if (0 == memcmp(pngChunkHeader.chunkType, "gAMA", 4))
 		{
 			if (read_IDAT_State == 0)
 			{
-				read_PNG_Chunk_Data_Default(&pngChunk.header, in_pngFile, &readChecksum);
+				if ((readResult = read_PNG_Chunk_Data_and_CRC(&pngChunkHeader, &pngChunkDataIHDR, in_pngFile, &readChecksum, 
+					&read_PNG_Chunk_Data_Default)) != ReadResultOK)
+					return readResult;
 			}
 			else
 			{
 				return ReadResultInvalidData;
 			}
 		}
-		else if (0 == memcmp(pngChunk.header.chunkType, "IDAT", 4))
+		else if (0 == memcmp(pngChunkHeader.chunkType, "IDAT", 4))
 		{
 			if (1 != read_IDAT_State)
 				return ReadResultInvalidData;
-			else
-				read_PNG_Chunk_Data_Default(&pngChunk.header, in_pngFile, &readChecksum);
+
+			if ((readResult = read_PNG_Chunk_Data_and_CRC(&pngChunkHeader, &pngChunkDataIHDR, in_pngFile, &readChecksum, 
+				&read_PNG_Chunk_Data_Default)) != ReadResultOK)
+				return readResult;
 		}
 		else
 		{
-			read_PNG_Chunk_Data_Default(&pngChunk.header, in_pngFile, &readChecksum);
+			if ((readResult = read_PNG_Chunk_Data_and_CRC(&pngChunkHeader, &pngChunkDataIHDR, in_pngFile, &readChecksum, 
+				&read_PNG_Chunk_Data_Default)) != ReadResultOK)
+				return readResult;
 		}
-
-		readChecksum = CRC_terminate(readChecksum);
-
-		if (fread(&pngChunk.crc, 4, 1, in_pngFile) != 1)
-			return ReadResultPrematureEndOfStream;
-
-		pngChunk.crc = _byteswap_ulong(pngChunk.crc);
-
-		if (pngChunk.crc != readChecksum)
-			return ReadResultInvalidData;
 	}
 
 	return ReadResultOK;
@@ -173,7 +169,7 @@ ReadResult read_PNG_Chunk_Data_and_CRC(const PNG_Chunk_Header *in_pHeader,
 	return ReadResultOK;
 }
 
-ReadResult read_PNG_Chunk_Data_Default(const PNG_Chunk_Header *in_pHeader, 
+ReadResult read_PNG_Chunk_Data_Default(const PNG_Chunk_Header *in_pHeader, void * _pData,
 	FILE* in_pngFile, uint32_t *in_pCurrentCRC)
 {
 	uint64_t index64;
@@ -181,7 +177,7 @@ ReadResult read_PNG_Chunk_Data_Default(const PNG_Chunk_Header *in_pHeader,
 	for (index64 = 0; index64 < in_pHeader->length; index64++)
 	{
 		uint8_t aByte;
-		
+
 		if (fread(&aByte, 1, 1, in_pngFile) != 1)
 			return ReadResultPrematureEndOfStream;
 
