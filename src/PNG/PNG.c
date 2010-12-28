@@ -44,20 +44,9 @@ ReadResult read_PNG(FILE* in_pngFile)
 		return ReadResultInvalidData;
 	}
 
-	if ((readResult = read_PNG_Chunk_Data_IHDR(&pngChunk.header, &pngChunkDataIHDR, in_pngFile, &readChecksum)) != ReadResultOK)
+	if ((readResult = read_PNG_Chunk_Data_and_CRC(&pngChunk.header, &pngChunkDataIHDR, in_pngFile, &readChecksum, 
+		&read_PNG_Chunk_Data_IHDR)) != ReadResultOK)
 		return readResult;
-
-	readChecksum = CRC_terminate(readChecksum);
-
-	if (fread(&pngChunk.crc, sizeof(pngChunk.crc), 1, in_pngFile) != 1)
-	{
-		return ReadResultPrematureEndOfStream;
-	}
-
-	pngChunk.crc = _byteswap_ulong(pngChunk.crc);
-
-	if (pngChunk.crc != readChecksum)
-		return ReadResultInvalidData;
 
 	while (1)
 	{
@@ -158,6 +147,32 @@ ReadResult read_PNG_Chunk_Header(PNG_Chunk_Header *out_pHeader, bool *out_isEndO
 	return ReadResultOK;
 }
 
+ReadResult read_PNG_Chunk_Data_and_CRC(const PNG_Chunk_Header *in_pHeader,
+	void *in_out_pData, FILE* in_pngFile, uint32_t *in_pCurrentCRC,
+	ReadResult (*in_pRead_PNG_Chunk_Data_Fun)(const PNG_Chunk_Header*, void*, FILE*, uint32_t*))
+{
+	ReadResult readResult;
+	uint32_t chunkCRC;
+
+	if ((readResult = (*in_pRead_PNG_Chunk_Data_Fun)(in_pHeader, in_out_pData, in_pngFile, in_pCurrentCRC)) 
+		!= ReadResultOK)
+		return readResult;
+
+	*in_pCurrentCRC = CRC_terminate(*in_pCurrentCRC);
+
+	if (fread(&chunkCRC, sizeof(chunkCRC), 1, in_pngFile) != 1)
+	{
+		return ReadResultPrematureEndOfStream;
+	}
+
+	chunkCRC = _byteswap_ulong(chunkCRC);
+
+	if (chunkCRC != *in_pCurrentCRC)
+		return ReadResultInvalidData;
+
+	return ReadResultOK;
+}
+
 ReadResult read_PNG_Chunk_Data_Default(const PNG_Chunk_Header *in_pHeader, FILE* in_pngFile, uint32_t *in_pCurrentCRC)
 {
 	uint64_t index64;
@@ -175,27 +190,29 @@ ReadResult read_PNG_Chunk_Data_Default(const PNG_Chunk_Header *in_pHeader, FILE*
 	return ReadResultOK;
 }
 
-ReadResult read_PNG_Chunk_Data_IHDR(const PNG_Chunk_Header *in_pHeader,  PNG_Chunk_Data_IHDR *out_pChunkData, 
+ReadResult read_PNG_Chunk_Data_IHDR(const PNG_Chunk_Header *in_pHeader,  void *out_pChunkDataIHDR, 
 	FILE* in_pngFile, uint32_t *in_pCurrentCRC)
 {
+	PNG_Chunk_Data_IHDR *pChunkDataIHDR = (PNG_Chunk_Data_IHDR *) out_pChunkDataIHDR;
+
 	if (sizeof(PNG_Chunk_Data_IHDR) != in_pHeader->length)
 	{
 		return ReadResultInvalidData;
 	}
 
-	if (fread_withState(out_pChunkData, sizeof(*out_pChunkData), 1, in_pngFile, in_pCurrentCRC, &CRC_stateUpdate) != 1)
+	if (fread_withState(pChunkDataIHDR, sizeof(*pChunkDataIHDR), 1, in_pngFile, in_pCurrentCRC, &CRC_stateUpdate) != 1)
 	{
 		return ReadResultPrematureEndOfStream;
 	}
 
-	out_pChunkData->Width = _byteswap_ulong(out_pChunkData->Width);
-	out_pChunkData->Height = _byteswap_ulong(out_pChunkData->Height);
+	pChunkDataIHDR->Width = _byteswap_ulong(pChunkDataIHDR->Width);
+	pChunkDataIHDR->Height = _byteswap_ulong(pChunkDataIHDR->Height);
 
 	// See Table 11.1 — Allowed combinations of colour type and bit depth
-	switch (out_pChunkData->Colour_type)
+	switch (pChunkDataIHDR->Colour_type)
 	{
 	case 0:
-		switch (out_pChunkData->Bit_depth)
+		switch (pChunkDataIHDR->Bit_depth)
 		{
 		case 1:
 		case 2:
@@ -208,7 +225,7 @@ ReadResult read_PNG_Chunk_Data_IHDR(const PNG_Chunk_Header *in_pHeader,  PNG_Chu
 		}
 		break;
 	case 2:
-		switch (out_pChunkData->Bit_depth)
+		switch (pChunkDataIHDR->Bit_depth)
 		{
 		case 8:
 		case 16:
@@ -218,7 +235,7 @@ ReadResult read_PNG_Chunk_Data_IHDR(const PNG_Chunk_Header *in_pHeader,  PNG_Chu
 		}
 		break;
 	case 3:
-		switch (out_pChunkData->Bit_depth)
+		switch (pChunkDataIHDR->Bit_depth)
 		{
 		case 1:
 		case 2:
@@ -231,7 +248,7 @@ ReadResult read_PNG_Chunk_Data_IHDR(const PNG_Chunk_Header *in_pHeader,  PNG_Chu
 		break;
 	case 4:
 	case 6:
-		switch (out_pChunkData->Bit_depth)
+		switch (pChunkDataIHDR->Bit_depth)
 		{
 		case 8:
 		case 16:
