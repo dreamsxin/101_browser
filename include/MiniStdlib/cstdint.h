@@ -1,4 +1,5 @@
-#ifndef _OZO_cstdint_h
+#ifndef _MTAx_MiniStdlib_cstdint_h
+#define _MTAx_MiniStdlib_cstdint_h
 
 # ifdef __cplusplus
 /*
