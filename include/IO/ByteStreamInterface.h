@@ -1,6 +1,8 @@
 #ifndef _MTAx_IO_ByteStreamInterface_h
 #define _MTAx_IO_ByteStreamInterface_h
 
+#include "MiniStdlib/cstdint.h"
+
 /* 
  * gcc requires this header file for a definition of size_t
  */
@@ -18,7 +20,8 @@ extern "C" {
 
 typedef struct
 {
-	size_t (*pRead)(void *in_out_pByteStream, void *in_pBuffer, size_t in_count);
+	size_t (*pRead)(void *in_out_pByteStreamState, void *in_pBuffer, size_t in_count, 
+		void *in_pAdditionalData);
 } ByteStreamInterface;
 
 #ifdef __cplusplus

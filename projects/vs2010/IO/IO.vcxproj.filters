@@ -21,9 +21,15 @@
     <ClInclude Include="..\..\..\include\IO\ByteStreamInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\IO\FileByteStream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\IO\fread.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\IO\FileByteStream.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
