@@ -1,8 +1,8 @@
 #ifndef _MTAx_RFC1950_zlib_h
 #define _MTAx_RFC1950_zlib_h
 
-//#include "Util/ReadResult.h"
-//#include "MiniStdlib/MTAx_cstdio.h"
+#include "Util/ReadResult.h"
+#include "MiniStdlib/MTAx_cstdio.h"
 #include "MiniStdlib/cstdint.h"
 //#include "MiniStdlib/cstdbool.h"
 
@@ -27,5 +27,7 @@ typedef struct
 } ZlibStreamHeader;
 
 #pragma pack(pop)
+
+
 
 #endif
