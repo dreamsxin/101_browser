@@ -3,6 +3,7 @@
 #include "MiniStdlib/MTAx_cstdlib.h" // for the conversation functions for endianness
 #include "PNG/CRC.h"
 #include "IO/fread.h"
+#include "RFC1950/RFC1950_zlib.h"
 
 // See http://www.w3.org/TR/PNG/#5PNG-file-signature
 const uint8_t PNG_signature[8] = { 137, 80, 78, 71, 13, 10, 26, 10 };
