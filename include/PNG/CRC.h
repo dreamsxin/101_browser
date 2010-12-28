@@ -33,7 +33,7 @@ __declspec(dllexport)
 uint32_t CRC_compute(uint8_t *in_buffer, size_t in_bufferSize);
 
 /*!
- * This function is simply for using with fread_withState (IO/fread.h).
+ * The function CRC_stateUpdate is for using with fread_withState (IO/fread.h).
  */
 #ifdef _WIN32
 __declspec(dllexport)
