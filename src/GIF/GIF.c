@@ -501,7 +501,6 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 ReadResult read_Application_Extension(FILE* in_gifFile, bool in_is89a)
 {
 	Application_Extension applExt;
-	Data_SubBlock subBlock;
 	
 	if (!in_is89a)
 		return ReadResultInvalidVersion;
@@ -519,31 +518,29 @@ ReadResult read_Application_Extension(FILE* in_gifFile, bool in_is89a)
 	if (strncmp(applExt.Application_Identifier, "NETSCAPE", 8) == 0 && 
 		strncmp(applExt.Application_Authentication_Code, "2.0", 3) == 0)
 	{
-		// TODO
+		uint8_t blockSize;
+		uint8_t blockData[3];
+
+		if (fread(&blockSize, sizeof(blockSize), 1, in_gifFile) != 1)
+			return ReadResultPrematureEndOfStream;
+
+		if (blockSize != 3)
+			return ReadResultInvalidData;
+
+		if (fread(blockData, sizeof(blockData), 1, in_gifFile) != 1)
+			return ReadResultPrematureEndOfStream;
+
+		// TODO: Interprete read data
+
+		if (fread(&blockSize, sizeof(blockSize), 1, in_gifFile) != 1)
+			return ReadResultPrematureEndOfStream;
+
+		if (blockSize != 0)
+			return ReadResultInvalidData;
 	}
 	else
 	{
 		return ReadResultNotImplemented;
-	}
-
-	while (1)
-	{
-		if (fread(&subBlock.Block_Size, sizeof(subBlock.Block_Size), 1, in_gifFile) != 1)
-			return ReadResultPrematureEndOfStream;
-
-		if (subBlock.Block_Size == 0)
-			break;
-
-		subBlock.Data_Values = (uint8_t*) malloc(subBlock.Block_Size);
-
-		if (fread(subBlock.Data_Values, subBlock.Block_Size, 1, in_gifFile) != 1)
-		{
-			return ReadResultPrematureEndOfStream;
-		}
-
-		// TODO: Interprete read block
-
-		free(subBlock.Data_Values);
 	}
 
 	return ReadResultOK;
@@ -556,17 +553,17 @@ ReadResult read_Comment_Extension(FILE* in_gifFile, bool in_is89a)
 	if (!in_is89a)
 		return ReadResultInvalidVersion;
 
-	while (1)
-	{
-		if (fread(&subBlock.Block_Size, sizeof(subBlock.Block_Size), 1, in_gifFile) != 1)
-			return ReadResultPrematureEndOfStream;
+	if (fread(&subBlock.Block_Size, sizeof(subBlock.Block_Size), 1, in_gifFile) != 1)
+		return ReadResultPrematureEndOfStream;
 
+	while (subBlock.Block_Size != 0)
+	{
 		if (subBlock.Block_Size == 0)
 			break;
 
 		subBlock.Data_Values = (uint8_t*) malloc(subBlock.Block_Size);
 
-		if (subBlock.Data_Values == NULL)
+		if (NULL == subBlock.Data_Values)
 		{
 			return ReadResultAllocationFailure;
 		}
@@ -579,6 +576,9 @@ ReadResult read_Comment_Extension(FILE* in_gifFile, bool in_is89a)
 		// TODO: Interprete read block
 
 		free(subBlock.Data_Values);
+
+		if (fread(&subBlock.Block_Size, sizeof(subBlock.Block_Size), 1, in_gifFile) != 1)
+			return ReadResultPrematureEndOfStream;
 	}
 
 	return ReadResultOK;

@@ -8,10 +8,22 @@ int main()
 	char filename[] = 
 		// "testfiles/gif/wikipedia/GifSampleSmall.gif";
 		// "testfiles/gif/wikipedia/GifSample.gif";
+		/*
+		 * Provides test case for Application Extension block
+		 */
 		// "testfiles/gif/wikipedia/Newtons_cradle_animation_book_2.gif";
+		/*
+		 * Provides test case for Application Extension block
+		 */
 		// "testfiles/gif/wikipedia/Rotating_earth_(large).gif";
-		"testfiles/gif/wikipedia/Rotating_earth_(small).gif";
-		// "testfiles/gif/wikipedia/Sunflower_as_gif_small.gif";
+		/*
+		 * Provides test case for Application Extension block
+		 */
+		// "testfiles/gif/wikipedia/Rotating_earth_(small).gif";
+		/*
+		 * Provides test case for Comment Extension block
+		 */
+		"testfiles/gif/wikipedia/Sunflower_as_gif_small.gif";
 
 		// "testfiles/gif/a_image.gif";
 		// "testfiles/gif/tc217.gif";
