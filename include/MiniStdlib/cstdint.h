@@ -3,7 +3,7 @@
 # ifdef __cplusplus
 /*
  * Visual Studio 2010 is the first version to 
- * contains cstdint. In the versions before we
+ * contain cstdint. In the versions before we
  * have to use boost. Also gcc does not like this
  */
 #  if defined(_MSC_VER) && (_MSC_VER < 1600)
