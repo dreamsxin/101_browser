@@ -97,7 +97,7 @@ ReadResult read_PNG(FILE* in_pngFile)
 				return ReadResultInvalidData;
 
 			if ((readResult = read_PNG_Chunk_Data_and_CRC(&pngChunkHeader, &pngChunkDataIHDR, in_pngFile, &readChecksum, 
-				&read_PNG_Chunk_Data_Default)) != ReadResultOK)
+				&read_PNG_Chunk_Data_IDAT)) != ReadResultOK)
 				return readResult;
 		}
 		else
@@ -169,8 +169,8 @@ ReadResult read_PNG_Chunk_Data_and_CRC(const PNG_Chunk_Header *in_pHeader,
 	return ReadResultOK;
 }
 
-ReadResult read_PNG_Chunk_Data_Default(const PNG_Chunk_Header *in_pHeader, void * _pData,
-	FILE* in_pngFile, uint32_t *in_pCurrentCRC)
+ReadResult read_PNG_Chunk_Data_Default(const PNG_Chunk_Header *in_pHeader, 
+	void *_pData, FILE* in_pngFile, uint32_t *in_pCurrentCRC)
 {
 	uint64_t index64;
 
@@ -256,6 +256,24 @@ ReadResult read_PNG_Chunk_Data_IHDR(const PNG_Chunk_Header *in_pHeader,
 		break;
 	default:
 		return ReadResultInvalidData;
+	}
+
+	return ReadResultOK;
+}
+
+ReadResult read_PNG_Chunk_Data_IDAT(const PNG_Chunk_Header *in_pHeader, 
+	void *_pData, FILE* in_pngFile, uint32_t *in_pCurrentCRC)
+{
+	uint64_t index64;
+
+	for (index64 = 0; index64 < in_pHeader->length; index64++)
+	{
+		uint8_t aByte;
+
+		if (fread(&aByte, 1, 1, in_pngFile) != 1)
+			return ReadResultPrematureEndOfStream;
+
+		*in_pCurrentCRC = CRC_update(*in_pCurrentCRC, aByte);
 	}
 
 	return ReadResultOK;
