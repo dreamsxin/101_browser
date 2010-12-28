@@ -81,8 +81,6 @@
     <ClInclude Include="..\..\..\include\BasicDataStructures\BigNumber\BigInteger.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\Collections.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\Comparator.h" />
-    <ClInclude Include="..\..\..\include\BasicDataStructures\Interval.h" />
-    <ClInclude Include="..\..\..\include\BasicDataStructures\Iterator.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\Maybe.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\Parser\AbstractParser.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\Parser\ParserDataStructures.h" />
@@ -105,7 +103,6 @@
     <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\BinaryTreeClasses.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\BinaryTreeHelper.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\BinaryTreeImpl.h" />
-    <ClInclude Include="..\..\..\include\BasicDataStructures\Unicode.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\Util\MemoryManager.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\Util\SingleChain.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\VirtualMachine\InstructionContext.h" />

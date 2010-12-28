@@ -1,8 +1,6 @@
 #ifndef _Collections_h
 #define _Collections_h
 
-#include "BasicDataStructures/Iterator.h"
-
 template <typename Type, typename CollectionState> struct Collection
 {
 
