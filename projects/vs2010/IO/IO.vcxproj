@@ -81,6 +81,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\IO\fread.h" />
+    <ClInclude Include="..\..\..\include\IO\ByteStreamInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\IO\fread.c" />
