@@ -6,6 +6,10 @@
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstdbool.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #pragma pack(push, 1)
 
 typedef struct
@@ -84,10 +88,6 @@ typedef struct
 } TableBased_Image;
 
 #pragma pack(pop)
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 // Helper functions
 size_t bytesOfColorTable(unsigned char in_sizeOfColorTable);
