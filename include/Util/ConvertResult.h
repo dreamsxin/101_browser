@@ -21,8 +21,13 @@ typedef enum
 	 * So please deliver some
 	 */
 	ConvertResultAdditionalDataNeeded,
-
-	ConvertResultAllocationFailure
+	ConvertResultInvalidVersion,
+	ConvertResultInvalidData,
+	/*!
+	 * Memory could not be allocated
+	 */
+	ConvertResultAllocationFailure,
+	ConvertResultNotImplemented
 } ConvertResult;
 
 #endif
