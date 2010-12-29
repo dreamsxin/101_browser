@@ -1,5 +1,5 @@
-#ifndef _ReadResult_h
-#define _ReadResult_h
+#ifndef _MTAx_Util_ReadResult_h
+#define _MTAx_Util_ReadResult_h
 
 typedef enum
 {
