@@ -16,10 +16,12 @@ uint8_t readHexDigit(char token)
 	{
 		return (token-'0');
 	}
+	else if (token >= '0' && token <= '9')
+	{
+		return 10+(token - 'A');
+	}
 	else
 	{
-		assert(token >= 'A' && token <= 'F');
-
-		return 10+(token - 'A');
+		return (uint8_t) -1;
 	}
 }
