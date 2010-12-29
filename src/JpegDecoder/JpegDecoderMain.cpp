@@ -5,7 +5,7 @@
 
 int main()
 {
-	char filename[] = "testfiles/T083/A1.jpg";
+	char filename[] = "testfiles/T083v1_0/T83_process1/A1.jpg";
 
 	FILE* jpegFile = MTAx_fopen(filename, "rb");
 

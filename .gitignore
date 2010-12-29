@@ -87,3 +87,7 @@ doc/*.toc
 
 # Java classes
 *.class
+
+# Don't include T083 test data, since I'm not sure whether this is legal...
+testfiles/T083v1_0/*
+
