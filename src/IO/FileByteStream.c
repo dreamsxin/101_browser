@@ -1,7 +1,6 @@
 #include "IO/FileByteStream.h"
 
-size_t fileByteStreamRead(void *in_out_pFileByteStreamState, void *in_pBuffer, 
-	size_t in_count, void *in_pAdditionalData)
+size_t fileByteStreamRead(void *in_out_pFileByteStreamState, void *in_pBuffer, size_t in_count)
 {
 	FileByteStreamState *pFileByteStreamState = 
 		(FileByteStreamState*) in_out_pFileByteStreamState;

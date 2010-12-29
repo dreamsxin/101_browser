@@ -1,4 +1,4 @@
-#include "Algorithm/BitRead.h"
+#include "IO/BitRead.h"
 #include <assert.h>
 
 void initBitReadState(BitReadState *in_pBitReadState)

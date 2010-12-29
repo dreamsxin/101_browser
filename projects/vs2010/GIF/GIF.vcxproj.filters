@@ -15,13 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\GifDecoder\GifDecoderMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\GIF\GIF.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\GifDecoder\LZW.c">
+    <ClCompile Include="..\..\..\src\GIF\LZW.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

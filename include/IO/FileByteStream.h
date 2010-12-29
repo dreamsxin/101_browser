@@ -17,8 +17,7 @@ typedef struct
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-size_t fileByteStreamRead(void *in_out_pFileByteStreamState, void *in_pBuffer, 
-	size_t in_count, void *in_pAdditionalData);
+size_t fileByteStreamRead(void *in_out_pFileByteStreamState, void *in_pBuffer, size_t in_count);
 
 #ifdef _WIN32
 __declspec(dllexport)

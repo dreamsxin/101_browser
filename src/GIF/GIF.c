@@ -1,6 +1,6 @@
 ﻿#include "GIF/GIF.h"
 #include "GIF/LZW.h"
-#include "Algorithm/BitRead.h"
+#include "IO/BitRead.h"
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>

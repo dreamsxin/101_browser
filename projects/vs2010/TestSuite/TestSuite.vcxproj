@@ -60,7 +60,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <Profile>true</Profile>
       <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;CPU.lib;HTML5.lib;MiniStdlib.lib;PNG.lib;RFC1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;CPU.lib;GIF.lib;HTML5.lib;MiniStdlib.lib;PNG.lib;RFC1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -82,7 +82,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <Profile>true</Profile>
       <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;CPU.lib;HTML5.lib;MiniStdlib.lib;PNG.lib;RFC1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;CPU.lib;GIF.lib;HTML5.lib;MiniStdlib.lib;PNG.lib;RFC1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -121,6 +121,9 @@
     </ProjectReference>
     <ProjectReference Include="..\CPU\CPU.vcxproj">
       <Project>{8bb562b5-9a8f-475b-8cc8-e305454cbd05}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\GIF\GIF.vcxproj">
+      <Project>{5fa06546-f277-4928-8478-41c474490ae6}</Project>
     </ProjectReference>
     <ProjectReference Include="..\HTML5\HTML5.vcxproj">
       <Project>{806e90f2-9b9c-4c45-82ff-71cbd076013c}</Project>

@@ -20,8 +20,7 @@ extern "C" {
 
 typedef struct
 {
-	size_t (*pRead)(void *in_out_pByteStreamState, void *in_pBuffer, size_t in_count, 
-		void *in_pAdditionalData);
+	size_t (*pRead)(void *in_out_pByteStreamState, void *in_pBuffer, size_t in_count);
 } ByteStreamInterface;
 
 #ifdef __cplusplus

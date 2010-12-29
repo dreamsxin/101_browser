@@ -84,11 +84,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\IO\BitRead.h" />
     <ClInclude Include="..\..\..\include\IO\FileByteStream.h" />
     <ClInclude Include="..\..\..\include\IO\fread.h" />
     <ClInclude Include="..\..\..\include\IO\ByteStreamInterface.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\IO\BitRead.c" />
     <ClCompile Include="..\..\..\src\IO\FileByteStream.c" />
     <ClCompile Include="..\..\..\src\IO\fread.c" />
   </ItemGroup>
