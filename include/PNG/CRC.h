@@ -2,6 +2,12 @@
 #define _CRC_h
 
 #include "MiniStdlib/cstdint.h"
+ // for size_t
+#ifdef __cplusplus
+#include <cstddef>
+#else
+#include <stddef.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {

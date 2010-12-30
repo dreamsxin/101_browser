@@ -2,6 +2,16 @@
 #define _LZW_h
 
 #include "MiniStdlib/cstdint.h"
+ // for size_t
+#ifdef __cplusplus
+#include <cstddef>
+#else
+#include <stddef.h>
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct _LZW_Tree_Node
 {
@@ -35,5 +45,9 @@ typedef struct
 } LZW_Stack;
 
 void initLZW_Stack(LZW_Stack *out_pLZW_Stack);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -1,4 +1,4 @@
-#include "rfc1950/rfc1950_adler32.h"
+#include "RFC1950/RFC1950_adler32.h"
 #include "Template/HigherOrderFunctions/Fold.h"
 
 uint32_t RFC1950_adler32_foldl(uint32_t in_adler, uint8_t *in_buffer, size_t in_bufferSize)

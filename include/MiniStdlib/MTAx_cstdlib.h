@@ -11,24 +11,9 @@
 extern "C" {
 #endif
 
-#ifdef _GCC
-inline dword _byteswap_ulong(dword x)
-{
-	asm("bswap %0" : "=r" (x) : "0" (x));
-	return x;
-}
-
-inline uint64 _byteswap_uint64(uint64 x)
-{
-	asm("bswap %0" : "=r" (x) : "0" (x));
-	return x;
-}
-
-inline word _byteswap_ushort(word x)
-{
-	__asm__("xchgb %b0,%h0" : "=q" (x) :  "0" (x));
-	return x;
-}
+#ifdef __GNUC__
+#define _byteswap_ulong __builtin_bswap32
+#define _byteswap_uint64 __builtin_bswap64
 #endif
 
 #ifdef __cplusplus
