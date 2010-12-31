@@ -15,7 +15,7 @@ uint8_t readHexDigit(char token)
 	}
 	else if (token >= 'A' && token <= 'F')
 	{
-		return 10 + (token - 'A');
+		return 0xA + (token - 'A');
 	}
 	else
 	{
