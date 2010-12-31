@@ -11,11 +11,11 @@ uint8_t readHexDigit(char token)
 {
 	if (token >= '0' && token <= '9')
 	{
-		return (token-'0');
+		return (token - '0');
 	}
-	else if (token >= '0' && token <= '9')
+	else if (token >= 'A' && token <= 'F')
 	{
-		return 10+(token - 'A');
+		return 10 + (token - 'A');
 	}
 	else
 	{
