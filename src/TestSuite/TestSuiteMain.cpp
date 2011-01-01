@@ -31,6 +31,8 @@ int main()
 	testGIF();
 	wprintf(L"Testing CPU\n");
 	testCPU();
+	wprintf(L"Testing Coroutine\n");
+	test_Coroutine();
 	wprintf(L"Testing PNG\n");
 	test_PNG();
 

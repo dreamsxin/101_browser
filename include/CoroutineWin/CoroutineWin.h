@@ -2,6 +2,11 @@
 #define _CoroutineWin_h
 
 #include <Windows.h>
+#include "MiniStdlib/cstdbool.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef LPVOID CoroutineDescriptor;
 
@@ -13,15 +18,29 @@ CoroutineDescriptor createCoroutine(size_t in_stackSize,  void (__stdcall * in_p
 __declspec(dllexport)
 #endif
 void switchToCoroutine(CoroutineDescriptor *in_pCoroutine);
+
+/*!
+ * Return value:
+ * true - sucess
+ * false - failure
+ */
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
 CoroutineDescriptor convertThreadToCoroutine();
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+bool convertCoroutineToThread();
 // this is only used internally
 CoroutineDescriptor getCurrentCoroutine();
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-void deleteCoroutine(CoroutineDescriptor in_coroutine);
+void deleteCoroutine(CoroutineDescriptor *in_pCoroutine);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -29,7 +29,25 @@ CoroutineDescriptor convertThreadToCoroutine()
 		return lCoroutineDescriptor;
 }
 
-void deleteCoroutine(CoroutineDescriptor in_coroutine)
+bool convertCoroutineToThread()
 {
-	DeleteFiber(in_coroutine);
+	CoroutineDescriptor lCoroutineDescriptor = getCurrentCoroutine();
+
+	if (lCoroutineDescriptor)
+		/*!
+		 * According to
+		 * http://msdn.microsoft.com/en-us/library/ms682112(VS.85).aspx
+		 * "If the function succeeds, the return value is nonzero."
+		 * 
+		 * We want to be sure that it is either 0 or 1.
+		 */
+		return ConvertFiberToThread() != 0;
+	else
+		return true;
+}
+
+void deleteCoroutine(CoroutineDescriptor *in_pCoroutine)
+{
+	DeleteFiber(*in_pCoroutine);
+	*in_pCoroutine = NULL;
 }

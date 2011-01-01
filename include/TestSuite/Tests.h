@@ -26,6 +26,7 @@ void testASCIIStringUnicodeIterator();
 void testHTML5();
 void test_PNG();
 void test_RFC1950();
+void test_Coroutine();
 
 #ifdef __cplusplus
 }

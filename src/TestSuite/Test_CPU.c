@@ -1,4 +1,5 @@
 #include "TestSuite/Tests.h"
+#include "TestSuite/TestSuite.h"
 #include "CPU/X86.h"
 #include <stdio.h>
 

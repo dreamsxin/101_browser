@@ -18,6 +18,9 @@
     <ClInclude Include="..\..\..\include\CoroutineWin\CoroutineWin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\Coroutine\Coroutine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\CoroutineWin\CoroutineWin.c">
