@@ -20,8 +20,13 @@ extern "C" {
 
 typedef struct
 {
-	size_t (*pRead)(void *in_out_pByteStreamState, void *in_pBuffer, size_t in_count);
-} ByteStreamInterface;
+	size_t (*pRead)(void *in_out_pByteStreamState, void *out_pBuffer, size_t in_count);
+} ByteReadStreamInterface;
+
+typedef struct
+{
+	size_t (*pWrite)(void *in_out_pByteStreamState, const void *in_pBuffer, size_t in_count);
+} ByteWriteStreamInterface;
 
 #ifdef __cplusplus
 }

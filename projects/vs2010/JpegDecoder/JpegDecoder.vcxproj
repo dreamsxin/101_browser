@@ -41,6 +41,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)out\vs2010\$(Configuration)\</OutDir>
     <RunCodeAnalysis>false</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

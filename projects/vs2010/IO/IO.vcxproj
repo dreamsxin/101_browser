@@ -40,6 +40,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)out\vs2010\$(Configuration)\</OutDir>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -88,11 +89,13 @@
     <ClInclude Include="..\..\..\include\IO\FileByteStream.h" />
     <ClInclude Include="..\..\..\include\IO\fread.h" />
     <ClInclude Include="..\..\..\include\IO\ByteStreamInterface.h" />
+    <ClInclude Include="..\..\..\include\IO\PipeStream.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\IO\BitRead.c" />
     <ClCompile Include="..\..\..\src\IO\FileByteStream.c" />
     <ClCompile Include="..\..\..\src\IO\fread.c" />
+    <ClCompile Include="..\..\..\src\IO\PipeStream.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MiniStdlib\MiniStdlib.vcxproj">

@@ -17,15 +17,15 @@ typedef struct
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-size_t fileByteStreamRead(void *in_out_pFileByteStreamState, void *in_pBuffer, size_t in_count);
+size_t fileByteReadStreamRead(void *in_out_pFileByteStreamState, void *out_pBuffer, size_t in_count);
 
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-bool createFileByteStreamState(const char *in_filename,
+bool createFileByteReadStreamState(const char *in_filename,
 	FileByteStreamState *in_pFileByteStreamState);
 
-const ByteStreamInterface cFileByteStreamInterface = { &fileByteStreamRead };
+const ByteReadStreamInterface cFileByteStreamInterface = { &fileByteReadStreamRead };
 
 #ifdef __cplusplus
 }

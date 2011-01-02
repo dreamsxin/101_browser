@@ -51,6 +51,7 @@ void test_Coroutine()
 	volatile unsigned int buffer[16];
 	unsigned int index;
 	PassedData passedData;
+	bool bla;
 
 	for (index = 0; index < 16; index++)
 	{
