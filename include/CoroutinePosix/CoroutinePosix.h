@@ -14,7 +14,7 @@ typedef ucontext_t CoroutineDescriptor;
 
 CoroutineDescriptor createCoroutine(size_t in_stackSize,  void (*in_pFiberFunc)(void*), void* in_pParam);
 
-void switchToCoroutine(CoroutineDescriptor *in_pCoroutine);
+void switchToCoroutine(CoroutineDescriptor * in_pCurrentCoroutine, CoroutineDescriptor *in_pNextCoroutine);
 
 CoroutineDescriptor convertThreadToCoroutine();
 
@@ -25,12 +25,16 @@ CoroutineDescriptor convertThreadToCoroutine();
  */
 bool convertCoroutineToThread();
 
-// getCurrentCoroutine is only used internally
-CoroutineDescriptor getCurrentCoroutine();
-
+/*!
+ * Warning: never call it on a coroutine that was not created by createCoroutine.
+ * 
+ * You have been warned.
+ */
 void deleteCoroutine(CoroutineDescriptor *in_pCoroutine);
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
 

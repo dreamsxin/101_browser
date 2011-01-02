@@ -1,4 +1,5 @@
-#include "CoroutineWin/CoroutinePosix.h"
+#include "Coroutine/Coroutine.h"
+#include "MiniStdlib/safe_free.h"
 #include <stdlib.h>
 
 CoroutineDescriptor createCoroutine(size_t in_stackSize,  void (*in_pFiberFunc)(void*), void* in_pParam)
@@ -9,14 +10,36 @@ CoroutineDescriptor createCoroutine(size_t in_stackSize,  void (*in_pFiberFunc)(
 	out_descriptor.uc_link = NULL;
 	out_descriptor.uc_stack.ss_sp = malloc(in_stackSize);
 	// TODO test for NULL
-	out_descriptor.uc_stack.ss_size = sizeof(iterator_stack);
+	out_descriptor.uc_stack.ss_size = in_stackSize;
 
 	getcontext(&out_descriptor);
-	// TODO Fix portability issue in the following line
+	// TODO Fix 64 bit portability issue in the following line
 	makecontext(&out_descriptor, in_pFiberFunc, 1, in_pParam);
 
 	return out_descriptor;
 }
 
+void switchToCoroutine(CoroutineDescriptor * in_pCurrentCoroutine, CoroutineDescriptor *in_pNextCoroutine)
+{
+	swapcontext(in_pCurrentCoroutine, in_pNextCoroutine);
+}
+
+CoroutineDescriptor convertThreadToCoroutine()
+{
+	CoroutineDescriptor out_coroutineDescriptor;
+	// TODO Check error code
+	getcontext(&out_coroutineDescriptor);
+	return out_coroutineDescriptor;
+}
+
+bool convertCoroutineToThread()
+{
+	return true;
+}
+
+void deleteCoroutine(CoroutineDescriptor *in_pCoroutine)
+{
+	safe_free(&in_pCoroutine->uc_stack.ss_sp);
+}
 
 

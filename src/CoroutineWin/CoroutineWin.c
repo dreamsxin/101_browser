@@ -1,13 +1,13 @@
-#include "CoroutineWin/CoroutineWin.h"
+#include "Coroutine/Coroutine.h"
 
 CoroutineDescriptor createCoroutine(size_t in_stackSize,  void (__stdcall * in_pFiberFunc)(void*), void* in_pParam)
 {
 	return CreateFiber(in_stackSize, in_pFiberFunc, in_pParam);
 }
 
-void switchToCoroutine(CoroutineDescriptor *in_pCoroutine)
+void void switchToCoroutine(CoroutineDescriptor * in_pCurrentCoroutine, CoroutineDescriptor *in_pNextCoroutine);
 {
-	SwitchToFiber(*in_pCoroutine);
+	SwitchToFiber(*in_pNextCoroutine);
 }
 
 CoroutineDescriptor getCurrentCoroutine()
