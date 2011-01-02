@@ -51,3 +51,4 @@ void deleteCoroutine(CoroutineDescriptor *in_pCoroutine)
 	DeleteFiber(*in_pCoroutine);
 	*in_pCoroutine = NULL;
 }
+
