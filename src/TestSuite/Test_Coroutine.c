@@ -4,7 +4,7 @@
 
 typedef struct
 {
-	CoroutineDescriptor currentDescriptor, func1Descriptor, func2Descriptor;
+	CoroutineDescriptor *pCurrentDescriptor, *pFunc1Descriptor, *pFunc2Descriptor;
 	volatile unsigned int *pBuffer;
 	volatile unsigned int currentIndex;
 } PassedData;
@@ -22,7 +22,7 @@ func1(void *in_pData)
 		pData->pBuffer[pData->currentIndex] = pData->currentIndex;
 		pData->currentIndex++;
 
-		switchToCoroutine(&pData->func2Descriptor);
+		switchToCoroutine(pData->pFunc1Descriptor, pData->pFunc2Descriptor);
 	}
 }
 
@@ -40,9 +40,9 @@ func2(void *in_pData)
 		pData->currentIndex++;
 
 		if (pData->currentIndex == 16)
-			switchToCoroutine(&pData->currentDescriptor);
+			switchToCoroutine(pData->pFunc2Descriptor, pData->pCurrentDescriptor);
 		else
-			switchToCoroutine(&pData->func1Descriptor);
+			switchToCoroutine(pData->pFunc2Descriptor, pData->pFunc1Descriptor);
 	}
 }
 
@@ -51,29 +51,38 @@ void test_Coroutine()
 	volatile unsigned int buffer[16];
 	unsigned int index;
 	PassedData passedData;
-	bool bla;
+	CoroutineDescriptor currentDescriptor, func1Descriptor, func2Descriptor;
 
 	for (index = 0; index < 16; index++)
 	{
 		buffer[index] = 0xDEADBEAF;
 	}
 
-	passedData.currentDescriptor = convertThreadToCoroutine();
+	currentDescriptor = convertThreadToCoroutine();
+#ifdef _WIN32
+	test(currentDescriptor != NULL);
+#endif
+	passedData.pCurrentDescriptor = &currentDescriptor;
 
-	test(passedData.currentDescriptor != NULL);
+	func1Descriptor = createCoroutine(4096, &func1, &passedData);
+#ifdef _WIN32
+	test(func1Descriptor != NULL);
+#endif
+	passedData.pFunc1Descriptor = &func1Descriptor;
 
-	passedData.func1Descriptor = createCoroutine(4096, &func1, &passedData);
-	test(passedData.func1Descriptor != NULL);
-	passedData.func2Descriptor = createCoroutine(4096, &func2, &passedData);
-	test(passedData.func2Descriptor != NULL);
+	func2Descriptor = createCoroutine(4096, &func2, &passedData);
+#ifdef _WIN32
+	test(func2Descriptor != NULL);
+#endif
+	passedData.pFunc2Descriptor = &func2Descriptor;
 
 	passedData.pBuffer = buffer;
 	passedData.currentIndex = 0;
 
-	switchToCoroutine(&passedData.func1Descriptor);
+	switchToCoroutine(passedData.pCurrentDescriptor, passedData.pFunc1Descriptor);
 
-	deleteCoroutine(&passedData.func1Descriptor);
-	deleteCoroutine(&passedData.func2Descriptor);
+	deleteCoroutine(passedData.pFunc1Descriptor);
+	deleteCoroutine(passedData.pFunc2Descriptor);
 
 	for (index = 0; index < 16; index++)
 	{
