@@ -5,7 +5,8 @@ CoroutineDescriptor createCoroutine(size_t in_stackSize,  void (__stdcall * in_p
 	return CreateFiber(in_stackSize, in_pFiberFunc, in_pParam);
 }
 
-void switchToCoroutine(CoroutineDescriptor * in_pCurrentCoroutine, CoroutineDescriptor *in_pNextCoroutine)
+void switchToCoroutine(volatile CoroutineDescriptor * in_pCurrentCoroutine, 
+	volatile CoroutineDescriptor *in_pNextCoroutine)
 {
 	SwitchToFiber(*in_pNextCoroutine);
 }
@@ -46,7 +47,7 @@ bool convertCoroutineToThread()
 		return true;
 }
 
-void deleteCoroutine(CoroutineDescriptor *in_pCoroutine)
+void deleteCoroutine(volatile CoroutineDescriptor *in_pCoroutine)
 {
 	DeleteFiber(*in_pCoroutine);
 	*in_pCoroutine = NULL;

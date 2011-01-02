@@ -14,7 +14,7 @@ typedef ucontext_t CoroutineDescriptor;
 
 CoroutineDescriptor createCoroutine(size_t in_stackSize,  void (*in_pFiberFunc)(void*), void* in_pParam);
 
-void switchToCoroutine(CoroutineDescriptor * in_pCurrentCoroutine, CoroutineDescriptor *in_pNextCoroutine);
+void switchToCoroutine(volatile CoroutineDescriptor * in_pCurrentCoroutine, volatile CoroutineDescriptor *in_pNextCoroutine);
 
 CoroutineDescriptor convertThreadToCoroutine();
 
@@ -30,7 +30,7 @@ bool convertCoroutineToThread();
  * 
  * You have been warned.
  */
-void deleteCoroutine(CoroutineDescriptor *in_pCoroutine);
+void deleteCoroutine(volatile CoroutineDescriptor *in_pCoroutine);
 
 #ifdef __cplusplus
 }

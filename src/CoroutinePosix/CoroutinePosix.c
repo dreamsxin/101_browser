@@ -19,7 +19,7 @@ CoroutineDescriptor createCoroutine(size_t in_stackSize,  void (*in_pFiberFunc)(
 	return out_descriptor;
 }
 
-void switchToCoroutine(CoroutineDescriptor * in_pCurrentCoroutine, CoroutineDescriptor *in_pNextCoroutine)
+void switchToCoroutine(volatile CoroutineDescriptor * in_pCurrentCoroutine, volatile CoroutineDescriptor *in_pNextCoroutine)
 {
 	swapcontext(in_pCurrentCoroutine, in_pNextCoroutine);
 }
@@ -37,7 +37,7 @@ bool convertCoroutineToThread()
 	return true;
 }
 
-void deleteCoroutine(CoroutineDescriptor *in_pCoroutine)
+void deleteCoroutine(volatile CoroutineDescriptor *in_pCoroutine)
 {
 	safe_free(&in_pCoroutine->uc_stack.ss_sp);
 }
