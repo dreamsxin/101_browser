@@ -5,7 +5,7 @@ CoroutineDescriptor createCoroutine(size_t in_stackSize,  void (__stdcall * in_p
 	return CreateFiber(in_stackSize, in_pFiberFunc, in_pParam);
 }
 
-void void switchToCoroutine(CoroutineDescriptor * in_pCurrentCoroutine, CoroutineDescriptor *in_pNextCoroutine);
+void switchToCoroutine(CoroutineDescriptor * in_pCurrentCoroutine, CoroutineDescriptor *in_pNextCoroutine)
 {
 	SwitchToFiber(*in_pNextCoroutine);
 }
