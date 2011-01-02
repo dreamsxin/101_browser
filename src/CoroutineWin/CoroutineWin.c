@@ -1,4 +1,4 @@
-#include "CoroutineWin/CoroutineWin.h"
+#include "Coroutine/Coroutine.h"
 
 CoroutineDescriptor createCoroutine(size_t in_stackSize,  void (__stdcall * in_pFiberFunc)(void*), void* in_pParam)
 {
