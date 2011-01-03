@@ -8,8 +8,8 @@ size_t binarySearch(const void* in_pToFind, const void* in_pFirst, size_t in_cou
 	size_t  lastIndex;
 	IntermediateCompareResult result;
 	
-	if (in_count == 0)
-		return -1;
+	if (in_count == 0u)
+		return (size_t) -1;
 
 	firstIndex = 0;
 	lastIndex = in_count-1;
