@@ -8,20 +8,21 @@ bool createCoroutine(size_t in_stackSize,
 	void* in_pParam, 
 	CoroutineDescriptor *out_pCoroutineDescriptor)
 {
-	CoroutineDescriptor out_descriptor;
+	CoroutineDescriptor lCoroutineDescriptor;
 
 	// Could be changed in future - only for now
-	out_descriptor.uc_link = NULL;
-	out_descriptor.uc_stack.ss_sp = malloc(in_stackSize);
-	if (NULL == out_descriptor.uc_stack.ss_sp)
+	lCoroutineDescriptor.uc_link = NULL;
+	lCoroutineDescriptor.uc_stack.ss_sp = malloc(in_stackSize);
+	if (NULL == lCoroutineDescriptor.uc_stack.ss_sp)
 		return false;
-	out_descriptor.uc_stack.ss_size = in_stackSize;
+	lCoroutineDescriptor.uc_stack.ss_size = in_stackSize;
 
-	getcontext(&out_descriptor);
+	getcontext(&lCoroutineDescriptor);
 	// TODO Fix 64 bit portability issue in the following line
-	makecontext(&out_descriptor, in_pFiberFunc, 1, in_pParam);
+	makecontext(&lCoroutineDescriptor, in_pFiberFunc, 1, in_pParam);
 
-	return out_descriptor;
+	*out_pCoroutineDescriptor = lCoroutineDescriptor;
+	return true;
 }
 
 void switchToCoroutine(volatile CoroutineDescriptor * in_pCurrentCoroutine, volatile CoroutineDescriptor *in_pNextCoroutine)
