@@ -10,8 +10,6 @@
  */
 inline unsigned short floorLog2(unsigned short value)
 {
-	unsigned short out_value = 16;
-
 	for (signed char i=15; i>=0; i--)
 	{
 		if (value & (1u<<i))
