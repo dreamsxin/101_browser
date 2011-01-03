@@ -43,7 +43,7 @@ to the new version. At least for beginners VS 2010 should be the better choice.
 
 h4. 2.2.2 Linux
 
-g++, scons, XLib
+gcc, g++, scons, XLib
 
 h2. 3. Building
 
