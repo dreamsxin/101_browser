@@ -134,10 +134,6 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				if (window->rawMice.data()[currentMouseIndex].deviceHandle == 
 					pRawInput->header.hDevice)
 				{
-					fprintf(logFile, "(%i, %i)\n", 
-						pRawInput->data.mouse.lLastX, pRawInput->data.mouse.lLastY);
-					fflush(logFile);
-
 					if (pRawInput->data.mouse.lLastX < 0 && 
 						((ULONG) -pRawInput->data.mouse.lLastX) > window->rawMice.data()[currentMouseIndex].x)
 						window->rawMice.data()[currentMouseIndex].x = 0;

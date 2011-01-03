@@ -57,10 +57,10 @@ namespace Gui
 
 					// We want to ignore RDP mice
 					{
-						TCHAR rdpMouseName[] = _T("\\??\\Root#RDP_MOU#0000#");
+						TCHAR rdpMouseName[] = _T("\\\\?\\Root#RDP_MOU#0000#");
 						size_t rdpMouseNameStrlen = _tcslen(rdpMouseName);
 
-						if ((_tcslen(psName) >= rdpMouseNameStrlen) && 
+						if (_tcslen(psName) >= rdpMouseNameStrlen && 
 							_tcsncmp(rdpMouseName, psName, rdpMouseNameStrlen) == 0)
 						{
 							safe_free(&psName);
