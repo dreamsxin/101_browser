@@ -13,6 +13,8 @@
  * 2.2. Data format
  * of RFC 1950
  */
+#pragma warning(push)
+#pragma warning(disable : 4214)
 typedef struct
 {
 	struct {
@@ -25,9 +27,8 @@ typedef struct
 		uint8_t FLEVEL : 2;
 	} FLG;
 } ZlibStreamHeader;
+#pragma warning(pop)
 
 #pragma pack(pop)
-
-
 
 #endif
