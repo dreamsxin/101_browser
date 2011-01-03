@@ -50,6 +50,7 @@ void test_Coroutine()
 {
 	volatile unsigned int buffer[16];
 	unsigned int index;
+	bool result;
 	PassedData passedData;
 	CoroutineDescriptor currentDescriptor, func1Descriptor, func2Descriptor;
 
@@ -64,16 +65,12 @@ void test_Coroutine()
 #endif
 	passedData.pCurrentDescriptor = &currentDescriptor;
 
-	func1Descriptor = createCoroutine(4096, &func1, &passedData);
-#ifdef _WIN32
-	test(func1Descriptor != NULL);
-#endif
+	result = createCoroutine(4096, &func1, &passedData, &func1Descriptor);
+	test(result);
 	passedData.pFunc1Descriptor = &func1Descriptor;
 
-	func2Descriptor = createCoroutine(4096, &func2, &passedData);
-#ifdef _WIN32
-	test(func2Descriptor != NULL);
-#endif
+	result = createCoroutine(4096, &func2, &passedData, &func2Descriptor);
+	test(result);
 	passedData.pFunc2Descriptor = &func2Descriptor;
 
 	passedData.pBuffer = buffer;

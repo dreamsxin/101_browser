@@ -2,14 +2,19 @@
 #include "MiniStdlib/safe_free.h"
 #include <stdlib.h>
 
-CoroutineDescriptor createCoroutine(size_t in_stackSize,  void (*in_pFiberFunc)(void*), void* in_pParam)
+
+bool createCoroutine(size_t in_stackSize, 
+	void (*in_pFiberFunc)(void*), 
+	void* in_pParam, 
+	CoroutineDescriptor *out_pCoroutineDescriptor)
 {
 	CoroutineDescriptor out_descriptor;
 
 	// Could be changed in future - only for now
 	out_descriptor.uc_link = NULL;
 	out_descriptor.uc_stack.ss_sp = malloc(in_stackSize);
-	// TODO test for NULL
+	if (NULL == out_descriptor.uc_stack.ss_sp)
+		return false;
 	out_descriptor.uc_stack.ss_size = in_stackSize;
 
 	getcontext(&out_descriptor);
@@ -41,5 +46,3 @@ void deleteCoroutine(volatile CoroutineDescriptor *in_pCoroutine)
 {
 	safe_free(&in_pCoroutine->uc_stack.ss_sp);
 }
-
-

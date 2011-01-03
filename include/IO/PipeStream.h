@@ -13,8 +13,8 @@ typedef struct
 	uint8_t *mNextBuffer;
 	size_t mCurrentBufferSize;
 	size_t mNextBufferSize;
-	CoroutineDescriptor *mpWriterDescriptor;
-	CoroutineDescriptor *mpReaderDescriptor;
+	CoroutineDescriptor mWriterDescriptor;
+	CoroutineDescriptor mReaderDescriptor;
 } PipeStreamState;
 
 void initPipeStreamState(PipeStreamState *in_pPipeStreamState);

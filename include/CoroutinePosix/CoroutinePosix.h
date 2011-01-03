@@ -12,9 +12,14 @@ const size_t cCoroutineDefaultStackSize = SIGSTKSZ;
 
 typedef ucontext_t CoroutineDescriptor;
 
-CoroutineDescriptor createCoroutine(size_t in_stackSize,  void (*in_pFiberFunc)(void*), void* in_pParam);
+bool createCoroutine(size_t in_stackSize, 
+	void (*in_pFiberFunc)(void*), 
+	void* in_pParam, 
+	CoroutineDescriptor *out_pCoroutineDescriptor);
 
-void switchToCoroutine(volatile CoroutineDescriptor * in_pCurrentCoroutine, volatile CoroutineDescriptor *in_pNextCoroutine);
+void switchToCoroutine(
+	volatile CoroutineDescriptor * in_pCurrentCoroutine, 
+	volatile CoroutineDescriptor *in_pNextCoroutine);
 
 CoroutineDescriptor convertThreadToCoroutine();
 

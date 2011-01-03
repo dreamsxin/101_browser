@@ -9,9 +9,14 @@ extern "C" {
 
 typedef LPVOID CoroutineDescriptor;
 
-__declspec(dllexport) CoroutineDescriptor createCoroutine(size_t in_stackSize,  void (__stdcall * in_pFiberFunc)(void*), void* in_pParam);
+__declspec(dllexport) bool createCoroutine(
+	size_t in_stackSize,  
+	void (__stdcall * in_pFiberFunc)(void*), 
+	void* in_pParam, 
+	volatile CoroutineDescriptor *out_pCoroutineDescriptor);
 
-__declspec(dllexport) void switchToCoroutine(volatile CoroutineDescriptor * in_pCurrentCoroutine, 
+__declspec(dllexport) void switchToCoroutine(
+	volatile CoroutineDescriptor * in_pCurrentCoroutine, 
 	volatile CoroutineDescriptor *in_pNextCoroutine);
 
 /*!

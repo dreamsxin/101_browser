@@ -1,12 +1,25 @@
 #include "Coroutine/Coroutine.h"
 #include <assert.h>
 
-CoroutineDescriptor createCoroutine(size_t in_stackSize,  void (__stdcall * in_pFiberFunc)(void*), void* in_pParam)
+bool createCoroutine(
+	size_t in_stackSize,  
+	void (__stdcall * in_pFiberFunc)(void*), 
+	void* in_pParam, 
+	volatile CoroutineDescriptor *out_pCoroutineDescriptor)
 {
-	return CreateFiber(in_stackSize, in_pFiberFunc, in_pParam);
+	CoroutineDescriptor lCoroutineDescriptor = 
+		CreateFiber(in_stackSize, in_pFiberFunc, in_pParam);
+	if (lCoroutineDescriptor != NULL)
+	{
+		*out_pCoroutineDescriptor = lCoroutineDescriptor;
+		return true;
+	}
+	else
+		return false;
 }
 
-void switchToCoroutine(volatile CoroutineDescriptor * in_pCurrentCoroutine, 
+void switchToCoroutine(
+	volatile CoroutineDescriptor * in_pCurrentCoroutine, 
 	volatile CoroutineDescriptor *in_pNextCoroutine)
 {
 	if (in_pNextCoroutine != NULL)
