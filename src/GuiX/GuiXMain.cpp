@@ -311,10 +311,10 @@ int main(int argc, char** argv)
 	initDisplay(&ozodisplay, NULL);
 
 	OZO_Window ozowindow;
-	memset(&ozowindow, sizeof(ozowindow), NULL);
+	memset(&ozowindow, 0, sizeof(ozowindow));
 
 	OZO_Atoms ozoatoms;
-	memset(&ozoatoms, sizeof(ozoatoms), NULL);
+	memset(&ozoatoms, 0, sizeof(ozoatoms));
 
 	int width = 640;
 	int height = 480;
