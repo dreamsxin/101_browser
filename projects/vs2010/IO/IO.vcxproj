@@ -45,6 +45,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)out\vs2010\$(Configuration)\</OutDir>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -98,6 +99,9 @@
     <ClCompile Include="..\..\..\src\IO\PipeStream.c" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CoroutineWin\CoroutineWin.vcxproj">
+      <Project>{a6ea98fe-d4ca-4d80-a963-d84a3233651d}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\MiniStdlib\MiniStdlib.vcxproj">
       <Project>{6c7c9fbb-39b4-42cc-a000-c0ff2f61388e}</Project>
     </ProjectReference>

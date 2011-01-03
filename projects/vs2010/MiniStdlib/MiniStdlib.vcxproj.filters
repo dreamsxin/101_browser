@@ -27,6 +27,9 @@
     <ClInclude Include="..\..\..\include\MiniStdlib\MTAx_cstdlib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\MiniStdlib\cstddef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\MiniStdlib\MTAx_cstdio.c">

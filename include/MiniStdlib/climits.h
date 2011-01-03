@@ -1,4 +1,5 @@
-#ifndef _OZO_climits_h
+#ifndef _MTAx_MiniStdlib_climits_h
+#define _MTAx_MiniStdlib_climits_h
 
 #ifdef __cplusplus
 #include <climits>
@@ -7,7 +8,7 @@
 #endif
 
 /*
- * g++ does not define this - so we define it
+ * gcc/g++ does not define this - so we define it
  */
 #ifndef SIZE_MAX
 #define SIZE_MAX ((size_t)(-1)) 

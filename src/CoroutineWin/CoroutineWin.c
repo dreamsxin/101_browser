@@ -1,4 +1,5 @@
 #include "Coroutine/Coroutine.h"
+#include <assert.h>
 
 CoroutineDescriptor createCoroutine(size_t in_stackSize,  void (__stdcall * in_pFiberFunc)(void*), void* in_pParam)
 {
@@ -8,7 +9,13 @@ CoroutineDescriptor createCoroutine(size_t in_stackSize,  void (__stdcall * in_p
 void switchToCoroutine(volatile CoroutineDescriptor * in_pCurrentCoroutine, 
 	volatile CoroutineDescriptor *in_pNextCoroutine)
 {
-	SwitchToFiber(*in_pNextCoroutine);
+	if (in_pNextCoroutine != NULL)
+	{
+		// Under Windows this is no problem - but it will cause problems under Linux
+		assert(getCurrentCoroutine() == *in_pCurrentCoroutine);
+
+		SwitchToFiber(*in_pNextCoroutine);
+	}
 }
 
 CoroutineDescriptor getCurrentCoroutine()
@@ -52,4 +59,3 @@ void deleteCoroutine(volatile CoroutineDescriptor *in_pCoroutine)
 	DeleteFiber(*in_pCoroutine);
 	*in_pCoroutine = NULL;
 }
-

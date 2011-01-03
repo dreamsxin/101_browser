@@ -9,12 +9,7 @@
 
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstdbool.h"
- // for size_t
-#ifdef __cplusplus
-#include <cstddef>
-#else
-#include <stddef.h>
-#endif
+#include "MiniStdlib/cstddef.h"
 
 #ifdef __cplusplus
 extern "C" {
