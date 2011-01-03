@@ -18,8 +18,8 @@ bool createCoroutine(size_t in_stackSize,
 	volatile CoroutineDescriptor *out_pCoroutineDescriptor);
 
 void switchToCoroutine(
-	volatile CoroutineDescriptor * in_pCurrentCoroutine, 
-	volatile CoroutineDescriptor *in_pNextCoroutine);
+	CoroutineDescriptor * in_pCurrentCoroutine, 
+	CoroutineDescriptor *in_pNextCoroutine);
 
 bool convertThreadToCoroutine(
 	CoroutineDescriptor *out_pCoroutineDescriptor);
@@ -36,7 +36,7 @@ bool convertCoroutineToThread();
  * 
  * You have been warned.
  */
-void deleteCoroutine(volatile CoroutineDescriptor *in_pCoroutine);
+void deleteCoroutine(CoroutineDescriptor *in_pCoroutine);
 
 #ifdef __cplusplus
 }

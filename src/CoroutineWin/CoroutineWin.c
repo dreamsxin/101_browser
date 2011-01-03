@@ -19,8 +19,8 @@ bool createCoroutine(
 }
 
 void switchToCoroutine(
-	volatile CoroutineDescriptor * in_pCurrentCoroutine, 
-	volatile CoroutineDescriptor *in_pNextCoroutine)
+	CoroutineDescriptor * in_pCurrentCoroutine, 
+	CoroutineDescriptor *in_pNextCoroutine)
 {
 	if (in_pNextCoroutine != NULL)
 	{
@@ -88,7 +88,7 @@ bool convertCoroutineToThread()
 		return true;
 }
 
-void deleteCoroutine(volatile CoroutineDescriptor *in_pCoroutine)
+void deleteCoroutine(CoroutineDescriptor *in_pCoroutine)
 {
 	DeleteFiber(*in_pCoroutine);
 	*in_pCoroutine = NULL;

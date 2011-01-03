@@ -6,7 +6,7 @@
 bool createCoroutine(size_t in_stackSize, 
 	void (*in_pFiberFunc)(void*), 
 	void* in_pParam, 
-	CoroutineDescriptor *out_pCoroutineDescriptor)
+	volatile CoroutineDescriptor *out_pCoroutineDescriptor)
 {
 	CoroutineDescriptor lCoroutineDescriptor;
 
@@ -19,13 +19,13 @@ bool createCoroutine(size_t in_stackSize,
 
 	getcontext(&lCoroutineDescriptor);
 	// TODO Fix 64 bit portability issue in the following line
-	makecontext(&lCoroutineDescriptor, in_pFiberFunc, 1, in_pParam);
+	makecontext(&lCoroutineDescriptor, (void (*)(void)) in_pFiberFunc, 1, in_pParam);
 
 	*out_pCoroutineDescriptor = lCoroutineDescriptor;
 	return true;
 }
 
-void switchToCoroutine(volatile CoroutineDescriptor * in_pCurrentCoroutine, volatile CoroutineDescriptor *in_pNextCoroutine)
+void switchToCoroutine(CoroutineDescriptor * in_pCurrentCoroutine, CoroutineDescriptor *in_pNextCoroutine)
 {
 	swapcontext(in_pCurrentCoroutine, in_pNextCoroutine);
 }
@@ -47,7 +47,7 @@ bool convertCoroutineToThread()
 	return true;
 }
 
-void deleteCoroutine(volatile CoroutineDescriptor *in_pCoroutine)
+void deleteCoroutine(CoroutineDescriptor *in_pCoroutine)
 {
 	safe_free(&in_pCoroutine->uc_stack.ss_sp);
 }
