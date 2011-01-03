@@ -59,7 +59,7 @@ void test_Coroutine()
 		buffer[index] = 0xDEADBEAF;
 	}
 
-	currentDescriptor = convertThreadToCoroutine();
+	result = convertThreadToCoroutine(&currentDescriptor);
 #ifdef _WIN32
 	test(currentDescriptor != NULL);
 #endif

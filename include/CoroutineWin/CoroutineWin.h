@@ -24,7 +24,8 @@ __declspec(dllexport) void switchToCoroutine(
  * true - sucess
  * false - failure
  */
-__declspec(dllexport) CoroutineDescriptor convertThreadToCoroutine();
+__declspec(dllexport) bool convertThreadToCoroutine(
+	CoroutineDescriptor *out_pCoroutineDescriptor);
 
 __declspec(dllexport) bool convertCoroutineToThread();
 

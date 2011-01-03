@@ -15,13 +15,14 @@ typedef ucontext_t CoroutineDescriptor;
 bool createCoroutine(size_t in_stackSize, 
 	void (*in_pFiberFunc)(void*), 
 	void* in_pParam, 
-	CoroutineDescriptor *out_pCoroutineDescriptor);
+	volatile CoroutineDescriptor *out_pCoroutineDescriptor);
 
 void switchToCoroutine(
 	volatile CoroutineDescriptor * in_pCurrentCoroutine, 
 	volatile CoroutineDescriptor *in_pNextCoroutine);
 
-CoroutineDescriptor convertThreadToCoroutine();
+bool convertThreadToCoroutine(
+	CoroutineDescriptor *out_pCoroutineDescriptor);
 
 /*!
  * Return value:

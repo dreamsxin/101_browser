@@ -39,15 +39,36 @@ CoroutineDescriptor getCurrentCoroutine()
 		return NULL;
 }
 
-CoroutineDescriptor convertThreadToCoroutine()
+bool convertThreadToCoroutine(
+	CoroutineDescriptor *out_pCoroutineDescriptor)
 {
 	CoroutineDescriptor lCoroutineDescriptor = getCurrentCoroutine();
 
-	if (!lCoroutineDescriptor)
-		// we pass no data since this is not necessary
-		return ConvertThreadToFiber(NULL);
+	if (NULL == lCoroutineDescriptor)
+	{
+		/*
+		 * According to
+		 * http://msdn.microsoft.com/en-us/library/ms682115(VS.85).aspx
+		 * "If the function succeeds, the return value is the address of the fiber.
+		 * 
+		 * If the function fails, the return value is NULL. 
+		 * To get extended error information, call GetLastError."
+		 */
+		lCoroutineDescriptor = ConvertThreadToFiber(NULL);
+		
+		if (NULL == lCoroutineDescriptor)
+			return false;
+		else
+		{
+			*out_pCoroutineDescriptor = lCoroutineDescriptor;
+			return true;
+		}
+	}
 	else
-		return lCoroutineDescriptor;
+	{
+		*out_pCoroutineDescriptor = lCoroutineDescriptor;
+		return true;
+	}
 }
 
 bool convertCoroutineToThread()

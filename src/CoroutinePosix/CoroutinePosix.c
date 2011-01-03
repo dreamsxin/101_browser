@@ -30,12 +30,16 @@ void switchToCoroutine(volatile CoroutineDescriptor * in_pCurrentCoroutine, vola
 	swapcontext(in_pCurrentCoroutine, in_pNextCoroutine);
 }
 
-CoroutineDescriptor convertThreadToCoroutine()
+bool convertThreadToCoroutine(
+	CoroutineDescriptor *out_pCoroutineDescriptor)
 {
-	CoroutineDescriptor out_coroutineDescriptor;
-	// TODO Check error code
-	getcontext(&out_coroutineDescriptor);
-	return out_coroutineDescriptor;
+	/*
+	 * According to
+	 * http://pubs.opengroup.org/onlinepubs/007908799/xsh/getcontext.html
+	 * "On successful completion, setcontext() does not return and getcontext() 
+	 * returns 0. Otherwise, a value of -1 is returned."
+	 */
+	return getcontext(out_pCoroutineDescriptor) == 0;
 }
 
 bool convertCoroutineToThread()
