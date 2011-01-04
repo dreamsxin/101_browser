@@ -18,6 +18,7 @@ bool compareTokensASCIICaseInsensitive(UnicodeCodePoint p1, UnicodeCodePoint p2)
 	return p1 == p2;
 }
 
+// TODO Warning: this function behaves incorrectly at the moment, if IterateResultOverBoundary is returned
 bool universalCompare(SingleIterator in_it, void* in_iteratorState0, void* in_iteratorState1, bool (*in_cmpFunc)(UnicodeCodePoint, UnicodeCodePoint))
 {
 	while (1)
@@ -98,6 +99,7 @@ void convertStringToASCIIUppercase(char* in_string)
 	universalConvertString(in_string, &tokenToASCIIUppercase);
 }
 
+// TODO Warning: this function behaves incorrectly at the moment, if IterateResultOverBoundary is returned
 bool prefixMatch(SingleIterator in_it, void* in_patternState, void* in_stringState)
 {
 	while (true)
