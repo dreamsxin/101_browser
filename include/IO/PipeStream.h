@@ -9,10 +9,11 @@
 
 typedef struct
 {
-	uint8_t *mCurrentBuffer;
-	uint8_t *mNextBuffer;
-	size_t mCurrentBufferSize;
-	size_t mNextBufferSize;
+	uint8_t *mpCurrentBuffer;
+	uint8_t *mpNextBuffer;
+	volatile size_t mCurrentBufferSize;
+	volatile size_t mNextBufferSize;
+	CoroutineDescriptor *mpMainDescriptor;
 	CoroutineDescriptor mWriterDescriptor;
 	CoroutineDescriptor mReaderDescriptor;
 } PipeStreamState;
