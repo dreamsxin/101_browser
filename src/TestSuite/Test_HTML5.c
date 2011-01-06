@@ -84,7 +84,7 @@ void test2_3()
 	 * A test case whether compareStringsCaseSensitive correctly
 	 * handles cyclic iterators
 	 */
-#if 0
+#if 1
 	cs0 = asciiStringUnicodeCyclicIteratorState_create(a);
 	cs1 = asciiStringUnicodeCyclicIteratorState_create(a);
 	test(compareStringsCaseSensitive(itc, &cs0, &cs1));

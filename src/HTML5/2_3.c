@@ -18,7 +18,6 @@ bool compareTokensASCIICaseInsensitive(UnicodeCodePoint p1, UnicodeCodePoint p2)
 	return p1 == p2;
 }
 
-// TODO Warning: this function behaves incorrectly at the moment, if IterateResultOverBoundary is returned
 bool universalCompare(SingleIterator in_it, void* in_iteratorState0, void* in_iteratorState1, bool (*in_cmpFunc)(UnicodeCodePoint, UnicodeCodePoint))
 {
 	while (1)
@@ -46,8 +45,17 @@ bool universalCompare(SingleIterator in_it, void* in_iteratorState0, void* in_it
 				return false;
 			else
 			{
-				(*in_it.mpfIterate)(in_iteratorState0);
-				(*in_it.mpfIterate)(in_iteratorState1);
+				IterateResult ir0 = (*in_it.mpfIterate)(in_iteratorState0);
+				IterateResult ir1 = (*in_it.mpfIterate)(in_iteratorState1);
+
+				if (ir0 == IterateResultOK && ir1 != IterateResultOK)
+					return false;
+				else if (ir0 != IterateResultOK && ir1 == IterateResultOK)
+					return false;
+				else if (ir0 != IterateResultOK && ir1 != IterateResultOK)
+					return true;
+				else
+					continue;
 			}
 		}
 	}
