@@ -77,7 +77,7 @@ SingleIterator asciiStringUnicodeCyclicIterator_create()
 	return out_si;
 }
 
-ASCIIStringUnicodeCyclicIteratorState asciiStringUnicodeCircularIteratorState_create(char* string)
+ASCIIStringUnicodeCyclicIteratorState asciiStringUnicodeCyclicIteratorState_create(char* string)
 {
 	ASCIIStringUnicodeCyclicIteratorState out_state;
 	// INV:ASCIIStringUnicodeCyclicIterator_c:68; follows from PRE:ASCIIStringUnicodeCyclicIterator_h_38

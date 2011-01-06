@@ -6,6 +6,7 @@
 #include "HTML5/2_4_4_1.h"
 #include "HTML5/2_4_5.h"
 #include "HTML5/ASCIIStringUnicodeIterator.h"
+#include "HTML5/ASCIIStringUnicodeCyclicIterator.h"
 #include "MiniStdlib/MTAx_cstdio.h"
 #include "BigNumber/BigInteger.h"
 
@@ -21,9 +22,13 @@ void test2_3()
 	char AbC1231[]   = "AbC123";
 
 	SingleIterator it = asciiStringUnicodeIterator_create();
+	SingleIterator itc = asciiStringUnicodeCyclicIterator_create();
 
 	ASCIIStringUnicodeIteratorState s0;
 	ASCIIStringUnicodeIteratorState s1;
+
+	ASCIIStringUnicodeCyclicIteratorState cs0;
+	ASCIIStringUnicodeCyclicIteratorState cs1;
 
 	s0 = asciiStringUnicodeIteratorState_create(empty0);
 	s1 = asciiStringUnicodeIteratorState_create(empty1);
@@ -74,6 +79,16 @@ void test2_3()
 	s0 = asciiStringUnicodeIteratorState_create(AbC1231);
 	s1 = asciiStringUnicodeIteratorState_create("ABC123");
 	test(compareStringsCaseSensitive(it, &s0, &s1));
+	
+	/*
+	 * A test case whether compareStringsCaseSensitive correctly
+	 * handles cyclic iterators
+	 */
+#if 0
+	cs0 = asciiStringUnicodeCyclicIteratorState_create(a);
+	cs1 = asciiStringUnicodeCyclicIteratorState_create(a);
+	test(compareStringsCaseSensitive(itc, &cs0, &cs1));
+#endif
 }
 
 void test2_4_1()
