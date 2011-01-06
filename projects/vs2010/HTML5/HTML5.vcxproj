@@ -90,6 +90,7 @@
     <ClCompile Include="..\..\..\src\HTML5\2_4_1_cpp.cpp" />
     <ClCompile Include="..\..\..\src\HTML5\2_4_4_1.c" />
     <ClCompile Include="..\..\..\src\HTML5\2_4_5.c" />
+    <ClCompile Include="..\..\..\src\HTML5\ASCIIStringUnicodeCircularIterator.c" />
     <ClCompile Include="..\..\..\src\HTML5\ASCIIStringUnicodeIterator.c" />
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +98,7 @@
     <ClInclude Include="..\..\..\include\HTML5\2_4_1.h" />
     <ClInclude Include="..\..\..\include\HTML5\2_4_4_1.h" />
     <ClInclude Include="..\..\..\include\HTML5\2_4_5.h" />
+    <ClInclude Include="..\..\..\include\HTML5\ASCIIStringUnicodeCircularIterator.h" />
     <ClInclude Include="..\..\..\include\HTML5\ASCIIStringUnicodeIterator.h" />
   </ItemGroup>
   <ItemGroup>

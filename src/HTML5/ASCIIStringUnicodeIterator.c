@@ -56,6 +56,10 @@ SingleIterator asciiStringUnicodeIterator_create()
 ASCIIStringUnicodeIteratorState asciiStringUnicodeIteratorState_create(char* string)
 {
 	ASCIIStringUnicodeIteratorState out_state;
+	// INV:AsciiStringUnicodeCyclicIterator:59
+	assert(string != NULL);
+	// INV:AsciiStringUnicodeCyclicIterator:61
+	assert(*string != 0);
 	out_state.characterPointer = string;
 	out_state.codePoint = 0; /* Setting it deliberately to an invalid value */
 	return out_state;

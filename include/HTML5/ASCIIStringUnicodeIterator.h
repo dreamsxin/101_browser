@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-typedef struct _ASCIIStringUnicodeIteratorState
+typedef struct
 {
 	char* characterPointer;
 	UnicodeCodePoint codePoint;
