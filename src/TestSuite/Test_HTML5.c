@@ -81,14 +81,20 @@ void test2_3()
 	test(compareStringsCaseSensitive(it, &s0, &s1));
 	
 	/*
-	 * A test case whether compareStringsCaseSensitive correctly
-	 * handles cyclic iterators
+	 * Test cases whether the functions correctly
+	 * handle cyclic iterators
 	 */
-#if 1
 	cs0 = asciiStringUnicodeCyclicIteratorState_create(a);
 	cs1 = asciiStringUnicodeCyclicIteratorState_create(a);
 	test(compareStringsCaseSensitive(itc, &cs0, &cs1));
-#endif
+
+	cs0 = asciiStringUnicodeCyclicIteratorState_create(a);
+	cs1 = asciiStringUnicodeCyclicIteratorState_create(a);
+	test(compareStringsASCIICaseInsensitive(itc, &cs0, &cs1));
+
+	cs0 = asciiStringUnicodeCyclicIteratorState_create(a);
+	cs1 = asciiStringUnicodeCyclicIteratorState_create(a);
+	test(prefixMatch(itc, &cs0, &cs1));
 }
 
 void test2_4_1()

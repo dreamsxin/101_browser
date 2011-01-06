@@ -54,8 +54,6 @@ bool universalCompare(SingleIterator in_it, void* in_iteratorState0, void* in_it
 					return false;
 				else if (ir0 != IterateResultOK && ir1 != IterateResultOK)
 					return true;
-				else
-					continue;
 			}
 		}
 	}
@@ -107,13 +105,14 @@ void convertStringToASCIIUppercase(char* in_string)
 	universalConvertString(in_string, &tokenToASCIIUppercase);
 }
 
-// TODO Warning: this function behaves incorrectly at the moment, if IterateResultOverBoundary is returned
 bool prefixMatch(SingleIterator in_it, void* in_patternState, void* in_stringState)
 {
 	while (true)
 	{
 		UnicodeCodePoint* pPatternPoint = (UnicodeCodePoint*) (*in_it.mpfGet)(in_patternState);
 		UnicodeCodePoint* pStringPoint = (UnicodeCodePoint*) (*in_it.mpfGet)(in_stringState);
+		IterateResult irPattern;
+		IterateResult irString;
 
 		if (pPatternPoint == NULL)
 			return true;
@@ -128,7 +127,12 @@ bool prefixMatch(SingleIterator in_it, void* in_patternState, void* in_stringSta
 		if (*pPatternPoint != *pStringPoint)
 			return false;
 
-		(*in_it.mpfIterate)(in_patternState);
-		(*in_it.mpfIterate)(in_stringState);
+		irPattern = (*in_it.mpfIterate)(in_patternState);
+		irString = (*in_it.mpfIterate)(in_stringState);
+
+		if (IterateResultOK == irPattern && IterateResultOK != irString)
+			return false;
+		else if (IterateResultOK != irPattern)
+			return true;
 	}
 }
