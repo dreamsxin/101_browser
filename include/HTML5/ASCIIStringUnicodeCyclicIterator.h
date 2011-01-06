@@ -38,9 +38,9 @@ SingleIterator asciiStringUnicodeCyclicIterator_create();
  * PRE:ASCIIStringUnicodeCyclicIterator_h_38: string != NULL
  * PRE:ASCIIStringUnicodeCyclicIterator_h_39: *string != 0
  * 
- * POST:ASCIIStringUnicodeCyclicIterator_h_41: the result obeys INV:ASCIIStringUnicodeCyclicIterator_h_23,
- * POST:ASCIIStringUnicodeCyclicIterator_h_42: the result obeys INV:ASCIIStringUnicodeCyclicIterator_h_24,
- * POST:ASCIIStringUnicodeCyclicIterator_h_43: the result obeys INV:ASCIIStringUnicodeCyclicIterator_h_26,
+ * POST:ASCIIStringUnicodeCyclicIterator_h_41: the result obeys INV:ASCIIStringUnicodeCyclicIterator_h_23
+ * POST:ASCIIStringUnicodeCyclicIterator_h_42: the result obeys INV:ASCIIStringUnicodeCyclicIterator_h_24
+ * POST:ASCIIStringUnicodeCyclicIterator_h_43: the result obeys INV:ASCIIStringUnicodeCyclicIterator_h_26
  * POST:ASCIIStringUnicodeCyclicIterator_h_44: the result obeys INV:ASCIIStringUnicodeCyclicIterator_h_27
  */
 #ifdef _WIN32

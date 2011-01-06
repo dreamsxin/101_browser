@@ -56,11 +56,19 @@ SingleIterator asciiStringUnicodeIterator_create()
 ASCIIStringUnicodeIteratorState asciiStringUnicodeIteratorState_create(char* string)
 {
 	ASCIIStringUnicodeIteratorState out_state;
-	// INV:AsciiStringUnicodeCyclicIterator:59
+	// INV:ASCIIStringUnicodeIterator_c_59; follows from PRE:ASCIIStringUnicodeIterator_h_23
 	assert(string != NULL);
-	// INV:AsciiStringUnicodeCyclicIterator:61
+	// INV:ASCIIStringUnicodeIterator_c_61; follows from PRE:ASCIIStringUnicodeIterator_h_24
 	assert(*string != 0);
+	// ASGN:ASCIIStringUnicodeIterator_c_63
 	out_state.characterPointer = string;
 	out_state.codePoint = 0; /* Setting it deliberately to an invalid value */
+	/*
+	 * From INV:ASCIIStringUnicodeIterator_c_59 and
+	 * INV:ASCIIStringUnicodeIterator_c_61
+	 * we get
+	 * POST:ASCIIStringUnicodeCyclicIterator_h_28 and
+	 * POST:ASCIIStringUnicodeCyclicIterator_h_29
+	 */
 	return out_state;
 }

@@ -33,7 +33,7 @@
     <ClCompile Include="..\..\..\src\HTML5\ASCIIStringUnicodeIterator.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\HTML5\ASCIIStringUnicodeCircularIterator.c">
+    <ClCompile Include="..\..\..\src\HTML5\ASCIIStringUnicodeCyclicIterator.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,7 +53,7 @@
     <ClInclude Include="..\..\..\include\HTML5\ASCIIStringUnicodeIterator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\HTML5\ASCIIStringUnicodeCircularIterator.h">
+    <ClInclude Include="..\..\..\include\HTML5\ASCIIStringUnicodeCyclicIterator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
