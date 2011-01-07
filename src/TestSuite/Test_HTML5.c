@@ -2,9 +2,9 @@
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
 #include "HTML5/2_3.h"
-#include "HTML5/2_4_1.h"
-#include "HTML5/2_4_4_1.h"
-#include "HTML5/2_4_5.h"
+#include "HTML5/2_5_1.h"
+#include "HTML5/2_5_4_1.h"
+#include "HTML5/2_5_5.h"
 #include "HTML5/ASCIIStringUnicodeIterator.h"
 #include "HTML5/ASCIIStringUnicodeCyclicIterator.h"
 #include "MiniStdlib/MTAx_cstdio.h"
@@ -97,7 +97,7 @@ void test2_3()
 	test(prefixMatch(itc, &cs0, &cs1));
 }
 
-void test2_4_1()
+void test2_5_1()
 {
 	{
 		test(!isSpaceCharacter(0x8));
@@ -364,7 +364,7 @@ void test2_4_1()
 	}
 }
 
-void test2_4_4_1()
+void test2_5_4_1()
 {
 	char emptyFail[]         = "";
 	char tabsFail[]          = "\t\t\t";
@@ -442,7 +442,7 @@ void test2_4_4_1()
 	freeUnsignedBigInteger(&number);
 }
 
-void test2_4_5()
+void test2_5_5()
 {
 	UnsignedBigInteger year;
 
@@ -487,9 +487,9 @@ void testHTML5()
 	wprintf(L"Testing 2.3\n");
 	test2_3();
 	wprintf(L"Testing 2.4.1\n");
-	test2_4_1();
+	test2_5_1();
 	wprintf(L"Testing 2.4.4.1\n");
-	test2_4_4_1();
+	test2_5_4_1();
 	wprintf(L"Testing 2.4.5\n");
-	test2_4_5();
+	test2_5_5();
 }

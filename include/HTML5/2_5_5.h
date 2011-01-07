@@ -1,5 +1,11 @@
-#ifndef _2_4_5_h
-#define _2_4_5_h
+#ifndef _2_5_5_h
+#define _2_5_5_h
+
+/*
+ * 2.5.5 Dates and times
+ * (previously 2.4.5 Dates and times
+ * Draft Standard - 4th of August 2010)
+ */
 
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstdbool.h"
@@ -9,10 +15,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/* 2.4.5 Dates and times
- * Draft Standard - 4th of August 2010
- */
 
 /*
  * For 1 <= month <= 12 this function returns the number of days in the month
