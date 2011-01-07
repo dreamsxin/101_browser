@@ -541,7 +541,7 @@ module html5
              attribute DOMString label;
              attribute boolean default;
   
-    readonly attribute TimedTrack track;
+    readonly attribute TextTrack track;
   };
 
   interface HTMLMediaElement : HTMLElement {
@@ -592,9 +592,9 @@ module html5
              attribute double volume;
              attribute boolean muted;
   
-    // timed tracks
-    readonly attribute TimedTrack[] tracks;
-    MutableTimedTrack addTrack(in DOMString kind, in optional DOMString label, in optional DOMString language);
+    // text tracks
+    readonly attribute TextTrack[] tracks;
+    MutableTextTrack addTrack(in DOMString kind, in optional DOMString label, in optional DOMString language);
   
   };
 
@@ -606,7 +606,7 @@ module html5
     readonly attribute unsigned short code;
   };
 
-  interface TimedTrack {
+  interface TextTrack {
     readonly attribute DOMString kind;
     readonly attribute DOMString label;
     readonly attribute DOMString language;
@@ -624,28 +624,28 @@ module html5
     const unsigned short SHOWING = 2;
              attribute unsigned short mode;
   
-    readonly attribute TimedTrackCueList cues;
-    readonly attribute TimedTrackCueList activeCues;
+    readonly attribute TextTrackCueList cues;
+    readonly attribute TextTrackCueList activeCues;
   
     readonly attribute Function oncuechange;
   };
 
-  interface MutableTimedTrack : TimedTrack {
-   void addCue(in TimedTrackCue cue);
-   void removeCue(in TimedTrackCue cue);
+  interface MutableTextTrack : TextTrack {
+   void addCue(in TextTrackCue cue);
+   void removeCue(in TextTrackCue cue);
   };
 
-  interface TimedTrackCueList {
+  interface TextTrackCueList {
     readonly attribute unsigned long length;
-    getter TimedTrackCue (in unsigned long index);
-    TimedTrackCue getCueById(in DOMString id);
+    getter TextTrackCue (in unsigned long index);
+    TextTrackCue getCueById(in DOMString id);
   };
 
   
   [Constructor(in DOMString id, in double startTime, in double endTime, in DOMString text, in optional DOMString settings, in optional boolean pauseOnExit)]
   
-  interface TimedTrackCue {
-    readonly attribute TimedTrack track;
+  interface TextTrackCue {
+    readonly attribute TextTrack track;
     readonly attribute DOMString id;
   
     readonly attribute double startTime;
@@ -1237,7 +1237,9 @@ module html5
              attribute DOMString name; 
     [PutForwards=href] readonly attribute Location location;
     readonly attribute History history;
+  
     readonly attribute UndoManager undoManager;
+  
     [Replaceable] readonly attribute BarProp locationbar;
     [Replaceable] readonly attribute BarProp menubar;
     [Replaceable] readonly attribute BarProp personalbar;
@@ -1389,14 +1391,14 @@ module html5
   };
 
   interface HashChangeEvent : Event {
-    readonly attribute any oldURL;
-    readonly attribute any newURL;
+    readonly attribute DOMString oldURL;
+    readonly attribute DOMString newURL;
     void initHashChangeEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in DOMString oldURLArg, in DOMString newURLArg);
   };
 
   interface PageTransitionEvent : Event {
-    readonly attribute any persisted;
-    void initPageTransitionEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in any persistedArg);
+    readonly attribute boolean persisted;
+    void initPageTransitionEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in boolean persistedArg);
   };
 
   interface BeforeUnloadEvent : Event {
