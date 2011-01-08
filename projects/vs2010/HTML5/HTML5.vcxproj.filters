@@ -56,5 +56,8 @@
     <ClInclude Include="..\..\..\include\HTML5\2_5_5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\HTML5\2_4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

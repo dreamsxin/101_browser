@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\BigNumber">
-      <UniqueIdentifier>{463eedbd-18f2-4102-a664-29297cdc4dcb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Parser">
       <UniqueIdentifier>{fb4ae5f8-3711-4be5-8c99-6ea74f83538d}</UniqueIdentifier>
     </Filter>
@@ -53,9 +50,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\BasicDataStructures\Comparator.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\BasicDataStructures\BigNumber\BigInteger.h">
-      <Filter>Header Files\BigNumber</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\BasicDataStructures\Parser\UnionParser.h">
       <Filter>Header Files\Parser</Filter>
@@ -118,9 +112,6 @@
       <Filter>Header Files\Tree</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\BasicDataStructures\Util\SingleChain.h">
-      <Filter>Header Files\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\BasicDataStructures\Util\MemoryManager.h">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\BasicDataStructures\VirtualMachine\InstructionContext.h">
