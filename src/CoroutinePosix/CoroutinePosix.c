@@ -18,7 +18,6 @@
 #include "MiniStdlib/safe_free.h"
 #include <stdlib.h>
 
-
 bool createCoroutine(size_t in_stackSize, 
 	void (*in_pFiberFunc)(void*), 
 	void* in_pParam, 
@@ -28,6 +27,10 @@ bool createCoroutine(size_t in_stackSize,
 
 	// Could be changed in future - only for now
 	lCoroutineDescriptor.uc_link = NULL;
+
+	if (in_stackSize == 0)
+		in_stackSize = SIGSTKSZ;
+
 	lCoroutineDescriptor.uc_stack.ss_sp = malloc(in_stackSize);
 	if (NULL == lCoroutineDescriptor.uc_stack.ss_sp)
 		return false;

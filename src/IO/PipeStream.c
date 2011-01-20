@@ -16,9 +16,27 @@
 
 #include "IO/PipeStream.h"
 
+typedef struct
+{
+	PipeStreamState *mpState;
+	void *mUserData;
+} PipeStreamData;
+
+
+void
+#ifdef _WIN32
+__stdcall
+#endif	
+pipeStreamKickoff(void *in_pPipeStreamData)
+{
+
+}
+
 bool initPipeStreamState(PipeStreamState *in_pPipeStreamState, 
 	bool in_isCurrentStreamWriter, CoroutineDescriptor *in_pOtherCoroutine)
 {
+	PipeStreamData pipeStreamData = { in_pPipeStreamState, NULL };
+
 	in_pPipeStreamState->mpCurrentBuffer = NULL;
 	in_pPipeStreamState->mpNextBuffer = NULL;
 	in_pPipeStreamState->mCurrentBufferSize = 0;
@@ -27,16 +45,24 @@ bool initPipeStreamState(PipeStreamState *in_pPipeStreamState,
 	if (in_isCurrentStreamWriter)
 	{
 		in_pPipeStreamState->mCurrentStateType = PipeStreamStateTypeWriter;
+
 		if (!convertThreadToCoroutine(in_pPipeStreamState->mpWriterDescriptor))
 			return false;
-		//in_pPipeStreamState->mpReaderCoroutine = createCoroutine(...)
+
+		if (!createCoroutine(0, &pipeStreamKickoff, &pipeStreamData, 
+			in_pPipeStreamState->mpReaderDescriptor))
+			return false;
 	}
 	else
 	{
 		in_pPipeStreamState->mCurrentStateType = PipeStreamStateTypeReader;
+
 		if (!convertThreadToCoroutine(in_pPipeStreamState->mpReaderDescriptor))
 			return false;
-		//in_pPipeStreamState->mpWriterCoroutine = createCoroutine(...)
+		
+		if (!createCoroutine(0, &pipeStreamKickoff, &pipeStreamData, 
+			in_pPipeStreamState->mpWriterDescriptor))
+			return false;
 	}
 
 	return true;

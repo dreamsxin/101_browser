@@ -24,8 +24,6 @@
 extern "C" {
 #endif
 
-const size_t cCoroutineDefaultStackSize = SIGSTKSZ;
-
 typedef ucontext_t CoroutineDescriptor;
 
 bool createCoroutine(size_t in_stackSize, 
