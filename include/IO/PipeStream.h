@@ -23,17 +23,24 @@
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstdbool.h"
 
+typedef enum
+{
+	PipeStreamStateTypeReader,
+	PipeStreamStateTypeWriter
+} PipeStreamStateType;
+
 typedef struct
 {
-	uint8_t *mpCurrentBuffer;
-	uint8_t *mpNextBuffer;
+	uint8_t * volatile mpCurrentBuffer;
+	uint8_t * volatile mpNextBuffer;
 	volatile size_t mCurrentBufferSize;
 	volatile size_t mNextBufferSize;
-	CoroutineDescriptor *mpMainDescriptor;
-	CoroutineDescriptor mWriterDescriptor;
-	CoroutineDescriptor mReaderDescriptor;
+	PipeStreamStateType mCurrentStateType;
+	CoroutineDescriptor *mpWriterDescriptor;
+	CoroutineDescriptor *mpReaderDescriptor;
 } PipeStreamState;
 
-void initPipeStreamState(PipeStreamState *in_pPipeStreamState);
+bool initPipeStreamState(PipeStreamState *in_pPipeStreamState, 
+	bool in_isCurrentStreamWriter, CoroutineDescriptor *in_pOtherCoroutine);
 
 #endif
