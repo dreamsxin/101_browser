@@ -29,14 +29,14 @@ bool initPipeStreamState(PipeStreamState *in_pPipeStreamState,
 		in_pPipeStreamState->mCurrentStateType = PipeStreamStateTypeWriter;
 		if (!convertThreadToCoroutine(in_pPipeStreamState->mpWriterDescriptor))
 			return false;
-		//in_pPipeStreamState->mpReaderCorotoutine = createCoroutine(...)
+		//in_pPipeStreamState->mpReaderCoroutine = createCoroutine(...)
 	}
 	else
 	{
 		in_pPipeStreamState->mCurrentStateType = PipeStreamStateTypeReader;
 		if (!convertThreadToCoroutine(in_pPipeStreamState->mpReaderDescriptor))
 			return false;
-		//in_pPipeStreamState->mpReaderCorotoutine = createCoroutine(...)
+		//in_pPipeStreamState->mpWriterCoroutine = createCoroutine(...)
 	}
 
 	return true;
