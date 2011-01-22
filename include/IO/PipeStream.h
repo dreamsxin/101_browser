@@ -41,6 +41,7 @@ typedef struct
 } PipeStreamState;
 
 bool initPipeStreamState(PipeStreamState *in_pPipeStreamState, 
-	bool in_isCurrentStreamWriter, CoroutineDescriptor *in_pOtherCoroutine);
+	bool in_isCurrentStreamWriter, CoroutineDescriptor *in_pOtherCoroutine,
+	void *in_pUserData);
 
 #endif

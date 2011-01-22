@@ -33,9 +33,10 @@ pipeStreamKickoff(void *in_pPipeStreamData)
 }
 
 bool initPipeStreamState(PipeStreamState *in_pPipeStreamState, 
-	bool in_isCurrentStreamWriter, CoroutineDescriptor *in_pOtherCoroutine)
+	bool in_isCurrentStreamWriter, CoroutineDescriptor *in_pOtherCoroutine, 
+	void *in_pUserData)
 {
-	PipeStreamData pipeStreamData = { in_pPipeStreamState, NULL };
+	PipeStreamData pipeStreamData = { in_pPipeStreamState, in_pUserData };
 
 	in_pPipeStreamState->mpCurrentBuffer = NULL;
 	in_pPipeStreamState->mpNextBuffer = NULL;

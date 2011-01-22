@@ -81,11 +81,11 @@ void test_Coroutine()
 #endif
 	passedData.pCurrentDescriptor = &currentDescriptor;
 
-	result = createCoroutine(4096, &func1, &passedData, &func1Descriptor);
+	result = createCoroutine(0, &func1, &passedData, &func1Descriptor);
 	test(result);
 	passedData.pFunc1Descriptor = &func1Descriptor;
 
-	result = createCoroutine(4096, &func2, &passedData, &func2Descriptor);
+	result = createCoroutine(0, &func2, &passedData, &func2Descriptor);
 	test(result);
 	passedData.pFunc2Descriptor = &func2Descriptor;
 
