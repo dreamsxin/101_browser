@@ -44,8 +44,10 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 {
 	PipeStreamData pipeStreamData = { in_pOtherCoroutineStartup, out_pPipeStreamState, in_pUserData };
 
+	// Not necessary, but more safe...
 	out_pPipeStreamState->mpCurrentBuffer = NULL;
 	out_pPipeStreamState->mpNextBuffer = NULL;
+
 	out_pPipeStreamState->mCurrentBufferSize = 0;
 	out_pPipeStreamState->mNextBufferSize = 0;
 
@@ -54,27 +56,19 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 		out_pPipeStreamState->mCurrentStateType = PipeStreamStateTypeWriter;
 		out_pPipeStreamState->mpWriterDescriptor = out_pThisCoroutine;
 		out_pPipeStreamState->mpReaderDescriptor = out_pOtherCoroutine;
-
-		if (!convertThreadToCoroutine(out_pPipeStreamState->mpWriterDescriptor))
-			return false;
-
-		if (!createCoroutine(0, &pipeStreamKickoff, &pipeStreamData, 
-			out_pPipeStreamState->mpReaderDescriptor))
-			return false;
 	}
 	else
 	{
 		out_pPipeStreamState->mCurrentStateType = PipeStreamStateTypeReader;
 		out_pPipeStreamState->mpReaderDescriptor = out_pThisCoroutine;
 		out_pPipeStreamState->mpWriterDescriptor = out_pOtherCoroutine;
-
-		if (!convertThreadToCoroutine(out_pPipeStreamState->mpReaderDescriptor))
-			return false;
-		
-		if (!createCoroutine(0, &pipeStreamKickoff, &pipeStreamData, 
-			out_pPipeStreamState->mpWriterDescriptor))
-			return false;
 	}
+
+	if (!convertThreadToCoroutine(out_pThisCoroutine))
+		return false;
+
+	if (!createCoroutine(0, &pipeStreamKickoff, &pipeStreamData, out_pOtherCoroutine))
+		return false;
 
 	return true;
 }
