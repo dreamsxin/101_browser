@@ -40,8 +40,22 @@ typedef struct
 	CoroutineDescriptor *mpReaderDescriptor;
 } PipeStreamState;
 
-bool initPipeStreamState(PipeStreamState *in_pPipeStreamState, 
-	bool in_isCurrentStreamWriter, CoroutineDescriptor *in_pOtherCoroutine,
+/*!
+ * Parameters:
+ * out_pPipeStreamState: adress where the created PipeStreamState will be stored
+ * in_isCurrentStreamWriter: set to true, if the current coroutine is the
+ *                           writer coroutine;
+ *                           set to false,  if the current coroutine is the
+ *                           reader coroutine
+ * in_pThisCoroutine: a pointer to the coroutine descriptor of the current coroutine
+ * in_pOtherCoroutine: TODO
+ * in_pUserData: user data to be sent to the new created coroutine
+ */
+bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
+	bool in_isCurrentStreamWriter,
+	CoroutineDescriptor *out_pThisCoroutine,
+	CoroutineDescriptor *out_pOtherCoroutine,
+	void (*in_pOtherCoroutineStartup)(PipeStreamState*, void*),
 	void *in_pUserData);
 
 #endif

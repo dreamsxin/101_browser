@@ -18,8 +18,9 @@
 
 typedef struct
 {
+	void (*mpStartup)(PipeStreamState*, void*);
 	PipeStreamState *mpState;
-	void *mUserData;
+	void *mpUserData;
 } PipeStreamData;
 
 
@@ -29,40 +30,49 @@ __stdcall
 #endif	
 pipeStreamKickoff(void *in_pPipeStreamData)
 {
+	PipeStreamData *pData = (PipeStreamData*) in_pPipeStreamData;
 
+	(*pData->mpStartup)(pData->mpState, pData->mpUserData);
 }
 
-bool initPipeStreamState(PipeStreamState *in_pPipeStreamState, 
-	bool in_isCurrentStreamWriter, CoroutineDescriptor *in_pOtherCoroutine, 
+bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
+	bool in_isCurrentStreamWriter,
+	CoroutineDescriptor *out_pThisCoroutine,
+	CoroutineDescriptor *out_pOtherCoroutine,
+	void (*in_pOtherCoroutineStartup)(PipeStreamState*, void*),
 	void *in_pUserData)
 {
-	PipeStreamData pipeStreamData = { in_pPipeStreamState, in_pUserData };
+	PipeStreamData pipeStreamData = { in_pOtherCoroutineStartup, out_pPipeStreamState, in_pUserData };
 
-	in_pPipeStreamState->mpCurrentBuffer = NULL;
-	in_pPipeStreamState->mpNextBuffer = NULL;
-	in_pPipeStreamState->mCurrentBufferSize = 0;
-	in_pPipeStreamState->mNextBufferSize = 0;
+	out_pPipeStreamState->mpCurrentBuffer = NULL;
+	out_pPipeStreamState->mpNextBuffer = NULL;
+	out_pPipeStreamState->mCurrentBufferSize = 0;
+	out_pPipeStreamState->mNextBufferSize = 0;
 
 	if (in_isCurrentStreamWriter)
 	{
-		in_pPipeStreamState->mCurrentStateType = PipeStreamStateTypeWriter;
+		out_pPipeStreamState->mCurrentStateType = PipeStreamStateTypeWriter;
+		out_pPipeStreamState->mpWriterDescriptor = out_pThisCoroutine;
+		out_pPipeStreamState->mpReaderDescriptor = out_pOtherCoroutine;
 
-		if (!convertThreadToCoroutine(in_pPipeStreamState->mpWriterDescriptor))
+		if (!convertThreadToCoroutine(out_pPipeStreamState->mpWriterDescriptor))
 			return false;
 
 		if (!createCoroutine(0, &pipeStreamKickoff, &pipeStreamData, 
-			in_pPipeStreamState->mpReaderDescriptor))
+			out_pPipeStreamState->mpReaderDescriptor))
 			return false;
 	}
 	else
 	{
-		in_pPipeStreamState->mCurrentStateType = PipeStreamStateTypeReader;
+		out_pPipeStreamState->mCurrentStateType = PipeStreamStateTypeReader;
+		out_pPipeStreamState->mpReaderDescriptor = out_pThisCoroutine;
+		out_pPipeStreamState->mpWriterDescriptor = out_pOtherCoroutine;
 
-		if (!convertThreadToCoroutine(in_pPipeStreamState->mpReaderDescriptor))
+		if (!convertThreadToCoroutine(out_pPipeStreamState->mpReaderDescriptor))
 			return false;
 		
 		if (!createCoroutine(0, &pipeStreamKickoff, &pipeStreamData, 
-			in_pPipeStreamState->mpWriterDescriptor))
+			out_pPipeStreamState->mpWriterDescriptor))
 			return false;
 	}
 
