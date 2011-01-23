@@ -23,6 +23,10 @@
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstdbool.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum
 {
 	PipeStreamStateTypeReader,
@@ -57,5 +61,9 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	CoroutineDescriptor *out_pOtherCoroutine,
 	void (*in_pOtherCoroutineStartup)(PipeStreamState*, void*),
 	void *in_pUserData);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

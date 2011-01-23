@@ -23,7 +23,6 @@ typedef struct
 	void *mpUserData;
 } PipeStreamData;
 
-
 void
 #ifdef _WIN32
 __stdcall
