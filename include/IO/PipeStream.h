@@ -18,10 +18,9 @@
 #define _MTAx_IO_PipeStream_h
 
 #include "Coroutine/Coroutine.h"
-
-#include "MiniStdlib/cstddef.h"
-#include "MiniStdlib/cstdint.h"
+#include "IO/ByteStreamInterface.h"
 #include "MiniStdlib/cstdbool.h"
+#include "MiniStdlib/climits.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -61,6 +60,10 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	CoroutineDescriptor *out_pOtherCoroutine,
 	void (*in_pOtherCoroutineStartup)(PipeStreamState*, void*),
 	void *in_pUserData);
+
+size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t in_count);
+
+size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, size_t in_count);
 
 #ifdef __cplusplus
 }

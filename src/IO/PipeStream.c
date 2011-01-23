@@ -15,6 +15,7 @@
  */
 
 #include "IO/PipeStream.h"
+#include <assert.h>
 
 typedef struct
 {
@@ -70,4 +71,18 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 		return false;
 
 	return true;
+}
+
+size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t in_count)
+{
+	PipeStreamState *pPipeStreamState = (PipeStreamState*) in_out_pPipeStreamState;
+	assert(PipeStreamStateTypeReader == pPipeStreamState->mCurrentStateType);
+	return 0;
+}
+
+size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, size_t in_count)
+{
+	PipeStreamState *pPipeStreamState = (PipeStreamState*) in_out_pPipeStreamState;
+	assert(PipeStreamStateTypeWriter == pPipeStreamState->mCurrentStateType);
+	return 0;
 }
