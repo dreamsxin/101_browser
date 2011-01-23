@@ -18,17 +18,10 @@
 #define _MTAx_IO_ByteStreamInterface_h
 
 #include "MiniStdlib/cstdint.h"
-
 /* 
  * gcc requires this header file for a definition of size_t
  */
-#ifdef __GNUC__
-# ifdef __cplusplus
-#include <cstddef>
-# else
-#include <stddef.h>
-# endif
-#endif
+#include "MiniStdlib/cstddef.h"
 
 #ifdef __cplusplus
 extern "C" {
