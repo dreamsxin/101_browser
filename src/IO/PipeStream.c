@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include "MiniStdlib/minmax.h"
 #include "IO/PipeStream.h"
 #include <assert.h>
 
@@ -46,10 +47,8 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 
 	// Not necessary, but more safe...
 	out_pPipeStreamState->mpCurrentBuffer = NULL;
-	out_pPipeStreamState->mpNextBuffer = NULL;
 
 	out_pPipeStreamState->mCurrentBufferSize = 0;
-	out_pPipeStreamState->mNextBufferSize = 0;
 
 	if (in_isCurrentStreamWriter)
 	{
@@ -76,13 +75,53 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t in_count)
 {
 	PipeStreamState *pPipeStreamState = (PipeStreamState*) in_out_pPipeStreamState;
+	uint8_t *pBuffer = (uint8_t*) out_pBuffer;
+	size_t bytesRead = 0;
+
 	assert(PipeStreamStateTypeReader == pPipeStreamState->mCurrentStateType);
+
+	while (bytesRead < in_count)
+	{
+		size_t bytesToReadInCurrentIteration = MIN(in_count-bytesRead, pPipeStreamState->mCurrentBufferSize);
+		
+		if (bytesToReadInCurrentIteration == 0)
+		{
+			switchToCoroutine(pPipeStreamState->mpReaderDescriptor, pPipeStreamState->mpWriterDescriptor);
+			continue;
+		}
+		else
+		{
+			memcpy(pBuffer, pPipeStreamState->mpCurrentBuffer, bytesToReadInCurrentIteration);
+
+			bytesRead += bytesToReadInCurrentIteration;
+			pBuffer += bytesToReadInCurrentIteration;
+			pPipeStreamState->mpCurrentBuffer += bytesToReadInCurrentIteration;
+			pPipeStreamState->mCurrentBufferSize -= bytesToReadInCurrentIteration;
+		}
+	}
+
+	// TODO: sensible return value
 	return 0;
 }
 
 size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, size_t in_count)
 {
 	PipeStreamState *pPipeStreamState = (PipeStreamState*) in_out_pPipeStreamState;
+
 	assert(PipeStreamStateTypeWriter == pPipeStreamState->mCurrentStateType);
+	assert(in_count < SIZE_MAX);
+
+	while (pPipeStreamState->mCurrentBufferSize != 0)
+	{
+		switchToCoroutine(pPipeStreamState->mpWriterDescriptor, pPipeStreamState->mpReaderDescriptor);
+		continue;
+	}
+
+	pPipeStreamState->mCurrentBufferSize = in_count;
+	pPipeStreamState->mpCurrentBuffer = (const uint8_t*) in_pBuffer;
+
+	switchToCoroutine(pPipeStreamState->mpWriterDescriptor, pPipeStreamState->mpReaderDescriptor);
+
+	// TODO: sensible return value
 	return 0;
 }

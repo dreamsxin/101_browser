@@ -34,10 +34,8 @@ typedef enum
 
 typedef struct
 {
-	uint8_t * volatile mpCurrentBuffer;
-	uint8_t * volatile mpNextBuffer;
+	const uint8_t * volatile mpCurrentBuffer;
 	volatile size_t mCurrentBufferSize;
-	volatile size_t mNextBufferSize;
 	PipeStreamStateType mCurrentStateType;
 	CoroutineDescriptor *mpWriterDescriptor;
 	CoroutineDescriptor *mpReaderDescriptor;
