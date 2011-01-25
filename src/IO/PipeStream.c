@@ -87,7 +87,9 @@ size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t i
 		if (bytesToReadInCurrentIteration == 0)
 		{
 			switchToCoroutine(pPipeStreamState->mpReaderDescriptor, pPipeStreamState->mpWriterDescriptor);
-			continue;
+			
+			if (pPipeStreamState->mCurrentBufferSize == 0)
+				return bytesRead;
 		}
 		else
 		{
@@ -100,8 +102,7 @@ size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t i
 		}
 	}
 
-	// TODO: sensible return value
-	return 0;
+	return bytesRead;
 }
 
 size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, size_t in_count)
