@@ -32,8 +32,23 @@ __stdcall
 pipeStreamKickoff(void *in_pPipeStreamData)
 {
 	PipeStreamData *pData = (PipeStreamData*) in_pPipeStreamData;
+	PipeStreamState *pState = pData->mpState;
 
 	(*pData->mpStartup)(pData->mpState, pData->mpUserData);
+
+	while (1)
+	{
+		size_t bytesCount;
+		if (pState->mCurrentStateType == PipeStreamStateTypeReader)
+		{
+			bytesCount = pipeStreamRead(pState, NULL, 0);
+		}
+		else
+		{
+			bytesCount = pipeStreamWrite(pState, NULL, 0);
+		}
+		assert(0 == bytesCount);
+	}
 }
 
 bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
