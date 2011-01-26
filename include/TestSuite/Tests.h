@@ -43,6 +43,7 @@ void testHTML5();
 void test_PNG();
 void test_RFC1950();
 void test_Coroutine();
+void test_IO();
 
 #ifdef __cplusplus
 }

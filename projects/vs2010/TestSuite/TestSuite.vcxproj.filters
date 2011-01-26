@@ -75,6 +75,9 @@
     <ClCompile Include="..\..\..\src\TestSuite\Test_Coroutine.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\TestSuite\Test_IO.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\TestSuite\IteratorTestUtil.h">

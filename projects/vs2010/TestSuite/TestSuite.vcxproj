@@ -61,7 +61,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <Profile>true</Profile>
       <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;CoroutineWin.lib;CPU.lib;GIF.lib;HTML5.lib;MiniStdlib.lib;PNG.lib;RFC1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;CoroutineWin.lib;CPU.lib;GIF.lib;HTML5.lib;IO.lib;MiniStdlib.lib;PNG.lib;RFC1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -83,7 +83,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <Profile>true</Profile>
       <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;CoroutineWin.lib;CPU.lib;GIF.lib;HTML5.lib;MiniStdlib.lib;PNG.lib;RFC1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;CoroutineWin.lib;CPU.lib;GIF.lib;HTML5.lib;IO.lib;MiniStdlib.lib;PNG.lib;RFC1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -101,6 +101,7 @@
     <ClCompile Include="..\..\..\src\TestSuite\Test_GIF.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_HTML5.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_Interval.cpp" />
+    <ClCompile Include="..\..\..\src\TestSuite\Test_IO.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_IteratorInstances.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_OuterBorderIterator.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_PNG.c" />
@@ -132,6 +133,9 @@
     </ProjectReference>
     <ProjectReference Include="..\HTML5\HTML5.vcxproj">
       <Project>{806e90f2-9b9c-4c45-82ff-71cbd076013c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\IO\IO.vcxproj">
+      <Project>{13a1ed8a-63a2-4eae-88dd-3f8811a4b673}</Project>
     </ProjectReference>
     <ProjectReference Include="..\MiniStdlib\MiniStdlib.vcxproj">
       <Project>{6c7c9fbb-39b4-42cc-a000-c0ff2f61388e}</Project>
