@@ -84,11 +84,12 @@ size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t i
 	{
 		size_t bytesToReadInCurrentIteration = MIN(in_count-bytesRead, pPipeStreamState->mCurrentBufferSize);
 		
-		if (bytesToReadInCurrentIteration == 0)
+		if (0 == bytesToReadInCurrentIteration)
 		{
 			switchToCoroutine(pPipeStreamState->mpReaderDescriptor, pPipeStreamState->mpWriterDescriptor);
 			
-			if (pPipeStreamState->mCurrentBufferSize == 0)
+			// that means the stream is terminated
+			if (0 == pPipeStreamState->mCurrentBufferSize)
 				return bytesRead;
 		}
 		else
