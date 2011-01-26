@@ -52,6 +52,9 @@ typedef struct
  * in_pOtherCoroutine: TODO
  * in_pUserData: user data to be sent to the new created coroutine
  */
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	bool in_isCurrentStreamWriter,
 	CoroutineDescriptor *out_pThisCoroutine,
@@ -59,10 +62,19 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	void (*in_pOtherCoroutineStartup)(PipeStreamState*, void*),
 	void *in_pUserData);
 
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 void deletePipeStreamState(PipeStreamState *out_pPipeStreamState);
 
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t in_count);
 
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, size_t in_count);
 
 #ifdef __cplusplus
