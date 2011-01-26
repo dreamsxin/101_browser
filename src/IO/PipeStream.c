@@ -72,6 +72,23 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	return true;
 }
 
+void deletePipeStreamState(PipeStreamState *out_pPipeStreamState)
+{
+	if (PipeStreamStateTypeReader == out_pPipeStreamState->mCurrentStateType)
+	{
+		deleteCoroutine(out_pPipeStreamState->mpWriterDescriptor);
+		out_pPipeStreamState->mpReaderDescriptor = NULL;
+	}
+	else
+	{
+		deleteCoroutine(out_pPipeStreamState->mpReaderDescriptor);
+		out_pPipeStreamState->mpWriterDescriptor = NULL;
+	}
+
+	out_pPipeStreamState->mpCurrentBuffer = NULL;
+	out_pPipeStreamState->mCurrentBufferSize = 0;
+}
+
 size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t in_count)
 {
 	PipeStreamState *pPipeStreamState = (PipeStreamState*) in_out_pPipeStreamState;

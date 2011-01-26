@@ -59,6 +59,8 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	void (*in_pOtherCoroutineStartup)(PipeStreamState*, void*),
 	void *in_pUserData);
 
+void deletePipeStreamState(PipeStreamState *out_pPipeStreamState);
+
 size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t in_count);
 
 size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, size_t in_count);
