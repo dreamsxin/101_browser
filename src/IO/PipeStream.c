@@ -18,23 +18,15 @@
 #include "IO/PipeStream.h"
 #include <assert.h>
 
-typedef struct
-{
-	void (*mpStartup)(PipeStreamState*, void*);
-	PipeStreamState *mpState;
-	void *mpUserData;
-} PipeStreamData;
-
 void
 #ifdef _WIN32
 __stdcall
 #endif	
 pipeStreamKickoff(void *in_pPipeStreamData)
 {
-	PipeStreamData *pData = (PipeStreamData*) in_pPipeStreamData;
-	PipeStreamState *pState = pData->mpState;
+	PipeStreamState *pState = (PipeStreamState*) in_pPipeStreamData;
 
-	(*pData->mpStartup)(pData->mpState, pData->mpUserData);
+	(*pState->mpStartup)(pState, pState->mpUserData);
 
 	while (1)
 	{
@@ -60,8 +52,6 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	void (*in_pOtherCoroutineStartup)(PipeStreamState*, void*),
 	void *in_pUserData)
 {
-	PipeStreamData pipeStreamData = { in_pOtherCoroutineStartup, out_pPipeStreamState, in_pUserData };
-
 	// Not necessary, but more safe...
 	out_pPipeStreamState->mpCurrentBuffer = NULL;
 
@@ -80,10 +70,13 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 		out_pPipeStreamState->mpWriterDescriptor = out_pOtherCoroutine;
 	}
 
+	out_pPipeStreamState->mpStartup = in_pOtherCoroutineStartup;
+	out_pPipeStreamState->mpUserData = in_pUserData;
+
 	if (!convertThreadToCoroutine(out_pThisCoroutine))
 		return false;
 
-	if (!createCoroutine(0, &pipeStreamKickoff, &pipeStreamData, out_pOtherCoroutine))
+	if (!createCoroutine(0, &pipeStreamKickoff, out_pPipeStreamState, out_pOtherCoroutine))
 		return false;
 
 	return true;
@@ -120,7 +113,9 @@ size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t i
 		
 		if (0 == bytesToReadInCurrentIteration)
 		{
+			pPipeStreamState->mCurrentStateType = PipeStreamStateTypeWriter;
 			switchToCoroutine(pPipeStreamState->mpReaderDescriptor, pPipeStreamState->mpWriterDescriptor);
+			assert(PipeStreamStateTypeReader == pPipeStreamState->mCurrentStateType);
 			
 			// that means the stream is terminated
 			if (0 == pPipeStreamState->mCurrentBufferSize)
@@ -151,7 +146,9 @@ size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, si
 	pPipeStreamState->mCurrentBufferSize = in_count;
 	pPipeStreamState->mpCurrentBuffer = (const uint8_t*) in_pBuffer;
 
+	pPipeStreamState->mCurrentStateType = PipeStreamStateTypeReader;
 	switchToCoroutine(pPipeStreamState->mpWriterDescriptor, pPipeStreamState->mpReaderDescriptor);
+	assert(PipeStreamStateTypeWriter == pPipeStreamState->mCurrentStateType);
 
 	return in_count - pPipeStreamState->mCurrentBufferSize;
 }

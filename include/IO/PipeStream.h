@@ -32,13 +32,17 @@ typedef enum
 	PipeStreamStateTypeWriter
 } PipeStreamStateType;
 
-typedef struct
+typedef struct _PipeStreamState
 {
 	const uint8_t * volatile mpCurrentBuffer;
 	volatile size_t mCurrentBufferSize;
 	PipeStreamStateType mCurrentStateType;
 	CoroutineDescriptor *mpWriterDescriptor;
 	CoroutineDescriptor *mpReaderDescriptor;
+
+	// Data to pass to the kickoff routine
+	void (*mpStartup)(struct _PipeStreamState*, void*);
+	void *mpUserData;
 } PipeStreamState;
 
 /*!
