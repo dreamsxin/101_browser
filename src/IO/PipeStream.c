@@ -39,6 +39,7 @@ pipeStreamKickoff(void *in_pPipeStreamData)
 	while (1)
 	{
 		size_t bytesCount;
+
 		if (pState->mCurrentStateType == PipeStreamStateTypeReader)
 		{
 			bytesCount = pipeStreamRead(pState, NULL, 0);
@@ -47,6 +48,7 @@ pipeStreamKickoff(void *in_pPipeStreamData)
 		{
 			bytesCount = pipeStreamWrite(pState, NULL, 0);
 		}
+
 		assert(0 == bytesCount);
 	}
 }
