@@ -110,19 +110,13 @@ size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, si
 	PipeStreamState *pPipeStreamState = (PipeStreamState*) in_out_pPipeStreamState;
 
 	assert(PipeStreamStateTypeWriter == pPipeStreamState->mCurrentStateType);
-	assert(in_count < SIZE_MAX);
-
-	while (pPipeStreamState->mCurrentBufferSize != 0)
-	{
-		switchToCoroutine(pPipeStreamState->mpWriterDescriptor, pPipeStreamState->mpReaderDescriptor);
-		continue;
-	}
+	// Else we would not be here...
+	assert(0 == pPipeStreamState->mCurrentBufferSize);
 
 	pPipeStreamState->mCurrentBufferSize = in_count;
 	pPipeStreamState->mpCurrentBuffer = (const uint8_t*) in_pBuffer;
 
 	switchToCoroutine(pPipeStreamState->mpWriterDescriptor, pPipeStreamState->mpReaderDescriptor);
 
-	// TODO: sensible return value
-	return 0;
+	return in_count - pPipeStreamState->mCurrentBufferSize;
 }
