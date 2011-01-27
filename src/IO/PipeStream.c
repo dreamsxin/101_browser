@@ -107,6 +107,16 @@ size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t i
 
 	assert(PipeStreamStateTypeReader == pPipeStreamState->mCurrentStateType);
 
+	// This means we want to terminate...
+	if (0 == in_count)
+	{
+		pPipeStreamState->mCurrentStateType = PipeStreamStateTypeWriter;
+		switchToCoroutine(pPipeStreamState->mpReaderDescriptor, pPipeStreamState->mpWriterDescriptor);
+		assert(PipeStreamStateTypeReader == pPipeStreamState->mCurrentStateType);
+
+		return 0;
+	}
+
 	while (bytesRead < in_count)
 	{
 		size_t bytesToReadInCurrentIteration = MIN(in_count-bytesRead, pPipeStreamState->mCurrentBufferSize);
@@ -140,8 +150,13 @@ size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, si
 	PipeStreamState *pPipeStreamState = (PipeStreamState*) in_out_pPipeStreamState;
 
 	assert(PipeStreamStateTypeWriter == pPipeStreamState->mCurrentStateType);
-	// Else we would not be here...
-	assert(0 == pPipeStreamState->mCurrentBufferSize);
+
+	/*
+	 * Note that pPipeStreamState->mCurrentBufferSize can become != 0
+	 *
+	 * Exactly in the case that when calling pipeStreamRead([...], [...], 0)
+	 * when pPipeStreamState->mCurrentBufferSize != 0.
+	 */
 
 	pPipeStreamState->mCurrentBufferSize = in_count;
 	pPipeStreamState->mpCurrentBuffer = (const uint8_t*) in_pBuffer;

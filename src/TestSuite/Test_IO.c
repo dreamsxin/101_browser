@@ -20,10 +20,13 @@
 
 void readerCoroutineFun(PipeStreamState *in_pPipeStreamState, void *in_pUserdata)
 {
-	uint8_t data[2];
+	uint8_t data[2] = {0xFF, 0xFF};
 
 	wprintf(L"Reading 2 bytes\n");
 	pipeStreamRead(in_pPipeStreamState, data, 2);
+
+	test(0 == data[0]);
+	test(1 == data[1]);
 }
 
 void test_IO_PipeStream()
@@ -48,11 +51,15 @@ void test_IO_PipeStream()
 		wprintf(L"Writing 1 byte\n");
 		test(pipeStreamWrite(&pipeStreamState, data, 1) == 1);
 
+		data[0] = 1;
+		data[1] = 2;
+		data[2] = 3;
+
+		wprintf(L"Writing 3 bytes\n");
+		test(pipeStreamWrite(&pipeStreamState, data, 3) == 1);
+
 		deletePipeStreamState(&pipeStreamState);
 	}
-
-	
-
 }
 
 void test_IO()
