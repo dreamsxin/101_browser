@@ -154,7 +154,7 @@ size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, si
 	/*
 	 * Note that pPipeStreamState->mCurrentBufferSize can become != 0
 	 *
-	 * Exactly in the case that when calling pipeStreamRead([...], [...], 0)
+	 * Exactly in the case of calling pipeStreamRead([...], [...], 0)
 	 * when pPipeStreamState->mCurrentBufferSize != 0.
 	 */
 
