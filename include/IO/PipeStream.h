@@ -81,6 +81,9 @@ __declspec(dllexport)
 #endif
 size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, size_t in_count);
 
+const ByteReadStreamInterface cPipeStreamReadInterface = { &pipeStreamRead };
+const ByteWriteStreamInterface cPipeStreamWriteInterface = { &pipeStreamWrite };
+
 #ifdef __cplusplus
 }
 #endif
