@@ -152,9 +152,8 @@ size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, si
 	assert(PipeStreamStateTypeWriter == pPipeStreamState->mCurrentStateType);
 
 	/*
-	 * Note that pPipeStreamState->mCurrentBufferSize can become != 0
-	 *
-	 * Exactly in the case of calling pipeStreamRead([...], [...], 0)
+	 * Note that pPipeStreamState->mCurrentBufferSize becomes != 0
+	 * exactly in the case of calling pipeStreamRead([...], [...], 0)
 	 * when pPipeStreamState->mCurrentBufferSize != 0.
 	 */
 
