@@ -84,6 +84,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\src\RFC1950\RFC1950_adler32_c.c" />
     <ClCompile Include="..\..\..\src\RFC1950\RFC1950_adler32_cpp.cpp" />
+    <ClCompile Include="RFC1950_zlib.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\RFC1950\RFC1950_adler32.h" />

@@ -20,7 +20,8 @@
 #include "Util/ReadResult.h"
 #include "MiniStdlib/MTAx_cstdio.h"
 #include "MiniStdlib/cstdint.h"
-//#include "MiniStdlib/cstdbool.h"
+#include "IO/ByteStreamInterface.h"
+#include "MiniStdlib/cstdbool.h"
 
 #pragma pack(push, 1)
 
@@ -33,18 +34,29 @@
 #pragma warning(disable : 4214)
 typedef struct
 {
-	struct {
-		uint8_t CM : 4;
-		uint8_t CINFO : 4;
+	union
+	{
+		struct {
+			uint8_t CM : 4;
+			uint8_t CINFO : 4;
+		} fields;
+		uint8_t byteValue;
 	} CMF;
-	struct {
-		uint8_t FCHECK : 5;
-		uint8_t FDICT : 1;
-		uint8_t FLEVEL : 2;
+	union
+	{
+		struct
+		{
+			uint8_t FCHECK : 5;
+			uint8_t FDICT : 1;
+			uint8_t FLEVEL : 2;
+		} fields;
+		uint8_t byteValue;
 	} FLG;
 } ZlibStreamHeader;
 #pragma warning(pop)
 
 #pragma pack(pop)
+
+void parseRFC1950(ByteReadStreamInterface in_readStream, void *in_pStreamState, bool in_supportPresetDictionary);
 
 #endif
