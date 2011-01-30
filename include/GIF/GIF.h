@@ -28,8 +28,10 @@ extern "C" {
 
 #pragma pack(push, 1)
 
+#ifdef _WIN32
 #pragma warning(push)
 #pragma warning(disable : 4214)
+#endif
 typedef struct
 {
 	uint16_t Logical_Screen_Width;
@@ -66,7 +68,10 @@ typedef struct
 	uint16_t Delay_Time;
 	uint8_t Transparent_Color_Index;
 } Graphic_Control_Extension;
+
+#ifdef _WIN32
 #pragma warning(pop)
+#endif
 
 typedef struct
 {
