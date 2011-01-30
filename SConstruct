@@ -28,7 +28,8 @@ network_posix = env.Clone()
 network_posix.Program('bin/NetworkPosix', Glob('src/NetworkPosix/*.cpp'))
 
 Unicode = env.Clone()
-Unicode.SharedLibrary('bin/Unicode', Glob('src/Unicode/*.c')+Glob('src/Unicode/*.cpp')+Glob('src/Unicode/generated/*.cpp'))
+Unicode.Append(LIBS = ['MiniStdlib'])
+Unicode.SharedLibrary('bin/Unicode', Glob('src/Unicode/*.c')+Glob('src/Unicode/*.cpp')+Glob('src/Unicode/generated/*.cpp'), LIBPATH = ['#/lib'])
 
 HTML5 = env.Clone()
 HTML5.SharedLibrary('bin/HTML5', Glob('src/HTML5/*.c')+Glob('src/HTML5/*.cpp'))

@@ -21,6 +21,7 @@
 #include "Util/Iterator.h"
 #include "Util/ReadResult.h"
 
+
 /*
 * http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#simple-color
 * "A simple color consists of three 8-bit numbers in the range 0..255, 
@@ -32,10 +33,18 @@ typedef struct
 	uint8_t red, green, blue;
 } SimpleColor;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef _WIN32
-	__declspec(dllexport)
+__declspec(dllexport)
 #endif
 ReadResult parseSimpleColor(SingleIterator in_iterator, void* in_iteratorState, 
 SimpleColor* in_pSimpleColor);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
