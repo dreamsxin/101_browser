@@ -20,7 +20,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
-#include <vector>
 
 #include "GuiOpenGL/GuiOpenGLState.h"
 
@@ -62,30 +61,21 @@ void initDisplay(OZO_Display* pDisplay, const char* displayName)
 
 GLXFBConfig* chooseFBConfig(const OZO_Display* pDisplay)
 {
-	vector<int> attributes;
-
-	attributes.push_back(GLX_RED_SIZE);
-	attributes.push_back(1);
-
-	attributes.push_back(GLX_GREEN_SIZE);
-	attributes.push_back(1);
-
-	attributes.push_back(GLX_BLUE_SIZE);
-	attributes.push_back(1);
-
-	attributes.push_back(GLX_DEPTH_SIZE);
-	attributes.push_back(1);
-
-	attributes.push_back(GLX_DOUBLEBUFFER);
-	attributes.push_back(True);
-
-	attributes.push_back(None);
+	int attributes[] = {
+		GLX_RED_SIZE, 1,
+		GLX_GREEN_SIZE, 1,
+		GLX_BLUE_SIZE, 1,
+		GLX_DEPTH_SIZE, 1,
+		GLX_DOUBLEBUFFER, True,
+		None
+	};
 
 	GLXFBConfig * fbconfigArray;  /*  Array of FBConfigs  */
         int fbconfigArraySize;        /*  Number of FBConfigs in the array  */
+
 	fbconfigArray = glXChooseFBConfig(pDisplay->display,
 		pDisplay->screen,
-		&attributes.at(0),
+		attributes,
 		&fbconfigArraySize );
 		
 	return fbconfigArray;
