@@ -34,9 +34,7 @@ typedef uint8_t _Bool;
 # ifndef __cplusplus
 #  include <stdbool.h>
 # else
-#  if sizeof(bool) != 1
-#   error sizeof(bool) != 1
-#  endif
+static_assert(sizeof(bool) == 1, "sizeof(bool) (C++) must be 1");
 # endif
 #endif
 

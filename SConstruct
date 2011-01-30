@@ -1,7 +1,7 @@
 if ARGUMENTS.get('debug', 0):
-    env = Environment(CCFLAGS = '-g',CPPPATH='#/include')
+    env = Environment(CCFLAGS = '-g', CXXFLAGS = '-std=gnu++0x', CPPPATH='#/include')
 else:
-    env = Environment(CCFLAGS = '-Wall',CPPPATH='#/include')
+    env = Environment(CCFLAGS = '-Wall', CXXFLAGS = '-std=gnu++0x', CPPPATH='#/include')
 
 MiniStdlib = env.Clone()
 MiniStdlib.Library('lib/MiniStdlib', Glob('src/MiniStdlib/*.c')+Glob('src/MiniStdlib/*.cpp'))

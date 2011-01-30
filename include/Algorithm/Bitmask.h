@@ -19,6 +19,7 @@
 
 #include "MiniStdlib/cstdbool.h"
 #include "MiniStdlib/cstdint.h"
+#include "MiniStdlib/cstddef.h"
 
 #ifdef __cplusplus
 extern "C" {
