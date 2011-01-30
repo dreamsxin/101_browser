@@ -30,8 +30,10 @@
  * 2.2. Data format
  * of RFC 1950
  */
+#ifdef _WIN32
 #pragma warning(push)
 #pragma warning(disable : 4214)
+#endif
 typedef struct
 {
 	union
@@ -53,7 +55,9 @@ typedef struct
 		uint8_t byteValue;
 	} FLG;
 } ZlibStreamHeader;
+#ifdef _WIN32
 #pragma warning(pop)
+#endif
 
 #pragma pack(pop)
 

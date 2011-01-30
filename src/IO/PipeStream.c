@@ -17,6 +17,7 @@
 #include "MiniStdlib/minmax.h"
 #include "IO/PipeStream.h"
 #include <assert.h>
+#include <string.h> // for memcpy
 
 void
 #ifdef _WIN32
