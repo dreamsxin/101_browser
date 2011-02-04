@@ -23,6 +23,10 @@
 #include "IO/ByteStreamInterface.h"
 #include "MiniStdlib/cstdbool.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #pragma pack(push, 1)
 
 /*!
@@ -62,5 +66,9 @@ typedef struct
 #pragma pack(pop)
 
 void parseRFC1950(ByteReadStreamInterface in_readStream, void *in_pStreamState, bool in_supportPresetDictionary);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
