@@ -521,7 +521,7 @@ module html5
     readonly attribute unsigned long videoWidth;
     readonly attribute unsigned long videoHeight;
              attribute DOMString poster;
-    [PutForwards=value attribute DOMSettableTokenList audio; 
+    [PutForwards=value] attribute DOMSettableTokenList audio; 
   };
 
   [NamedConstructor=Audio(),
@@ -1067,8 +1067,8 @@ module html5
   interface HTMLTextAreaElement : HTMLElement {
              attribute boolean autofocus;
              attribute unsigned long cols;
-             attribute boolean disabled;
              attribute DOMString dirName;
+             attribute boolean disabled;
     readonly attribute HTMLFormElement form;
              attribute long maxLength;
              attribute DOMString name;
@@ -1432,10 +1432,22 @@ module html5
   };
   ApplicationCache implements EventTarget;
 
+  [Supplemental, NoInterfaceObject]
+  interface NavigatorOnLine {
+    readonly attribute boolean onLine;
+  };
+
   [Callback=FunctionOnly, NoInterfaceObject]
   interface Function {
     any call(in any... arguments);
   };
+
+  [Supplemental, NoInterfaceObject]
+  interface WindowBase64 {
+    DOMString btoa(in DOMString btoa);
+    DOMString atob(in DOMString atob);
+  };
+  Window implements WindowBase64;
 
   [Supplemental, NoInterfaceObject]
   interface WindowTimers {
@@ -1456,8 +1468,9 @@ module html5
   };
   Navigator implements NavigatorID;
   Navigator implements NavigatorOnLine;
-  Navigator implements NavigatorAbilities;
-  
+  Navigator implements NavigatorContentUtils;
+  Navigator implements NavigatorStorageUtils;
+
   [Supplemental, NoInterfaceObject]
   interface NavigatorID {
     readonly attribute DOMString appName;
@@ -1465,17 +1478,16 @@ module html5
     readonly attribute DOMString platform;
     readonly attribute DOMString userAgent;
   };
-  
+
   [Supplemental, NoInterfaceObject]
-  interface NavigatorOnLine {
-    readonly attribute boolean onLine;
-  };
-  
-  [Supplemental, NoInterfaceObject]
-  interface NavigatorAbilities {
+  interface NavigatorContentUtils {
     // content handler registration
     void registerProtocolHandler(in DOMString scheme, in DOMString url, in DOMString title);
     void registerContentHandler(in DOMString mimeType, in DOMString url, in DOMString title);
+  };
+
+  [Supplemental, NoInterfaceObject]
+  interface NavigatorStorageUtils {
     void yieldForStorageUpdates();
   };
 
@@ -1483,14 +1495,17 @@ module html5
              attribute DOMString dropEffect;
              attribute DOMString effectAllowed;
   
-    readonly attribute DOMStringList types;
-    void clearData(in optional DOMString format);
-    void setData(in DOMString format, in DOMString data);
-    DOMString getData(in DOMString format);
-    readonly attribute FileList files;
+    readonly attribute DataTransferItems items;
   
     void setDragImage(in Element image, in long x, in long y);
     void addElement(in Element element);
+  
+    /* old interface */
+    readonly attribute DOMStringList types;
+    DOMString getData(in DOMString format);
+    void setData(in DOMString format, in DOMString data);
+    void clearData(in optional DOMString format);
+    readonly attribute FileList files;
   };
 
   interface DataTransferItems {
