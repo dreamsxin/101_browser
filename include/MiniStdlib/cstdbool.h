@@ -17,6 +17,10 @@ typedef uint8_t _Bool;
 #else
 # ifndef __cplusplus
 #  include <stdbool.h>
+# else
+#  if sizeof(bool) != 1
+#   error sizeof(bool) != 1
+#  endif
 # endif
 #endif
 

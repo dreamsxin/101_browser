@@ -33,6 +33,9 @@
     <ClInclude Include="..\..\..\include\MiniStdlib\minmax.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\MiniStdlib\cstdbool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\MiniStdlib\MTAx_cstdio.c">
