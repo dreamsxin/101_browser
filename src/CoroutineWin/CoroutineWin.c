@@ -34,6 +34,10 @@ bool createCoroutine(
 		return false;
 }
 
+#ifdef _WIN32
+#pragma warning(push)
+#pragma warning(disable : 4100)
+#endif
 void switchToCoroutine(
 	CoroutineDescriptor * in_pCurrentCoroutine, 
 	CoroutineDescriptor *in_pNextCoroutine)
@@ -46,6 +50,9 @@ void switchToCoroutine(
 		SwitchToFiber(*in_pNextCoroutine);
 	}
 }
+#ifdef _WIN32
+#pragma warning(pop)
+#endif
 
 CoroutineDescriptor getCurrentCoroutine()
 {
