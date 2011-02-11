@@ -65,7 +65,7 @@ typedef struct
 
 #pragma pack(pop)
 
-void parseRFC1950(ByteReadStreamInterface in_readStream, void *in_pStreamState, bool in_supportPresetDictionary);
+void parseRFC1950(ByteStreamReadInterface in_readStream, void *in_pStreamState, bool in_supportPresetDictionary);
 
 #ifdef __cplusplus
 }

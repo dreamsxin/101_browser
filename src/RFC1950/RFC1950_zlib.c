@@ -1,6 +1,6 @@
 #include "RFC1950/RFC1950_zlib.h"
 
-void parseRFC1950(ByteReadStreamInterface in_readStream, void *in_pStreamState, bool in_supportPresetDictionary)
+void parseRFC1950(ByteStreamReadInterface in_readStream, void *in_pStreamState, bool in_supportPresetDictionary)
 {
 	ZlibStreamHeader header;
 	uint16_t LZ77_window_size;

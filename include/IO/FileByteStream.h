@@ -41,7 +41,7 @@ __declspec(dllexport)
 bool createFileByteReadStreamState(const char *in_filename,
 	FileByteStreamState *in_pFileByteStreamState);
 
-const ByteReadStreamInterface cFileByteStreamInterface = { &fileByteReadStreamRead };
+const ByteStreamReadInterface cFileByteStreamInterface = { &fileByteReadStreamRead };
 
 #ifdef __cplusplus
 }

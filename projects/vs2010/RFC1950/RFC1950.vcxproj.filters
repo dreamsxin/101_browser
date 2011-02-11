@@ -21,7 +21,7 @@
     <ClCompile Include="..\..\..\src\RFC1950\RFC1950_adler32_cpp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RFC1950_zlib.c">
+    <ClCompile Include="..\..\..\src\RFC1950\RFC1950_zlib.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
