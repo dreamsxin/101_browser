@@ -145,8 +145,8 @@ void test_2_4()
 	size_t readCount;
 
 	result = convertThreadToCoroutine(&thisCoroutine);
-	test(result);
 
+	test(result);
 	if (!result)
 		return;
 
@@ -166,8 +166,8 @@ void test_2_4()
 
 		result = initPipeStreamState(&pipeStreamState, false, &thisCoroutine, &otherCoroutine, 
 			&test_2_4_Coroutine, &test_2_4_userdata);
-		test(result);
 
+		test(result);
 		if (!result)
 			return;
 
