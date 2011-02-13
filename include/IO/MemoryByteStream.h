@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 Wolfgang Keller
+ * Copyright 2011 Wolfgang Keller
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 
-#ifndef _MTAx_HTML_2_4_h
-#define _MTAx_HTML_2_4_h
+#ifndef _MTAx_IO_MemoryByteStream_h
+#define _MTAx_IO_MemoryByteStream_h
 
+#include "MiniStdlib/cstdint.h"
 #include "IO/ByteStreamInterface.h"
 
-/*
- * 2.4 UTF-8
- * Living Standard — 7 January 2011
- */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+typedef struct
+{
+	const uint8_t *buffer;
+	size_t bufferSize;
+	size_t bufferPos;
+} MemoryByteStreamReadState;
 
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-void convertUTF8toCodepoints(
-	ByteStreamReadInterface in_readInterface, 
-	void *in_pReadState,
-	ByteStreamWriteInterface in_writeInterface,
-	void *in_pWriteState);
+void initMemoryByteStreamReadState(
+	MemoryByteStreamReadState *in_pMemoryByteStreamReadState,
+	const void *in_pBuffer, size_t in_bufferSize);
 
-#ifdef __cplusplus
-}
+#ifdef _WIN32
+__declspec(dllexport)
 #endif
+size_t memoryByteReadStreamRead(void *in_out_pMemoryByteStreamReadState, void *out_pBuffer, size_t in_count);
+
+const ByteStreamReadInterface cMemoryStreamReadInterface = { &memoryByteReadStreamRead };
 
 #endif

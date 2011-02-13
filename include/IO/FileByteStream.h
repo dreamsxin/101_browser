@@ -17,7 +17,6 @@
 #ifndef _MTAx_IO_FileByteStream_h
 #define _MTAx_IO_FileByteStream_h
 
-#include "IO/ByteStreamInterface.h"
 #include "MiniStdlib/MTAx_cstdio.h"
 #include "MiniStdlib/cstdbool.h"
 
@@ -41,7 +40,6 @@ __declspec(dllexport)
 bool createFileByteReadStreamState(const char *in_filename,
 	FileByteStreamState *in_pFileByteStreamState);
 
-const ByteStreamReadInterface cFileByteStreamInterface = { &fileByteReadStreamRead };
 
 #ifdef __cplusplus
 }

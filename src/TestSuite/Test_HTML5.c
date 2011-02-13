@@ -18,6 +18,7 @@
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
 #include "HTML5/2_3.h"
+#include "HTML5/2_4.h"
 #include "HTML5/2_5_1.h"
 #include "HTML5/2_5_4_1.h"
 #include "HTML5/2_5_5.h"
@@ -25,8 +26,10 @@
 #include "HTML5/ASCIIStringUnicodeCyclicIterator.h"
 #include "MiniStdlib/MTAx_cstdio.h"
 #include "BigNumber/BigInteger.h"
+#include "IO/MemoryByteStream.h"
+#include "IO/PipeStream.h"
 
-void test2_3()
+void test_2_3()
 {
 	/* two empty strings */
 	char empty0[] = "";
@@ -113,7 +116,77 @@ void test2_3()
 	test(prefixMatch(itc, &cs0, &cs1));
 }
 
-void test2_5_1()
+typedef struct
+{
+	uint8_t *pInputBytes;
+	MemoryByteStreamReadState *pReadState;
+} Test_2_4_Userdata;
+
+void test_2_4_Coroutine(PipeStreamState *in_pPipeStreamState, void *in_pUserData)
+{
+	ByteStreamWriteInterface pipeStreamWriteInterface = { &pipeStreamWrite };
+
+	Test_2_4_Userdata *pUserData = (Test_2_4_Userdata *) in_pUserData;
+
+	convertUTF8toCodepoints(cMemoryStreamReadInterface, pUserData->pReadState, 
+		pipeStreamWriteInterface, in_pPipeStreamState);
+}
+
+void test_2_4()
+{
+	Test_2_4_Userdata test_2_4_userdata;
+	bool result;
+	MemoryByteStreamReadState readState;
+	PipeStreamState pipeStreamState;
+	CoroutineDescriptor thisCoroutine;
+	CoroutineDescriptor otherCoroutine;
+	size_t idx;
+	UnicodeCodePoint currentCodePoint;
+	size_t readCount;
+
+	result = convertThreadToCoroutine(&thisCoroutine);
+	test(result);
+
+	if (!result)
+		return;
+
+	{
+		/*
+		 * the test string from
+		 * http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#utf-8
+		 * (12 February 2011)
+		 */
+		uint8_t inputBytes[] = { 0x41, 0x98, 0xBA, 0x42, 0xE2, 0x98, 0x43, 0xE2, 0x98, 0xBA, 0xE2, 0x98 };
+		UnicodeCodePoint outputCodepoints[] = { 'A', 0xFFFD, 0xFFFD, 'B', 0xFFFD, 'C', 0x263A, 0xFFFD };
+
+		initMemoryByteStreamReadState(&readState, inputBytes, sizeof(inputBytes));
+
+		test_2_4_userdata.pInputBytes = inputBytes;
+		test_2_4_userdata.pReadState = &readState;
+
+		result = initPipeStreamState(&pipeStreamState, false, &thisCoroutine, &otherCoroutine, 
+			&test_2_4_Coroutine, &test_2_4_userdata);
+		test(result);
+
+		if (!result)
+			return;
+
+		for (idx = 0; idx < sizeof(outputCodepoints) / sizeof(UnicodeCodePoint); idx++)
+		{
+			readCount = pipeStreamRead(&pipeStreamState, &currentCodePoint, sizeof(UnicodeCodePoint));
+
+			test(readCount == sizeof(UnicodeCodePoint));
+			test(currentCodePoint == outputCodepoints[idx]);
+		}
+
+		readCount = pipeStreamRead(&pipeStreamState, &currentCodePoint, sizeof(UnicodeCodePoint));
+		test(0 == readCount);
+
+		deletePipeStreamState(&pipeStreamState);
+	}
+}
+
+void test_2_5_1()
 {
 	{
 		test(!isSpaceCharacter(0x8));
@@ -380,7 +453,7 @@ void test2_5_1()
 	}
 }
 
-void test2_5_4_1()
+void test_2_5_4_1()
 {
 	char emptyFail[]         = "";
 	char tabsFail[]          = "\t\t\t";
@@ -458,7 +531,7 @@ void test2_5_4_1()
 	freeUnsignedBigInteger(&number);
 }
 
-void test2_5_5()
+void test_2_5_5()
 {
 	UnsignedBigInteger year;
 
@@ -501,11 +574,13 @@ void test2_5_5()
 void testHTML5()
 {
 	wprintf(L"Testing 2.3\n");
-	test2_3();
-	wprintf(L"Testing 2.4.1\n");
-	test2_5_1();
-	wprintf(L"Testing 2.4.4.1\n");
-	test2_5_4_1();
-	wprintf(L"Testing 2.4.5\n");
-	test2_5_5();
+	test_2_3();
+	wprintf(L"Testing 2.4\n");
+	test_2_4();
+	wprintf(L"Testing 2.5.1\n");
+	test_2_5_1();
+	wprintf(L"Testing 2.5.4.1\n");
+	test_2_5_4_1();
+	wprintf(L"Testing 2.5.5\n");
+	test_2_5_5();
 }
