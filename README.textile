@@ -4,7 +4,7 @@ h2. 1. Basic information
 
 |_. Property|_. Value|
 |Name|101_browser|
-|Copyright|Copyright (c) 2009-2010 Wolfgang Keller (still considering which Open Source Licence to use)|
+|Copyright|Copyright (c) 2009-2011 Wolfgang Keller (still considering which Open Source Licence to use)|
 |Version|current head revision ;-)|
 |Author|Wolfgang Keller|
 |Email|wolfgangkeller@gmail.com|
