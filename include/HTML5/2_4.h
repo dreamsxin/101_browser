@@ -21,7 +21,7 @@
 
 /*
  * 2.4 UTF-8
- * Living Standard — 7 January 2011
+ * Living Standard — Last Updated 14 February 2011
  */
 
 #ifdef __cplusplus
