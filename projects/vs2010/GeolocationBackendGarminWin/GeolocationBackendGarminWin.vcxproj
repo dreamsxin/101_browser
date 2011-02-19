@@ -59,7 +59,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>setupapi.lib;MiniStdlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>setupapi.lib;CoroutineWin.lib;MiniStdlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -80,20 +80,27 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>setupapi.lib;MiniStdlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>setupapi.lib;CoroutineWin.lib;MiniStdlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationBackendGarminWinBackend.h" />
-    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationBackendGarminWinCommon.h" />
-    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationBackendGarminWinFrontend.h" />
+    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarmin.h" />
+    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminFunctions.h" />
+    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminInternalMemory.h" />
+    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminPackets.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationBackendGarminWinBackend.c" />
-    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationBackendGarminWinFrontend.c" />
+    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminCoroutine.c" />
+    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminFunctions.c" />
+    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminInit.c" />
+    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminInternalMemory.c" />
+    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminPacket.c" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CoroutineWin\CoroutineWin.vcxproj">
+      <Project>{a6ea98fe-d4ca-4d80-a963-d84a3233651d}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\MiniStdlib\MiniStdlib.vcxproj">
       <Project>{6c7c9fbb-39b4-42cc-a000-c0ff2f61388e}</Project>
     </ProjectReference>

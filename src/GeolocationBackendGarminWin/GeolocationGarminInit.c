@@ -1,21 +1,4 @@
-/*
- * Copyright 2008-2011 Wolfgang Keller
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-#include "GeolocationBackendGarminWin/GeolocationBackendGarminWinFrontend.h"
-#include "GeolocationBackendGarminWin/GeolocationBackendGarminWinBackend.h"
+#include "GeolocationBackendGarminWin/GeolocationGarmin.h"
 
 #include <windows.h>
 #include <initguid.h>
@@ -78,39 +61,23 @@ HANDLE initializeGeolocationBackendGarmin(WORD *in_out_pUsbSize)
 	return out_handle;
 }
 
-ReceivePacketState getInitialReceivePacketState()
+bool createGeolocationCoroutine(GarminUsbData *out_pGarminUsbData, 
+	CoroutineDescriptor *in_pCurrentCoroutine, 
+	CoroutineDescriptor *in_pGeolocationCoroutine,
+	HANDLE in_garminHandle, 
+	void (*in_pPacketHandlerFunc)(Packet_t*, void*),
+	void *in_pPacketHandlerData)
 {
-	return ReceiveByDeviceIoControl;
+	out_pGarminUsbData->pMainCoroutine = in_pCurrentCoroutine;
+	out_pGarminUsbData->pGeolocationCoroutine = in_pGeolocationCoroutine;
+	out_pGarminUsbData->garminHandle = in_garminHandle;
+	out_pGarminUsbData->pPacketHandlerFunc = in_pPacketHandlerFunc;
+	out_pGarminUsbData->pPacketHandlerData = in_pPacketHandlerData;
+
+	return createCoroutine(0, &geolocationCoroutine, out_pGarminUsbData, out_pGarminUsbData->pGeolocationCoroutine);
 }
 
-bool startSession(ReceivePacketState *in_pState, 
-				  HANDLE in_garminHandle,
-				  WORD in_usbPacketSize)
+void startGeolocationCoroutine(GarminUsbData *in_out_pGarminUsbData)
 {
-	Packet_t theStartSessionPacket = {
-		PacketType_USB_Protocol_Layer,
-		0, 0, // reserved fields
-		Pid_Start_Session,
-		0,    // data size
-		0     // reserved
-	};
-
-	Packet_t* thePacket = NULL;
-
-	ReceivePacketResult receivePacketResult;
-
-	sendPacket(in_garminHandle, theStartSessionPacket, in_usbPacketSize);
-
-	receivePacketResult = waitForPacket(in_pState,
-		in_garminHandle, 
-		&thePacket,
-		PacketType_USB_Protocol_Layer,
-		Pid_Session_Started);
-
-	if (isErrorResult(receivePacketResult))
-		return false;
-
-	freePacket(&thePacket);
-
-	return true;
+	switchToCoroutine(in_out_pGarminUsbData->pMainCoroutine, in_out_pGarminUsbData->pGeolocationCoroutine);
 }

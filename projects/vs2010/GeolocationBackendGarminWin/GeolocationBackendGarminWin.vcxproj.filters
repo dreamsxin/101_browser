@@ -15,21 +15,33 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationBackendGarminWinBackend.h">
+    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarmin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationBackendGarminWinCommon.h">
+    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminPackets.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationBackendGarminWinFrontend.h">
+    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminInternalMemory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationBackendGarminWinBackend.c">
+    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminInit.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationBackendGarminWinFrontend.c">
+    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminCoroutine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminPacket.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminInternalMemory.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminFunctions.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

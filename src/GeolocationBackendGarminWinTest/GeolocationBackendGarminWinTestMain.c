@@ -18,39 +18,70 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "GeolocationBackendGarminWin/GeolocationBackendGarminWinFrontend.h"
-#include "GeolocationBackendGarminWin/GeolocationBackendGarminWinBackend.h"
+#include "GeolocationBackendGarminWin/GeolocationGarmin.h"
+#include "GeolocationBackendGarminWin/GeolocationGarminFunctions.h"
 
 int main()
 {
 	WORD lUsbSize;
 	HANDLE lGarminHandle;
-	Packet_t theProductDataPacket = { PacketType_Application_Layer, 0, 0, Pid_Product_Rqst, 0 , 0 };
-	Packet_t* thePacket;
-	ReceivePacketState receivePacketState;
-	ReceivePacketResult receivePacketResult;
+
+	CoroutineDescriptor currentCoroutine, geolocationCoroutine;
+
+	Packet_t theStartSessionPacket = {
+		PacketType_USB_Protocol_Layer,
+		0, 0, // reserved fields
+		Pid_Start_Session,
+		0,    // data size
+		0     // data
+	};
+
+	Packet_t theProductDataPacket = {
+		PacketType_Application_Layer, 
+		0, 0, // reserved fields
+		Pid_Product_Rqst, 
+		0,    // data size
+		0     // data
+	};
+	GarminUsbData garminUsbData;
 
 	lGarminHandle = initializeGeolocationBackendGarmin(&lUsbSize);
 
 	if (!lGarminHandle)
 	{
 		printf("Could not find Garmin device. Exiting.\n");
-		return 0;
+		exit(EXIT_FAILURE);
 	}
 
-	receivePacketState = getInitialReceivePacketState();
+	if (!convertThreadToCoroutine(&currentCoroutine))
+	{
+		printf("Could not convert current thread to coroutine.\n");
+		exit(EXIT_FAILURE);
+	}
 
-	startSession(&receivePacketState, lGarminHandle, lUsbSize);
+	if (!createGeolocationCoroutine(&garminUsbData, &currentCoroutine, &geolocationCoroutine, 
+		lGarminHandle, NULL, NULL))
+	{
+		printf("Could not create Geolocation coroutine.\n");
+		exit(EXIT_FAILURE);
+	}
 
-	sendPacket(lGarminHandle, theProductDataPacket, lUsbSize);
+	sendPacket(lGarminHandle, &theStartSessionPacket, lUsbSize);
 
-	receivePacketResult = waitForPacket(&receivePacketState, 
-		lGarminHandle,
-		&thePacket,
-		PacketType_Application_Layer,
-		Pid_Product_Data);
+	if (!waitForPacket(&garminUsbData, PacketType_USB_Protocol_Layer, Pid_Session_Started))
+	{
+		printf("Could not start session.\n");
+		exit(EXIT_FAILURE);
+	}
 
-	while (ReceivePacketResultPacketContinueRead == receivePacketResult)
+	sendPacket(lGarminHandle, &theProductDataPacket, lUsbSize);
+	if (!waitForPacket(&garminUsbData, PacketType_Application_Layer, Pid_Product_Data))
+	{
+		printf("Could not get product data.\n");
+		exit(EXIT_FAILURE);
+	}
+
+	/*while (ReceivePacketResultPacketContinueRead == receivePacketResult)
 	{
 		printf("Type: %u\tId: %u\n", (unsigned) thePacket->mPacketType, 
 		(unsigned) thePacket->mPacketId);
@@ -70,8 +101,6 @@ int main()
 			}
 		}
 
-		freePacket(&thePacket);
-
 		receivePacketResult = receivePacket(&receivePacketState,
 			lGarminHandle,
 			&thePacket);
@@ -81,11 +110,7 @@ int main()
 			fprintf(stderr, "An error occured.\n");
 			exit(EXIT_FAILURE);
 		}
-	}
-	
-	assert(thePacket == NULL);
-	// Only to be sure...
-	freePacket(&thePacket);
+	}*/
 	
 	return 0;
 }

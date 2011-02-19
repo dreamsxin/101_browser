@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-#ifndef _GeolocationBackendGarminWinBackend_h
-#define _GeolocationBackendGarminWinBackend_h
+#ifndef _MTAx_GeolocationGarminWin_GeolocationGarminPackets_h
+#define _MTAx_GeolocationGarminWin_GeolocationGarminPackets_h
 
-#include "GeolocationBackendGarminWin/GeolocationBackendGarminWinCommon.h"
-#include <windows.h>
 #include "MiniStdlib/cstdint.h"
-#include "MiniStdlib/cstdbool.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -53,7 +50,7 @@ enum
 };
 
 enum 
-{ 
+{
 	Pid_Protocol_Array = 253, /* may not be implemented in all devices */
 	Pid_Product_Rqst = 254,
 	Pid_Product_Data = 255,
@@ -69,43 +66,6 @@ typedef struct
 #pragma pack(pop)
 
 typedef Protocol_Data_Type Protocol_Array_Type[];
-
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-void freePacket(Packet_t **in_ppPacket);
-
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-void sendPacket(HANDLE in_garminHandle, Packet_t in_packet, WORD in_usbPacketSize);
-
-
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-ReceivePacketResult receivePacket(ReceivePacketState *in_pState, 
-								  HANDLE in_garminHandle,
-								  Packet_t** out_ppPacket);
-
-/*!
- * Either returns NULL (in case of error) or a received packet with
- * mPacketType == in_type and
- * mPacketId == in_pid
- */
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-ReceivePacketResult waitForPacket(ReceivePacketState *in_pState, 
-								  HANDLE in_garminHandle, 
-								  Packet_t** out_ppPacket,
-								  unsigned char in_type,
-								  unsigned short in_pid);
-
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool isErrorResult(ReceivePacketResult in_result);
 
 #ifdef __cplusplus
 }

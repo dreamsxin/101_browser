@@ -14,33 +14,26 @@
  * limitations under the License.
  */
 
-#ifndef _GeolocationBackendGarminWinFrontend_h
-#define _GeolocationBackendGarminWinFrontend_h
+#ifndef _MTAx_GeolocationGarminWin_GeolocationGarminInternalMemory_h
+#define _MTAx_GeolocationGarminWin_GeolocationGarminInternalMemory_h
 
-#include "GeolocationBackendGarminWin/GeolocationBackendGarminWinCommon.h"
-#include <windows.h>
+#include "GeolocationBackendGarminWin/GeolocationGarminPackets.h"
+
 #include "MiniStdlib/cstdbool.h"
+#include "MiniStdlib/cstddef.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-HANDLE initializeGeolocationBackendGarmin(WORD *in_out_pUsbSize);
+/*!
+ * Return value: true on success
+ *               false on failure
+ */
+bool reallocBufferAndItsSizeAndDeleteIfFailure(void *in_ppTheBuffer,
+	size_t in_size, size_t in_additionalDataSize);
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-ReceivePacketState getInitialReceivePacketState();
-
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool startSession(ReceivePacketState *in_pState,
-				  HANDLE in_garminHandle,
-				  WORD in_usbPacketSize);
+bool isPacketBufferLargeEnough(Packet_t* in_pPacket, size_t in_bufferSize);
 
 #ifdef __cplusplus
 }
