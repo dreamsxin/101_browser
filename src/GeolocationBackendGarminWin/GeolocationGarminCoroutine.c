@@ -22,6 +22,7 @@ void __stdcall geolocationCoroutine(void *in_pGarminUsbData)
 	while (1)
 	{
 		DWORD theBufferSize = 0;
+		DWORD readBytesCount = 0;
 		theBytesReturned = ASYNC_DATA_SIZE;
 
 		while (ASYNC_DATA_SIZE == theBytesReturned)
@@ -47,14 +48,16 @@ void __stdcall geolocationCoroutine(void *in_pGarminUsbData)
 				NULL);
 
 			theBufferSize += ASYNC_DATA_SIZE;
+			readBytesCount += theBytesReturned;
 
+			assert(readBytesCount <= theBufferSize);
 			assert(_msize(theBuffer) == theBufferSize);
 		}
 
 		if (PacketType_USB_Protocol_Layer != ((Packet_t*) theBuffer)->mPacketType || 
 			Pid_Data_Available != ((Packet_t*) theBuffer)->mPacketId)
 		{
-			if (!isPacketBufferLargeEnough((Packet_t*) theBuffer, theBufferSize))
+			if (!isPacketBufferOfCorrectSize((Packet_t*) theBuffer, readBytesCount))
 			{
 				safe_free(&theBuffer);
 				pGarminUsbData->coroutineState = GarminCoroutineStateErrorInvalidData;
@@ -121,12 +124,7 @@ void __stdcall geolocationCoroutine(void *in_pGarminUsbData)
 				break;
 			}
 
-			/*
-			* It would still be safe to use 4096 instead of theBytesReturned.
-			* But if theBytesReturned is not sufficient, we assume a 
-			* malicious attempt.
-			*/
-			if (!isPacketBufferLargeEnough((Packet_t*) theBuffer, theBytesReturned))
+			if (!isPacketBufferOfCorrectSize((Packet_t*) theBuffer, theBytesReturned))
 			{
 				safe_free(&theBuffer);
 

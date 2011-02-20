@@ -14,26 +14,22 @@
  * limitations under the License.
  */
 
-#ifndef _MTAx_GeolocationGarminWin_GeolocationGarminInternalMemory_h
-#define _MTAx_GeolocationGarminWin_GeolocationGarminInternalMemory_h
+#ifndef _MTAx_GeolocationGarminWin_GeolocationGarminPacketsUtil_h
+#define _MTAx_GeolocationGarminWin_GeolocationGarminPacketsUtil_h
 
 #include "GeolocationBackendGarminWin/GeolocationGarminPackets.h"
 
-#include "MiniStdlib/cstdbool.h"
-#include "MiniStdlib/cstddef.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/*!
- * Return value: true on success
- *               false on failure
- */
-bool reallocBufferAndItsSizeAndDeleteIfFailure(void *in_ppTheBuffer,
-	size_t in_size, size_t in_additionalDataSize);
+__declspec(dllexport) void fillEmptyPacket(Packet_t *in_pPacket, 
+	uint8_t in_packetType, 
+	uint16_t in_packetId);
 
-bool isPacketBufferOfCorrectSize(Packet_t* in_pPacket, size_t in_bufferSize);
+__declspec(dllexport) void fillDeviceCommandPacket(Device_Command_Packet_t *in_pPacket, 
+	Command_Id_Type in_command_Id_Type);
 
 #ifdef __cplusplus
 }

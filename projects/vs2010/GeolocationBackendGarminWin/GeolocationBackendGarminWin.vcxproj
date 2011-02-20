@@ -89,6 +89,7 @@
     <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminFunctions.h" />
     <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminInternalMemory.h" />
     <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminPackets.h" />
+    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminPacketsUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminCoroutine.c" />
@@ -96,6 +97,7 @@
     <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminInit.c" />
     <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminInternalMemory.c" />
     <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminPacket.c" />
+    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminPacketsUtil.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoroutineWin\CoroutineWin.vcxproj">

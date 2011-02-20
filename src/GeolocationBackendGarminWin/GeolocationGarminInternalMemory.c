@@ -41,7 +41,7 @@ bool reallocBufferAndItsSizeAndDeleteIfFailure(void *in_ppTheBuffer, size_t in_s
 	}
 }
 
-bool isPacketBufferLargeEnough(Packet_t* in_pPacket, size_t in_bufferSize)
+bool isPacketBufferOfCorrectSize(Packet_t* in_pPacket, size_t in_bufferSize)
 {
 	assert(in_pPacket != NULL);
 
@@ -52,5 +52,5 @@ bool isPacketBufferLargeEnough(Packet_t* in_pPacket, size_t in_bufferSize)
 	if (in_pPacket == NULL)
 		return false;
 
-	return in_pPacket->mDataSize + offsetof(Packet_t, mData) <= in_bufferSize;
+	return in_pPacket->mDataSize + offsetof(Packet_t, mData) == in_bufferSize;
 }

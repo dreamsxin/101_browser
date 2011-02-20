@@ -20,9 +20,17 @@
 
 #include "GeolocationBackendGarminWin/GeolocationGarmin.h"
 #include "GeolocationBackendGarminWin/GeolocationGarminFunctions.h"
+#include "GeolocationBackendGarminWin/GeolocationGarminPacketsUtil.h"
 
-void interprete_Protocol_Array(Packet_t *in_pPacket, void *in_data)
+typedef struct
 {
+	volatile bool A010_supported;
+} SupportedProtocols;
+
+void interprete_Protocol_Array(Packet_t *in_pPacket, void *in_pSupportedProtocols)
+{
+	SupportedProtocols *pSupportedProtocols = (SupportedProtocols *) in_pSupportedProtocols;
+
 #if 0
 	printf("%u %u\n", in_pPacket->mPacketType, in_pPacket->mPacketId);
 #endif
@@ -37,9 +45,28 @@ void interprete_Protocol_Array(Packet_t *in_pPacket, void *in_data)
 			Protocol_Data_Type *current_Protocol_Data_Type = 
 				((Protocol_Data_Type*) in_pPacket->mData)+idx;
 
+			if ('A' == current_Protocol_Data_Type->tag && 
+				10 == current_Protocol_Data_Type->data)
+			{
+				pSupportedProtocols->A010_supported = true;
+			}
+
 			printf("%c%03u\n", current_Protocol_Data_Type->tag, 
 				(unsigned) current_Protocol_Data_Type->data);
 		}
+	}
+}
+
+void pvtHandler(Packet_t *in_pPacket, void *in_pData)
+{
+	if (PacketType_Application_Layer == in_pPacket->mPacketType && 
+		Pid_Pvt_Data == in_pPacket->mPacketId)
+	{
+		printf("%u %u\n", in_pPacket->mPacketType, in_pPacket->mPacketId);
+	}
+	else
+	{
+		printf("%u %u\n", in_pPacket->mPacketType, in_pPacket->mPacketId);
 	}
 }
 
@@ -50,28 +77,24 @@ int main()
 
 	CoroutineDescriptor currentCoroutine, geolocationCoroutine;
 
-	Packet_t theStartSessionPacket = {
-		PacketType_USB_Protocol_Layer,
-		0, 0, // reserved fields
-		Pid_Start_Session,
-		0,    // data size
-		0     // data
-	};
+	Packet_t theStartSessionPacket;
+	Packet_t theProductDataPacket;
+	Device_Command_Packet_t theStartPvtDataPacket;
+	Device_Command_Packet_t theStopPvtDataPacket;
 
-	Packet_t theProductDataPacket = {
-		PacketType_Application_Layer, 
-		0, 0, // reserved fields
-		Pid_Product_Rqst, 
-		0,    // data size
-		0     // data
-	};
 	GarminUsbData garminUsbData;
+	SupportedProtocols supportedProcotocols = { false };
+
+	fillEmptyPacket(&theStartSessionPacket, PacketType_USB_Protocol_Layer, Pid_Start_Session);
+	fillEmptyPacket(&theProductDataPacket, PacketType_Application_Layer, Pid_Product_Rqst);
+	fillDeviceCommandPacket(&theStartPvtDataPacket, Cmnd_Start_Pvt_Data);
+	fillDeviceCommandPacket(&theStopPvtDataPacket, Cmnd_Stop_Pvt_Data);
 
 	lGarminHandle = initializeGeolocationBackendGarmin(&lUsbSize);
 
 	if (!lGarminHandle)
 	{
-		printf("Could not find Garmin device. Exiting.\n");
+		printf("Could not find Garmin device.\n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -99,10 +122,32 @@ int main()
 	sendPacket(lGarminHandle, &theProductDataPacket, lUsbSize);
 
 	if (!waitForPacket(&garminUsbData, PacketType_Application_Layer, Pid_Product_Data, 
-		true, &interprete_Protocol_Array, NULL))
+		true, &interprete_Protocol_Array, &supportedProcotocols))
 	{
 		printf("Could not get product data.\n");
 		exit(EXIT_FAILURE);
+	}
+
+	if (!supportedProcotocols.A010_supported)
+	{
+		printf("Protocol A010 is not supported.\n");
+		exit(EXIT_FAILURE);
+	}
+
+	garminUsbData.pPacketHandlerFunc = &pvtHandler;
+	garminUsbData.pPacketHandlerData = NULL;
+
+	sendPacket(lGarminHandle, &theStartPvtDataPacket, lUsbSize);
+
+	while (1)
+	{
+		startGeolocationCoroutine(&garminUsbData);
+
+		if (garminUsbData.coroutineState != GarminCoroutineStateOK)
+		{
+			printf("Invalid state.\n");
+			exit(1);
+		}
 	}
 
 	return 0;

@@ -16,9 +16,9 @@
 
 #include "GeolocationBackendGarminWin/GeolocationGarmin.h"
 
-void sendPacket(HANDLE in_garminHandle, Packet_t *in_pPacket, WORD in_usbPacketSize)
+void sendPacket(HANDLE in_garminHandle, void *in_pPacket, WORD in_usbPacketSize)
 {
-	DWORD theBytesToWrite = sizeof(Packet_t) - 1 + in_pPacket->mDataSize;
+	DWORD theBytesToWrite = sizeof(Packet_t) - 1 + ((Packet_t *) in_pPacket)->mDataSize;
 	DWORD theBytesReturned = 0;
 
 	WriteFile(in_garminHandle, in_pPacket, theBytesToWrite, &theBytesReturned, NULL);

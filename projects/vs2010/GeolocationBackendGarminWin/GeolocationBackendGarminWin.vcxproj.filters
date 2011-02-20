@@ -27,6 +27,9 @@
     <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminPacketsUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminInit.c">
@@ -42,6 +45,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminFunctions.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminPacketsUtil.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
