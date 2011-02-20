@@ -38,14 +38,20 @@ void __stdcall geolocationCoroutine(void *in_pGarminUsbData)
 				return;
 			}
 
-			DeviceIoControl(pGarminUsbData->garminHandle,
+			if (!DeviceIoControl(pGarminUsbData->garminHandle,
 				IOCTL_ASYNC_IN,
 				0,
 				0,
 				theBuffer+theBufferSize,
 				ASYNC_DATA_SIZE,
 				&theBytesReturned,
-				NULL);
+				NULL))
+			{
+				pGarminUsbData->coroutineState = GarminCoroutineStateErrorDeviceIoControl;
+				switchToCoroutine(pGarminUsbData->pGeolocationCoroutine, pGarminUsbData->pMainCoroutine);
+
+				return;
+			}
 
 			theBufferSize += ASYNC_DATA_SIZE;
 			readBytesCount += theBytesReturned;
