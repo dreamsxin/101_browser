@@ -111,7 +111,11 @@ int main()
 		exit(EXIT_FAILURE);
 	}
 
-	sendPacket(lGarminHandle, &theStartSessionPacket, lUsbSize);
+	if (!sendPacket(lGarminHandle, &theStartSessionPacket, lUsbSize))
+	{
+		printf("Could not send start session packet.\n");
+		exit(EXIT_FAILURE);
+	}
 
 	if (!waitForPacket(&garminUsbData, PacketType_USB_Protocol_Layer, Pid_Session_Started, false, NULL, NULL))
 	{
@@ -119,7 +123,11 @@ int main()
 		exit(EXIT_FAILURE);
 	}
 
-	sendPacket(lGarminHandle, &theProductDataPacket, lUsbSize);
+	if (!sendPacket(lGarminHandle, &theProductDataPacket, lUsbSize))
+	{
+		printf("Could not send product data packet.\n");
+		exit(EXIT_FAILURE);
+	}
 
 	if (!waitForPacket(&garminUsbData, PacketType_Application_Layer, Pid_Product_Data, 
 		true, &interprete_Protocol_Array, &supportedProcotocols))
@@ -137,7 +145,11 @@ int main()
 	garminUsbData.pPacketHandlerFunc = &pvtHandler;
 	garminUsbData.pPacketHandlerData = NULL;
 
-	sendPacket(lGarminHandle, &theStartPvtDataPacket, lUsbSize);
+	if (!sendPacket(lGarminHandle, &theStartPvtDataPacket, lUsbSize))
+	{
+		printf("Could not send start PVT packet.\n");
+		exit(EXIT_FAILURE);
+	}
 
 	while (1)
 	{

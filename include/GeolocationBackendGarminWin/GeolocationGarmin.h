@@ -60,7 +60,7 @@ __declspec(dllexport) void startGeolocationCoroutine(GarminUsbData *in_out_pGarm
 
 void __stdcall geolocationCoroutine(void *in_pGarminUsbData);
 
-__declspec(dllexport) void sendPacket(HANDLE in_garminHandle, void *in_pPacket, WORD in_usbPacketSize);
+__declspec(dllexport) bool sendPacket(HANDLE in_garminHandle, void *in_pPacket, WORD in_usbPacketSize);
 
 #ifdef __cplusplus
 }

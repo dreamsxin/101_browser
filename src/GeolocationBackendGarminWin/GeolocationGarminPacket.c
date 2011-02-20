@@ -16,12 +16,13 @@
 
 #include "GeolocationBackendGarminWin/GeolocationGarmin.h"
 
-void sendPacket(HANDLE in_garminHandle, void *in_pPacket, WORD in_usbPacketSize)
+bool sendPacket(HANDLE in_garminHandle, void *in_pPacket, WORD in_usbPacketSize)
 {
 	DWORD theBytesToWrite = sizeof(Packet_t) - 1 + ((Packet_t *) in_pPacket)->mDataSize;
 	DWORD theBytesReturned = 0;
 
-	WriteFile(in_garminHandle, in_pPacket, theBytesToWrite, &theBytesReturned, NULL);
+	if (!WriteFile(in_garminHandle, in_pPacket, theBytesToWrite, &theBytesReturned, NULL))
+		return false;
 
 	/*
 	 * If the packet size was an exact multiple of the USB packet
@@ -29,6 +30,9 @@ void sendPacket(HANDLE in_garminHandle, void *in_pPacket, WORD in_usbPacketSize)
 	 */
 	if (theBytesToWrite % in_usbPacketSize == 0)
 	{
-		WriteFile(in_garminHandle, 0, 0, &theBytesReturned, NULL);
+		if (!WriteFile(in_garminHandle, 0, 0, &theBytesReturned, NULL))
+			return false;
 	}
+
+	return true;
 }
