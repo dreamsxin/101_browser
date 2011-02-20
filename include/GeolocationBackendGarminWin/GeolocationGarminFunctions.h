@@ -32,7 +32,10 @@ extern "C" {
 __declspec(dllexport) bool waitForPacket(
 	GarminUsbData *in_out_pUsbData,
 	uint8_t in_type,
-	uint16_t in_pid);
+	uint16_t in_pid,
+	bool in_setNextHandler,
+	void (*in_pNextHandlerFunc)(Packet_t *, void *),
+	void * volatile in_pNextHandlerData);
 
 #ifdef __cplusplus
 }

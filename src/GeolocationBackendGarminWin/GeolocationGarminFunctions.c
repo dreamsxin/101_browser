@@ -20,7 +20,11 @@ typedef struct
 {
 	uint8_t type;
 	uint16_t pid;
+	GarminUsbData *pUsbData;
 	volatile bool hasReceived;
+	bool setNextHandler;
+	void (* pNextHandlerFunc)(Packet_t *, void *);
+	void * volatile pNextHandlerData;
 } WaitForPacketData;
 
 void waitForPacketHandler(Packet_t *in_pPacket, void *in_pData)
@@ -31,15 +35,25 @@ void waitForPacketHandler(Packet_t *in_pPacket, void *in_pData)
 		in_pPacket->mPacketId == waitForData->pid)
 	{
 		waitForData->hasReceived = true;
+
+		if (waitForData->setNextHandler)
+		{
+			waitForData->pUsbData->pPacketHandlerFunc = waitForData->pNextHandlerFunc;
+			waitForData->pUsbData->pPacketHandlerData = waitForData->pNextHandlerData;
+		}
 	}
 }
 
 bool waitForPacket(
 	GarminUsbData *in_out_pUsbData,
 	uint8_t in_type,
-	uint16_t in_pid)
+	uint16_t in_pid,
+	bool in_setNextHandler,
+	void (*in_pNextHandlerFunc)(Packet_t *, void *),
+	void * volatile in_pNextHandlerData)
 {
-	WaitForPacketData waitForPacketData = { in_type, in_pid, false };
+	WaitForPacketData waitForPacketData = { in_type, in_pid, in_out_pUsbData, 
+		false, in_setNextHandler, in_pNextHandlerFunc, in_pNextHandlerData };
 
 	in_out_pUsbData->pPacketHandlerFunc = &waitForPacketHandler;
 	in_out_pUsbData->pPacketHandlerData = &waitForPacketData;

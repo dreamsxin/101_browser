@@ -21,6 +21,28 @@
 #include "GeolocationBackendGarminWin/GeolocationGarmin.h"
 #include "GeolocationBackendGarminWin/GeolocationGarminFunctions.h"
 
+void interprete_Protocol_Array(Packet_t *in_pPacket, void *in_data)
+{
+#if 0
+	printf("%u %u\n", in_pPacket->mPacketType, in_pPacket->mPacketId);
+#endif
+
+	if (in_pPacket->mPacketType == PacketType_Application_Layer &&
+		in_pPacket->mPacketId == Pid_Protocol_Array)
+	{
+		size_t idx;
+
+		for (idx = 0; idx < in_pPacket->mDataSize/3; idx++)
+		{
+			Protocol_Data_Type *current_Protocol_Data_Type = 
+				((Protocol_Data_Type*) in_pPacket->mData)+idx;
+
+			printf("%c%03u\n", current_Protocol_Data_Type->tag, 
+				(unsigned) current_Protocol_Data_Type->data);
+		}
+	}
+}
+
 int main()
 {
 	WORD lUsbSize;
@@ -68,49 +90,20 @@ int main()
 
 	sendPacket(lGarminHandle, &theStartSessionPacket, lUsbSize);
 
-	if (!waitForPacket(&garminUsbData, PacketType_USB_Protocol_Layer, Pid_Session_Started))
+	if (!waitForPacket(&garminUsbData, PacketType_USB_Protocol_Layer, Pid_Session_Started, false, NULL, NULL))
 	{
 		printf("Could not start session.\n");
 		exit(EXIT_FAILURE);
 	}
 
 	sendPacket(lGarminHandle, &theProductDataPacket, lUsbSize);
-	if (!waitForPacket(&garminUsbData, PacketType_Application_Layer, Pid_Product_Data))
+
+	if (!waitForPacket(&garminUsbData, PacketType_Application_Layer, Pid_Product_Data, 
+		true, &interprete_Protocol_Array, NULL))
 	{
 		printf("Could not get product data.\n");
 		exit(EXIT_FAILURE);
 	}
 
-	/*while (ReceivePacketResultPacketContinueRead == receivePacketResult)
-	{
-		printf("Type: %u\tId: %u\n", (unsigned) thePacket->mPacketType, 
-		(unsigned) thePacket->mPacketId);
-
-		if (thePacket->mPacketType == PacketType_Application_Layer &&
-			thePacket->mPacketId == Pid_Protocol_Array)
-		{
-			size_t idx;
-
-			for (idx = 0; idx < thePacket->mDataSize/3; idx++)
-			{
-				Protocol_Data_Type *current_Protocol_Data_Type = 
-					((Protocol_Data_Type*) thePacket->mData)+idx;
-
-				printf("%c%u\n", current_Protocol_Data_Type->tag, 
-					(unsigned) current_Protocol_Data_Type->data);
-			}
-		}
-
-		receivePacketResult = receivePacket(&receivePacketState,
-			lGarminHandle,
-			&thePacket);
-
-		if (isErrorResult(receivePacketResult))
-		{
-			fprintf(stderr, "An error occured.\n");
-			exit(EXIT_FAILURE);
-		}
-	}*/
-	
 	return 0;
 }
