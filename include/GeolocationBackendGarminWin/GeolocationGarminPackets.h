@@ -143,6 +143,45 @@ typedef struct
 
 typedef Protocol_Data_Type Protocol_Array_Type[];
 
+// 7.3.13 radian_position_type
+#pragma pack(push, 1)
+typedef struct
+{
+	double lat; /* latitude in radians */
+	double lon; /* longitude in radians */
+} radian_position_type;
+#pragma pack(pop)
+
+// 7.4.40 D800_Pvt_Data_Type
+#pragma pack(push, 1)
+typedef struct
+{
+	float alt; /* altitude above WGS 84 ellipsoid (meters) */
+	float epe; /* estimated position error, 2 sigma (meters) */
+	float eph; /* epe, but horizontal only (meters) */
+	float epv; /* epe, but vertical only (meters) */
+	uint16_t fix; /* type of position fix */
+	double tow; /* time of week (seconds) */
+	radian_position_type posn; /* latitude and longitude (radians) */
+	float east; /* velocity east (meters/second) */
+	float north; /* velocity north (meters/second) */
+	float up; /* velocity up (meters/second) */
+	float msl_hght; /* height of WGS84 ellipsoid above MSL(meters)*/
+	int16_t leap_scnds; /* difference between GPS and UTC (seconds) */
+	uint32_t wn_days; /* week number days */
+} D800_Pvt_Data_Type;
+#pragma pack(pop)
+
+enum
+{
+	fix_unusable = 0, /* failed integrity check */
+	fix_invalid = 1, /* invalid or unavailable */
+	fix_2D = 2, /* two dimensional */
+	fix_3D = 3, /* three dimensional */
+	fix_2D_diff = 4, /* two dimensional differential */
+	fix_3D_diff = 5 /* three dimensional differential */
+};
+
 #ifdef __cplusplus
 }
 #endif

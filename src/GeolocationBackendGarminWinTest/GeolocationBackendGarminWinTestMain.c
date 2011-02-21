@@ -17,6 +17,8 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 #include "GeolocationBackendGarminWin/GeolocationGarmin.h"
 #include "GeolocationBackendGarminWin/GeolocationGarminFunctions.h"
@@ -71,7 +73,11 @@ void pvtHandler(Packet_t *in_pPacket, void *in_pData)
 	if (PacketType_Application_Layer == in_pPacket->mPacketType && 
 		Pid_Pvt_Data == in_pPacket->mPacketId)
 	{
-		printf("%u %u\n", in_pPacket->mPacketType, in_pPacket->mPacketId);
+		if (sizeof(D800_Pvt_Data_Type) == in_pPacket->mDataSize)
+		{
+			D800_Pvt_Data_Type *pPvtData = (D800_Pvt_Data_Type*) in_pPacket->mData;
+			printf("%f %f\n", pPvtData->posn.lon * 180.0/M_PI, pPvtData->posn.lat * 180.0/M_PI);
+		}
 	}
 }
 
