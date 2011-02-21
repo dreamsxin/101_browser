@@ -25,6 +25,8 @@
 typedef struct
 {
 	volatile bool A010_supported;
+	volatile bool A800_supported;
+	volatile bool D800_supported;
 } SupportedProtocols;
 
 void interprete_Protocol_Array(Packet_t *in_pPacket, void *in_pSupportedProtocols)
@@ -45,10 +47,17 @@ void interprete_Protocol_Array(Packet_t *in_pPacket, void *in_pSupportedProtocol
 			Protocol_Data_Type *current_Protocol_Data_Type = 
 				((Protocol_Data_Type*) in_pPacket->mData)+idx;
 
-			if ('A' == current_Protocol_Data_Type->tag && 
-				10 == current_Protocol_Data_Type->data)
+			if ('A' == current_Protocol_Data_Type->tag)
 			{
-				pSupportedProtocols->A010_supported = true;
+				if (10 == current_Protocol_Data_Type->data)
+					pSupportedProtocols->A010_supported = true;
+				else if (800 == current_Protocol_Data_Type->data)
+					pSupportedProtocols->A800_supported = true;
+			}
+			else if ('D' == current_Protocol_Data_Type->tag)
+			{
+				if (800 == current_Protocol_Data_Type->data)
+					pSupportedProtocols->D800_supported = true;
 			}
 
 			printf("%c%03u\n", current_Protocol_Data_Type->tag, 
@@ -61,10 +70,6 @@ void pvtHandler(Packet_t *in_pPacket, void *in_pData)
 {
 	if (PacketType_Application_Layer == in_pPacket->mPacketType && 
 		Pid_Pvt_Data == in_pPacket->mPacketId)
-	{
-		printf("%u %u\n", in_pPacket->mPacketType, in_pPacket->mPacketId);
-	}
-	else
 	{
 		printf("%u %u\n", in_pPacket->mPacketType, in_pPacket->mPacketId);
 	}
@@ -83,7 +88,7 @@ int main()
 	Device_Command_Packet_t theStopPvtDataPacket;
 
 	GarminUsbData garminUsbData;
-	SupportedProtocols supportedProcotocols = { false };
+	SupportedProtocols supportedProcotocols = { false, false, false };
 
 	fillEmptyPacket(&theStartSessionPacket, PacketType_USB_Protocol_Layer, Pid_Start_Session);
 	fillEmptyPacket(&theProductDataPacket, PacketType_Application_Layer, Pid_Product_Rqst);
@@ -139,6 +144,18 @@ int main()
 	if (!supportedProcotocols.A010_supported)
 	{
 		printf("Protocol A010 is not supported.\n");
+		exit(EXIT_FAILURE);
+	}
+
+	if (!supportedProcotocols.A800_supported)
+	{
+		printf("Protocol A800 is not supported.\n");
+		exit(EXIT_FAILURE);
+	}
+
+	if (!supportedProcotocols.D800_supported)
+	{
+		printf("Protocol D800 is not supported.\n");
 		exit(EXIT_FAILURE);
 	}
 
