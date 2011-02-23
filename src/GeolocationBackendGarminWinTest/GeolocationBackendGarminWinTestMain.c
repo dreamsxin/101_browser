@@ -76,7 +76,10 @@ void pvtHandler(Packet_t *in_pPacket, void *in_pData)
 		if (sizeof(D800_Pvt_Data_Type) == in_pPacket->mDataSize)
 		{
 			D800_Pvt_Data_Type *pPvtData = (D800_Pvt_Data_Type*) in_pPacket->mData;
-			printf("%f %f\n", pPvtData->posn.lon * 180.0/M_PI, pPvtData->posn.lat * 180.0/M_PI);
+			printf("Position: %f %f (+/- %f m)\n", pPvtData->posn.lat * 180.0/M_PI, pPvtData->posn.lon * 180.0/M_PI, pPvtData->eph);
+			printf("Height: %f (+/- %f m)\n", pPvtData->alt+pPvtData->msl_hght, pPvtData->epv);
+
+			printf("\n");
 		}
 	}
 }
