@@ -616,8 +616,8 @@ module html5
     const unsigned short LOADED = 2;
     const unsigned short ERROR = 3;
     readonly attribute unsigned short readyState;
-    readonly attribute Function onload;
-    readonly attribute Function onerror;
+             attribute Function onload;
+             attribute Function onerror;
   
     const unsigned short OFF = 0;
     const unsigned short HIDDEN = 1;
@@ -627,8 +627,9 @@ module html5
     readonly attribute TextTrackCueList cues;
     readonly attribute TextTrackCueList activeCues;
   
-    readonly attribute Function oncuechange;
+             attribute Function oncuechange;
   };
+  TextTrack implements EventTarget;
 
   interface MutableTextTrack : TextTrack {
    void addCue(in TextTrackCue cue);
@@ -664,9 +665,10 @@ module html5
     DOMString getCueAsSource();
     DocumentFragment getCueAsHTML();
   
-    readonly attribute Function onenter;
-    readonly attribute Function onexit;
+             attribute Function onenter;
+             attribute Function onexit;
   };
+  TextTrackCue implements EventTarget;
 
   interface TimeRanges {
     readonly attribute unsigned long length;
@@ -1200,28 +1202,29 @@ module html5
   [Constructor(in DOMString serverConfiguration)]
   interface ConnectionPeer {
     void sendText(in DOMString text, in optional boolean unimportant); // if second arg is true, then use unreliable low-latency transport (UDP-like), otherwise guarantee delivery (TCP-like)
-    attribute Function ontext; // receiving
+             attribute Function ontext; // receiving
   
     void sendBitmap(in HTMLImageElement image);
-    attribute Function onbitmap; // receiving
+             attribute Function onbitmap; // receiving
   
     void sendFile(in File file);
-    attribute Function onfile; // receiving
+             attribute Function onfile; // receiving
   
     void addStream(in Stream stream);
     void removeStream(in Stream stream);
     readonly attribute Stream[] localStreams;
     readonly attribute Stream[] remoteStreams;
-    attribute Function onstream; // receiving
+             attribute Function onstream; // receiving
   
     void getLocalConfiguration(in ConnectionPeerConfigurationCallback callback); // maybe this should be in the constructor, or be an event
     void addRemoteConfiguration(in DOMString configuration, in optional DOMString remoteOrigin); // remote origin is assumed to be same-origin if not specified. If specified, has to match remote origin (checked in handshake). Should support leading "*." to mean "any subdomain of".
     void close(); // disconnects and stops listening
   
-    attribute Function onconnect;
-    attribute Function onerror;
-    attribute Function ondisconnect;
+             attribute Function onconnect;
+             attribute Function onerror;
+             attribute Function ondisconnect;
   };
+  ConnectionPeer implements EventTarget;
   
   [Callback=FunctionOnly, NoInterfaceObject]
   interface ConnectionPeerConfigurationCallback {
@@ -1255,7 +1258,7 @@ module html5
     [Replaceable] readonly attribute WindowProxy frames;
     [Replaceable] readonly attribute unsigned long length;
     readonly attribute WindowProxy top;
-    [Replaceable] readonly attribute WindowProxy opener;
+             attribute WindowProxy opener;
     readonly attribute WindowProxy parent;
     readonly attribute Element frameElement;
     WindowProxy open(in optional DOMString url, in optional DOMString target, in optional DOMString features, in optional DOMString replace);
@@ -1458,7 +1461,7 @@ module html5
   };
   Window implements WindowTimers;
 
-  [Supplemental, NoInterfaceObject] interface WindowModal {
+  [NoInterfaceObject] interface WindowModal {
     readonly attribute any dialogArguments;
              attribute DOMString returnValue;
   };
