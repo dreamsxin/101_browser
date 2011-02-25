@@ -17,6 +17,19 @@
 #include "PNG/CRC.h"
 
 const uint32_t cInitialCRC = 0xFFFFFFFF;
+/*
+ * 5.5 Cyclic Redundancy Code algorithm
+ * 
+ * "The CRC polynomial employed is
+ * x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^5 + x^4 + x^2 + x + 1
+ * In PNG, the 32-bit CRC is initialized to all 1's, and then the data from 
+ * each byte is processed from the least significant bit (1) to the most 
+ * significant bit (128)."
+ * 
+ * Note that the bits are written here in seemingly reverse order, because
+ * "For the purpose of separating into bytes and ordering, the least significant 
+ * bit of the 32-bit CRC is defined to be the coefficient of the x^31 term."
+ */
 const uint32_t cCRC_polynomial = 0xedb88320;
 
 uint32_t CRC_init()
