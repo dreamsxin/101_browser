@@ -478,27 +478,27 @@ void test_2_5_4_1()
 	UnsignedBigInteger number;
 
 	s = asciiStringUnicodeIteratorState_create(emptyFail);
-	test(parseNonNegativeInteger(it, &s, &number) == ResultError);
+	test(parseNonNegativeInteger(it, &s, &number) == ReadResultPrematureEndOfStream);
 
 	s = asciiStringUnicodeIteratorState_create(tabsFail);
-	test(parseNonNegativeInteger(it, &s, &number) == ResultError);
+	test(parseNonNegativeInteger(it, &s, &number) == ReadResultPrematureEndOfStream);
 
 	s = asciiStringUnicodeIteratorState_create(plusFail);
-	test(parseNonNegativeInteger(it, &s, &number) == ResultError);
+	test(parseNonNegativeInteger(it, &s, &number) == ReadResultPrematureEndOfStream);
 
 	s = asciiStringUnicodeIteratorState_create(dollarFail);
-	test(parseNonNegativeInteger(it, &s, &number) == ResultError);
+	test(parseNonNegativeInteger(it, &s, &number) == ReadResultInvalidData);
 
 	s = asciiStringUnicodeIteratorState_create(tabsPlusFail);
-	test(parseNonNegativeInteger(it, &s, &number) == ResultError);
+	test(parseNonNegativeInteger(it, &s, &number) == ReadResultPrematureEndOfStream);
 
 	s = asciiStringUnicodeIteratorState_create(tabsPlus0Pass);
-	test(parseNonNegativeInteger(it, &s, &number) == ResultOK);
+	test(parseNonNegativeInteger(it, &s, &number) == ReadResultOK);
 	test(number.numberSize == 0);
 	freeUnsignedBigInteger(&number);
 
 	s = asciiStringUnicodeIteratorState_create(plus9Pass);
-	test(parseNonNegativeInteger(it, &s, &number) == ResultOK);
+	test(parseNonNegativeInteger(it, &s, &number) == ReadResultOK);
 	test(number.numberSize == 1);
 	if (number.numberSize == 1)
 	{
@@ -507,13 +507,13 @@ void test_2_5_4_1()
 	freeUnsignedBigInteger(&number);
 
 	s = asciiStringUnicodeIteratorState_create(plus0DollarFail);
-	test(parseNonNegativeInteger(it, &s, &number) == ResultError);
+	test(parseNonNegativeInteger(it, &s, &number) == ReadResultInvalidData);
 
 	s = asciiStringUnicodeIteratorState_create(tabsPlus9PlusFail);
-	test(parseNonNegativeInteger(it, &s, &number) == ResultError);
+	test(parseNonNegativeInteger(it, &s, &number) == ReadResultInvalidData);
 
 	s = asciiStringUnicodeIteratorState_create(overUint32Pass);
-	test(parseNonNegativeInteger(it, &s, &number) == ResultOK);
+	test(parseNonNegativeInteger(it, &s, &number) == ReadResultOK);
 	test(number.numberSize == 2);
 	if (number.numberSize == 2)
 	{
@@ -523,7 +523,7 @@ void test_2_5_4_1()
 	freeUnsignedBigInteger(&number);
 
 	s = asciiStringUnicodeIteratorState_create(plusVeryLargePass);
-	test(parseNonNegativeInteger(it, &s, &number) == ResultOK);
+	test(parseNonNegativeInteger(it, &s, &number) == ReadResultOK);
 	test(number.numberSize == 0x20);
 	if (number.numberSize == 0x20)
 	{

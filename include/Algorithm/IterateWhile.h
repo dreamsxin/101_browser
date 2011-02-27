@@ -26,8 +26,7 @@ extern "C" {
 
 /*!
  * Return value:
- * true if there is no situation where we got past the end (the
- *      iterator stays valid) or the iterator state was already invalid
+ * true if there is no situation where we got past the end
  * false otherwise
  */
 #ifdef _WIN32

@@ -20,7 +20,7 @@
 #include "HTML5/2_5_1.h"
 #include "Util/Unicode.h"
 
-enum Result parseNonNegativeInteger(SingleIterator in_iterator, void* in_iteratorState, 
+ReadResult parseNonNegativeInteger(SingleIterator in_iterator, void* in_iteratorState, 
 							   UnsignedBigInteger* in_pUnsignedInteger)
 {
 	UnicodeCodePoint *pUnicodeCodePoint;
@@ -28,7 +28,7 @@ enum Result parseNonNegativeInteger(SingleIterator in_iterator, void* in_iterato
 	bool lResult = skipWhitespace(in_iterator, in_iteratorState);
 
 	if (!lResult)
-		return ResultError;
+		return ReadResultPrematureEndOfStream;
 
 	pUnicodeCodePoint = (UnicodeCodePoint*) in_iterator.mpfGet(in_iteratorState);
 
@@ -36,19 +36,19 @@ enum Result parseNonNegativeInteger(SingleIterator in_iterator, void* in_iterato
 
 	// this will never get called - but nevertheless we test it for security
 	if (pUnicodeCodePoint == NULL)
-		return ResultError;
+		return ReadResultSomeError;
 
 	if (*pUnicodeCodePoint == '+')
 	{
 		if (in_iterator.mpfIterate(in_iteratorState) != IterateResultOK)
-			return ResultError;
+			return ReadResultPrematureEndOfStream;
 	}
 
 	lResult = initUnsignedBigIntegerUC(&out_unsignedBigInteger, 0);
 
 	assert(lResult);
 	if (!lResult)
-		return ResultError;
+		return ReadResultAllocationFailure;
 
 	do
 	{
@@ -57,31 +57,31 @@ enum Result parseNonNegativeInteger(SingleIterator in_iterator, void* in_iterato
 		if (pUnicodeCodePoint == NULL)
 		{
 			freeUnsignedBigInteger(&out_unsignedBigInteger);
-			return ResultError;
+			return ReadResultSomeError;
 		}
 
 		if (*pUnicodeCodePoint < '0' || *pUnicodeCodePoint > '9')
 		{
 			freeUnsignedBigInteger(&out_unsignedBigInteger);
-			return ResultError;
+			return ReadResultInvalidData;
 		}
 
 		if (mulUBUC(&out_unsignedBigInteger, 10) != 0)
 		{
 			freeUnsignedBigInteger(&out_unsignedBigInteger);
-			return ResultAllocationFailure;
+			return ReadResultAllocationFailure;
 		}
 
 		if (addUBUC(&out_unsignedBigInteger, *pUnicodeCodePoint-'0') != 0)
 		{
 			freeUnsignedBigInteger(&out_unsignedBigInteger);
-			return ResultAllocationFailure;
+			return ReadResultAllocationFailure;
 		}
 
 		if (in_iterator.mpfIterate(in_iteratorState) != IterateResultOK)
 		{
 			*in_pUnsignedInteger = out_unsignedBigInteger;
-			return ResultOK;
+			return ReadResultOK;
 		}
 	} while (1);
 }
