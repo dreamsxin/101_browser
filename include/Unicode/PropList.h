@@ -26,6 +26,7 @@
 
 #include "MiniStdlib/cstdbool.h"
 #include "MiniStdlib/cstdint.h"
+#include "MiniStdlib/HexDigit.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,16 +50,10 @@ __declspec(dllexport)
 #endif
 void freeIntervalsFromPropList(void* in_ppIntervals);
 
-// Internal functions
-
 /*!
- * The function converts the hex token token (i. e. token obeys 
- * (token >= '0' && token <= '9') || (token >= 'A' && token <= 'F')
- * ) into the corresponding number.
- * 
- * If token does not obey this condition 0xFF ((uint8_t) -1) is returned.
- */
-uint8_t readHexDigit(char token);
+* A dirty hack to avoid having to regenerate code
+*/
+#define readHexDigit convertHexDigitToNumber
 
 #ifdef __cplusplus
 }
