@@ -17,6 +17,7 @@
 #ifndef _MTAx_MiniStdlib_HexDigit_h
 #define _MTAx_MiniStdlib_HexDigit_h
 
+#include "MiniStdlib/cstdbool.h"
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/HexDigit.h"
 
@@ -24,14 +25,8 @@
 extern "C" {
 #endif
 
-/*!
- * convertHexDigitToNumber converts the hex token token (i. e. token obeys 
- * (token >= '0' && token <= '9') || (token >= 'A' && token <= 'F')
- * ) into the corresponding number.
- * 
- * If token does not obey this condition 0xFF ((uint8_t) -1) is returned.
- */
-uint8_t convertHexDigitToNumber(char token);
+bool convertHexDigitToNumber(char token, uint8_t *out_pNumber, 
+	bool in_acceptUppercase, bool in_acceptLowercase);
 
 #ifdef __cplusplus
 }

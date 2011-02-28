@@ -16,18 +16,26 @@
 
 #include "MiniStdlib/HexDigit.h"
 
-uint8_t convertHexDigitToNumber(char token)
+bool convertHexDigitToNumber(char token, uint8_t *out_pNumber, 
+	bool in_acceptUppercase, bool in_acceptLowercase)
 {
 	if (token >= '0' && token <= '9')
 	{
-		return (token - '0');
+		*out_pNumber = (token - '0');
+		return true;
 	}
-	else if (token >= 'A' && token <= 'F')
+	else if (token >= 'A' && token <= 'F' && in_acceptUppercase)
 	{
-		return 0xA + (token - 'A');
+		*out_pNumber = 0xA + (token - 'A');
+		return true;
+	}
+	else if (token >= 'a' && token <= 'f' && in_acceptLowercase)
+	{
+		*out_pNumber = 0xA + (token - 'a');
+		return true;
 	}
 	else
 	{
-		return (uint8_t) -1;
+		return false;
 	}
 }

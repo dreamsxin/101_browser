@@ -22,3 +22,16 @@ void freeIntervalsFromPropList(void* in_ppIntervals)
 {
 	safe_free(in_ppIntervals);
 }
+
+uint8_t readHexDigit(char token)
+{
+	uint8_t out_value;
+	if (convertHexDigitToNumber(token, &out_value, true, false))
+	{
+		return out_value;
+	}
+	else
+	{
+		return (uint8_t) -1;
+	}
+}

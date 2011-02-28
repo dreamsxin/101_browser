@@ -51,9 +51,13 @@ __declspec(dllexport)
 void freeIntervalsFromPropList(void* in_ppIntervals);
 
 /*!
-* A dirty hack to avoid having to regenerate code
-*/
-#define readHexDigit convertHexDigitToNumber
+ * convertHexDigitToNumber converts the hex token token (i. e. token obeys 
+ * (token >= '0' && token <= '9') || (token >= 'A' && token <= 'F')
+ * ) into the corresponding number.
+ * 
+ * If token does not obey this condition 0xFF ((uint8_t) -1) is returned.
+ */
+uint8_t readHexDigit(char token);
 
 #ifdef __cplusplus
 }
