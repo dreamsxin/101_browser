@@ -14,28 +14,24 @@
 * limitations under the License.
 */
 
-#include "MiniStdlib/HexDigit.h"
+#ifndef _MTAx_MiniStdlib_HexDigit_h
+#define _MTAx_MiniStdlib_HexDigit_h
 
+#include "MiniStdlib/cstdbool.h"
+#include "MiniStdlib/cstdint.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 bool convertHexDigitToNumber(char token, uint8_t *out_pNumber, 
-	bool in_acceptUppercase, bool in_acceptLowercase)
-{
-	if (token >= '0' && token <= '9')
-	{
-		*out_pNumber = (token - '0');
-		return true;
-	}
-	else if (token >= 'A' && token <= 'F' && in_acceptUppercase)
-	{
-		*out_pNumber = 0xA + (token - 'A');
-		return true;
-	}
-	else if (token >= 'a' && token <= 'f' && in_acceptLowercase)
-	{
-		*out_pNumber = 0xA + (token - 'a');
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	bool in_acceptUppercase, bool in_acceptLowercase);
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif
