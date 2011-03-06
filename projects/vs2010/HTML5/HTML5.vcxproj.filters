@@ -39,7 +39,7 @@
     <ClCompile Include="..\..\..\src\HTML5\2_4.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="2_5_6.c">
+    <ClCompile Include="..\..\..\src\HTML5\2_5_6.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
