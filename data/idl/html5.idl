@@ -156,8 +156,6 @@ module html5
              attribute Function onended;
              attribute Function onerror;
              attribute Function onfocus;
-             attribute Function onformchange;
-             attribute Function onforminput;
              attribute Function oninput;
              attribute Function oninvalid;
              attribute Function onkeydown;
@@ -281,8 +279,6 @@ module html5
              attribute Function onended;
              attribute Function onerror;
              attribute Function onfocus;
-             attribute Function onformchange;
-             attribute Function onforminput;
              attribute Function oninput;
              attribute Function oninvalid;
              attribute Function onkeydown;
@@ -899,9 +895,6 @@ module html5
     void submit();
     void reset();
     boolean checkValidity();
-  
-    void dispatchFormInput();
-    void dispatchFormChange();
   };
 
   interface HTMLFieldSetElement : HTMLElement {
@@ -1306,8 +1299,6 @@ module html5
              attribute Function onended;
              attribute Function onerror;
              attribute Function onfocus;
-             attribute Function onformchange;
-             attribute Function onforminput;
              attribute Function onhashchange;
              attribute Function oninput;
              attribute Function oninvalid;
