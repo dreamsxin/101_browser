@@ -26,7 +26,7 @@
 
 #include "MiniStdlib/cstdbool.h"
 #include "MiniStdlib/cstdint.h"
-#include "Algorithm/HexDigit.h"
+#include "MiniStdlib/HexDigit.h"
 
 #ifdef __cplusplus
 extern "C" {

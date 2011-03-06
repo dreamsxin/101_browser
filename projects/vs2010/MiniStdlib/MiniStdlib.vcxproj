@@ -15,12 +15,14 @@
     <ClInclude Include="..\..\..\include\MiniStdlib\cstdbool.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\cstddef.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\cstdint.h" />
+    <ClInclude Include="..\..\..\include\MiniStdlib\HexDigit.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\minmax.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\MTAx_cstdio.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\MTAx_cstdlib.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\safe_free.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\MiniStdlib\HexDigit.c" />
     <ClCompile Include="..\..\..\src\MiniStdlib\MTAx_cstdio.c" />
     <ClCompile Include="..\..\..\src\MiniStdlib\safe_free.c" />
   </ItemGroup>

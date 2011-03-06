@@ -14,9 +14,9 @@
 * limitations under the License.
 */
 
-#include "Algorithm/HexDigit.h"
+#include "MiniStdlib/HexDigit.h"
 
-bool convertHexDigitToNumber(char token, uint8_t *out_pNumber, 
+bool convertHexDigitToNumber(UnicodeCodePoint token, uint8_t *out_pNumber, 
 	bool in_acceptUppercase, bool in_acceptLowercase)
 {
 	if (token >= '0' && token <= '9')

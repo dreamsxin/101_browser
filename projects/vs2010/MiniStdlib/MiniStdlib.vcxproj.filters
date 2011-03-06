@@ -39,12 +39,18 @@
     <ClInclude Include="..\..\..\include\MiniStdlib\safe_free.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\MiniStdlib\HexDigit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\MiniStdlib\MTAx_cstdio.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\MiniStdlib\safe_free.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MiniStdlib\HexDigit.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

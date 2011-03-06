@@ -17,6 +17,7 @@
 #ifndef _MTAx_MiniStdlib_HexDigit_h
 #define _MTAx_MiniStdlib_HexDigit_h
 
+#include "Util/Unicode.h"
 #include "MiniStdlib/cstdbool.h"
 #include "MiniStdlib/cstdint.h"
 
@@ -24,10 +25,7 @@
 extern "C" {
 #endif
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool convertHexDigitToNumber(char token, uint8_t *out_pNumber, 
+bool convertHexDigitToNumber(UnicodeCodePoint token, uint8_t *out_pNumber, 
 	bool in_acceptUppercase, bool in_acceptLowercase);
 
 #ifdef __cplusplus

@@ -59,7 +59,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;MiniStdlib.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -80,7 +80,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;MiniStdlib.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -93,6 +93,7 @@
     <ClCompile Include="..\..\..\src\HTML5\2_5_5.c" />
     <ClCompile Include="..\..\..\src\HTML5\ASCIIStringUnicodeCyclicIterator.c" />
     <ClCompile Include="..\..\..\src\HTML5\ASCIIStringUnicodeIterator.c" />
+    <ClCompile Include="2_5_6.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\HTML5\2_3.h" />
@@ -100,6 +101,7 @@
     <ClInclude Include="..\..\..\include\HTML5\2_5_1.h" />
     <ClInclude Include="..\..\..\include\HTML5\2_5_4_1.h" />
     <ClInclude Include="..\..\..\include\HTML5\2_5_5.h" />
+    <ClInclude Include="..\..\..\include\HTML5\2_5_6.h" />
     <ClInclude Include="..\..\..\include\HTML5\ASCIIStringUnicodeCyclicIterator.h" />
     <ClInclude Include="..\..\..\include\HTML5\ASCIIStringUnicodeIterator.h" />
   </ItemGroup>
@@ -109,6 +111,9 @@
     </ProjectReference>
     <ProjectReference Include="..\BigNumber\BigNumber.vcxproj">
       <Project>{d090e174-4129-4500-a265-20a5fd191604}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\MiniStdlib\MiniStdlib.vcxproj">
+      <Project>{6c7c9fbb-39b4-42cc-a000-c0ff2f61388e}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Unicode\Unicode.vcxproj">
       <Project>{dcc383e7-20ee-4cf5-8491-22f24c5772db}</Project>

@@ -22,6 +22,7 @@
 #include "HTML5/2_5_1.h"
 #include "HTML5/2_5_4_1.h"
 #include "HTML5/2_5_5.h"
+#include "HTML5/2_5_6.h"
 #include "HTML5/ASCIIStringUnicodeIterator.h"
 #include "HTML5/ASCIIStringUnicodeCyclicIterator.h"
 #include "MiniStdlib/MTAx_cstdio.h"
@@ -576,6 +577,56 @@ void test_2_5_5()
 	test(!isDigit(':'));
 }
 
+void test_colorUntouched(SimpleColor *pSimpleColor)
+{
+	test(pSimpleColor->red   = 0xAB);
+	test(pSimpleColor->green = 0xCD);
+	test(pSimpleColor->blue  = 0xDE);
+}
+
+void test_2_5_6()
+{
+	{
+		char empty[]         = "";
+		char numberSign[]    = "#";
+		char someChar[]      = "a";
+		char invalidColor[]  = "#12345g";
+		char overlongColor[] = "#123aFE1";
+		char validColor[]    = "#Af1E09";
+
+		SimpleColor simpleColor = { 0xAB, 0xCD, 0xDE };
+
+		SingleIterator it = asciiStringUnicodeIterator_create();
+		ASCIIStringUnicodeIteratorState s;
+
+		s = asciiStringUnicodeIteratorState_create(empty);
+		test(parseSimpleColor(it, &s, &simpleColor) == ReadResultPrematureEndOfStream);
+		test_colorUntouched(&simpleColor);
+
+		s = asciiStringUnicodeIteratorState_create(numberSign);
+		test(parseSimpleColor(it, &s, &simpleColor) == ReadResultPrematureEndOfStream);
+		test_colorUntouched(&simpleColor);
+
+		s = asciiStringUnicodeIteratorState_create(someChar);
+		test(parseSimpleColor(it, &s, &simpleColor) == ReadResultInvalidData);
+		test_colorUntouched(&simpleColor);
+
+		s = asciiStringUnicodeIteratorState_create(invalidColor);
+		test(parseSimpleColor(it, &s, &simpleColor) == ReadResultInvalidData);
+		test_colorUntouched(&simpleColor);
+
+		s = asciiStringUnicodeIteratorState_create(overlongColor);
+		test(parseSimpleColor(it, &s, &simpleColor) == ReadResultOverdueEndOfStream);
+		test_colorUntouched(&simpleColor);
+
+		s = asciiStringUnicodeIteratorState_create(validColor);
+		test(parseSimpleColor(it, &s, &simpleColor) == ReadResultOK);
+		test(0xAF == simpleColor.red);
+		test(0x1E == simpleColor.green);
+		test(0x09 == simpleColor.blue);
+	}
+}
+
 void testHTML5()
 {
 	wprintf(L"Testing 2.3\n");
@@ -588,4 +639,6 @@ void testHTML5()
 	test_2_5_4_1();
 	wprintf(L"Testing 2.5.5\n");
 	test_2_5_5();
+	wprintf(L"Testing 2.5.6\n");
+	test_2_5_6();
 }
