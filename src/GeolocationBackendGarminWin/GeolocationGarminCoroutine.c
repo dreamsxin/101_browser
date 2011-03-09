@@ -35,6 +35,7 @@ void __stdcall geolocationCoroutine(void *in_pGarminUsbData)
 	DWORD theBytesReturned;
 	BYTE* theBuffer = NULL;
 
+begin_of_geolocationCoroutine_loop:
 	while (1)
 	{
 		DWORD theBufferSize = 0;
@@ -55,12 +56,11 @@ void __stdcall geolocationCoroutine(void *in_pGarminUsbData)
 				return;
 			}
 
-			if (!DeviceIoControl(pGarminUsbData->garminHandle,
+			if (!DeviceIoControl(
+				pGarminUsbData->garminHandle,
 				IOCTL_ASYNC_IN,
-				0,
-				0,
-				theBuffer+theBufferSize,
-				ASYNC_DATA_SIZE,
+				0, 0,
+				theBuffer+theBufferSize, ASYNC_DATA_SIZE,
 				&theBytesReturned,
 				NULL))
 			{
@@ -78,39 +78,40 @@ void __stdcall geolocationCoroutine(void *in_pGarminUsbData)
 			assert(_msize(theBuffer) == theBufferSize);
 		}
 
+		// So we have read the async packet
+
+		if (!isPacketBufferOfCorrectSize((Packet_t*) theBuffer, readBytesCount))
+		{
+			safe_free(&theBuffer);
+			pGarminUsbData->coroutineState = GarminCoroutineStateErrorInvalidData;
+			pGarminUsbData->pPacket = NULL;
+			switchToCoroutine(pGarminUsbData->pGeolocationCoroutine, pGarminUsbData->pMainCoroutine);
+
+			return;
+		}
+
 		if (PacketType_USB_Protocol_Layer != ((Packet_t*) theBuffer)->mPacketType || 
 			Pid_Data_Available != ((Packet_t*) theBuffer)->mPacketId)
 		{
-			if (!isPacketBufferOfCorrectSize((Packet_t*) theBuffer, readBytesCount))
-			{
-				safe_free(&theBuffer);
-				pGarminUsbData->coroutineState = GarminCoroutineStateErrorInvalidData;
-				pGarminUsbData->pPacket = NULL;
-				switchToCoroutine(pGarminUsbData->pGeolocationCoroutine, pGarminUsbData->pMainCoroutine);
+			pGarminUsbData->coroutineState = GarminCoroutineStateOkSendingPossible;
+			pGarminUsbData->pPacket = (Packet_t*) theBuffer;
+			switchToCoroutine(pGarminUsbData->pGeolocationCoroutine, pGarminUsbData->pMainCoroutine);
 
-				return;
-			}
-			else
-			{
-				pGarminUsbData->coroutineState = GarminCoroutineStateOkSendingPossible;
-				pGarminUsbData->pPacket = (Packet_t*) theBuffer;
-				switchToCoroutine(pGarminUsbData->pGeolocationCoroutine, pGarminUsbData->pMainCoroutine);
+			safe_free(&theBuffer);
 
-				safe_free(&theBuffer);
-
-				continue;
-			}
+			continue;
 		}
 
-		// We got a signal package
+		/*
+		* We got a signal package before that we haven't deleted
+		*/
 		assert(theBuffer != NULL);
-
 		safe_free(&theBuffer);
 
 		/*
-		 * If this was a small "signal" packet, read a real
-		 * packet using ReadFile
-		 */
+		* If this was a small "signal" packet, read a real
+		* packet using ReadFile
+		*/
 
 		theBuffer = (BYTE*) malloc(MAX_BUFFER_SIZE);
 
@@ -123,61 +124,105 @@ void __stdcall geolocationCoroutine(void *in_pGarminUsbData)
 			return;
 		}
 
-		/*
-		 * Keep reading (and queueing) packets 
-		 * until the driver returns a 0 size buffer.
-		 */
-		while (1)
+		if (!ReadFile(pGarminUsbData->garminHandle,
+			theBuffer,
+			MAX_BUFFER_SIZE,
+			&theBytesReturned,
+			NULL))
 		{
-			if (!ReadFile(pGarminUsbData->garminHandle,
-				theBuffer,
-				MAX_BUFFER_SIZE,
-				&theBytesReturned,
-				NULL))
-			{
-				safe_free(&theBuffer);
+			safe_free(&theBuffer);
 
-				pGarminUsbData->coroutineState = GarminCoroutineStateErrorReadFile;
+			pGarminUsbData->coroutineState = GarminCoroutineStateErrorReadFile;
+			pGarminUsbData->pPacket = NULL;
+			switchToCoroutine(pGarminUsbData->pGeolocationCoroutine, pGarminUsbData->pMainCoroutine);
+
+			return;
+		}
+
+		if (theBytesReturned == 0)
+		{
+			safe_free(&theBuffer);
+
+			goto begin_of_geolocationCoroutine_loop;
+		}
+
+		if (!isPacketBufferOfCorrectSize((Packet_t*) theBuffer, theBytesReturned))
+		{
+			safe_free(&theBuffer);
+
+			pGarminUsbData->coroutineState = GarminCoroutineStateErrorInvalidData;
+			pGarminUsbData->pPacket = NULL;
+			switchToCoroutine(pGarminUsbData->pGeolocationCoroutine, pGarminUsbData->pMainCoroutine);
+
+			return;
+		}
+
+		{
+			BYTE *theNextBuffer = NULL;
+
+			theNextBuffer = (BYTE*) malloc(MAX_BUFFER_SIZE);
+
+			if (theNextBuffer == NULL)
+			{
+				safe_free(theBuffer);
+				pGarminUsbData->coroutineState = GarminCoroutineStateErrorAllocation;
 				pGarminUsbData->pPacket = NULL;
 				switchToCoroutine(pGarminUsbData->pGeolocationCoroutine, pGarminUsbData->pMainCoroutine);
 
 				return;
 			}
 
-			if (theBytesReturned == 0)
+			/*
+			* Keep reading packets 
+			* until the driver returns a 0 size buffer.
+			*/
+			while (1)
 			{
-				// LBL: GeolocationGarminCoroutine:125
-				safe_free(&theBuffer);
+				if (!ReadFile(pGarminUsbData->garminHandle,
+					theNextBuffer,
+					MAX_BUFFER_SIZE,
+					&theBytesReturned,
+					NULL))
+				{
+					safe_free(&theNextBuffer);
+					safe_free(&theBuffer);
 
-				pGarminUsbData->coroutineState = GarminCoroutineStateOkSendingPossible;
-				pGarminUsbData->pPacket = NULL;
-				switchToCoroutine(pGarminUsbData->pGeolocationCoroutine, pGarminUsbData->pMainCoroutine);
+					pGarminUsbData->coroutineState = GarminCoroutineStateErrorReadFile;
+					pGarminUsbData->pPacket = NULL;
+					switchToCoroutine(pGarminUsbData->pGeolocationCoroutine, pGarminUsbData->pMainCoroutine);
+
+					return;
+				}
+
+				if (theBytesReturned == 0)
+				{
+					safe_free(&theNextBuffer);
+
+					pGarminUsbData->coroutineState = GarminCoroutineStateOkSendingPossible;
+					pGarminUsbData->pPacket = (Packet_t*) theBuffer;
+					switchToCoroutine(pGarminUsbData->pGeolocationCoroutine, pGarminUsbData->pMainCoroutine);
+
+					safe_free(&theBuffer);
+
+					break;
+				}
+
+				if (!isPacketBufferOfCorrectSize((Packet_t*) theNextBuffer, theBytesReturned))
+				{
+					safe_free(&theNextBuffer);
+					safe_free(&theBuffer);
+
+					pGarminUsbData->coroutineState = GarminCoroutineStateErrorInvalidData;
+					pGarminUsbData->pPacket = NULL;
+					switchToCoroutine(pGarminUsbData->pGeolocationCoroutine, pGarminUsbData->pMainCoroutine);
+
+					return;
+				}
 				
-				break;
-			}
-
-			if (!isPacketBufferOfCorrectSize((Packet_t*) theBuffer, theBytesReturned))
-			{
-				safe_free(&theBuffer);
-
-				pGarminUsbData->coroutineState = GarminCoroutineStateErrorInvalidData;
-				pGarminUsbData->pPacket = NULL;
-				switchToCoroutine(pGarminUsbData->pGeolocationCoroutine, pGarminUsbData->pMainCoroutine);
-
-				return;
-			}
-			else
-			{
 				pGarminUsbData->coroutineState = GarminCoroutineStateOkSendingNotPossible;
 				pGarminUsbData->pPacket = (Packet_t*) theBuffer;
 				switchToCoroutine(pGarminUsbData->pGeolocationCoroutine, pGarminUsbData->pMainCoroutine);
-
-				/*
-				 * We don't free the buffer here, since it would not be reallocated.
-				 * Instead we free it at LBL: GeolocationGarminCoroutine:125
-				 */
-
-				continue;
+				theBuffer = theNextBuffer;
 			}
 		}
 	}
