@@ -20,8 +20,9 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-#include "GeolocationBackendGarminWin/GeolocationGarmin.h"
-#include "GeolocationBackendGarminWin/GeolocationGarminFunctions.h"
+#include "GeolocationBackendGarminWin/GeolocationGarminInit.h"
+#include "GeolocationBackendGarminWin/GeolocationGarminCoroutineStateFunctions.h"
+#include "GeolocationBackendGarminWin/GeolocationGarminPacketFunctions.h"
 #include "GeolocationBackendGarminWin/GeolocationGarminPacketsUtil.h"
 
 typedef struct
@@ -31,7 +32,7 @@ typedef struct
 	volatile bool D800_supported;
 } SupportedProtocols;
 
-void interprete_Protocol_Array(Packet_t *in_pPacket, void *in_pSupportedProtocols)
+void interprete_Protocol_Array(Packet_t *in_pPacket, SupportedProtocols *in_pSupportedProtocols)
 {
 	SupportedProtocols *pSupportedProtocols = (SupportedProtocols *) in_pSupportedProtocols;
 
@@ -93,6 +94,8 @@ int main()
 
 	Packet_t theStartSessionPacket;
 	Packet_t theProductDataPacket;
+	Packet_t *pReceivedPacket;
+
 	Device_Command_Packet_t theStartPvtDataPacket;
 	Device_Command_Packet_t theStopPvtDataPacket;
 
@@ -119,34 +122,75 @@ int main()
 	}
 
 	if (!createGeolocationCoroutine(&garminUsbData, &currentCoroutine, &geolocationCoroutine, 
-		lGarminHandle, NULL, NULL))
+		lGarminHandle))
 	{
 		printf("Could not create Geolocation coroutine.\n");
 		exit(EXIT_FAILURE);
 	}
 
-	if (!sendPacket(lGarminHandle, &theStartSessionPacket, lUsbSize))
+	if (!sendPacket(&garminUsbData, &theStartSessionPacket, lUsbSize))
 	{
 		printf("Could not send start session packet.\n");
 		exit(EXIT_FAILURE);
 	}
 
-	if (!waitForPacket(&garminUsbData, PacketType_USB_Protocol_Layer, Pid_Session_Started, false, NULL, NULL))
+	do
 	{
-		printf("Could not start session.\n");
-		exit(EXIT_FAILURE);
-	}
+		if (!receivePacket(&garminUsbData, &pReceivedPacket))
+		{
+			printf("Could not receive packet.\n");
+			exit(EXIT_FAILURE);
+		}
+	} while (
+		NULL == pReceivedPacket ||
+		pReceivedPacket->mPacketType != PacketType_USB_Protocol_Layer || 
+		pReceivedPacket->mPacketId != Pid_Session_Started);
 
-	if (!sendPacket(lGarminHandle, &theProductDataPacket, lUsbSize))
+	do
+	{
+		if (isSendingPossible(garminUsbData.coroutineState))
+			break;
+
+		if (!receivePacket(&garminUsbData, &pReceivedPacket))
+		{
+			printf("Could not receive packet.\n");
+			exit(EXIT_FAILURE);
+		}
+	} while (1);
+
+	if (!sendPacket(&garminUsbData, &theProductDataPacket, lUsbSize))
 	{
 		printf("Could not send product data packet.\n");
 		exit(EXIT_FAILURE);
 	}
 
-	if (!waitForPacket(&garminUsbData, PacketType_Application_Layer, Pid_Product_Data, 
-		true, &interprete_Protocol_Array, &supportedProcotocols))
+	do
 	{
-		printf("Could not get product data.\n");
+		if (!receivePacket(&garminUsbData, &pReceivedPacket))
+		{
+			printf("Could not receive packet.\n");
+			exit(EXIT_FAILURE);
+		}
+	} while (
+		NULL == pReceivedPacket ||
+		pReceivedPacket->mPacketType != PacketType_Application_Layer || 
+		pReceivedPacket->mPacketId != Pid_Product_Data);
+
+	do
+	{
+		if (isSendingPossible(garminUsbData.coroutineState))
+			break;
+
+		if (!receivePacket(&garminUsbData, &pReceivedPacket))
+		{
+			printf("Could not receive packet.\n");
+			exit(EXIT_FAILURE);
+		}
+	} while (1);
+
+	if (!sendPacket(&garminUsbData, &theProductDataPacket, lUsbSize))
+	{
+		printf("Could not send product data packet.\n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -168,10 +212,13 @@ int main()
 		exit(EXIT_FAILURE);
 	}
 
+#if 0
+#if 0
 	garminUsbData.pPacketHandlerFunc = &pvtHandler;
 	garminUsbData.pPacketHandlerData = NULL;
+#endif
 
-	if (!sendPacket(lGarminHandle, &theStartPvtDataPacket, lUsbSize))
+	if (!sendPacket(&garminUsbData, &theStartPvtDataPacket, lUsbSize))
 	{
 		printf("Could not send start PVT packet.\n");
 		exit(EXIT_FAILURE);
@@ -181,12 +228,13 @@ int main()
 	{
 		startGeolocationCoroutine(&garminUsbData);
 
-		if (garminUsbData.coroutineState != GarminCoroutineStateOK)
+		if (!isGarminCoroutineStateOK(garminUsbData.coroutineState))
 		{
 			printf("Invalid state.\n");
 			exit(1);
 		}
 	}
+#endif
 
 	return 0;
 }

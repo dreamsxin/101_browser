@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 Wolfgang Keller
+ * Copyright 2011 Wolfgang Keller
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,17 @@
  * limitations under the License.
  */
 
-#ifndef _MTAx_GeolocationGarminWin_GeolocationGarminFunctions_h
-#define _MTAx_GeolocationGarminWin_GeolocationGarminFunctions_h
+#ifndef _MTAx_GeolocationGarminWin_GeolocationGarminStateFunctions_h
+#define _MTAx_GeolocationGarminWin_GeolocationGarminStateFunctions_h
 
-#include "GeolocationBackendGarminWin/GeolocationGarmin.h"
+#include "GeolocationBackendGarminWin/GeolocationGarminCoroutineDataTypes.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/*!
- * Return value:
- *
- * true - success
- * false - error
- */
-__declspec(dllexport) bool waitForPacket(
-	GarminUsbData *in_out_pUsbData,
-	uint8_t in_type,
-	uint16_t in_pid,
-	bool in_setNextHandler,
-	void (*in_pNextHandlerFunc)(Packet_t *, void *),
-	void * volatile in_pNextHandlerData);
+__declspec(dllexport) bool isGarminCoroutineStateOK(GarminCoroutineState in_coroutineState);
+__declspec(dllexport) bool isSendingPossible(GarminCoroutineState in_coroutineState);
 
 #ifdef __cplusplus
 }

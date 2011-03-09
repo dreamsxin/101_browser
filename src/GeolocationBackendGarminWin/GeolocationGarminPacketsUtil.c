@@ -16,7 +16,7 @@
 
 #include "GeolocationBackendGarminWin/GeolocationGarminPacketsUtil.h"
 
-__declspec(dllexport) void fillEmptyPacket(Packet_t *in_pPacket, 
+void fillEmptyPacket(Packet_t *in_pPacket, 
 	uint8_t in_packetType, 
 	uint16_t in_packetId)
 {

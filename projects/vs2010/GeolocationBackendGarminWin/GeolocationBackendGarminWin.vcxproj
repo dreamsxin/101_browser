@@ -85,18 +85,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarmin.h" />
-    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminFunctions.h" />
+    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminInit.h" />
+    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminCoroutineDataTypes.h" />
+    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminCoroutineStateFunctions.h" />
     <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminInternalMemory.h" />
+    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminPacketFunctions.h" />
     <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminPackets.h" />
     <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminPacketsUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminCoroutine.c" />
-    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminFunctions.c" />
+    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminCoroutineStateFunctions.c" />
     <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminInit.c" />
     <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminInternalMemory.c" />
-    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminPacket.c" />
+    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminPacketFunctions.c" />
     <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminPacketsUtil.c" />
   </ItemGroup>
   <ItemGroup>

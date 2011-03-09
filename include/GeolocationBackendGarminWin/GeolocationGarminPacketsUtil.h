@@ -19,7 +19,6 @@
 
 #include "GeolocationBackendGarminWin/GeolocationGarminPackets.h"
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
