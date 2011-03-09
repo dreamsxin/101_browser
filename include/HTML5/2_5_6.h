@@ -21,6 +21,9 @@
 #include "Util/Iterator.h"
 #include "Util/ReadResult.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*
 * http://www.whatwg.org/specs/web-apps/current-work/multipage/common-microsyntaxes.html#simple-color
@@ -32,10 +35,6 @@ typedef struct
 {
 	uint8_t red, green, blue;
 } SimpleColor;
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #ifdef _WIN32
 __declspec(dllexport)
