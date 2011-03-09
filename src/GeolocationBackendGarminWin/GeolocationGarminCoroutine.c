@@ -49,6 +49,7 @@ void __stdcall geolocationCoroutine(void *in_pGarminUsbData)
 			if (!reallocBufferAndItsSizeAndDeleteIfFailure(&theBuffer, theBufferSize, ASYNC_DATA_SIZE))
 			{
 				pGarminUsbData->coroutineState = GarminCoroutineStateErrorAllocation;
+				pGarminUsbData->pPacket = NULL;
 				switchToCoroutine(pGarminUsbData->pGeolocationCoroutine, pGarminUsbData->pMainCoroutine);
 
 				return;
@@ -64,6 +65,7 @@ void __stdcall geolocationCoroutine(void *in_pGarminUsbData)
 				NULL))
 			{
 				pGarminUsbData->coroutineState = GarminCoroutineStateErrorDeviceIoControl;
+				pGarminUsbData->pPacket = NULL;
 				switchToCoroutine(pGarminUsbData->pGeolocationCoroutine, pGarminUsbData->pMainCoroutine);
 
 				return;
@@ -83,6 +85,7 @@ void __stdcall geolocationCoroutine(void *in_pGarminUsbData)
 			{
 				safe_free(&theBuffer);
 				pGarminUsbData->coroutineState = GarminCoroutineStateErrorInvalidData;
+				pGarminUsbData->pPacket = NULL;
 				switchToCoroutine(pGarminUsbData->pGeolocationCoroutine, pGarminUsbData->pMainCoroutine);
 
 				return;
@@ -98,6 +101,11 @@ void __stdcall geolocationCoroutine(void *in_pGarminUsbData)
 				continue;
 			}
 		}
+
+		// We got a signal package
+		assert(theBuffer != NULL);
+
+		safe_free(&theBuffer);
 
 		/*
 		 * If this was a small "signal" packet, read a real
