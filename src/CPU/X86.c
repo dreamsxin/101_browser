@@ -58,4 +58,3 @@ int Check_CPU_support_AES()
 	
 	return (CPUInfo[2] & 0x2000000);
 }
-
