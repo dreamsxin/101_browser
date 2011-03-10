@@ -579,9 +579,9 @@ void test_2_5_5()
 
 void test_colorUntouched(SimpleColor *pSimpleColor)
 {
-	test(pSimpleColor->red   = 0xAB);
-	test(pSimpleColor->green = 0xCD);
-	test(pSimpleColor->blue  = 0xDE);
+	test(0xAB == pSimpleColor->red  );
+	test(0xCD == pSimpleColor->green);
+	test(0xDE == pSimpleColor->blue );
 }
 
 void test_2_5_6()
