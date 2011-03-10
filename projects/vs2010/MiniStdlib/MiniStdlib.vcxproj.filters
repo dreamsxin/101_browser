@@ -42,6 +42,9 @@
     <ClInclude Include="..\..\..\include\MiniStdlib\HexDigit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\MiniStdlib\xchg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\MiniStdlib\MTAx_cstdio.c">
@@ -51,6 +54,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\MiniStdlib\HexDigit.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MiniStdlib\xchg.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
