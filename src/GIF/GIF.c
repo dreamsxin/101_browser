@@ -574,9 +574,6 @@ ReadResult read_Comment_Extension(FILE* in_gifFile, bool in_is89a)
 
 	while (subBlock.Block_Size != 0)
 	{
-		if (subBlock.Block_Size == 0)
-			break;
-
 		subBlock.Data_Values = (uint8_t*) malloc(subBlock.Block_Size);
 
 		if (NULL == subBlock.Data_Values)
