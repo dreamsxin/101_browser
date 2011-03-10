@@ -18,6 +18,7 @@
 #define _MTAx_GeolocationGarminWin_GeolocationGarminPacketsUtil_h
 
 #include "GeolocationBackendGarminWin/GeolocationGarminPackets.h"
+#include "GeolocationBackendGarminWin/GeolocationGarminCoroutineDataTypes.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,6 +30,24 @@ __declspec(dllexport) void fillEmptyPacket(Packet_t *in_pPacket,
 
 __declspec(dllexport) void fillDeviceCommandPacket(Device_Command_Packet_t *in_pPacket, 
 	Command_Id_Type in_command_Id_Type);
+
+/*!
+* Return value:
+* true on success (no error occured)
+* false on failure
+*/
+__declspec(dllexport) bool waitForPacket(
+	GarminUsbData *in_out_pGarminUsbData, 
+	Packet_t **out_ppPacket, 
+	uint8_t in_type,
+	uint16_t in_pid);
+
+/*!
+* Return value:
+* true on success (no error occured)
+* false on failure
+*/
+__declspec(dllexport) bool flushPacketsUntilSendingPossible(GarminUsbData *in_out_pGarminUsbData);
 
 #ifdef __cplusplus
 }

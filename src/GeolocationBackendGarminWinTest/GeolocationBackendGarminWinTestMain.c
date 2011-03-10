@@ -1,18 +1,18 @@
 /*
- * Copyright 2008-2011 Wolfgang Keller
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+* Copyright 2008-2011 Wolfgang Keller
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 #include <assert.h>
 #include <stdio.h>
@@ -27,61 +27,62 @@
 
 typedef struct
 {
-	volatile bool A010_supported;
-	volatile bool A800_supported;
-	volatile bool D800_supported;
+	bool A010_supported;
+	bool A800_supported;
+	bool D800_supported;
 } SupportedProtocols;
 
-void interprete_Protocol_Array(Packet_t *in_pPacket, SupportedProtocols *in_pSupportedProtocols)
+SupportedProtocols interprete_Protocol_Array(Packet_t *in_pPacket)
 {
-	SupportedProtocols *pSupportedProtocols = (SupportedProtocols *) in_pSupportedProtocols;
+	SupportedProtocols supportedProtocols = { false, false, false };
+	size_t idx;
 
-#if 0
-	printf("%u %u\n", in_pPacket->mPacketType, in_pPacket->mPacketId);
-#endif
+	assert(PacketType_Application_Layer == in_pPacket->mPacketType);
+	assert(Pid_Protocol_Array == in_pPacket->mPacketId);
 
-	if (in_pPacket->mPacketType == PacketType_Application_Layer &&
-		in_pPacket->mPacketId == Pid_Protocol_Array)
+	for (idx = 0; idx < in_pPacket->mDataSize/3; idx++)
 	{
-		size_t idx;
+		Protocol_Data_Type *current_Protocol_Data_Type = 
+			((Protocol_Data_Type*) in_pPacket->mData)+idx;
 
-		for (idx = 0; idx < in_pPacket->mDataSize/3; idx++)
+		if ('A' == current_Protocol_Data_Type->tag)
 		{
-			Protocol_Data_Type *current_Protocol_Data_Type = 
-				((Protocol_Data_Type*) in_pPacket->mData)+idx;
-
-			if ('A' == current_Protocol_Data_Type->tag)
-			{
-				if (10 == current_Protocol_Data_Type->data)
-					pSupportedProtocols->A010_supported = true;
-				else if (800 == current_Protocol_Data_Type->data)
-					pSupportedProtocols->A800_supported = true;
-			}
-			else if ('D' == current_Protocol_Data_Type->tag)
-			{
-				if (800 == current_Protocol_Data_Type->data)
-					pSupportedProtocols->D800_supported = true;
-			}
-
-			printf("%c%03u\n", current_Protocol_Data_Type->tag, 
-				(unsigned) current_Protocol_Data_Type->data);
+			if (10 == current_Protocol_Data_Type->data)
+				supportedProtocols.A010_supported = true;
+			else if (800 == current_Protocol_Data_Type->data)
+				supportedProtocols.A800_supported = true;
 		}
+		else if ('D' == current_Protocol_Data_Type->tag)
+		{
+			if (800 == current_Protocol_Data_Type->data)
+				supportedProtocols.D800_supported = true;
+		}
+
+		printf("%c%03u\n", current_Protocol_Data_Type->tag, 
+			(unsigned) current_Protocol_Data_Type->data);
 	}
+
+	return supportedProtocols;
 }
 
-void pvtHandler(Packet_t *in_pPacket, void *in_pData)
+bool pvtHandler(Packet_t *in_pPacket)
 {
-	if (PacketType_Application_Layer == in_pPacket->mPacketType && 
-		Pid_Pvt_Data == in_pPacket->mPacketId)
-	{
-		if (sizeof(D800_Pvt_Data_Type) == in_pPacket->mDataSize)
-		{
-			D800_Pvt_Data_Type *pPvtData = (D800_Pvt_Data_Type*) in_pPacket->mData;
-			printf("Position: %f %f (+/- %f m)\n", pPvtData->posn.lat * 180.0/M_PI, pPvtData->posn.lon * 180.0/M_PI, pPvtData->eph);
-			printf("Height: %f (+/- %f m)\n", pPvtData->alt+pPvtData->msl_hght, pPvtData->epv);
+	assert(PacketType_Application_Layer == in_pPacket->mPacketType);
+	assert(Pid_Pvt_Data == in_pPacket->mPacketId);
 
-			printf("\n");
-		}
+	if (sizeof(D800_Pvt_Data_Type) == in_pPacket->mDataSize)
+	{
+		D800_Pvt_Data_Type *pPvtData = (D800_Pvt_Data_Type*) in_pPacket->mData;
+		printf("Position: %f %f (+/- %f m)\n", pPvtData->posn.lat * 180.0/M_PI, pPvtData->posn.lon * 180.0/M_PI, pPvtData->eph);
+		printf("Height: %f (+/- %f m)\n", pPvtData->alt+pPvtData->msl_hght, pPvtData->epv);
+
+		printf("\n");
+
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 
@@ -134,29 +135,18 @@ int main()
 		exit(EXIT_FAILURE);
 	}
 
-	do
+	if (!waitForPacket(&garminUsbData, &pReceivedPacket, 
+		PacketType_USB_Protocol_Layer, Pid_Session_Started))
 	{
-		if (!receivePacket(&garminUsbData, &pReceivedPacket))
-		{
-			printf("Could not receive packet.\n");
-			exit(EXIT_FAILURE);
-		}
-	} while (
-		NULL == pReceivedPacket ||
-		pReceivedPacket->mPacketType != PacketType_USB_Protocol_Layer || 
-		pReceivedPacket->mPacketId != Pid_Session_Started);
+		printf("Error when waiting for packet.\n");
+		exit(EXIT_FAILURE);
+	}
 
-	do
+	if (!flushPacketsUntilSendingPossible(&garminUsbData))
 	{
-		if (isSendingPossible(garminUsbData.coroutineState))
-			break;
-
-		if (!receivePacket(&garminUsbData, &pReceivedPacket))
-		{
-			printf("Could not receive packet.\n");
-			exit(EXIT_FAILURE);
-		}
-	} while (1);
+		printf("Error when flushing packets.\n");
+		exit(EXIT_FAILURE);
+	}
 
 	if (!sendPacket(&garminUsbData, &theProductDataPacket, lUsbSize))
 	{
@@ -164,34 +154,27 @@ int main()
 		exit(EXIT_FAILURE);
 	}
 
-	do
+	if (!waitForPacket(&garminUsbData, &pReceivedPacket, 
+		PacketType_Application_Layer, Pid_Product_Data))
 	{
-		if (!receivePacket(&garminUsbData, &pReceivedPacket))
-		{
-			printf("Could not receive packet.\n");
-			exit(EXIT_FAILURE);
-		}
-	} while (
-		NULL == pReceivedPacket ||
-		pReceivedPacket->mPacketType != PacketType_Application_Layer || 
-		pReceivedPacket->mPacketId != Pid_Product_Data);
-
-	do
-	{
-		if (isSendingPossible(garminUsbData.coroutineState))
-			break;
-
-		if (!receivePacket(&garminUsbData, &pReceivedPacket))
-		{
-			printf("Could not receive packet.\n");
-			exit(EXIT_FAILURE);
-		}
-	} while (1);
-
-	if (!sendPacket(&garminUsbData, &theProductDataPacket, lUsbSize))
-	{
-		printf("Could not send product data packet.\n");
+		printf("Error when waiting for packet.\n");
 		exit(EXIT_FAILURE);
+	}
+
+	while (!isSendingPossible(garminUsbData.coroutineState))
+	{
+		if (!receivePacket(&garminUsbData, &pReceivedPacket))
+		{
+			printf("Error receiving packet.\n");
+			exit(EXIT_FAILURE);
+		}
+
+		if (PacketType_Application_Layer == pReceivedPacket->mPacketType && 
+			Pid_Protocol_Array == pReceivedPacket->mPacketId)
+		{
+			supportedProcotocols = interprete_Protocol_Array(pReceivedPacket);
+			printf("\n");
+		}
 	}
 
 	if (!supportedProcotocols.A010_supported)
@@ -211,13 +194,7 @@ int main()
 		printf("Protocol D800 is not supported.\n");
 		exit(EXIT_FAILURE);
 	}
-
-#if 0
-#if 0
-	garminUsbData.pPacketHandlerFunc = &pvtHandler;
-	garminUsbData.pPacketHandlerData = NULL;
-#endif
-
+	
 	if (!sendPacket(&garminUsbData, &theStartPvtDataPacket, lUsbSize))
 	{
 		printf("Could not send start PVT packet.\n");
@@ -226,15 +203,21 @@ int main()
 
 	while (1)
 	{
-		startGeolocationCoroutine(&garminUsbData);
-
-		if (!isGarminCoroutineStateOK(garminUsbData.coroutineState))
+		if (!receivePacket(&garminUsbData, &pReceivedPacket))
 		{
-			printf("Invalid state.\n");
-			exit(1);
+			printf("Error receiving packet.\n");
+			exit(EXIT_FAILURE);
+		}
+
+		if (PacketType_Application_Layer == pReceivedPacket->mPacketType && 
+			Pid_Pvt_Data == pReceivedPacket->mPacketId)
+		{
+			if (!pvtHandler(pReceivedPacket))
+			{
+				printf("Invalid PVT packet.\n");
+			}
 		}
 	}
-#endif
 
 	return 0;
 }

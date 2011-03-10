@@ -15,6 +15,10 @@
  */
 
 #include "GeolocationBackendGarminWin/GeolocationGarminPacketsUtil.h"
+// for isSendingPossible
+#include "GeolocationBackendGarminWin/GeolocationGarminCoroutineStateFunctions.h"
+// for receivePacket
+#include "GeolocationBackendGarminWin/GeolocationGarminPacketFunctions.h"
 
 void fillEmptyPacket(Packet_t *in_pPacket, 
 	uint8_t in_packetType, 
@@ -44,4 +48,34 @@ void fillDeviceCommandPacket(Device_Command_Packet_t *in_pPacket,
 	};
 
 	*in_pPacket = lPacket;
+}
+
+bool waitForPacket(
+	GarminUsbData *in_out_pGarminUsbData, 
+	Packet_t **out_ppPacket, 
+	uint8_t in_type, 
+	uint16_t in_pid)
+{
+	do
+	{
+		if (!receivePacket(in_out_pGarminUsbData, out_ppPacket))
+			return false;
+	} while ((*out_ppPacket)->mPacketType != in_type || 
+		(*out_ppPacket)->mPacketId != in_pid);
+
+	return true;
+}
+
+__declspec(dllexport) bool flushPacketsUntilSendingPossible(GarminUsbData *in_out_pGarminUsbData)
+{
+	if (!isGarminCoroutineStateOK(in_out_pGarminUsbData->coroutineState))
+		return false;
+	
+	while (!isSendingPossible(in_out_pGarminUsbData->coroutineState))
+	{
+		if (!receivePacket(in_out_pGarminUsbData, NULL))
+			return false;
+	}
+
+	return true;
 }

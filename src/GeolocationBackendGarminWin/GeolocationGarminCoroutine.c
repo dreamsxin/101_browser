@@ -22,6 +22,7 @@
 #include <stdio.h>  // for printf
 
 #include "MiniStdlib/safe_free.h" // for safe_free
+#include "MiniStdlib/xchg.h"
 
 #define IOCTL_ASYNC_IN CTL_CODE (FILE_DEVICE_UNKNOWN, 0x850, METHOD_BUFFERED, FILE_ANY_ACCESS)
 
@@ -222,7 +223,8 @@ begin_of_geolocationCoroutine_loop:
 				pGarminUsbData->coroutineState = GarminCoroutineStateOkSendingNotPossible;
 				pGarminUsbData->pPacket = (Packet_t*) theBuffer;
 				switchToCoroutine(pGarminUsbData->pGeolocationCoroutine, pGarminUsbData->pMainCoroutine);
-				theBuffer = theNextBuffer;
+
+				xchg(&theBuffer, &theNextBuffer, sizeof(BYTE*));
 			}
 		}
 	}
