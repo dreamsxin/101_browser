@@ -141,8 +141,6 @@ void test_IO_PipeStream()
 
 		readFun(&pipeStreamState, bytesToRead);
 
-		
-
 		deletePipeStreamState(&pipeStreamState);
 	}
 }
