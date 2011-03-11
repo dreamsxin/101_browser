@@ -89,6 +89,7 @@ void test_IO_PipeStream()
 			return;
 
 		writeFun(&pipeStreamState, bytesToRead);
+		test(pipeStreamWrite(&pipeStreamState, NULL, 0) == 0);
 
 		deletePipeStreamState(&pipeStreamState);
 	}
@@ -106,6 +107,7 @@ void test_IO_PipeStream()
 			return;
 
 		writeFun(&pipeStreamState, bytesToRead);
+		test(pipeStreamWrite(&pipeStreamState, NULL, 0) == 0);
 
 		deletePipeStreamState(&pipeStreamState);
 	}
