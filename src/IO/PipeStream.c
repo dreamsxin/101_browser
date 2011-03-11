@@ -26,24 +26,43 @@ const ByteStreamWriteInterface cPipeStreamWriteInterface = { &pipeStreamWrite };
 void
 #ifdef _WIN32
 __stdcall
-#endif	
+#endif
 pipeStreamKickoff(void *in_pPipeStreamData)
 {
-	PipeStreamState *pState = (PipeStreamState*) in_pPipeStreamData;
+	PipeStreamStateAndKickoff stateAndKickoff = *(PipeStreamStateAndKickoff*) in_pPipeStreamData;
 
-	(*pState->mpStartup)(pState, pState->mpUserData);
+	if (PipeStreamStateTypeReader == stateAndKickoff.pState->mCurrentStateType)
+	{
+		switchToCoroutine(
+			stateAndKickoff.pState->mpWriterDescriptor, 
+			stateAndKickoff.pState->mpReaderDescriptor);
+	}
+	else
+	{
+		assert(PipeStreamStateTypeWriter == stateAndKickoff.pState->mCurrentStateType);
+
+		switchToCoroutine(
+			stateAndKickoff.pState->mpReaderDescriptor, 
+			stateAndKickoff.pState->mpWriterDescriptor);
+	}
+
+	(*stateAndKickoff.kickoffData.mpStartup)(
+		stateAndKickoff.pState, 
+		stateAndKickoff.kickoffData.mpUserData);
 
 	while (1)
 	{
 		size_t bytesCount;
 
-		if (pState->mCurrentStateType == PipeStreamStateTypeReader)
+		if (PipeStreamStateTypeReader == stateAndKickoff.pState->mCurrentStateType)
 		{
-			bytesCount = pipeStreamRead(pState, NULL, 0);
+			bytesCount = pipeStreamRead(stateAndKickoff.pState, NULL, 0);
 		}
 		else
 		{
-			bytesCount = pipeStreamWrite(pState, NULL, 0);
+			assert(PipeStreamStateTypeWriter == stateAndKickoff.pState->mCurrentStateType);
+
+			bytesCount = pipeStreamWrite(stateAndKickoff.pState, NULL, 0);
 		}
 
 		assert(0 == bytesCount);
@@ -57,6 +76,10 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	void (*in_pOtherCoroutineStartup)(PipeStreamState*, void*),
 	void *in_pUserData)
 {
+	PipeStreamStateAndKickoff stateAndKickoff;
+
+	stateAndKickoff.pState = out_pPipeStreamState;
+
 	// Not necessary, but more safe...
 	out_pPipeStreamState->mpCurrentBuffer = NULL;
 
@@ -75,14 +98,16 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 		out_pPipeStreamState->mpWriterDescriptor = out_pOtherCoroutine;
 	}
 
-	out_pPipeStreamState->mpStartup = in_pOtherCoroutineStartup;
-	out_pPipeStreamState->mpUserData = in_pUserData;
+	stateAndKickoff.kickoffData.mpStartup = in_pOtherCoroutineStartup;
+	stateAndKickoff.kickoffData.mpUserData = in_pUserData;
 
 	if (!convertThreadToCoroutine(out_pThisCoroutine))
 		return false;
 
-	if (!createCoroutine(0, &pipeStreamKickoff, out_pPipeStreamState, out_pOtherCoroutine))
+	if (!createCoroutine(0, &pipeStreamKickoff, &stateAndKickoff, out_pOtherCoroutine))
 		return false;
+
+	switchToCoroutine(out_pThisCoroutine, out_pOtherCoroutine);
 
 	return true;
 }

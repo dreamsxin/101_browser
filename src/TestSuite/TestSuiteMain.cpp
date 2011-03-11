@@ -41,6 +41,8 @@ int main()
 	testASCIIStringUnicodeIterator();
 	wprintf(L"Testing Unicode\n");
 	testUnicode();
+	wprintf(L"Testing IO\n");
+	test_IO();
 	wprintf(L"Testing HTML5\n");
 	testHTML5();
 	wprintf(L"Testing GIF\n");
@@ -49,8 +51,6 @@ int main()
 	testCPU();
 	wprintf(L"Testing Coroutine\n");
 	test_Coroutine();
-	wprintf(L"Testing IO\n");
-	test_IO();
 	wprintf(L"Testing PNG\n");
 	test_PNG();
 
