@@ -65,7 +65,6 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 
 	// Not necessary, but more safe...
 	out_pPipeStreamState->mpCurrentBuffer = NULL;
-
 	out_pPipeStreamState->mCurrentBufferSize = 0;
 
 	out_pPipeStreamState->mpCurrentCoroutineDescriptor = out_pThisCoroutine;
