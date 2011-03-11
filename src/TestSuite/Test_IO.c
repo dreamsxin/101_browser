@@ -17,16 +17,56 @@
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
 #include "IO/PipeStream.h"
+#include "MiniStdlib/minmax.h"
+#include <string.h>
+
+void readFun(PipeStreamState *in_pPipeStreamState, unsigned int in_bytesToRead)
+{
+	uint8_t data[32];
+	size_t readCount;
+	unsigned int idx;
+
+	memset(data, 0xFF, 32);
+
+	wprintf(L"Reading %u bytes\n", in_bytesToRead);
+	
+	readCount = pipeStreamRead(in_pPipeStreamState, data, in_bytesToRead);
+
+	test(readCount == MIN(in_bytesToRead, 4));
+
+	for (idx = 0; idx < readCount; idx++)
+	{
+		test(idx == data[idx]);
+	}
+}
+
+void writeFun(PipeStreamState *in_pPipeStreamState, unsigned int in_bytesToRead)
+{
+	uint8_t data[3];
+
+	data[0] = 0;
+
+	wprintf(L"Writing 1 byte\n");
+	test(pipeStreamWrite(in_pPipeStreamState, data, 1) == 1);
+
+	data[0] = 1;
+	data[1] = 2;
+	data[2] = 3;
+
+	wprintf(L"Writing 3 bytes\n");
+	test(pipeStreamWrite(in_pPipeStreamState, data, 3) == MIN(3, in_bytesToRead-1));
+}
 
 void readerCoroutineFun(PipeStreamState *in_pPipeStreamState, void *in_pUserdata)
 {
-	uint8_t data[2] = {0xFF, 0xFF};
+	unsigned int *bytesToRead = (unsigned int *) in_pUserdata;
+	readFun(in_pPipeStreamState, *bytesToRead);
+}
 
-	wprintf(L"Reading 2 bytes\n");
-	pipeStreamRead(in_pPipeStreamState, data, 2);
-
-	test(0 == data[0]);
-	test(1 == data[1]);
+void writerCoroutineFun(PipeStreamState *in_pPipeStreamState, void *in_pUserdata)
+{
+	unsigned int *bytesToRead = (unsigned int *) in_pUserdata;
+	writeFun(in_pPipeStreamState, *bytesToRead);
 }
 
 void test_IO_PipeStream()
@@ -34,29 +74,74 @@ void test_IO_PipeStream()
 	PipeStreamState pipeStreamState;
 	CoroutineDescriptor thisCoroutine;
 	CoroutineDescriptor otherCoroutine;
+	unsigned int bytesToRead;
 
+	// Test 1: the current coroutine is the writer and 2 bytes are read
+	bytesToRead = 2;
 	{
 		bool result = initPipeStreamState(&pipeStreamState, true, 
 			&thisCoroutine, &otherCoroutine, 
-			&readerCoroutineFun, NULL);
-		uint8_t data[3];
+			&readerCoroutineFun, &bytesToRead);
 
 		test(result);
 
 		if (!result)
 			return;
 
-		data[0] = 0;
+		writeFun(&pipeStreamState, bytesToRead);
 
-		wprintf(L"Writing 1 byte\n");
-		test(pipeStreamWrite(&pipeStreamState, data, 1) == 1);
+		deletePipeStreamState(&pipeStreamState);
+	}
 
-		data[0] = 1;
-		data[1] = 2;
-		data[2] = 3;
+	// Test 2: the current coroutine is the writer and 32 bytes are read
+	bytesToRead = 32;
+	{
+		bool result = initPipeStreamState(&pipeStreamState, true, 
+			&thisCoroutine, &otherCoroutine, 
+			&readerCoroutineFun, &bytesToRead);
 
-		wprintf(L"Writing 3 bytes\n");
-		test(pipeStreamWrite(&pipeStreamState, data, 3) == 1);
+		test(result);
+
+		if (!result)
+			return;
+
+		writeFun(&pipeStreamState, bytesToRead);
+
+		deletePipeStreamState(&pipeStreamState);
+	}
+
+	// Test 3: the current coroutine is the reader and 2 bytes are read
+	bytesToRead = 2;
+	{
+		bool result = initPipeStreamState(&pipeStreamState, false, 
+			&thisCoroutine, &otherCoroutine, 
+			&writerCoroutineFun, &bytesToRead);
+
+		test(result);
+
+		if (!result)
+			return;
+
+		readFun(&pipeStreamState, bytesToRead);
+
+		deletePipeStreamState(&pipeStreamState);
+	}
+
+	// Test 4: the current coroutine is the reader and 32 bytes are read
+	bytesToRead = 32;
+	{
+		bool result = initPipeStreamState(&pipeStreamState, false, 
+			&thisCoroutine, &otherCoroutine, 
+			&writerCoroutineFun, &bytesToRead);
+
+		test(result);
+
+		if (!result)
+			return;
+
+		readFun(&pipeStreamState, bytesToRead);
+
+		
 
 		deletePipeStreamState(&pipeStreamState);
 	}
