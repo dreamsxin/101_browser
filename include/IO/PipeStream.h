@@ -37,10 +37,8 @@ typedef struct
 	const uint8_t * volatile mpCurrentBuffer;
 	volatile size_t mCurrentBufferSize;
 
-	PipeStreamStateType mCurrentStateType;
-
-	CoroutineDescriptor *mpWriterDescriptor;
-	CoroutineDescriptor *mpReaderDescriptor;
+	CoroutineDescriptor *mpCurrentCoroutineDescriptor;
+	CoroutineDescriptor *mpOtherCoroutineDescriptor;
 } PipeStreamState;
 
 typedef struct
@@ -48,6 +46,7 @@ typedef struct
 	// Data to pass to the kickoff routine
 	void (*mpStartup)(PipeStreamState*, void*);
 	void *mpUserData;
+	bool isOtherStreamReader;
 } PipeStreamKickoffData;
 
 typedef struct
@@ -71,7 +70,7 @@ typedef struct
 __declspec(dllexport)
 #endif
 bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
-	bool in_isCurrentStreamWriter,
+	bool in_isOtherStreamReader,
 	CoroutineDescriptor *out_pThisCoroutine,
 	CoroutineDescriptor *out_pOtherCoroutine,
 	void (*in_pOtherCoroutineStartup)(PipeStreamState*, void*),
