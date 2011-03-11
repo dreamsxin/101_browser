@@ -74,75 +74,40 @@ void test_IO_PipeStream()
 	PipeStreamState pipeStreamState;
 	CoroutineDescriptor thisCoroutine;
 	CoroutineDescriptor otherCoroutine;
-	unsigned int bytesToRead;
+	unsigned int bytesToReadArray[] = { 2, 32 };
+	size_t idx;
 
-	// Test 1: the current coroutine is the writer and 2 bytes are read
-	bytesToRead = 2;
+	// Test 1, 2: the current coroutine is the writer and 2 or 32 bytes are read
+	for (idx = 0; idx < 2; idx++)
 	{
 		bool result = initPipeStreamState(&pipeStreamState, true, 
 			&thisCoroutine, &otherCoroutine, 
-			&readerCoroutineFun, &bytesToRead);
+			&readerCoroutineFun, bytesToReadArray+idx);
 
 		test(result);
 
 		if (!result)
 			return;
 
-		writeFun(&pipeStreamState, bytesToRead);
+		writeFun(&pipeStreamState, bytesToReadArray[idx]);
 		test(pipeStreamWrite(&pipeStreamState, NULL, 0) == 0);
 
 		deletePipeStreamState(&pipeStreamState);
 	}
 
-	// Test 2: the current coroutine is the writer and 32 bytes are read
-	bytesToRead = 32;
-	{
-		bool result = initPipeStreamState(&pipeStreamState, true, 
-			&thisCoroutine, &otherCoroutine, 
-			&readerCoroutineFun, &bytesToRead);
-
-		test(result);
-
-		if (!result)
-			return;
-
-		writeFun(&pipeStreamState, bytesToRead);
-		test(pipeStreamWrite(&pipeStreamState, NULL, 0) == 0);
-
-		deletePipeStreamState(&pipeStreamState);
-	}
-
-	// Test 3: the current coroutine is the reader and 2 bytes are read
-	bytesToRead = 2;
+	// Test 3, 4: the current coroutine is the reader and 2 or 32 bytes are read
+	for (idx = 0; idx < 2; idx++)
 	{
 		bool result = initPipeStreamState(&pipeStreamState, false, 
 			&thisCoroutine, &otherCoroutine, 
-			&writerCoroutineFun, &bytesToRead);
+			&writerCoroutineFun, bytesToReadArray+idx);
 
 		test(result);
 
 		if (!result)
 			return;
 
-		readFun(&pipeStreamState, bytesToRead);
-		test(pipeStreamRead(&pipeStreamState, NULL, 0) == 0);
-
-		deletePipeStreamState(&pipeStreamState);
-	}
-
-	// Test 4: the current coroutine is the reader and 32 bytes are read
-	bytesToRead = 32;
-	{
-		bool result = initPipeStreamState(&pipeStreamState, false, 
-			&thisCoroutine, &otherCoroutine, 
-			&writerCoroutineFun, &bytesToRead);
-
-		test(result);
-
-		if (!result)
-			return;
-
-		readFun(&pipeStreamState, bytesToRead);
+		readFun(&pipeStreamState, bytesToReadArray[idx]);
 		test(pipeStreamRead(&pipeStreamState, NULL, 0) == 0);
 
 		deletePipeStreamState(&pipeStreamState);
