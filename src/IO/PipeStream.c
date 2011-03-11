@@ -21,9 +21,6 @@
 #include <string.h> // for memcpy
 
 
-const ByteStreamReadInterface cPipeStreamReadInterface = { &pipeStreamRead };
-const ByteStreamWriteInterface cPipeStreamWriteInterface = { &pipeStreamWrite };
-
 void
 #ifdef _WIN32
 	__stdcall
