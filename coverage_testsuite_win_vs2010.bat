@@ -5,6 +5,8 @@ vsinstr out\vs2010\Debug\Algorithm.dll /COVERAGE
 vsinstr out\vs2010\Debug\BigNumber.dll /COVERAGE
 vsinstr out\vs2010\Debug\GIF.dll /COVERAGE
 vsinstr out\vs2010\Debug\HTML5.dll /COVERAGE
+vsinstr out\vs2010\Debug\IO.dll /COVERAGE
+
 Start VSPerfMon.exe /COVERAGE /OUTPUT:testsuite
 PAUSE
 out\vs2010\Debug\TestSuite.exe
