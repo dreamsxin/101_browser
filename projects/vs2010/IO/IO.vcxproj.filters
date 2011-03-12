@@ -33,6 +33,9 @@
     <ClInclude Include="..\..\..\include\IO\MemoryByteStream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\IO\BidirectionalStream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\IO\fread.c">
@@ -48,6 +51,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\IO\MemoryByteStream.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\IO\BidirectionalStream.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

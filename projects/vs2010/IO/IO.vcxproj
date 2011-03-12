@@ -87,6 +87,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\IO\BidirectionalStream.h" />
     <ClInclude Include="..\..\..\include\IO\BitRead.h" />
     <ClInclude Include="..\..\..\include\IO\FileByteStream.h" />
     <ClInclude Include="..\..\..\include\IO\fread.h" />
@@ -95,6 +96,7 @@
     <ClInclude Include="..\..\..\include\IO\PipeStream.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\IO\BidirectionalStream.c" />
     <ClCompile Include="..\..\..\src\IO\BitRead.c" />
     <ClCompile Include="..\..\..\src\IO\FileByteStream.c" />
     <ClCompile Include="..\..\..\src\IO\fread.c" />

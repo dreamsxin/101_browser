@@ -43,8 +43,8 @@ typedef struct
 
 typedef struct
 {
-	// Data to pass to the kickoff routine
 	void (*mpStartup)(PipeStreamState*, void*);
+	// Data to pass to the other coroutine
 	void *mpUserData;
 	bool isOtherStreamReader;
 } PipeStreamKickoffData;

@@ -158,9 +158,9 @@ size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, si
 	* exactly in the case of calling pipeStreamRead([...], [...], 0)
 	* when pPipeStreamState->mCurrentBufferSize != 0.
 	*/
-
-	pPipeStreamState->mCurrentBufferSize = in_count;
+	
 	pPipeStreamState->mpCurrentBuffer = (const uint8_t*) in_pBuffer;
+	pPipeStreamState->mCurrentBufferSize = in_count;
 
 	xchg(
 		&pPipeStreamState->mpCurrentCoroutineDescriptor, 
