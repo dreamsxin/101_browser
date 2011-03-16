@@ -46,7 +46,6 @@ typedef struct
 	void (*mpStartup)(PipeStreamState*, void*);
 	// Data to pass to the other coroutine
 	void *mpUserData;
-	bool isOtherStreamReader;
 } PipeStreamKickoffData;
 
 typedef struct

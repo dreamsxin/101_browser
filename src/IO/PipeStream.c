@@ -23,9 +23,9 @@
 
 void
 #ifdef _WIN32
-	__stdcall
+__stdcall
 #endif
-	pipeStreamKickoff(void *in_pPipeStreamData)
+pipeStreamKickoffReader(void *in_pPipeStreamData)
 {
 	PipeStreamStateAndKickoff stateAndKickoff = *(PipeStreamStateAndKickoff*) in_pPipeStreamData;
 
@@ -41,13 +41,32 @@ void
 
 	while (1)
 	{
-		size_t bytesCount;
+		size_t bytesCount = pipeStreamRead(stateAndKickoff.pState, NULL, 0);
+		assert(0 == bytesCount);
+	}
+}
 
-		if (stateAndKickoff.kickoffData.isOtherStreamReader)
-			bytesCount = pipeStreamRead(stateAndKickoff.pState, NULL, 0);
-		else
-			bytesCount = pipeStreamWrite(stateAndKickoff.pState, NULL, 0);
+void
+#ifdef _WIN32
+__stdcall
+#endif
+pipeStreamKickoffWriter(void *in_pPipeStreamData)
+{
+	PipeStreamStateAndKickoff stateAndKickoff = *(PipeStreamStateAndKickoff*) in_pPipeStreamData;
 
+	/*
+	* No exchanging of descriptors since it hasn't been done originally when switching to
+	* this coroutine.
+	*/
+	switchToCoroutine(stateAndKickoff.pState->mpOtherCoroutineDescriptor, stateAndKickoff.pState->mpCurrentCoroutineDescriptor);
+
+	(*stateAndKickoff.kickoffData.mpStartup)(
+		stateAndKickoff.pState, 
+		stateAndKickoff.kickoffData.mpUserData);
+
+	while (1)
+	{
+		size_t bytesCount = pipeStreamWrite(stateAndKickoff.pState, NULL, 0);
 		assert(0 == bytesCount);
 	}
 }
@@ -72,12 +91,13 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 
 	stateAndKickoff.kickoffData.mpStartup = in_pOtherCoroutineStartup;
 	stateAndKickoff.kickoffData.mpUserData = in_pUserData;
-	stateAndKickoff.kickoffData.isOtherStreamReader = in_isOtherStreamReader;
 
 	if (!convertThreadToCoroutine(out_pThisCoroutine))
 		return false;
 
-	if (!createCoroutine(0, &pipeStreamKickoff, &stateAndKickoff, out_pOtherCoroutine))
+	if (!createCoroutine(0, 
+		in_isOtherStreamReader ? pipeStreamKickoffReader : pipeStreamKickoffWriter, 
+		&stateAndKickoff, out_pOtherCoroutine))
 		return false;
 
 	/*

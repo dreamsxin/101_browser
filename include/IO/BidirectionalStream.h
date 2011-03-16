@@ -18,36 +18,73 @@
 #define _MTAx_IO_BidirectionalStream_h
 
 #include "Coroutine/Coroutine.h"
+#include "MiniStdlib/cstdint.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+typedef enum
+{
+	// This state is before the halfstream started reading or writing
+	BidirectionalHalfStreamActionNoAction,
+	BidirectionalHalfStreamActionReading,
+	BidirectionalHalfStreamActionWriting,
+	BidirectionalHalfStreamActionTerminated
+} BidirectionalHalfStreamAction;
+
 typedef struct
 {
-	void *pBuffer;
+	CoroutineDescriptor *mpCoroutineDescriptor;
+	const uint8_t * volatile mpBuffer;
+	volatile size_t mCurrentBufferSize;
+	volatile BidirectionalHalfStreamAction mAction;
+} BidirectionalHalfStreamState;
+
+typedef struct
+{
+	BidirectionalHalfStreamState mHalfStreamStates[2];
 } BidirectionalStreamState;
 
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-size_t bidirectionStreamSide0Read(void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count);
+void initBidirectionalStream(BidirectionalStreamState out_pBidirectionalStreamState,
+CoroutineDescriptor *out_pThisCoroutine,
+CoroutineDescriptor *out_pOtherCoroutine,
+void (*in_pOtherCoroutineStartup)(BidirectionalStreamState*, void*),
+void *in_pUserData
+);
 
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-size_t bidirectionStreamSide0Write(void *in_out_pBidirectionalStreamState, const void *in_pBuffer, size_t in_count);
+size_t bidirectionalStreamRead(uint8_t in_side, void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count);
 
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-size_t bidirectionStreamSide1Read(void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count);
+size_t bidirectionalStreamWrite(uint8_t in_side, void *in_out_pBidirectionalStreamState, const void *in_pBuffer, size_t in_count);
 
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-size_t bidirectionStreamSide1Write(void *in_out_pBidirectionalStreamState, const void *in_pBuffer, size_t in_count);
+size_t bidirectionalStreamSide0Read(void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count);
 
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+size_t bidirectionalStreamSide0Write(void *in_out_pBidirectionalStreamState, const void *in_pBuffer, size_t in_count);
+
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+size_t bidirectionalStreamSide1Read(void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count);
+
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+size_t bidirectionalStreamSide1Write(void *in_out_pBidirectionalStreamState, const void *in_pBuffer, size_t in_count);
 
 #ifdef __cplusplus
 }
