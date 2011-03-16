@@ -30,7 +30,7 @@ void testASCIIStringUnicodeIterator()
 
 	/* string of single character */
 	state = asciiStringUnicodeIteratorState_create("a");
-	pu = (*it.mpfGet)(&state);
+	pu = (UnicodeCodePoint*) (*it.mpfGet)(&state);
 	test(pu != NULL);
 	if (pu != NULL)
 	{
@@ -42,28 +42,28 @@ void testASCIIStringUnicodeIterator()
 
 	/* string of multiple characters */
 	state = asciiStringUnicodeIteratorState_create("asdf");
-	pu = (*it.mpfGet)(&state);
+	pu = (UnicodeCodePoint*) (*it.mpfGet)(&state);
 	test(pu != NULL);
 	if (pu != NULL)
 	{
 		test (*pu == 'a');
 	}
 	test((*it.mpfIterate)(&state) == IterateResultOK);
-	pu = (*it.mpfGet)(&state);
+	pu = (UnicodeCodePoint*) (*it.mpfGet)(&state);
 	test(pu != NULL);
 	if (pu != NULL)
 	{
 		test (*pu == 's');
 	}
 	test((*it.mpfIterate)(&state) == IterateResultOK);
-	pu = (*it.mpfGet)(&state);
+	pu = (UnicodeCodePoint*) (*it.mpfGet)(&state);
 	test(pu != NULL);
 	if (pu != NULL)
 	{
 		test (*pu == 'd');
 	}
 	test((*it.mpfIterate)(&state) == IterateResultOK);
-	pu = (*it.mpfGet)(&state);
+	pu = (UnicodeCodePoint*) (*it.mpfGet)(&state);
 	test(pu != NULL);
 	if (pu != NULL)
 	{
