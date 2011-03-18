@@ -59,32 +59,22 @@ void *in_pUserData
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
+bool bidirectionalStreamIsReadingPossible(uint8_t in_side, void *in_pBidirectionalStreamState);
+
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+bool bidirectionalStreamIsWritingPossible(uint8_t in_side, void *in_pBidirectionalStreamState);
+
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
 size_t bidirectionalStreamRead(uint8_t in_side, void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count);
 
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
 size_t bidirectionalStreamWrite(uint8_t in_side, void *in_out_pBidirectionalStreamState, const void *in_pBuffer, size_t in_count);
-
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-size_t bidirectionalStreamSide0Read(void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count);
-
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-size_t bidirectionalStreamSide0Write(void *in_out_pBidirectionalStreamState, const void *in_pBuffer, size_t in_count);
-
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-size_t bidirectionalStreamSide1Read(void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count);
-
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-size_t bidirectionalStreamSide1Write(void *in_out_pBidirectionalStreamState, const void *in_pBuffer, size_t in_count);
 
 #ifdef __cplusplus
 }

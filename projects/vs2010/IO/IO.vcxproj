@@ -89,6 +89,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\include\IO\BidirectionalStream.h" />
     <ClInclude Include="..\..\..\include\IO\BitRead.h" />
+    <ClInclude Include="..\..\..\include\IO\CoroutineStream.h" />
     <ClInclude Include="..\..\..\include\IO\FileByteStream.h" />
     <ClInclude Include="..\..\..\include\IO\fread.h" />
     <ClInclude Include="..\..\..\include\IO\ByteStreamInterface.h" />

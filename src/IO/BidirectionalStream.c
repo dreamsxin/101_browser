@@ -17,44 +17,70 @@
 #include "IO/BidirectionalStream.h"
 #include <assert.h>
 
+bool bidirectionalStreamIsReadingPossible(uint8_t in_side, void *in_pBidirectionalStreamState)
+{
+	BidirectionalStreamState *pStreamState = (BidirectionalStreamState*) in_pBidirectionalStreamState;
+
+	if (in_side != 0 && in_side != 1)
+		return false;
+
+	return (BidirectionalHalfStreamActionWriting == pStreamState->mHalfStreamStates[1-in_side].mAction || 
+		BidirectionalHalfStreamActionNoAction == pStreamState->mHalfStreamStates[1-in_side].mAction);
+}
+
+bool bidirectionalStreamIsWritingPossible(uint8_t in_side, void *in_pBidirectionalStreamState)
+{
+	BidirectionalStreamState *pStreamState = (BidirectionalStreamState*) in_pBidirectionalStreamState;
+
+	if (in_side != 0 && in_side != 1)
+		return false;
+
+	return (BidirectionalHalfStreamActionReading == pStreamState->mHalfStreamStates[1-in_side].mAction || 
+		BidirectionalHalfStreamActionNoAction == pStreamState->mHalfStreamStates[1-in_side].mAction);
+}
+
 size_t bidirectionalStreamRead(uint8_t in_side, void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count)
 {
 	BidirectionalStreamState *pStreamState = (BidirectionalStreamState*) in_out_pBidirectionalStreamState;
 
-	assert(0 == in_side || 1 == in_side);
+	if (in_side != 0 && in_side != 1)
+		return 0;
 
-
-
-	return 0;
+	if (bidirectionalStreamIsReadingPossible(in_side, in_out_pBidirectionalStreamState))
+	{
+		// TODO...
+		return 42;
+	}
+	else
+		return 0;
 }
 
 size_t bidirectionalStreamWrite(uint8_t in_side, void *in_out_pBidirectionalStreamState, const void *in_pBuffer, size_t in_count)
 {
 	BidirectionalStreamState *pStreamState = (BidirectionalStreamState*) in_out_pBidirectionalStreamState;
 
-	assert(0 == in_side || 1 == in_side);
+	if (in_side != 0 && in_side != 1)
+		return 0;
 
+	if (bidirectionalStreamIsWritingPossible(in_side, in_out_pBidirectionalStreamState))
+	{
+		size_t writtenBytes;
+		
+		pStreamState->mHalfStreamStates[in_side].mpBuffer = (const uint8_t*) in_pBuffer;
+		pStreamState->mHalfStreamStates[in_side].mCurrentBufferSize = in_count;
+		pStreamState->mHalfStreamStates[in_side].mAction = BidirectionalHalfStreamActionWriting;
 
-	
-	return 0;
-}
+		switchToCoroutine(pStreamState->mHalfStreamStates[in_side].mpCoroutineDescriptor, 
+			pStreamState->mHalfStreamStates[1-in_side].mpCoroutineDescriptor);
+		writtenBytes = in_count - pStreamState->mHalfStreamStates[in_side].mCurrentBufferSize;
 
-size_t bidirectionalStreamSide0Read(void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count)
-{
-	return bidirectionalStreamRead(0, in_out_pBidirectionalStreamState, out_pBuffer, in_count);
-}
+		// the first two lines are for additional security...
+		pStreamState->mHalfStreamStates[in_side].mpBuffer = NULL;
+		pStreamState->mHalfStreamStates[in_side].mCurrentBufferSize = 0;
+		pStreamState->mHalfStreamStates[in_side].mAction = BidirectionalHalfStreamActionNoAction;
 
-size_t bidirectionalStreamSide1Read(void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count)
-{
-	return bidirectionalStreamRead(1, in_out_pBidirectionalStreamState, out_pBuffer, in_count);
-}
-
-size_t bidirectionalStreamSide0Write(void *in_out_pBidirectionalStreamState, const void *in_pBuffer, size_t in_count)
-{
-	return bidirectionalStreamWrite(0, in_out_pBidirectionalStreamState, in_pBuffer, in_count);
-}
-
-size_t bidirectionalStreamSide1Write(void *in_out_pBidirectionalStreamState, const void *in_pBuffer, size_t in_count)
-{
-	return bidirectionalStreamWrite(1, in_out_pBidirectionalStreamState, in_pBuffer, in_count);
+		return writtenBytes;
+	}
+	else
+		return 0;
 }
