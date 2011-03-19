@@ -20,7 +20,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-#include "GeolocationBackendGarminWin/GeolocationGarminInit.h"
+#include "GeolocationBackendGarminWin/GeolocationGarminInitAndTerminate.h"
 #include "GeolocationBackendGarminWin/GeolocationGarminCoroutineStateFunctions.h"
 #include "GeolocationBackendGarminWin/GeolocationGarminPacketFunctions.h"
 #include "GeolocationBackendGarminWin/GeolocationGarminPacketsUtil.h"
@@ -96,6 +96,7 @@ int main()
 	Packet_t theStartSessionPacket;
 	Packet_t theProductDataPacket;
 	Packet_t *pReceivedPacket;
+	size_t someCounter;
 
 	Device_Command_Packet_t theStartPvtDataPacket;
 	Device_Command_Packet_t theStopPvtDataPacket;
@@ -201,7 +202,7 @@ int main()
 		exit(EXIT_FAILURE);
 	}
 
-	while (1)
+	for (someCounter = 0; someCounter < 50; someCounter++)
 	{
 		if (!receivePacket(&garminUsbData, &pReceivedPacket))
 		{
@@ -218,6 +219,8 @@ int main()
 			}
 		}
 	}
+
+	stopGeolocationCoroutine(&garminUsbData);
 
 	return 0;
 }

@@ -100,6 +100,12 @@ begin_of_geolocationCoroutine_loop:
 
 			safe_free(&theBuffer);
 
+			if (GarminCoroutineStateRequestToTerminate == pGarminUsbData->coroutineState)
+			{
+				pGarminUsbData->coroutineState = GarminCoroutineStateTerminated;
+				return;
+			}
+
 			continue;
 		}
 
@@ -205,6 +211,12 @@ begin_of_geolocationCoroutine_loop:
 
 					safe_free(&theBuffer);
 
+					if (GarminCoroutineStateRequestToTerminate == pGarminUsbData->coroutineState)
+					{
+						pGarminUsbData->coroutineState = GarminCoroutineStateTerminated;
+						return;
+					}
+
 					break;
 				}
 
@@ -223,6 +235,15 @@ begin_of_geolocationCoroutine_loop:
 				pGarminUsbData->coroutineState = GarminCoroutineStateOkSendingNotPossible;
 				pGarminUsbData->pPacket = (Packet_t*) theBuffer;
 				switchToCoroutine(pGarminUsbData->pGeolocationCoroutine, pGarminUsbData->pMainCoroutine);
+
+				if (GarminCoroutineStateRequestToTerminate == pGarminUsbData->coroutineState)
+				{
+					safe_free(&theNextBuffer);
+					safe_free(&theBuffer);
+
+					pGarminUsbData->coroutineState = GarminCoroutineStateTerminated;
+					return;
+				}
 
 				xchg(&theBuffer, &theNextBuffer, sizeof(BYTE*));
 			}

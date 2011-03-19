@@ -16,7 +16,7 @@
 
 #include "GeolocationBackendGarminWin/GeolocationGarminCoroutineStateFunctions.h"
 
-bool isGarminCoroutineStateOK(GarminCoroutineState in_coroutineState)
+bool isGarminCoroutineStateActive(GarminCoroutineState in_coroutineState)
 {
 	return GarminCoroutineStateOkSendingPossible == in_coroutineState ||
 		GarminCoroutineStateOkSendingNotPossible == in_coroutineState;

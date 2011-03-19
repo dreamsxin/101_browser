@@ -23,7 +23,7 @@
 extern "C" {
 #endif
 
-__declspec(dllexport) bool isGarminCoroutineStateOK(GarminCoroutineState in_coroutineState);
+__declspec(dllexport) bool isGarminCoroutineStateActive(GarminCoroutineState in_coroutineState);
 __declspec(dllexport) bool isSendingPossible(GarminCoroutineState in_coroutineState);
 
 #ifdef __cplusplus

@@ -68,7 +68,7 @@ bool waitForPacket(
 
 __declspec(dllexport) bool flushPacketsUntilSendingPossible(GarminUsbData *in_out_pGarminUsbData)
 {
-	if (!isGarminCoroutineStateOK(in_out_pGarminUsbData->coroutineState))
+	if (!isGarminCoroutineStateActive(in_out_pGarminUsbData->coroutineState))
 		return false;
 	
 	while (!isSendingPossible(in_out_pGarminUsbData->coroutineState))

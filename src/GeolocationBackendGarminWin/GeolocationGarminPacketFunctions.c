@@ -47,12 +47,12 @@ bool sendPacket(GarminUsbData *in_pGarminUsbData, void *in_pPacket,
 
 bool receivePacket(GarminUsbData *in_pGarminUsbData, Packet_t **in_ppPacket)
 {
-	if (!isGarminCoroutineStateOK(in_pGarminUsbData->coroutineState))
+	if (!isGarminCoroutineStateActive(in_pGarminUsbData->coroutineState))
 		return false;
 
 	switchToCoroutine(in_pGarminUsbData->pMainCoroutine, in_pGarminUsbData->pGeolocationCoroutine);
 
-	if (!isGarminCoroutineStateOK(in_pGarminUsbData->coroutineState))
+	if (!isGarminCoroutineStateActive(in_pGarminUsbData->coroutineState))
 		return false;
 	else
 	{

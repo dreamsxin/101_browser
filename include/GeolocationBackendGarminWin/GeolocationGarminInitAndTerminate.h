@@ -14,8 +14,8 @@
 * limitations under the License.
 */
 
-#ifndef _MTAx_GeolocationGarminWin_GeolocationGarminInit_h
-#define _MTAx_GeolocationGarminWin_GeolocationGarminInit_h
+#ifndef _MTAx_GeolocationGarminWin_GeolocationGarminInitAndTerminate_h
+#define _MTAx_GeolocationGarminWin_GeolocationGarminInitAndTerminate_h
 
 #include "GeolocationBackendGarminWin/GeolocationGarminPackets.h"
 #include "GeolocationBackendGarminWin/GeolocationGarminCoroutineDataTypes.h"
@@ -34,6 +34,8 @@ __declspec(dllexport) bool createGeolocationCoroutine(GarminUsbData *out_pGarmin
 void __stdcall geolocationCoroutine(void *in_pGarminUsbData);
 
 void startGeolocationCoroutine(GarminUsbData *in_out_pGarminUsbData);
+
+__declspec(dllexport) void stopGeolocationCoroutine(GarminUsbData *in_out_pGarminUsbData);
 
 #ifdef __cplusplus
 }

@@ -14,12 +14,16 @@
 * limitations under the License.
 */
 
-#include "GeolocationBackendGarminWin/GeolocationGarminInit.h"
+#include "GeolocationBackendGarminWin/GeolocationGarminInitAndTerminate.h"
+#include "GeolocationBackendGarminWin/GeolocationGarminPacketFunctions.h" // for isGarminCoroutineStateActive
+
+#include <assert.h>
 
 #include <windows.h>
 #include <initguid.h>
 #include <setupapi.h>
 #include <winioctl.h>
+
 
 #define IOCTL_USB_PACKET_SIZE CTL_CODE(FILE_DEVICE_UNKNOWN, 0x851, METHOD_BUFFERED, FILE_ANY_ACCESS)
 
@@ -94,4 +98,14 @@ bool createGeolocationCoroutine(GarminUsbData *out_pGarminUsbData,
 void startGeolocationCoroutine(GarminUsbData *in_out_pGarminUsbData)
 {
 	switchToCoroutine(in_out_pGarminUsbData->pMainCoroutine, in_out_pGarminUsbData->pGeolocationCoroutine);
+}
+
+void stopGeolocationCoroutine(GarminUsbData *in_out_pGarminUsbData)
+{
+	if (isGarminCoroutineStateActive(in_out_pGarminUsbData->coroutineState))
+	{
+		in_out_pGarminUsbData->coroutineState = GarminCoroutineStateRequestToTerminate;
+		switchToCoroutine(in_out_pGarminUsbData->pMainCoroutine, in_out_pGarminUsbData->pGeolocationCoroutine);
+		assert(GarminCoroutineStateTerminated == in_out_pGarminUsbData->coroutineState);
+	}
 }

@@ -33,14 +33,11 @@
     <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminPacketFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminInit.h">
+    <ClInclude Include="..\..\..\include\GeolocationBackendGarminWin\GeolocationGarminInitAndTerminate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminInit.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminCoroutine.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -54,6 +51,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminPacketFunctions.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\GeolocationBackendGarminWin\GeolocationGarminInitAndTerminate.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

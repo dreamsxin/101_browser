@@ -28,6 +28,9 @@ typedef enum
 	GarminCoroutineStateOkSendingPossible,
 	GarminCoroutineStateOkSendingNotPossible,
 
+	GarminCoroutineStateRequestToTerminate,
+	GarminCoroutineStateTerminated,
+
 	GarminCoroutineStateErrorAllocation,
 	GarminCoroutineStateErrorDeviceIoControl,
 	GarminCoroutineStateErrorReadFile,
