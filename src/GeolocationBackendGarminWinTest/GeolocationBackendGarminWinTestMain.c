@@ -25,6 +25,8 @@
 #include "GeolocationBackendGarminWin/GeolocationGarminPacketFunctions.h"
 #include "GeolocationBackendGarminWin/GeolocationGarminPacketsUtil.h"
 
+#define PVT_COUNT 10
+
 typedef struct
 {
 	bool A010_supported;
@@ -202,7 +204,7 @@ int main()
 		exit(EXIT_FAILURE);
 	}
 
-	for (someCounter = 0; someCounter < 50; someCounter++)
+	for (someCounter = 0; someCounter < PVT_COUNT;)
 	{
 		if (!receivePacket(&garminUsbData, &pReceivedPacket))
 		{
@@ -217,8 +219,26 @@ int main()
 			{
 				printf("Invalid PVT packet.\n");
 			}
+
+			someCounter++;
 		}
 	}
+
+	if (!flushPacketsUntilSendingPossible(&garminUsbData))
+	{
+		printf("Error when flushing packets.\n");
+		exit(EXIT_FAILURE);
+	}
+
+	assert(isSendingPossible(garminUsbData.coroutineState));
+
+	if (!sendPacket(&garminUsbData, &theStopPvtDataPacket, lUsbSize))
+	{
+		printf("Could not send start PVT packet.\n");
+		exit(EXIT_FAILURE);
+	}
+
+	
 
 	stopGeolocationCoroutine(&garminUsbData);
 
