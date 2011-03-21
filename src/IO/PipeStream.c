@@ -163,12 +163,6 @@ copy_bytes:
 size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, size_t in_count)
 {
 	PipeStreamState *pPipeStreamState = (PipeStreamState*) in_out_pPipeStreamState;
-
-	/*
-	* Note that pPipeStreamState->mCurrentBufferSize becomes != 0
-	* exactly in the case of calling pipeStreamRead([...], [...], 0)
-	* when pPipeStreamState->mCurrentBufferSize != 0.
-	*/
 	
 	pPipeStreamState->mpCurrentBuffer = (const uint8_t*) in_pBuffer;
 	pPipeStreamState->mCurrentBufferSize = in_count;
