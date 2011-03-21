@@ -124,9 +124,9 @@ size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t i
 	PipeStreamState *pPipeStreamState = (PipeStreamState*) in_out_pPipeStreamState;
 	uint8_t *pBuffer = (uint8_t*) out_pBuffer;
 	size_t bytesRead = 0;
-	size_t bytesToReadInCurrentIteration = MIN(in_count-bytesRead, pPipeStreamState->mCurrentBufferSize);
+	size_t bytesToReadInCurrentIterationCount = MIN(in_count-bytesRead, pPipeStreamState->mCurrentBufferSize);
 
-	if (0 == bytesToReadInCurrentIteration)
+	if (0 == bytesToReadInCurrentIterationCount)
 	{
 switch_to_writer:
 
@@ -137,21 +137,21 @@ switch_to_writer:
 		switchToCoroutine(pPipeStreamState->mpOtherCoroutineDescriptor,
 			pPipeStreamState->mpCurrentCoroutineDescriptor);
 
-		bytesToReadInCurrentIteration = MIN(in_count-bytesRead, pPipeStreamState->mCurrentBufferSize);
+		bytesToReadInCurrentIterationCount = MIN(in_count-bytesRead, pPipeStreamState->mCurrentBufferSize);
 
-		if (bytesToReadInCurrentIteration > 0)
+		if (bytesToReadInCurrentIterationCount > 0)
 			goto copy_bytes;
 	}
 	else
 	{
 copy_bytes:
 
-		memcpy(pBuffer, pPipeStreamState->mpCurrentBuffer, bytesToReadInCurrentIteration);
+		memcpy(pBuffer, pPipeStreamState->mpCurrentBuffer, bytesToReadInCurrentIterationCount);
 
-		bytesRead += bytesToReadInCurrentIteration;
-		pBuffer += bytesToReadInCurrentIteration;
-		pPipeStreamState->mpCurrentBuffer += bytesToReadInCurrentIteration;
-		pPipeStreamState->mCurrentBufferSize -= bytesToReadInCurrentIteration;
+		bytesRead += bytesToReadInCurrentIterationCount;
+		pBuffer += bytesToReadInCurrentIterationCount;
+		pPipeStreamState->mpCurrentBuffer += bytesToReadInCurrentIterationCount;
+		pPipeStreamState->mCurrentBufferSize -= bytesToReadInCurrentIterationCount;
 
 		if (0 == pPipeStreamState->mCurrentBufferSize)
 			goto switch_to_writer;
