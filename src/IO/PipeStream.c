@@ -124,10 +124,12 @@ size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t i
 	PipeStreamState *pPipeStreamState = (PipeStreamState*) in_out_pPipeStreamState;
 	uint8_t *pBuffer = (uint8_t*) out_pBuffer;
 	size_t bytesRead = 0;
+	size_t bytesToReadInCurrentIteration = MIN(in_count-bytesRead, pPipeStreamState->mCurrentBufferSize);
 
-	// This means we want to terminate...
-	if (0 == in_count)
+	if (0 == bytesToReadInCurrentIteration)
 	{
+switch_to_writer:
+
 		xchg(
 			&pPipeStreamState->mpCurrentCoroutineDescriptor, 
 			&pPipeStreamState->mpOtherCoroutineDescriptor,
@@ -135,35 +137,24 @@ size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t i
 		switchToCoroutine(pPipeStreamState->mpOtherCoroutineDescriptor,
 			pPipeStreamState->mpCurrentCoroutineDescriptor);
 
-		return 0;
+		bytesToReadInCurrentIteration = MIN(in_count-bytesRead, pPipeStreamState->mCurrentBufferSize);
+
+		if (bytesToReadInCurrentIteration > 0)
+			goto copy_bytes;
 	}
-
-	while (bytesRead < in_count)
+	else
 	{
-		size_t bytesToReadInCurrentIteration = MIN(in_count-bytesRead, pPipeStreamState->mCurrentBufferSize);
+copy_bytes:
 
-		if (0 == bytesToReadInCurrentIteration)
-		{
-			xchg(
-				&pPipeStreamState->mpCurrentCoroutineDescriptor, 
-				&pPipeStreamState->mpOtherCoroutineDescriptor,
-				sizeof(CoroutineDescriptor*));
-			switchToCoroutine(pPipeStreamState->mpOtherCoroutineDescriptor,
-				pPipeStreamState->mpCurrentCoroutineDescriptor);
+		memcpy(pBuffer, pPipeStreamState->mpCurrentBuffer, bytesToReadInCurrentIteration);
 
-			// that means the stream is terminated
-			if (0 == pPipeStreamState->mCurrentBufferSize)
-				return bytesRead;
-		}
-		else
-		{
-			memcpy(pBuffer, pPipeStreamState->mpCurrentBuffer, bytesToReadInCurrentIteration);
+		bytesRead += bytesToReadInCurrentIteration;
+		pBuffer += bytesToReadInCurrentIteration;
+		pPipeStreamState->mpCurrentBuffer += bytesToReadInCurrentIteration;
+		pPipeStreamState->mCurrentBufferSize -= bytesToReadInCurrentIteration;
 
-			bytesRead += bytesToReadInCurrentIteration;
-			pBuffer += bytesToReadInCurrentIteration;
-			pPipeStreamState->mpCurrentBuffer += bytesToReadInCurrentIteration;
-			pPipeStreamState->mCurrentBufferSize -= bytesToReadInCurrentIteration;
-		}
+		if (0 == pPipeStreamState->mCurrentBufferSize)
+			goto switch_to_writer;
 	}
 
 	return bytesRead;
