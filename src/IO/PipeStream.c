@@ -23,9 +23,9 @@
 
 void
 #ifdef _WIN32
-__stdcall
+	__stdcall
 #endif
-pipeStreamKickoffReader(void *in_pPipeStreamData)
+	pipeStreamKickoffReader(void *in_pPipeStreamData)
 {
 	PipeStreamStateAndKickoff stateAndKickoff = *(PipeStreamStateAndKickoff*) in_pPipeStreamData;
 
@@ -48,9 +48,9 @@ pipeStreamKickoffReader(void *in_pPipeStreamData)
 
 void
 #ifdef _WIN32
-__stdcall
+	__stdcall
 #endif
-pipeStreamKickoffWriter(void *in_pPipeStreamData)
+	pipeStreamKickoffWriter(void *in_pPipeStreamData)
 {
 	PipeStreamStateAndKickoff stateAndKickoff = *(PipeStreamStateAndKickoff*) in_pPipeStreamData;
 
@@ -127,7 +127,23 @@ size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t i
 	size_t bytesToReadInCurrentIterationCount = MIN(in_count-bytesRead, pPipeStreamState->mCurrentBufferSize);
 
 	if (0 == bytesToReadInCurrentIterationCount)
+		goto switch_to_writer;
+
+	while (1)
 	{
+		// copy bytes
+		memcpy(pBuffer, pPipeStreamState->mpCurrentBuffer, bytesToReadInCurrentIterationCount);
+
+		bytesRead += bytesToReadInCurrentIterationCount;
+		pBuffer += bytesToReadInCurrentIterationCount;
+		pPipeStreamState->mpCurrentBuffer += bytesToReadInCurrentIterationCount;
+		pPipeStreamState->mCurrentBufferSize -= bytesToReadInCurrentIterationCount;
+
+		if (pPipeStreamState->mCurrentBufferSize > 0)
+			break;
+
+
+		// switch to writer
 switch_to_writer:
 
 		xchg(
@@ -139,22 +155,8 @@ switch_to_writer:
 
 		bytesToReadInCurrentIterationCount = MIN(in_count-bytesRead, pPipeStreamState->mCurrentBufferSize);
 
-		if (bytesToReadInCurrentIterationCount > 0)
-			goto copy_bytes;
-	}
-	else
-	{
-copy_bytes:
-
-		memcpy(pBuffer, pPipeStreamState->mpCurrentBuffer, bytesToReadInCurrentIterationCount);
-
-		bytesRead += bytesToReadInCurrentIterationCount;
-		pBuffer += bytesToReadInCurrentIterationCount;
-		pPipeStreamState->mpCurrentBuffer += bytesToReadInCurrentIterationCount;
-		pPipeStreamState->mCurrentBufferSize -= bytesToReadInCurrentIterationCount;
-
-		if (0 == pPipeStreamState->mCurrentBufferSize)
-			goto switch_to_writer;
+		if (bytesToReadInCurrentIterationCount == 0)
+			break;
 	}
 
 	return bytesRead;
@@ -163,7 +165,7 @@ copy_bytes:
 size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, size_t in_count)
 {
 	PipeStreamState *pPipeStreamState = (PipeStreamState*) in_out_pPipeStreamState;
-	
+
 	pPipeStreamState->mpCurrentBuffer = (const uint8_t*) in_pBuffer;
 	pPipeStreamState->mCurrentBufferSize = in_count;
 
