@@ -38,7 +38,7 @@ uint32_t applyCarry(UnsignedBigInteger* in_pInt, uint32_t in_c)
 
 				if (in_pInt->numberSize+1 <= SIZE_MAX/sizeof(uint32_t))
 				{
-					uint32_t* newLimbs = realloc(in_pInt->limbs, sizeof(uint32_t)*(in_pInt->numberSize+1));
+					uint32_t* newLimbs = (uint32_t*) realloc(in_pInt->limbs, sizeof(uint32_t)*(in_pInt->numberSize+1));
 
 					if (newLimbs != NULL)
 					{
