@@ -52,7 +52,8 @@ size_t bidirectionalStreamRead(uint8_t in_side, void *in_out_pBidirectionalStrea
 		return 42;
 	}
 	else
-		return 0;
+		// Error
+		return SIZE_MAX;
 }
 
 size_t bidirectionalStreamWrite(uint8_t in_side, void *in_out_pBidirectionalStreamState, const void *in_pBuffer, size_t in_count)
@@ -82,5 +83,6 @@ size_t bidirectionalStreamWrite(uint8_t in_side, void *in_out_pBidirectionalStre
 		return writtenBytes;
 	}
 	else
-		return 0;
+		// Error
+		return SIZE_MAX;
 }
