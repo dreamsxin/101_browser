@@ -1,5 +1,5 @@
 /*
-* Copyright 2011 Wolfgang Keller
+* Copyright 2008-2011 Wolfgang Keller
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,21 +14,9 @@
 * limitations under the License.
 */
 
-#include "MiniStdlib/xchg.h"
-#include "MiniStdlib/cstdint.h"
-#include <assert.h>
-#include <string.h>
-#include <limits.h>
+#include "TestSuite/Tests.h"
+#include "TestSuite/TestSuite.h"
 
-void xchg(void *in_p1, void *in_p2, size_t in_dataSize)
+void test_MiniStdlib()
 {
-	uint8_t temp;
-	size_t idx;
-
-	for (idx = 0; idx<in_dataSize; idx++)
-	{
-		temp = ((uint8_t*) in_p1)[idx];
-		((uint8_t*) in_p1)[idx] = ((uint8_t*) in_p2)[idx];
-		((uint8_t*) in_p2)[idx] = temp;
-	}
 }

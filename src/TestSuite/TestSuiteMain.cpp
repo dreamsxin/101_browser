@@ -23,6 +23,8 @@
 
 int main()
 {
+	wprintf(L"Testing MiniStdlib\n");
+	test_MiniStdlib();
 	wprintf(L"Testing Interval\n");
 	testInterval();
 	wprintf(L"Testing Algorithm\n");

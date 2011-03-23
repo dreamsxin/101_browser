@@ -103,6 +103,7 @@
     <ClCompile Include="..\..\..\src\TestSuite\Test_Interval.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_IO.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_IteratorInstances.cpp" />
+    <ClCompile Include="..\..\..\src\TestSuite\Test_MiniStdlib.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_OuterBorderIterator.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_PNG.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_RFC1950.c" />
