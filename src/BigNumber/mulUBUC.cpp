@@ -35,4 +35,3 @@ uint32_t mulUBUC(UnsignedBigInteger* in_pInt, uint32_t in_c)
 		return 0;
 	}
 }
-
