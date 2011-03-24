@@ -26,8 +26,6 @@ bool checkBitmask(const void *in_pBuffer, size_t in_bufferSize, const void *in_p
 	size_t index;
 	uint8_t currentBit;
 	
-	assert(in_bufferSize < SIZE_MAX);
-
 	for (index = 0; index < in_bufferSize; index++)
 	{
 		for (currentBit = 0; currentBit < 8; currentBit++)

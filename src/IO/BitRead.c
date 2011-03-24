@@ -28,8 +28,6 @@ bool readBits(BitReadState *in_pBitReadState, void* in_pReaderState,  bool (*in_
 	uint8_t *currentBufferElement = (uint8_t *) in_pBuffer;
 	size_t currentBitIndex; // counter in the loop
 
-	assert(in_bitsCount < SIZE_MAX);
-
 	for (currentBitIndex = 0; currentBitIndex < in_bitsCount; ++currentBitIndex)
 	{
 		uint8_t currentBit;

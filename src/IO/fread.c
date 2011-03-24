@@ -24,9 +24,6 @@ size_t fread_withState(void *in_dstBuffer, size_t in_elementSize, size_t in_coun
 {
 	size_t readCount;
 	size_t countIndex;
-	
-	// Reason for this assertion: the loops won't terminate otherwise
-	assert(in_count < SIZE_MAX);
 
 	readCount = fread(in_dstBuffer, in_elementSize, in_count, in_file);
 

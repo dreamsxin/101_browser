@@ -136,9 +136,6 @@ namespace Gui
 
 		void syncRawMousePositions(ArrayBlock<RawMouse>* in_oldRawMice, ArrayBlock<RawMouse>* in_newRawMice)
 		{
-			assert(in_oldRawMice->count() < SIZE_MAX);
-			assert(in_newRawMice->count() < SIZE_MAX);
-
 			for (size_t lNewIndex = 0; lNewIndex < in_newRawMice->count(); lNewIndex++)
 			{
 				RawMouse* pCurrentNewRawMouse = in_newRawMice->data()+lNewIndex;
@@ -160,8 +157,6 @@ namespace Gui
 
 		void destroyRawMouseArray(ArrayBlock<RawMouse>* in_rawMice)
 		{
-			assert(in_rawMice->count() < SIZE_MAX);
-
 			for (size_t index = 0; index < in_rawMice->count(); index++)
 			{
 				in_rawMice->data()[index].buttonsPressed.free();
