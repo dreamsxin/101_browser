@@ -59,5 +59,8 @@
     <ClCompile Include="..\..\..\src\IO\BidirectionalStream.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\IO\CoroutineStream.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

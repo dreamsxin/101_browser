@@ -37,13 +37,14 @@ typedef struct
 {
 	CoroutineDescriptor *mpCoroutineDescriptor;
 	const uint8_t * volatile mpBuffer;
-	volatile size_t mCurrentBufferSize;
+	volatile size_t mBufferSize;
 	volatile BidirectionalHalfStreamAction mAction;
 } BidirectionalHalfStreamState;
 
 typedef struct
 {
 	BidirectionalHalfStreamState mHalfStreamStates[2];
+	uint8_t mCurrentSide;
 } BidirectionalStreamState;
 
 #ifdef _WIN32
@@ -59,22 +60,22 @@ void *in_pUserData
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-bool bidirectionalStreamIsReadingPossible(uint8_t in_side, void *in_pBidirectionalStreamState);
+bool bidirectionalStreamIsReadingPossible(void *in_pBidirectionalStreamState);
 
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-bool bidirectionalStreamIsWritingPossible(uint8_t in_side, void *in_pBidirectionalStreamState);
+bool bidirectionalStreamIsWritingPossible(void *in_pBidirectionalStreamState);
 
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-size_t bidirectionalStreamRead(uint8_t in_side, void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count);
+size_t bidirectionalStreamRead(void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count);
 
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-size_t bidirectionalStreamWrite(uint8_t in_side, void *in_out_pBidirectionalStreamState, const void *in_pBuffer, size_t in_count);
+size_t bidirectionalStreamWrite(void *in_out_pBidirectionalStreamState, const void *in_pBuffer, size_t in_count);
 
 #ifdef __cplusplus
 }

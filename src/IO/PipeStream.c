@@ -20,18 +20,24 @@
 #include <assert.h>
 #include <string.h> // for memcpy
 
-void xchgAndSwitchCoroutine(CoroutineDescriptor **in_ppCurrentSD, CoroutineDescriptor **in_ppOtherCD)
+void xchgAndSwitchCoroutine(void *in_out_pPipeStreamState)
 {
-	xchg(in_ppCurrentSD, in_ppOtherCD, sizeof(CoroutineDescriptor*));
-	switchToCoroutine(*in_ppOtherCD, *in_ppCurrentSD);
+	PipeStreamState *pPipeStreamState = (PipeStreamState *) in_out_pPipeStreamState;
+	
+	xchg(&pPipeStreamState->mpCurrentCoroutineDescriptor, 
+		&pPipeStreamState->mpOtherCoroutineDescriptor, sizeof(CoroutineDescriptor*));
+	/*
+	* Note that we just exchanged the two coroutine descriptors; that's why we
+	* have this strange order.
+	*/
+	switchToCoroutine(pPipeStreamState->mpOtherCoroutineDescriptor, pPipeStreamState->mpCurrentCoroutineDescriptor);
 }
 
 void pipeStreamTerminalLoopRead(PipeStreamState *in_pPipeStreamState)
 {
 	// equals pipeStreamRead(stateAndKickoff.pState, NULL, 0);
 
-	xchgAndSwitchCoroutine(&in_pPipeStreamState->mpCurrentCoroutineDescriptor, 
-		&in_pPipeStreamState->mpOtherCoroutineDescriptor);
+	xchgAndSwitchCoroutine(in_pPipeStreamState);
 }
 
 void pipeStreamTerminalLoopWrite(PipeStreamState *in_pPipeStreamState)
@@ -41,8 +47,7 @@ void pipeStreamTerminalLoopWrite(PipeStreamState *in_pPipeStreamState)
 	in_pPipeStreamState->mpCurrentBuffer = NULL;
 	in_pPipeStreamState->mCurrentBufferSize = 0;
 
-	xchgAndSwitchCoroutine(&in_pPipeStreamState->mpCurrentCoroutineDescriptor, 
-		&in_pPipeStreamState->mpOtherCoroutineDescriptor);
+	xchgAndSwitchCoroutine(in_pPipeStreamState);
 }
 
 void
@@ -142,8 +147,7 @@ size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t i
 		// switch to writer
 switch_to_writer:
 
-		xchgAndSwitchCoroutine(&pPipeStreamState->mpCurrentCoroutineDescriptor, 
-			&pPipeStreamState->mpOtherCoroutineDescriptor);
+		xchgAndSwitchCoroutine(pPipeStreamState);
 
 		bytesToReadInCurrentIterationCount = MIN(in_count-bytesRead, pPipeStreamState->mCurrentBufferSize);
 
@@ -161,8 +165,7 @@ size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, si
 	pPipeStreamState->mpCurrentBuffer = (const uint8_t*) in_pBuffer;
 	pPipeStreamState->mCurrentBufferSize = in_count;
 
-	xchgAndSwitchCoroutine(&pPipeStreamState->mpCurrentCoroutineDescriptor, 
-		&pPipeStreamState->mpOtherCoroutineDescriptor);
+	xchgAndSwitchCoroutine(pPipeStreamState);
 
 	return in_count - pPipeStreamState->mCurrentBufferSize;
 }

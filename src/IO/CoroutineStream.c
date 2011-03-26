@@ -14,12 +14,5 @@
 * limitations under the License.
 */
 
-#ifndef _MTAx_IO_CoroutineStream_h
-#define _MTAx_IO_CoroutineStream_h
+#include "IO/CoroutineStream.h"
 
-typedef struct
-{
-	void (*mpfSwitchCoroutine)(void *);
-} CoroutineStreamFunctions;
-
-#endif
