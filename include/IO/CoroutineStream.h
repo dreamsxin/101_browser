@@ -17,9 +17,13 @@
 #ifndef _MTAx_IO_CoroutineStream_h
 #define _MTAx_IO_CoroutineStream_h
 
+#pragma pack(push, 1)
+
 typedef struct
 {
 	void (*mpfSwitchCoroutine)(void *);
 } CoroutineStreamFunctions;
+
+#pragma pack(pop)
 
 #endif

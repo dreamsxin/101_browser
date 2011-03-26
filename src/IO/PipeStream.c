@@ -33,21 +33,21 @@ void xchgAndSwitchCoroutine(void *in_out_pPipeStreamState)
 	switchToCoroutine(pPipeStreamState->mpOtherCoroutineDescriptor, pPipeStreamState->mpCurrentCoroutineDescriptor);
 }
 
-void pipeStreamTerminalLoopRead(PipeStreamState *in_pPipeStreamState)
+void pipeStreamTerminalLoopRead(PipeStreamState *in_out_pPipeStreamState)
 {
-	// equals pipeStreamRead(stateAndKickoff.pState, NULL, 0);
+	// equals pipeStreamRead(in_out_pPipeStreamState, NULL, 0);
 
-	xchgAndSwitchCoroutine(in_pPipeStreamState);
+	(((CoroutineStreamFunctions*) in_out_pPipeStreamState)->mpfSwitchCoroutine)(in_out_pPipeStreamState);
 }
 
-void pipeStreamTerminalLoopWrite(PipeStreamState *in_pPipeStreamState)
+void pipeStreamTerminalLoopWrite(PipeStreamState *in_out_pPipeStreamState)
 {
-	// equals pipeStreamWrite(stateAndKickoff.pState, NULL, 0);
+	// equals pipeStreamWrite(in_out_pPipeStreamState, NULL, 0);
 
-	in_pPipeStreamState->mpCurrentBuffer = NULL;
-	in_pPipeStreamState->mCurrentBufferSize = 0;
+	in_out_pPipeStreamState->mpCurrentBuffer = NULL;
+	in_out_pPipeStreamState->mCurrentBufferSize = 0;
 
-	xchgAndSwitchCoroutine(in_pPipeStreamState);
+	(((CoroutineStreamFunctions*) in_out_pPipeStreamState)->mpfSwitchCoroutine)(in_out_pPipeStreamState);
 }
 
 void
@@ -68,7 +68,7 @@ void
 
 	while (1)
 	{
-		(*stateAndKickoff.kickoffData.mpTerminateLoopFun)(stateAndKickoff.pState);
+		(*stateAndKickoff.kickoffData.mpTerminateLoopFun)(&stateAndKickoff.pState->mFunctions, stateAndKickoff.pState);
 	}
 }
 
@@ -82,6 +82,8 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	PipeStreamStateAndKickoff stateAndKickoff;
 
 	stateAndKickoff.pState = out_pPipeStreamState;
+	
+	out_pPipeStreamState->mFunctions.mpfSwitchCoroutine = xchgAndSwitchCoroutine;
 
 	out_pPipeStreamState->mpCurrentBuffer = NULL;
 	out_pPipeStreamState->mCurrentBufferSize = 0;
@@ -147,7 +149,7 @@ size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t i
 		// switch to writer
 switch_to_writer:
 
-		xchgAndSwitchCoroutine(pPipeStreamState);
+		(((CoroutineStreamFunctions*) pPipeStreamState)->mpfSwitchCoroutine)(pPipeStreamState);
 
 		bytesToReadInCurrentIterationCount = MIN(in_count-bytesRead, pPipeStreamState->mCurrentBufferSize);
 
@@ -165,7 +167,7 @@ size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, si
 	pPipeStreamState->mpCurrentBuffer = (const uint8_t*) in_pBuffer;
 	pPipeStreamState->mCurrentBufferSize = in_count;
 
-	xchgAndSwitchCoroutine(pPipeStreamState);
+	(((CoroutineStreamFunctions*) pPipeStreamState)->mpfSwitchCoroutine)(pPipeStreamState);
 
 	return in_count - pPipeStreamState->mCurrentBufferSize;
 }

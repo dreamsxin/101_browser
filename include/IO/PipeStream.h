@@ -19,6 +19,7 @@
 
 #include "Coroutine/Coroutine.h"
 #include "IO/ByteStreamInterface.h"
+#include "IO/CoroutineStream.h"
 #include "MiniStdlib/cstdbool.h"
 #include "MiniStdlib/climits.h"
 
@@ -32,14 +33,21 @@ typedef enum
 	PipeStreamStateTypeWriter
 } PipeStreamStateType;
 
+#pragma pack(push, 1)
+
 typedef struct
 {
+	// this has to be the first member of the struct because it will be casted
+	CoroutineStreamFunctions mFunctions;
+
 	const uint8_t * volatile mpCurrentBuffer;
 	volatile size_t mCurrentBufferSize;
 
 	CoroutineDescriptor *mpCurrentCoroutineDescriptor;
 	CoroutineDescriptor *mpOtherCoroutineDescriptor;
 } PipeStreamState;
+
+#pragma pack(pop)
 
 typedef struct
 {
