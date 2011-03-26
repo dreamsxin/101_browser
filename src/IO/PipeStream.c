@@ -126,19 +126,18 @@ size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t i
 {
 	PipeStreamState *pPipeStreamState = (PipeStreamState*) in_out_pPipeStreamState;
 
-	size_t out_bytesRead = coroutineStreamRead(
+	return coroutineStreamRead(
 		in_out_pPipeStreamState, 
 		out_pBuffer, in_count, 
-		&pPipeStreamState->mpCurrentBuffer,
-		&pPipeStreamState->mCurrentBufferSize);
-
-	return out_bytesRead;
+		&pPipeStreamState->mpCurrentBuffer, &pPipeStreamState->mCurrentBufferSize);
 }
 
 size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, size_t in_count)
 {
 	PipeStreamState *pPipeStreamState = (PipeStreamState*) in_out_pPipeStreamState;
 	
-	return coroutineStreamWrite(in_out_pPipeStreamState, in_pBuffer, in_count, 
+	return coroutineStreamWrite(
+		in_out_pPipeStreamState, 
+		in_pBuffer, in_count, 
 		&pPipeStreamState->mpCurrentBuffer, &pPipeStreamState->mCurrentBufferSize);
 }
