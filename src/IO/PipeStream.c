@@ -20,6 +20,11 @@
 #include <assert.h>
 #include <string.h> // for memcpy
 
+void xchgAndSwitchCoroutine(CoroutineDescriptor **in_ppCurrentSD, CoroutineDescriptor **in_ppOtherCD)
+{
+	xchg(in_ppCurrentSD, in_ppOtherCD, sizeof(CoroutineDescriptor*));
+	switchToCoroutine(*in_ppOtherCD, *in_ppCurrentSD);
+}
 
 void
 #ifdef _WIN32
@@ -41,8 +46,9 @@ void
 
 	while (1)
 	{
-		size_t bytesCount = pipeStreamRead(stateAndKickoff.pState, NULL, 0);
-		assert(0 == bytesCount);
+		// equals pipeStreamRead(stateAndKickoff.pState, NULL, 0);
+		xchgAndSwitchCoroutine(&stateAndKickoff.pState->mpCurrentCoroutineDescriptor, 
+			&stateAndKickoff.pState->mpOtherCoroutineDescriptor);
 	}
 }
 
@@ -66,8 +72,13 @@ void
 
 	while (1)
 	{
-		size_t bytesCount = pipeStreamWrite(stateAndKickoff.pState, NULL, 0);
-		assert(0 == bytesCount);
+		// equals pipeStreamWrite(stateAndKickoff.pState, NULL, 0);
+
+		stateAndKickoff.pState->mpCurrentBuffer = NULL;
+		stateAndKickoff.pState->mCurrentBufferSize = 0;
+
+		xchgAndSwitchCoroutine(&stateAndKickoff.pState->mpCurrentCoroutineDescriptor, 
+			&stateAndKickoff.pState->mpOtherCoroutineDescriptor);
 	}
 }
 
@@ -146,12 +157,8 @@ size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t i
 		// switch to writer
 switch_to_writer:
 
-		xchg(
-			&pPipeStreamState->mpCurrentCoroutineDescriptor, 
-			&pPipeStreamState->mpOtherCoroutineDescriptor,
-			sizeof(CoroutineDescriptor*));
-		switchToCoroutine(pPipeStreamState->mpOtherCoroutineDescriptor,
-			pPipeStreamState->mpCurrentCoroutineDescriptor);
+		xchgAndSwitchCoroutine(&pPipeStreamState->mpCurrentCoroutineDescriptor, 
+			&pPipeStreamState->mpOtherCoroutineDescriptor);
 
 		bytesToReadInCurrentIterationCount = MIN(in_count-bytesRead, pPipeStreamState->mCurrentBufferSize);
 
@@ -169,12 +176,8 @@ size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, si
 	pPipeStreamState->mpCurrentBuffer = (const uint8_t*) in_pBuffer;
 	pPipeStreamState->mCurrentBufferSize = in_count;
 
-	xchg(
-		&pPipeStreamState->mpCurrentCoroutineDescriptor, 
-		&pPipeStreamState->mpOtherCoroutineDescriptor,
-		sizeof(CoroutineDescriptor*));
-	switchToCoroutine(pPipeStreamState->mpOtherCoroutineDescriptor,
-		pPipeStreamState->mpCurrentCoroutineDescriptor);
+	xchgAndSwitchCoroutine(&pPipeStreamState->mpCurrentCoroutineDescriptor, 
+		&pPipeStreamState->mpOtherCoroutineDescriptor);
 
 	return in_count - pPipeStreamState->mCurrentBufferSize;
 }
