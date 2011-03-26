@@ -78,6 +78,23 @@ At the time of writing (26th of December 2010) only the Standard library of C/C+
 
 \includegraphics[width=130mm]{uml/PipeStream_read_activity.png}
 
+Things that you should check to validate the model:
+
+\begin{tabular}{| l | l | l |}
+\hline
+Call & Remark & Desired action \\
+\hline
+\hline
+  read(0) & & switch coroutine \\
+\hline
+  read(in\_count) & \texttt{in\_count} $>$ 0 and \texttt{in\_count} $<$ \texttt{currentBufferSize} & don't switch coroutine \\
+\hline
+  read(in\_count) & \texttt{in\_count} $>$ 0 and \texttt{in\_count} $==$ \texttt{currentBufferSize} & don't switch coroutine \\
+\hline
+  read(in\_count) & \texttt{in\_count} $>$ 0 and \texttt{in\_count} $>$ \texttt{currentBufferSize} & switch coroutine \\
+\hline
+\end{tabular}
+
 \part{Bits and pieces}
 
 \chapter{Web standards}

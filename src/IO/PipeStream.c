@@ -136,7 +136,7 @@ size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t i
 		pPipeStreamState->mpCurrentBuffer += bytesToReadInCurrentIterationCount;
 		pPipeStreamState->mCurrentBufferSize -= bytesToReadInCurrentIterationCount;
 
-		if (pPipeStreamState->mCurrentBufferSize > 0)
+		if (pPipeStreamState->mCurrentBufferSize > 0 || bytesRead == in_count)
 			break;
 
 
