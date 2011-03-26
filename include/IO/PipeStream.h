@@ -33,8 +33,6 @@ typedef enum
 	PipeStreamStateTypeWriter
 } PipeStreamStateType;
 
-#pragma pack(push, 1)
-
 typedef struct
 {
 	// this has to be the first member of the struct because it will be casted
@@ -46,8 +44,6 @@ typedef struct
 	CoroutineDescriptor *mpCurrentCoroutineDescriptor;
 	CoroutineDescriptor *mpOtherCoroutineDescriptor;
 } PipeStreamState;
-
-#pragma pack(pop)
 
 typedef struct
 {
