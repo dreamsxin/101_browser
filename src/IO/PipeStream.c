@@ -78,7 +78,6 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 
 	stateAndKickoff.pState = out_pPipeStreamState;
 
-	// Not necessary, but more safe...
 	out_pPipeStreamState->mpCurrentBuffer = NULL;
 	out_pPipeStreamState->mCurrentBufferSize = 0;
 
