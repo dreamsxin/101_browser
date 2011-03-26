@@ -17,12 +17,22 @@
 #ifndef _MTAx_IO_CoroutineStream_h
 #define _MTAx_IO_CoroutineStream_h
 
+#include "MiniStdlib/cstdint.h"
+
 #pragma pack(push, 1)
 
 typedef struct
 {
 	void (*mpfSwitchCoroutine)(void *);
 } CoroutineStreamFunctions;
+
+size_t coroutineStreamRead(void *in_out_pStreamState, 
+	void *out_pBuffer, size_t in_count, 
+	const uint8_t * volatile *in_ppCurrentBuffer, volatile size_t * in_pCurrentBufferSize);
+
+size_t coroutineStreamWrite(void *in_out_pStreamState, 
+	const void *in_pBuffer, size_t in_count, 
+	const uint8_t * volatile *in_ppCurrentBuffer, volatile size_t * in_pCurrentBufferSize);
 
 #pragma pack(pop)
 

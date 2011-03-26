@@ -68,7 +68,7 @@ void
 
 	while (1)
 	{
-		(*stateAndKickoff.kickoffData.mpTerminateLoopFun)(&stateAndKickoff.pState->mFunctions, stateAndKickoff.pState);
+		(*stateAndKickoff.kickoffData.mpTerminateLoopFun)(stateAndKickoff.pState);
 	}
 }
 
@@ -125,49 +125,20 @@ void deletePipeStreamState(PipeStreamState *out_pPipeStreamState)
 size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t in_count)
 {
 	PipeStreamState *pPipeStreamState = (PipeStreamState*) in_out_pPipeStreamState;
-	uint8_t *pBuffer = (uint8_t*) out_pBuffer;
-	size_t bytesRead = 0;
-	size_t bytesToReadInCurrentIterationCount = MIN(in_count-bytesRead, pPipeStreamState->mCurrentBufferSize);
 
-	if (0 == bytesToReadInCurrentIterationCount)
-		goto switch_to_writer;
+	size_t out_bytesRead = coroutineStreamRead(
+		in_out_pPipeStreamState, 
+		out_pBuffer, in_count, 
+		&pPipeStreamState->mpCurrentBuffer,
+		&pPipeStreamState->mCurrentBufferSize);
 
-	while (1)
-	{
-		// copy bytes
-		memcpy(pBuffer, pPipeStreamState->mpCurrentBuffer, bytesToReadInCurrentIterationCount);
-
-		bytesRead += bytesToReadInCurrentIterationCount;
-		pBuffer += bytesToReadInCurrentIterationCount;
-		pPipeStreamState->mpCurrentBuffer += bytesToReadInCurrentIterationCount;
-		pPipeStreamState->mCurrentBufferSize -= bytesToReadInCurrentIterationCount;
-
-		if (pPipeStreamState->mCurrentBufferSize > 0 || bytesRead == in_count)
-			break;
-
-
-		// switch to writer
-switch_to_writer:
-
-		(((CoroutineStreamFunctions*) pPipeStreamState)->mpfSwitchCoroutine)(pPipeStreamState);
-
-		bytesToReadInCurrentIterationCount = MIN(in_count-bytesRead, pPipeStreamState->mCurrentBufferSize);
-
-		if (bytesToReadInCurrentIterationCount == 0)
-			break;
-	}
-
-	return bytesRead;
+	return out_bytesRead;
 }
 
 size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, size_t in_count)
 {
 	PipeStreamState *pPipeStreamState = (PipeStreamState*) in_out_pPipeStreamState;
-
-	pPipeStreamState->mpCurrentBuffer = (const uint8_t*) in_pBuffer;
-	pPipeStreamState->mCurrentBufferSize = in_count;
-
-	(((CoroutineStreamFunctions*) pPipeStreamState)->mpfSwitchCoroutine)(pPipeStreamState);
-
-	return in_count - pPipeStreamState->mCurrentBufferSize;
+	
+	return coroutineStreamWrite(in_out_pPipeStreamState, in_pBuffer, in_count, 
+		&pPipeStreamState->mpCurrentBuffer, &pPipeStreamState->mCurrentBufferSize);
 }

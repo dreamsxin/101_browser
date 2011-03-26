@@ -16,6 +16,7 @@
 
 #include "MiniStdlib/minmax.h"
 #include "IO/BidirectionalStream.h"
+#include "IO/CoroutineStream.h"
 #include <assert.h>
 #include <string.h> // for memcpy
 
@@ -58,10 +59,8 @@ bool bidirectionalStreamIsWritingPossible(void *in_pBidirectionalStreamState)
 size_t bidirectionalStreamRead(void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count)
 {
 	BidirectionalStreamState *pStreamState = (BidirectionalStreamState*) in_out_pBidirectionalStreamState;
-	uint8_t *pBuffer = (uint8_t*) out_pBuffer;
-	size_t bytesRead = 0;
-	size_t bytesToReadInCurrentIterationCount = MIN(in_count-bytesRead, pStreamState->mHalfStreamStates[pStreamState->mCurrentSide].mBufferSize);
-
+	size_t out_bytesRead;
+	
 	if (0 != pStreamState->mCurrentSide && 1 != pStreamState->mCurrentSide)
 		// Error
 		return SIZE_MAX;
@@ -77,46 +76,23 @@ size_t bidirectionalStreamRead(void *in_out_pBidirectionalStreamState, void *out
 		pStreamState->mHalfStreamStates[pStreamState->mCurrentSide].mAction = BidirectionalHalfStreamActionReading;
 	}
 
-	if (0 == bytesToReadInCurrentIterationCount)
-		goto switch_to_writer;
-
-	while (1)
-	{
-		// copy bytes
-		memcpy(pBuffer, pStreamState->mHalfStreamStates[1-pStreamState->mCurrentSide].mpBuffer, bytesToReadInCurrentIterationCount);
-
-		bytesRead += bytesToReadInCurrentIterationCount;
-		pBuffer += bytesToReadInCurrentIterationCount;
-		pStreamState->mHalfStreamStates[1-pStreamState->mCurrentSide].mpBuffer += bytesToReadInCurrentIterationCount;
-		pStreamState->mHalfStreamStates[1-pStreamState->mCurrentSide].mBufferSize -= bytesToReadInCurrentIterationCount;
-
-		if (pStreamState->mHalfStreamStates[1-pStreamState->mCurrentSide].mBufferSize > 0 || bytesRead == in_count)
-			break;
-
-
-		// switch to writer
-switch_to_writer:
-
-		invertAndSwitchCoroutine(pStreamState);
-
-		bytesToReadInCurrentIterationCount = MIN(in_count-bytesRead, 
-			pStreamState->mHalfStreamStates[1-pStreamState->mCurrentSide].mBufferSize);
-
-		if (bytesToReadInCurrentIterationCount == 0)
-			break;
-	}
+	out_bytesRead = coroutineStreamRead(in_out_pBidirectionalStreamState, 
+		out_pBuffer, in_count, 
+		&pStreamState->mHalfStreamStates[1-pStreamState->mCurrentSide].mpCurrentBuffer,
+		&pStreamState->mHalfStreamStates[1-pStreamState->mCurrentSide].mCurrentBufferSize);
 
 	if (0 != in_count)
 	{
 		pStreamState->mHalfStreamStates[pStreamState->mCurrentSide].mAction = BidirectionalHalfStreamActionNoAction;
 	}
 
-	return bytesRead;
+	return out_bytesRead;
 }
 
 size_t bidirectionalStreamWrite(void *in_out_pBidirectionalStreamState, const void *in_pBuffer, size_t in_count)
 {
 	BidirectionalStreamState *pStreamState = (BidirectionalStreamState*) in_out_pBidirectionalStreamState;
+	size_t out_bytesWritten;
 
 	assert(0 == pStreamState->mCurrentSide || 1 == pStreamState->mCurrentSide);
 	
@@ -133,14 +109,14 @@ size_t bidirectionalStreamWrite(void *in_out_pBidirectionalStreamState, const vo
 		pStreamState->mHalfStreamStates[pStreamState->mCurrentSide].mAction = BidirectionalHalfStreamActionWriting;
 	}
 
-	pStreamState->mHalfStreamStates[pStreamState->mCurrentSide].mpBuffer = (const uint8_t*) in_pBuffer;
-	pStreamState->mHalfStreamStates[pStreamState->mCurrentSide].mBufferSize = in_count;
-	invertAndSwitchCoroutine(pStreamState);
+	out_bytesWritten = coroutineStreamWrite(pStreamState, in_pBuffer, in_count, 
+		&pStreamState->mHalfStreamStates[pStreamState->mCurrentSide].mpCurrentBuffer,
+		&pStreamState->mHalfStreamStates[pStreamState->mCurrentSide].mCurrentBufferSize);
 
 	if (0 != in_count)
 	{
 		pStreamState->mHalfStreamStates[pStreamState->mCurrentSide].mAction = BidirectionalHalfStreamActionNoAction;
 	}
 
-	return in_count - pStreamState->mHalfStreamStates[pStreamState->mCurrentSide].mBufferSize;
+	return out_bytesWritten;
 }

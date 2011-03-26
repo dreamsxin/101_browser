@@ -18,6 +18,7 @@
 #define _MTAx_IO_BidirectionalStream_h
 
 #include "Coroutine/Coroutine.h"
+#include "IO/CoroutineStream.h"
 #include "MiniStdlib/cstdint.h"
 
 #ifdef __cplusplus
@@ -36,13 +37,16 @@ typedef enum
 typedef struct
 {
 	CoroutineDescriptor *mpCoroutineDescriptor;
-	const uint8_t * volatile mpBuffer;
-	volatile size_t mBufferSize;
+	const uint8_t * volatile mpCurrentBuffer;
+	volatile size_t mCurrentBufferSize;
 	volatile BidirectionalHalfStreamAction mAction;
 } BidirectionalHalfStreamState;
 
 typedef struct
 {
+	// this has to be the first member of the struct because it will be casted
+	CoroutineStreamFunctions mFunctions;
+	
 	BidirectionalHalfStreamState mHalfStreamStates[2];
 	uint8_t mCurrentSide;
 } BidirectionalStreamState;

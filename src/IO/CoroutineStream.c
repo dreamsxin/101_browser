@@ -15,4 +15,57 @@
 */
 
 #include "IO/CoroutineStream.h"
+#include "MiniStdlib/minmax.h"
+#include <string.h>
 
+size_t coroutineStreamRead(void *in_out_pStreamState, 
+	void *out_pBuffer, size_t in_count, 
+	const uint8_t * volatile *in_ppCurrentBuffer, volatile size_t * in_pCurrentBufferSize)
+{
+	uint8_t *pBuffer = (uint8_t*) out_pBuffer;
+	size_t bytesRead = 0;
+	size_t bytesToReadInCurrentIterationCount = MIN(in_count-bytesRead, *in_pCurrentBufferSize);
+
+	if (0 == bytesToReadInCurrentIterationCount)
+		goto switch_to_writer;
+
+	while (1)
+	{
+		// copy bytes
+		memcpy(pBuffer, *in_ppCurrentBuffer, bytesToReadInCurrentIterationCount);
+
+		bytesRead += bytesToReadInCurrentIterationCount;
+		pBuffer += bytesToReadInCurrentIterationCount;
+		*in_ppCurrentBuffer += bytesToReadInCurrentIterationCount;
+		*in_pCurrentBufferSize -= bytesToReadInCurrentIterationCount;
+
+		if (*in_pCurrentBufferSize > 0 || bytesRead == in_count)
+			break;
+
+
+		// switch to writer
+switch_to_writer:
+
+		(((CoroutineStreamFunctions *) in_out_pStreamState)->mpfSwitchCoroutine)(in_out_pStreamState);
+
+		bytesToReadInCurrentIterationCount = MIN(in_count-bytesRead, *in_pCurrentBufferSize);
+
+		if (bytesToReadInCurrentIterationCount == 0)
+			break;
+	}
+
+	return bytesRead;
+}
+
+size_t coroutineStreamWrite(
+	void *in_out_pStreamState, 
+	const void *in_pBuffer, size_t in_count, 
+	const uint8_t * volatile *in_ppCurrentBuffer, volatile size_t * in_pCurrentBufferSize)
+{
+	(*in_ppCurrentBuffer) = (const uint8_t*) in_pBuffer;
+	*in_pCurrentBufferSize = in_count;
+
+	(((CoroutineStreamFunctions*) in_out_pStreamState)->mpfSwitchCoroutine)(in_out_pStreamState);
+
+	return in_count - *in_pCurrentBufferSize;
+}
