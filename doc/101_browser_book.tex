@@ -85,13 +85,13 @@ Things that you should check to validate the model:
 Call & Remark & Desired action \\
 \hline
 \hline
-  read(0) & & switch coroutine \\
+  \texttt{read(0)} & & Switch coroutine \\
 \hline
-  read(in\_count) & \texttt{in\_count} $>$ 0 and \texttt{in\_count} $<$ \texttt{currentBufferSize} & don't switch coroutine \\
+  \texttt{read(in\_count)} & \texttt{in\_count} $>$ 0 and \texttt{in\_count} $<$ \texttt{currentBufferSize} & Don't switch coroutine \\
 \hline
-  read(in\_count) & \texttt{in\_count} $>$ 0 and \texttt{in\_count} $==$ \texttt{currentBufferSize} & don't switch coroutine \\
+  \texttt{read(in\_count)} & \texttt{in\_count} $>$ 0 and \texttt{in\_count} $==$ \texttt{currentBufferSize} & Don't switch coroutine \\
 \hline
-  read(in\_count) & \texttt{in\_count} $>$ 0 and \texttt{in\_count} $>$ \texttt{currentBufferSize} & switch coroutine \\
+  \texttt{read(in\_count)} & \texttt{in\_count} $>$ 0 and \texttt{in\_count} $>$ \texttt{currentBufferSize} & Wwitch coroutine \\
 \hline
 \end{tabular}
 
