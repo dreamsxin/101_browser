@@ -44,6 +44,7 @@ typedef struct
 typedef struct
 {
 	void (*mpStartup)(PipeStreamState*, void*);
+	void (*mpTerminateLoopFun)(PipeStreamState*);
 	// Data to pass to the other coroutine
 	void *mpUserData;
 } PipeStreamKickoffData;

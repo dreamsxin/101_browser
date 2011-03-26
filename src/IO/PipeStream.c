@@ -26,37 +26,30 @@ void xchgAndSwitchCoroutine(CoroutineDescriptor **in_ppCurrentSD, CoroutineDescr
 	switchToCoroutine(*in_ppOtherCD, *in_ppCurrentSD);
 }
 
-void
-#ifdef _WIN32
-	__stdcall
-#endif
-	pipeStreamKickoffReader(void *in_pPipeStreamData)
+void pipeStreamTerminalLoopRead(PipeStreamState *in_pPipeStreamState)
 {
-	PipeStreamStateAndKickoff stateAndKickoff = *(PipeStreamStateAndKickoff*) in_pPipeStreamData;
+	// equals pipeStreamRead(stateAndKickoff.pState, NULL, 0);
 
-	/*
-	* No exchanging of descriptors since it hasn't been done originally when switching to
-	* this coroutine.
-	*/
-	switchToCoroutine(stateAndKickoff.pState->mpOtherCoroutineDescriptor, stateAndKickoff.pState->mpCurrentCoroutineDescriptor);
+	xchgAndSwitchCoroutine(&in_pPipeStreamState->mpCurrentCoroutineDescriptor, 
+		&in_pPipeStreamState->mpOtherCoroutineDescriptor);
+}
 
-	(*stateAndKickoff.kickoffData.mpStartup)(
-		stateAndKickoff.pState, 
-		stateAndKickoff.kickoffData.mpUserData);
+void pipeStreamTerminalLoopWrite(PipeStreamState *in_pPipeStreamState)
+{
+	// equals pipeStreamWrite(stateAndKickoff.pState, NULL, 0);
 
-	while (1)
-	{
-		// equals pipeStreamRead(stateAndKickoff.pState, NULL, 0);
-		xchgAndSwitchCoroutine(&stateAndKickoff.pState->mpCurrentCoroutineDescriptor, 
-			&stateAndKickoff.pState->mpOtherCoroutineDescriptor);
-	}
+	in_pPipeStreamState->mpCurrentBuffer = NULL;
+	in_pPipeStreamState->mCurrentBufferSize = 0;
+
+	xchgAndSwitchCoroutine(&in_pPipeStreamState->mpCurrentCoroutineDescriptor, 
+		&in_pPipeStreamState->mpOtherCoroutineDescriptor);
 }
 
 void
 #ifdef _WIN32
 	__stdcall
 #endif
-	pipeStreamKickoffWriter(void *in_pPipeStreamData)
+	pipeStreamKickoff(void *in_pPipeStreamData)
 {
 	PipeStreamStateAndKickoff stateAndKickoff = *(PipeStreamStateAndKickoff*) in_pPipeStreamData;
 
@@ -66,19 +59,11 @@ void
 	*/
 	switchToCoroutine(stateAndKickoff.pState->mpOtherCoroutineDescriptor, stateAndKickoff.pState->mpCurrentCoroutineDescriptor);
 
-	(*stateAndKickoff.kickoffData.mpStartup)(
-		stateAndKickoff.pState, 
-		stateAndKickoff.kickoffData.mpUserData);
+	(*stateAndKickoff.kickoffData.mpStartup)(stateAndKickoff.pState, stateAndKickoff.kickoffData.mpUserData);
 
 	while (1)
 	{
-		// equals pipeStreamWrite(stateAndKickoff.pState, NULL, 0);
-
-		stateAndKickoff.pState->mpCurrentBuffer = NULL;
-		stateAndKickoff.pState->mCurrentBufferSize = 0;
-
-		xchgAndSwitchCoroutine(&stateAndKickoff.pState->mpCurrentCoroutineDescriptor, 
-			&stateAndKickoff.pState->mpOtherCoroutineDescriptor);
+		(*stateAndKickoff.kickoffData.mpTerminateLoopFun)(stateAndKickoff.pState);
 	}
 }
 
@@ -101,14 +86,15 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	out_pPipeStreamState->mpOtherCoroutineDescriptor = out_pOtherCoroutine;
 
 	stateAndKickoff.kickoffData.mpStartup = in_pOtherCoroutineStartup;
+	stateAndKickoff.kickoffData.mpTerminateLoopFun = in_isOtherStreamReader 
+		? pipeStreamTerminalLoopRead
+		: pipeStreamTerminalLoopWrite;
 	stateAndKickoff.kickoffData.mpUserData = in_pUserData;
 
 	if (!convertThreadToCoroutine(out_pThisCoroutine))
 		return false;
 
-	if (!createCoroutine(0, 
-		in_isOtherStreamReader ? pipeStreamKickoffReader : pipeStreamKickoffWriter, 
-		&stateAndKickoff, out_pOtherCoroutine))
+	if (!createCoroutine(0, pipeStreamKickoff, &stateAndKickoff, out_pOtherCoroutine))
 		return false;
 
 	/*
