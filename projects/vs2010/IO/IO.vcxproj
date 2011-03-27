@@ -90,6 +90,7 @@
     <ClInclude Include="..\..\..\include\IO\BidirectionalStream.h" />
     <ClInclude Include="..\..\..\include\IO\BitRead.h" />
     <ClInclude Include="..\..\..\include\IO\CoroutineStream.h" />
+    <ClInclude Include="..\..\..\include\IO\ExtendedBidirectionalStream.h" />
     <ClInclude Include="..\..\..\include\IO\FileByteStream.h" />
     <ClInclude Include="..\..\..\include\IO\fread.h" />
     <ClInclude Include="..\..\..\include\IO\ByteStreamInterface.h" />
@@ -100,6 +101,7 @@
     <ClCompile Include="..\..\..\src\IO\BidirectionalStream.c" />
     <ClCompile Include="..\..\..\src\IO\BitRead.c" />
     <ClCompile Include="..\..\..\src\IO\CoroutineStream.c" />
+    <ClCompile Include="..\..\..\src\IO\ExtendedBidirectionalStream.c" />
     <ClCompile Include="..\..\..\src\IO\FileByteStream.c" />
     <ClCompile Include="..\..\..\src\IO\fread.c" />
     <ClCompile Include="..\..\..\src\IO\MemoryByteStream.c" />

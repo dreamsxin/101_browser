@@ -24,6 +24,20 @@ typedef struct
 	void (*mpfSwitchCoroutine)(void *);
 } CoroutineStreamFunctions;
 
+typedef struct
+{
+	void (*mpStartup)(void *in_pStreamState, void *in_pUserData);
+	void (*mpTerminateLoopFun)(void*);
+	// Data to pass to the other coroutine
+	void *mpUserData;
+} CoroutineStreamKickoffData;
+
+typedef struct
+{
+	void *pState;
+	CoroutineStreamKickoffData kickoffData;
+} CoroutineStateAndKickoff;
+
 size_t coroutineStreamRead(void *in_out_pStreamState, 
 	void *out_pBuffer, size_t in_count, 
 	const uint8_t * volatile *in_ppCurrentBuffer, volatile size_t * in_pCurrentBufferSize);

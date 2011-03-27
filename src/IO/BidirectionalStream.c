@@ -36,6 +36,21 @@ void invertAndSwitchCoroutine(void *in_out_pBidirectionalStreamState)
 		pBidirectionalStreamState->mHalfStreamStates[pBidirectionalStreamState->mCurrentSide].mpCoroutineDescriptor);
 }
 
+void bidirectionalStreamTerminalLoopWrite(void *in_out_pBidirectionalStreamState)
+{
+	BidirectionalStreamState *pBidirectionalStreamState = (BidirectionalStreamState *) in_out_pBidirectionalStreamState;
+	
+	if (0 != pBidirectionalStreamState->mCurrentSide && 1 != pBidirectionalStreamState->mCurrentSide)
+		return;
+
+	assert(BidirectionalHalfStreamActionNoAction == pBidirectionalStreamState->mHalfStreamStates->mAction);
+
+	pBidirectionalStreamState->mHalfStreamStates[pBidirectionalStreamState->mCurrentSide].mpCurrentBuffer = NULL;
+	pBidirectionalStreamState->mHalfStreamStates[pBidirectionalStreamState->mCurrentSide].mCurrentBufferSize = 0;
+
+	(pBidirectionalStreamState->mFunctions.mpfSwitchCoroutine)(in_out_pBidirectionalStreamState);
+}
+
 bool bidirectionalStreamIsReadingPossible(void *in_pBidirectionalStreamState)
 {
 	BidirectionalStreamState *pStreamState = (BidirectionalStreamState*) in_pBidirectionalStreamState;

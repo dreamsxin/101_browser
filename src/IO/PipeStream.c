@@ -14,11 +14,8 @@
 * limitations under the License.
 */
 
-#include "MiniStdlib/minmax.h"
 #include "MiniStdlib/xchg.h"
 #include "IO/PipeStream.h"
-#include <assert.h>
-#include <string.h> // for memcpy
 
 void xchgAndSwitchCoroutine(void *in_out_pPipeStreamState)
 {
@@ -33,19 +30,19 @@ void xchgAndSwitchCoroutine(void *in_out_pPipeStreamState)
 	switchToCoroutine(pPipeStreamState->mpOtherCoroutineDescriptor, pPipeStreamState->mpCurrentCoroutineDescriptor);
 }
 
-void pipeStreamTerminalLoopRead(PipeStreamState *in_out_pPipeStreamState)
+void pipeStreamTerminalLoopRead(void *in_out_pPipeStreamState)
 {
 	// equals pipeStreamRead(in_out_pPipeStreamState, NULL, 0);
 
 	(((CoroutineStreamFunctions*) in_out_pPipeStreamState)->mpfSwitchCoroutine)(in_out_pPipeStreamState);
 }
 
-void pipeStreamTerminalLoopWrite(PipeStreamState *in_out_pPipeStreamState)
+void pipeStreamTerminalLoopWrite(void *in_out_pPipeStreamState)
 {
 	// equals pipeStreamWrite(in_out_pPipeStreamState, NULL, 0);
 
-	in_out_pPipeStreamState->mpCurrentBuffer = NULL;
-	in_out_pPipeStreamState->mCurrentBufferSize = 0;
+	((PipeStreamState*) in_out_pPipeStreamState)->mpCurrentBuffer = NULL;
+	((PipeStreamState*) in_out_pPipeStreamState)->mCurrentBufferSize = 0;
 
 	(((CoroutineStreamFunctions*) in_out_pPipeStreamState)->mpfSwitchCoroutine)(in_out_pPipeStreamState);
 }
@@ -56,13 +53,13 @@ void
 #endif
 	pipeStreamKickoff(void *in_pPipeStreamData)
 {
-	PipeStreamStateAndKickoff stateAndKickoff = *(PipeStreamStateAndKickoff*) in_pPipeStreamData;
+	CoroutineStateAndKickoff stateAndKickoff = *(CoroutineStateAndKickoff*) in_pPipeStreamData;
 
 	/*
 	* No exchanging of descriptors since it hasn't been done originally when switching to
 	* this coroutine.
 	*/
-	switchToCoroutine(stateAndKickoff.pState->mpOtherCoroutineDescriptor, stateAndKickoff.pState->mpCurrentCoroutineDescriptor);
+	(((CoroutineStreamFunctions*) stateAndKickoff.pState)->mpfSwitchCoroutine)(stateAndKickoff.pState);
 
 	(*stateAndKickoff.kickoffData.mpStartup)(stateAndKickoff.pState, stateAndKickoff.kickoffData.mpUserData);
 
@@ -76,10 +73,10 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	bool in_isOtherStreamReader,
 	CoroutineDescriptor *out_pThisCoroutine,
 	CoroutineDescriptor *out_pOtherCoroutine,
-	void (*in_pOtherCoroutineStartup)(PipeStreamState*, void*),
+	void (*in_pOtherCoroutineStartup)(void *in_pStreamState, void *in_pUserData),
 	void *in_pUserData)
 {
-	PipeStreamStateAndKickoff stateAndKickoff;
+	CoroutineStateAndKickoff stateAndKickoff;
 
 	stateAndKickoff.pState = out_pPipeStreamState;
 	
@@ -103,11 +100,7 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	if (!createCoroutine(0, pipeStreamKickoff, &stateAndKickoff, out_pOtherCoroutine))
 		return false;
 
-	/*
-	* No exchanging of coroutine descriptors since we will immediately
-	* come back (and the kickoff function knows of this property).
-	*/
-	switchToCoroutine(out_pThisCoroutine, out_pOtherCoroutine);
+	(out_pPipeStreamState->mFunctions.mpfSwitchCoroutine)(out_pPipeStreamState);
 
 	return true;
 }

@@ -27,12 +27,6 @@
 extern "C" {
 #endif
 
-typedef enum
-{
-	PipeStreamStateTypeReader,
-	PipeStreamStateTypeWriter
-} PipeStreamStateType;
-
 typedef struct
 {
 	// this has to be the first member of the struct because it will be casted
@@ -45,19 +39,6 @@ typedef struct
 	CoroutineDescriptor *mpOtherCoroutineDescriptor;
 } PipeStreamState;
 
-typedef struct
-{
-	void (*mpStartup)(PipeStreamState*, void*);
-	void (*mpTerminateLoopFun)(PipeStreamState*);
-	// Data to pass to the other coroutine
-	void *mpUserData;
-} PipeStreamKickoffData;
-
-typedef struct
-{
-	PipeStreamState *pState;
-	PipeStreamKickoffData kickoffData;
-} PipeStreamStateAndKickoff;
 
 /*!
  * Parameters:
@@ -78,7 +59,7 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	bool in_isOtherStreamReader,
 	CoroutineDescriptor *out_pThisCoroutine,
 	CoroutineDescriptor *out_pOtherCoroutine,
-	void (*in_pOtherCoroutineStartup)(PipeStreamState*, void*),
+	void (*in_pOtherCoroutineStartup)(void *in_pStreamState, void *in_pUserData),
 	void *in_pUserData);
 
 #ifdef _WIN32
