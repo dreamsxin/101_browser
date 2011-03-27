@@ -47,28 +47,6 @@ void pipeStreamTerminalLoopWrite(void *in_out_pPipeStreamState)
 	(((CoroutineStreamFunctions*) in_out_pPipeStreamState)->mpfSwitchCoroutine)(in_out_pPipeStreamState);
 }
 
-void
-#ifdef _WIN32
-	__stdcall
-#endif
-	pipeStreamKickoff(void *in_pPipeStreamData)
-{
-	CoroutineStateAndKickoff stateAndKickoff = *(CoroutineStateAndKickoff*) in_pPipeStreamData;
-
-	/*
-	* No exchanging of descriptors since it hasn't been done originally when switching to
-	* this coroutine.
-	*/
-	(((CoroutineStreamFunctions*) stateAndKickoff.pState)->mpfSwitchCoroutine)(stateAndKickoff.pState);
-
-	(*stateAndKickoff.kickoffData.mpStartup)(stateAndKickoff.pState, stateAndKickoff.kickoffData.mpUserData);
-
-	while (1)
-	{
-		(*stateAndKickoff.kickoffData.mpTerminateLoopFun)(stateAndKickoff.pState);
-	}
-}
-
 bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	bool in_isOtherStreamReader,
 	CoroutineDescriptor *out_pThisCoroutine,
@@ -76,9 +54,7 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	void (*in_pOtherCoroutineStartup)(void *in_pStreamState, void *in_pUserData),
 	void *in_pUserData)
 {
-	CoroutineStateAndKickoff stateAndKickoff;
-
-	stateAndKickoff.pState = out_pPipeStreamState;
+	//CoroutineStateAndKickoff stateAndKickoff;
 	
 	out_pPipeStreamState->mFunctions.mpfSwitchCoroutine = xchgAndSwitchCoroutine;
 
@@ -88,21 +64,12 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	out_pPipeStreamState->mpCurrentCoroutineDescriptor = out_pThisCoroutine;
 	out_pPipeStreamState->mpOtherCoroutineDescriptor = out_pOtherCoroutine;
 
-	stateAndKickoff.kickoffData.mpStartup = in_pOtherCoroutineStartup;
-	stateAndKickoff.kickoffData.mpTerminateLoopFun = in_isOtherStreamReader 
-		? pipeStreamTerminalLoopRead
-		: pipeStreamTerminalLoopWrite;
-	stateAndKickoff.kickoffData.mpUserData = in_pUserData;
-
-	if (!convertThreadToCoroutine(out_pThisCoroutine))
-		return false;
-
-	if (!createCoroutine(0, pipeStreamKickoff, &stateAndKickoff, out_pOtherCoroutine))
-		return false;
-
-	(out_pPipeStreamState->mFunctions.mpfSwitchCoroutine)(out_pPipeStreamState);
-
-	return true;
+	return coroutineStreamStart(out_pPipeStreamState,
+		out_pThisCoroutine,
+		out_pOtherCoroutine,
+		in_isOtherStreamReader ? pipeStreamTerminalLoopRead : pipeStreamTerminalLoopWrite,
+		in_pOtherCoroutineStartup,
+		in_pUserData);
 }
 
 void deletePipeStreamState(PipeStreamState *out_pPipeStreamState)

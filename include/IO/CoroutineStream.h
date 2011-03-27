@@ -19,6 +19,10 @@
 
 #include "MiniStdlib/cstdint.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
 	void (*mpfSwitchCoroutine)(void *);
@@ -38,6 +42,19 @@ typedef struct
 	CoroutineStreamKickoffData kickoffData;
 } CoroutineStateAndKickoff;
 
+void
+#ifdef _WIN32
+	__stdcall
+#endif
+coroutineStreamKickoff(void *in_pCoroutineStateAndKickoff);
+
+bool coroutineStreamStart(void *in_pStreamState, 
+	CoroutineDescriptor *out_pThisCoroutine,
+	CoroutineDescriptor *out_pOtherCoroutine,
+	void (*in_pfTerminalFunction)(void *in_out_pStreamState),
+	void (*in_pOtherCoroutineStartup)(void *in_pStreamState, void *in_pUserData),
+	void *in_pUserData);
+
 size_t coroutineStreamRead(void *in_out_pStreamState, 
 	void *out_pBuffer, size_t in_count, 
 	const uint8_t * volatile *in_ppCurrentBuffer, volatile size_t * in_pCurrentBufferSize);
@@ -45,5 +62,9 @@ size_t coroutineStreamRead(void *in_out_pStreamState,
 size_t coroutineStreamWrite(void *in_out_pStreamState, 
 	const void *in_pBuffer, size_t in_count, 
 	const uint8_t * volatile *in_ppCurrentBuffer, volatile size_t * in_pCurrentBufferSize);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

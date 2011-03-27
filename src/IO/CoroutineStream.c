@@ -14,9 +14,57 @@
 * limitations under the License.
 */
 
+#include "Coroutine/Coroutine.h"
 #include "IO/CoroutineStream.h"
 #include "MiniStdlib/minmax.h"
 #include <string.h>
+
+void
+#ifdef _WIN32
+	__stdcall
+#endif
+	coroutineStreamKickoff(void *in_pCoroutineStateAndKickoff)
+{
+	CoroutineStateAndKickoff stateAndKickoff = *(CoroutineStateAndKickoff*) in_pCoroutineStateAndKickoff;
+
+	/*
+	* No exchanging of descriptors since it hasn't been done originally when switching to
+	* this coroutine.
+	*/
+	(((CoroutineStreamFunctions*) stateAndKickoff.pState)->mpfSwitchCoroutine)(stateAndKickoff.pState);
+
+	(*stateAndKickoff.kickoffData.mpStartup)(stateAndKickoff.pState, stateAndKickoff.kickoffData.mpUserData);
+
+	while (1)
+	{
+		(*stateAndKickoff.kickoffData.mpTerminateLoopFun)(stateAndKickoff.pState);
+	}
+}
+
+bool coroutineStreamStart(void *in_pStreamState, 
+	CoroutineDescriptor *out_pThisCoroutine,
+	CoroutineDescriptor *out_pOtherCoroutine,
+	void (*in_pfTerminalFunction)(void *in_out_pStreamState),
+	void (*in_pOtherCoroutineStartup)(void *in_pStreamState, void *in_pUserData),
+	void *in_pUserData)
+{
+	CoroutineStateAndKickoff stateAndKickoff;
+	
+	stateAndKickoff.pState = in_pStreamState;
+	stateAndKickoff.kickoffData.mpStartup = in_pOtherCoroutineStartup;
+	stateAndKickoff.kickoffData.mpTerminateLoopFun = in_pfTerminalFunction;
+	stateAndKickoff.kickoffData.mpUserData = in_pUserData;
+
+	if (!convertThreadToCoroutine(out_pThisCoroutine))
+		return false;
+
+	if (!createCoroutine(0, coroutineStreamKickoff, &stateAndKickoff, out_pOtherCoroutine))
+		return false;
+
+	(((CoroutineStreamFunctions*) in_pStreamState)->mpfSwitchCoroutine)(in_pStreamState);
+
+	return true;
+}
 
 size_t coroutineStreamRead(void *in_out_pStreamState, 
 	void *out_pBuffer, size_t in_count, 
