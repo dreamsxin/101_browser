@@ -54,22 +54,21 @@ typedef struct
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
-void initBidirectionalStream(BidirectionalStreamState out_pBidirectionalStreamState,
-CoroutineDescriptor *out_pThisCoroutine,
-CoroutineDescriptor *out_pOtherCoroutine,
-void (*in_pOtherCoroutineStartup)(BidirectionalStreamState*, void*),
-void *in_pUserData
-);
-
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
 bool bidirectionalStreamIsReadingPossible(void *in_pBidirectionalStreamState);
 
 #ifdef _WIN32
 __declspec(dllexport)
 #endif
 bool bidirectionalStreamIsWritingPossible(void *in_pBidirectionalStreamState);
+
+#ifdef _WIN32
+__declspec(dllexport)
+#endif
+bool bidirectionalStreamInit(BidirectionalStreamState *out_pBidirectionalStreamState,
+CoroutineDescriptor *out_pThisCoroutine,
+CoroutineDescriptor *out_pOtherCoroutine,
+void (*in_pOtherCoroutineStartup)(void *in_pStreamState, void *in_pUserData),
+void *in_pUserData);
 
 #ifdef _WIN32
 __declspec(dllexport)

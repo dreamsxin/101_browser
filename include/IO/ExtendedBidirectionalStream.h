@@ -22,8 +22,13 @@
 typedef struct
 {
 	BidirectionalStreamState mStreamState;
-	// gets initialized with false
-	bool mIsSecondSideReading;
+	// which side shall get the extended behaviour
+	uint8_t mWhichSideToExtend;
+	/*
+	* Is true if the side having the extended behaviour is in the "reading loop"
+	* and false if it is in the "writing loop".
+	*/
+	bool mIsExtendedSideReading;
 } ExtendedBidirectionalStreamState;
 
 #endif

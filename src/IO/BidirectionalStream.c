@@ -36,7 +36,7 @@ void invertAndSwitchCoroutine(void *in_out_pBidirectionalStreamState)
 		pBidirectionalStreamState->mHalfStreamStates[pBidirectionalStreamState->mCurrentSide].mpCoroutineDescriptor);
 }
 
-void bidirectionalStreamTerminalLoopWrite(void *in_out_pBidirectionalStreamState)
+void bidirectionalStreamTerminalLoop(void *in_out_pBidirectionalStreamState)
 {
 	BidirectionalStreamState *pBidirectionalStreamState = (BidirectionalStreamState *) in_out_pBidirectionalStreamState;
 	
@@ -69,6 +69,35 @@ bool bidirectionalStreamIsWritingPossible(void *in_pBidirectionalStreamState)
 		return false;
 
 	return (BidirectionalHalfStreamActionWriting != pStreamState->mHalfStreamStates[1- pStreamState->mCurrentSide].mAction);
+}
+
+bool bidirectionalStreamInit(BidirectionalStreamState *out_pBidirectionalStreamState,
+	CoroutineDescriptor *out_pThisCoroutine,
+	CoroutineDescriptor *out_pOtherCoroutine,
+	void (*in_pOtherCoroutineStartup)(void *in_pStreamState, void *in_pUserData),
+	void *in_pUserData)
+{
+	uint8_t idx;
+	
+	out_pBidirectionalStreamState->mFunctions.mpfSwitchCoroutine = invertAndSwitchCoroutine;
+	out_pBidirectionalStreamState->mHalfStreamStates[0].mpCoroutineDescriptor = out_pThisCoroutine;
+	out_pBidirectionalStreamState->mHalfStreamStates[1].mpCoroutineDescriptor = out_pOtherCoroutine;
+	
+	for (idx = 0; idx < 2; idx++)
+	{
+		out_pBidirectionalStreamState->mHalfStreamStates[idx].mpCurrentBuffer = NULL;
+		out_pBidirectionalStreamState->mHalfStreamStates[idx].mCurrentBufferSize = 0;
+		out_pBidirectionalStreamState->mHalfStreamStates[idx].mAction = BidirectionalHalfStreamActionNoAction;
+	}
+
+	out_pBidirectionalStreamState->mCurrentSide = 0;
+
+	return coroutineStreamStart(out_pBidirectionalStreamState,
+		out_pThisCoroutine,
+		out_pOtherCoroutine,
+		bidirectionalStreamTerminalLoop,
+		in_pOtherCoroutineStartup,
+		in_pUserData);
 }
 
 size_t bidirectionalStreamRead(void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count)
