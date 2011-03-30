@@ -583,13 +583,21 @@ module html5
     void play();
     void pause();
   
+    // media controller
+             attribute DOMString mediaGroup;
+             attribute MediaController controller;
+  
     // controls
              attribute boolean controls;
              attribute double volume;
              attribute boolean muted;
   
-    // text tracks
-    readonly attribute TextTrack[] tracks;
+    // tracks
+  
+    readonly attribute MultipleTrackList audioTracks;
+    readonly attribute ExclusiveTrackList videoTracks;
+  
+    readonly attribute TextTrack[] textTracks;
     MutableTextTrack addTrack(in DOMString kind, in optional DOMString label, in optional DOMString language);
   
   };
@@ -600,6 +608,43 @@ module html5
     const unsigned short MEDIA_ERR_DECODE = 3;
     const unsigned short MEDIA_ERR_SRC_NOT_SUPPORTED = 4;
     readonly attribute unsigned short code;
+  };
+
+  interface TrackList {
+    readonly attribute unsigned long length;
+    DOMString getName(in unsigned long index);
+    DOMString getLanguage(in unsigned long index);
+  };
+  
+  interface MultipleTrackList : TrackList {
+    boolean isEnabled(in unsigned long index);
+    void enable(in unsigned long index);
+    void disable(in unsigned long index);
+  };
+  
+  interface ExclusiveTrackList : TrackList {
+    readonly attribute unsigned long selectedIndex;
+    void select(in unsigned long index);
+  };
+
+  [Constructor]
+  interface MediaController {
+    readonly attribute boolean paused;
+    void play();
+    void pause();
+  
+             attribute double defaultPlaybackRate;
+             attribute double playbackRate;
+  
+             attribute double volume;
+             attribute boolean muted;
+  
+    void seek(in double delta);
+  
+             attribute Function onplay;
+             attribute Function onpause;
+             attribute Function onratechange;
+             attribute Function onvolumechange;
   };
 
   interface TextTrack {
@@ -1178,52 +1223,6 @@ module html5
              attribute DOMString label;
   };
 
-  interface HTMLDeviceElement : HTMLElement {
-             attribute DOMString type;
-    readonly attribute any data;
-  };
-
-  interface Stream {
-    readonly attribute DOMString url;
-    StreamRecorder record();
-  };
-
-  interface StreamRecorder {
-    File stop();
-  };
-
-  [Constructor(in DOMString serverConfiguration)]
-  interface ConnectionPeer {
-    void sendText(in DOMString text, in optional boolean unimportant); // if second arg is true, then use unreliable low-latency transport (UDP-like), otherwise guarantee delivery (TCP-like)
-             attribute Function ontext; // receiving
-  
-    void sendBitmap(in HTMLImageElement image);
-             attribute Function onbitmap; // receiving
-  
-    void sendFile(in File file);
-             attribute Function onfile; // receiving
-  
-    void addStream(in Stream stream);
-    void removeStream(in Stream stream);
-    readonly attribute Stream[] localStreams;
-    readonly attribute Stream[] remoteStreams;
-             attribute Function onstream; // receiving
-  
-    void getLocalConfiguration(in ConnectionPeerConfigurationCallback callback); // maybe this should be in the constructor, or be an event
-    void addRemoteConfiguration(in DOMString configuration, in optional DOMString remoteOrigin); // remote origin is assumed to be same-origin if not specified. If specified, has to match remote origin (checked in handshake). Should support leading "*." to mean "any subdomain of".
-    void close(); // disconnects and stops listening
-  
-             attribute Function onconnect;
-             attribute Function onerror;
-             attribute Function ondisconnect;
-  };
-  ConnectionPeer implements EventTarget;
-  
-  [Callback=FunctionOnly, NoInterfaceObject]
-  interface ConnectionPeerConfigurationCallback {
-    void handleEvent(in ConnectionPeer server, in DOMString configuration);
-  };
-
   [ReplaceableNamedProperties] 
   interface Window {
     // the current browsing context
@@ -1353,6 +1352,7 @@ module html5
 
   interface History {
     readonly attribute long length;
+    readonly attribute any state;
     void go(in optional long delta);
     void back();
     void forward();
@@ -1543,6 +1543,100 @@ module html5
   interface UndoManagerEvent : Event {
     readonly attribute any data;
     void initUndoManagerEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in any dataArg);
+  };
+
+  [Supplemental, NoInterfaceObject]
+  interface NavigatorUserMedia {
+    void getUserMedia(in DOMString options, in NavigatorUserMediaSuccessCallback successCallback, in optional NavigatorUserMediaErrorCallback errorCallback);
+  };
+  Navigator implements NavigatorUserMedia;
+  
+  [Callback=FunctionOnly, NoInterfaceObject]
+  interface NavigatorUserMediaSuccessCallback {
+    void handleEvent(in GeneratedStream stream);
+  };
+  
+  [NoInterfaceObject]
+  interface NavigatorUserMediaError {
+    const unsigned short PERMISSION_DENIED = 1;
+    readonly attribute unsigned short code;
+  };
+  
+  [Callback=FunctionOnly, NoInterfaceObject]
+  interface NavigatorUserMediaErrorCallback {
+    void handleEvent(in NavigatorUserMediaError error);
+  };
+
+  interface Stream {
+    readonly attribute DOMString label;
+    StreamRecorder record();
+  
+    const unsigned short LIVE = 1;
+    const unsigned short ENDED = 2;
+    readonly attribute unsigned short readyState;
+             attribute Function onended;
+  };
+  Stream implements EventTarget;
+  
+  interface GeneratedStream : Stream {
+    void stop();
+  
+    // track control
+    readonly attribute MultipleTrackList audioTracks;
+    readonly attribute ExclusiveTrackList videoTracks;
+  };
+
+  interface StreamRecorder {
+    void getRecordedData(in BlobCallback callback);
+  };
+  
+  [Callback=FunctionOnly, NoInterfaceObject]
+  interface BlobCallback {
+    void handleEvent(in Blob blob);
+  };
+
+  [Supplemental]
+  interface URL {
+    static DOMString createObjectURL(in Stream stream);
+  };
+
+  [Constructor(in DOMString configuration, in SignalingCallback signalingCallback)]
+  interface PeerConnection {
+    void signalingMessage(in DOMString message);
+  
+    const unsigned short NEW = 0;
+    const unsigned short NEGOTIATING = 1;
+    const unsigned short ACTIVE = 2;
+    const unsigned short CLOSED = 3;
+    readonly attribute unsigned short readyState;
+  
+    void send(in DOMString text);
+    void addStream(in Stream stream);
+    void removeStream(in Stream stream);
+    readonly attribute Stream[] localStreams;
+    readonly attribute Stream[] remoteStreams;
+  
+    void close();
+  
+    // connection quality information
+             attribute Function onconnecting;
+             attribute Function onopen;
+             attribute Function onerror;
+             attribute Function onclose;
+             attribute Function onmessage;
+             attribute Function onaddstream;
+             attribute Function onremovestream;
+  };
+  PeerConnection implements EventTarget;
+  
+  [Callback=FunctionOnly, NoInterfaceObject]
+  interface SignalingCallback {
+    void handleEvent(in DOMString message, in PeerConnection source);
+  };
+
+  interface StreamEvent : Event {
+    readonly attribute Stream stream;
+    void initStreamEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in Stream streamArg);
   };
 
   interface MessageEvent : Event {
