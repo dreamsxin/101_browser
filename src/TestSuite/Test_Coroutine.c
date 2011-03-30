@@ -25,7 +25,7 @@ typedef struct
 	volatile unsigned int currentIndex;
 } PassedData;
 
-void COROUTINE_CALL func1(void *in_pData)
+void COROUTINE_KICKOFF_CALL func1(void *in_pData)
 {
 	volatile PassedData *pData = (volatile PassedData*) in_pData;
 
@@ -38,7 +38,7 @@ void COROUTINE_CALL func1(void *in_pData)
 	}
 }
 
-void COROUTINE_CALL func2(void *in_pData)
+void COROUTINE_KICKOFF_CALL func2(void *in_pData)
 {
 	volatile PassedData *pData = (volatile PassedData*) in_pData;
 

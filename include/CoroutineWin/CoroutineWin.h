@@ -25,11 +25,11 @@ extern "C" {
 #endif
 
 typedef LPVOID CoroutineDescriptor;
-#define COROUTINE_CALL __stdcall
+#define COROUTINE_KICKOFF_CALL __stdcall
 
 __declspec(dllexport) bool createCoroutine(
 	size_t in_stackSize,  
-	void (COROUTINE_CALL * in_pFiberFunc)(void*), 
+	void (COROUTINE_KICKOFF_CALL * in_pFiberFunc)(void*), 
 	void* in_pParam, 
 	volatile CoroutineDescriptor *out_pCoroutineDescriptor);
 

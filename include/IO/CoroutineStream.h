@@ -43,7 +43,7 @@ typedef struct
 	CoroutineStreamKickoffData kickoffData;
 } CoroutineStateAndKickoff;
 
-void COROUTINE_CALL coroutineStreamKickoff(void *in_pCoroutineStateAndKickoff);
+void COROUTINE_KICKOFF_CALL coroutineStreamKickoff(void *in_pCoroutineStateAndKickoff);
 
 bool coroutineStreamStart(void *in_pStreamState, 
 	CoroutineDescriptor *out_pThisCoroutine,

@@ -29,7 +29,7 @@
 #define MAX_BUFFER_SIZE 4096
 #define ASYNC_DATA_SIZE 64
 
-void COROUTINE_CALL geolocationCoroutine(void *in_pGarminUsbData)
+void COROUTINE_KICKOFF_CALL geolocationCoroutine(void *in_pGarminUsbData)
 {
 	GarminUsbData *pGarminUsbData = (GarminUsbData*) in_pGarminUsbData;
 

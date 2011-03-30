@@ -18,7 +18,7 @@
 #include "MiniStdlib/minmax.h"
 #include <string.h>
 
-void COROUTINE_CALL coroutineStreamKickoff(void *in_pCoroutineStateAndKickoff)
+void COROUTINE_KICKOFF_CALL coroutineStreamKickoff(void *in_pCoroutineStateAndKickoff)
 {
 	CoroutineStateAndKickoff stateAndKickoff = *(CoroutineStateAndKickoff*) in_pCoroutineStateAndKickoff;
 
