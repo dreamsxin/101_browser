@@ -18,6 +18,7 @@
 #define _MTAx_HTML5_2_5_6_h
 
 #include "MiniStdlib/cstdint.h"
+#include "MiniStdlib/declspec.h"
 #include "Util/Iterator.h"
 #include "Util/ReadResult.h"
 
@@ -36,10 +37,7 @@ typedef struct
 	uint8_t red, green, blue;
 } SimpleColor;
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-ReadResult parseSimpleColor(SingleIterator in_iterator, void* in_iteratorState, 
+DLLEXPORT ReadResult parseSimpleColor(SingleIterator in_iterator, void* in_iteratorState, 
 SimpleColor* in_pSimpleColor);
 
 #ifdef __cplusplus

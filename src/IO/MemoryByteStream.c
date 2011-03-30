@@ -29,7 +29,8 @@ void initMemoryByteStreamReadState(
 	in_pMemoryByteStreamReadState->bufferPos = 0;
 }
 
-size_t memoryByteReadStreamRead(void *in_out_pMemoryByteStreamReadState, void *out_pBuffer, size_t in_count)
+size_t memoryByteReadStreamRead(void *in_out_pMemoryByteStreamReadState, 
+	void *out_pBuffer, size_t in_count)
 {
 	MemoryByteStreamReadState *pMemoryByteStreamReadState = 
 		(MemoryByteStreamReadState *) in_out_pMemoryByteStreamReadState;

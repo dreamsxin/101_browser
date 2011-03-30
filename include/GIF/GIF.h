@@ -21,6 +21,7 @@
 #include "MiniStdlib/MTAx_cstdio.h"
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstdbool.h"
+#include "MiniStdlib/declspec.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -117,10 +118,7 @@ typedef struct
 size_t bytesOfColorTable(unsigned char in_sizeOfColorTable);
 
 // Grammar words
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-ReadResult read_GIF_Data_Stream(FILE* in_gifFile, GIF_Data_Stream *in_pDataStream);
+DLLEXPORT ReadResult read_GIF_Data_Stream(FILE* in_gifFile, GIF_Data_Stream *in_pDataStream);
 ReadResult read_Logical_Screen(FILE* in_gifFile, Logical_Screen *in_pLogicalScreen);
 ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a);
 ReadResult read_Graphic_Block(FILE* in_gifFile, uint8_t in_separator, uint8_t lLabel, bool in_is89a);

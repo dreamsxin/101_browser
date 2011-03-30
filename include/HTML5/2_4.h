@@ -17,6 +17,7 @@
 #ifndef _MTAx_HTML_2_4_h
 #define _MTAx_HTML_2_4_h
 
+#include "MiniStdlib/declspec.h"
 #include "IO/ByteStreamInterface.h"
 
 /*
@@ -28,10 +29,7 @@
 extern "C" {
 #endif
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-void convertUTF8toCodepoints(
+DLLEXPORT void convertUTF8toCodepoints(
 	ByteStreamReadInterface in_readInterface, 
 	void *in_pReadState,
 	ByteStreamWriteInterface in_writeInterface,

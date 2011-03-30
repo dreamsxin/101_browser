@@ -18,16 +18,18 @@
 #define _MTAx_Coroutine_CoroutineWin_h
 
 #include <windows.h>
+#include "MiniStdlib/cstdbool.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef LPVOID CoroutineDescriptor;
+#define COROUTINE_CALL __stdcall
 
 __declspec(dllexport) bool createCoroutine(
 	size_t in_stackSize,  
-	void (__stdcall * in_pFiberFunc)(void*), 
+	void (COROUTINE_CALL * in_pFiberFunc)(void*), 
 	void* in_pParam, 
 	volatile CoroutineDescriptor *out_pCoroutineDescriptor);
 

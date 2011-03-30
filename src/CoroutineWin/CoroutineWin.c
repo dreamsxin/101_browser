@@ -19,7 +19,7 @@
 
 bool createCoroutine(
 	size_t in_stackSize,  
-	void (__stdcall * in_pFiberFunc)(void*), 
+	void (COROUTINE_CALL * in_pFiberFunc)(void*), 
 	void* in_pParam, 
 	volatile CoroutineDescriptor *out_pCoroutineDescriptor)
 {

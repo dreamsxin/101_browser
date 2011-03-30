@@ -22,6 +22,7 @@
 * Living Standard — 7 January 2011
 */
 
+#include "MiniStdlib/declspec.h"
 #include "BigNumber/BigInteger.h"
 #include "Util/Iterator.h"
 #include "Util/ReadResult.h"
@@ -30,15 +31,12 @@
 extern "C" {
 #endif
 
-#ifdef _WIN32
-	__declspec(dllexport)
-#endif
 /*!
 * Return value: ResultOK on success (in this case in_pUnsignedInteger will
 *               contain the parsed number)
 *               ResultError or ResultAllocationFailure on failure
 */
-ReadResult parseNonNegativeInteger(SingleIterator in_iterator, void* in_iteratorState, 
+DLLEXPORT ReadResult parseNonNegativeInteger(SingleIterator in_iterator, void* in_iteratorState, 
 UnsignedBigInteger* in_pUnsignedInteger);
 
 #ifdef __cplusplus

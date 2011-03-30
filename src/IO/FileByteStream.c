@@ -19,7 +19,8 @@
 
 const ByteStreamReadInterface cFileByteStreamInterface = { &fileByteReadStreamRead };
 
-size_t fileByteReadStreamRead(void *in_out_pFileByteStreamState, void *out_pBuffer, size_t in_count)
+size_t fileByteReadStreamRead(void *in_out_pFileByteStreamState, 
+	void *out_pBuffer, size_t in_count)
 {
 	FileByteStreamState *pFileByteStreamState = 
 		(FileByteStreamState*) in_out_pFileByteStreamState;

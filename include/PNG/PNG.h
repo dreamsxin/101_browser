@@ -21,6 +21,7 @@
 #include "MiniStdlib/MTAx_cstdio.h"
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstdbool.h"
+#include "MiniStdlib/declspec.h"
 
 #pragma pack(push, 1)
 
@@ -57,10 +58,7 @@ typedef struct
 extern "C" {
 #endif
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-ReadResult read_PNG(FILE* in_pngFile);
+DLLEXPORT ReadResult read_PNG(FILE* in_pngFile);
 
 ReadResult read_PNG_Chunk_Header(PNG_Chunk_Header *out_pHeader, 
 	bool *out_isEndOfStream, FILE* in_pngFile, uint32_t *in_pCurrentCRC);

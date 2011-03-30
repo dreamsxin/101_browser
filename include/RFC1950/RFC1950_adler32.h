@@ -29,30 +29,16 @@
 #endif
 
 #include "MiniStdlib/cstdint.h"
+#include "MiniStdlib/declspec.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-uint32_t RFC1950_adler32_init();
-
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-uint32_t RFC1950_adler32_compute(void *in_buffer, size_t in_bufferSize);
-
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-uint32_t RFC1950_adler32_foldl(uint32_t in_adler, uint8_t *in_buffer, size_t in_bufferSize);
-
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-uint32_t RFC1950_adler32_update(uint32_t in_adler, uint8_t in_currentByte);
+DLLEXPORT uint32_t RFC1950_adler32_init();
+DLLEXPORT uint32_t RFC1950_adler32_compute(void *in_buffer, size_t in_bufferSize);
+DLLEXPORT uint32_t RFC1950_adler32_foldl(uint32_t in_adler, uint8_t *in_buffer, size_t in_bufferSize);
+DLLEXPORT uint32_t RFC1950_adler32_update(uint32_t in_adler, uint8_t in_currentByte);
 
 #ifdef __cplusplus
 }

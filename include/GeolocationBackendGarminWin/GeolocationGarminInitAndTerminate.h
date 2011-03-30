@@ -31,7 +31,7 @@ __declspec(dllexport) bool createGeolocationCoroutine(GarminUsbData *out_pGarmin
 	CoroutineDescriptor *in_pGeolocationCoroutine,
 	HANDLE in_garminHandle);
 
-void __stdcall geolocationCoroutine(void *in_pGarminUsbData);
+void COROUTINE_CALL geolocationCoroutine(void *in_pGarminUsbData);
 
 void startGeolocationCoroutine(GarminUsbData *in_out_pGarminUsbData);
 

@@ -14,16 +14,11 @@
 * limitations under the License.
 */
 
-#include "Coroutine/Coroutine.h"
 #include "IO/CoroutineStream.h"
 #include "MiniStdlib/minmax.h"
 #include <string.h>
 
-void
-#ifdef _WIN32
-	__stdcall
-#endif
-	coroutineStreamKickoff(void *in_pCoroutineStateAndKickoff)
+void COROUTINE_CALL coroutineStreamKickoff(void *in_pCoroutineStateAndKickoff)
 {
 	CoroutineStateAndKickoff stateAndKickoff = *(CoroutineStateAndKickoff*) in_pCoroutineStateAndKickoff;
 

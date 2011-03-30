@@ -31,6 +31,7 @@
 
 #include "Util/Iterator.h"
 #include "Util/Unicode.h"
+#include "MiniStdlib/declspec.h"
 #include "MiniStdlib/cstdbool.h"
 #include "MiniStdlib/cstdint.h"
 
@@ -38,31 +39,16 @@
 extern "C" {
 #endif
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool isSpaceCharacter(UnicodeCodePoint in_p);
+DLLEXPORT bool isSpaceCharacter(UnicodeCodePoint in_p);
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool allocWhite_SpaceCharacterIntervals(FILE* in_propListFile, void** in_pWhitespaceIntervals, 
+DLLEXPORT bool allocWhite_SpaceCharacterIntervals(FILE* in_propListFile, void** in_pWhitespaceIntervals, 
                               size_t* in_pWhitespaceIntervalsCount);
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-void freeWhite_SpaceCharacterIntervals(void** in_pWhitespaceIntervals);
+DLLEXPORT void freeWhite_SpaceCharacterIntervals(void** in_pWhitespaceIntervals);
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-extern bool isWhite_SpaceCharacter(UnicodeCodePoint in_p, void* in_pWhitespaceIntervals, 
+DLLEXPORT extern bool isWhite_SpaceCharacter(UnicodeCodePoint in_p, void* in_pWhitespaceIntervals, 
 						   size_t in_whitespaceIntervalsCount);
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool isAlphanumericASCIICharacter(UnicodeCodePoint in_p);
+DLLEXPORT bool isAlphanumericASCIICharacter(UnicodeCodePoint in_p);
 
 // not implemented yet
 // bool collectSequenceOfCharacters()
@@ -70,18 +56,12 @@ bool isAlphanumericASCIICharacter(UnicodeCodePoint in_p);
 /*!
  * Return value: same as iterateWhile
  */
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool skipWhitespace(SingleIterator in_iterator, void* in_iteratorState);
+DLLEXPORT bool skipWhitespace(SingleIterator in_iterator, void* in_iteratorState);
 
 /*!
  * Return value: same as iterateWhile
  */
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool skipWhite_SpaceCharacters(SingleIterator in_iterator, void* in_iteratorState, 
+DLLEXPORT bool skipWhite_SpaceCharacters(SingleIterator in_iterator, void* in_iteratorState, 
 							   void* in_pWhitespaceIntervals, size_t in_whitespaceIntervalsCount);
 
 #ifdef __cplusplus

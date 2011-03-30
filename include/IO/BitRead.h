@@ -26,6 +26,7 @@
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstdbool.h"
 #include "MiniStdlib/cstddef.h"
+#include "MiniStdlib/declspec.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,10 +47,7 @@ typedef struct
 	uint8_t buffer;
 } BitReadState;
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-void initBitReadState(BitReadState *in_pBitReadState);
+DLLEXPORT void initBitReadState(BitReadState *in_pBitReadState);
 
 /*!
  * Reads in_bitsCount bits from the file.
@@ -58,11 +56,8 @@ void initBitReadState(BitReadState *in_pBitReadState);
  * true if successful
  * false if not
  */
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool readBits(BitReadState *in_pBitReadState, void* in_pReaderState,  bool (*in_pReadByte)(void*, uint8_t*), 
-void* in_pBuffer, size_t in_bitsCount);
+DLLEXPORT bool readBits(BitReadState *in_pBitReadState, void* in_pReaderState, 
+	bool (*in_pReadByte)(void*, uint8_t*), void* in_pBuffer, size_t in_bitsCount);
 
 #ifdef __cplusplus
 }

@@ -18,6 +18,7 @@
 #define _IterateWhile_h
 
 #include "MiniStdlib/cstdbool.h"
+#include "MiniStdlib/declspec.h"
 #include "Util/Iterator.h"
 
 #ifdef __cplusplus
@@ -29,11 +30,8 @@ extern "C" {
  * true if there is no situation where we got past the end
  * false otherwise
  */
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool iterateWhile(SingleIterator in_iterator, void* in_iteratorState, void* in_pUserdata,
-				  bool (*in_pConditionFunction)(const void* in_pCurrentElement, const void* in_pUserdata));
+DLLEXPORT bool iterateWhile(SingleIterator in_iterator, void* in_iteratorState, void* in_pUserdata,
+	bool (*in_pConditionFunction)(const void* in_pCurrentElement, const void* in_pUserdata));
 
 #ifdef __cplusplus
 }

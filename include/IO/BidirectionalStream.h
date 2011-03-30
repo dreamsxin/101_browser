@@ -20,6 +20,7 @@
 #include "Coroutine/Coroutine.h"
 #include "IO/CoroutineStream.h"
 #include "MiniStdlib/cstdint.h"
+#include "MiniStdlib/declspec.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -51,34 +52,19 @@ typedef struct
 	uint8_t mCurrentSide;
 } BidirectionalStreamState;
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool bidirectionalStreamIsReadingPossible(void *in_pBidirectionalStreamState);
+DLLEXPORT bool bidirectionalStreamIsReadingPossible(void *in_pBidirectionalStreamState);
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool bidirectionalStreamIsWritingPossible(void *in_pBidirectionalStreamState);
+DLLEXPORT bool bidirectionalStreamIsWritingPossible(void *in_pBidirectionalStreamState);
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool bidirectionalStreamInit(BidirectionalStreamState *out_pBidirectionalStreamState,
+DLLEXPORT bool bidirectionalStreamInit(BidirectionalStreamState *out_pBidirectionalStreamState, 
 CoroutineDescriptor *out_pThisCoroutine,
 CoroutineDescriptor *out_pOtherCoroutine,
 void (*in_pOtherCoroutineStartup)(void *in_pStreamState, void *in_pUserData),
 void *in_pUserData);
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-size_t bidirectionalStreamRead(void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count);
+DLLEXPORT size_t bidirectionalStreamRead(void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count);
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-size_t bidirectionalStreamWrite(void *in_out_pBidirectionalStreamState, const void *in_pBuffer, size_t in_count);
+DLLEXPORT size_t bidirectionalStreamWrite(void *in_out_pBidirectionalStreamState, const void *in_pBuffer, size_t in_count);
 
 #ifdef __cplusplus
 }

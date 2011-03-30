@@ -19,6 +19,7 @@
 
 #include "MiniStdlib/MTAx_cstdio.h"
 #include "MiniStdlib/cstdbool.h"
+#include "MiniStdlib/declspec.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,15 +30,10 @@ typedef struct
 	FILE *mFile;
 } FileByteStreamState;
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-size_t fileByteReadStreamRead(void *in_out_pFileByteStreamState, void *out_pBuffer, size_t in_count);
+DLLEXPORT size_t fileByteReadStreamRead(void *in_out_pFileByteStreamState, 
+	void *out_pBuffer, size_t in_count);
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool createFileByteReadStreamState(const char *in_filename,
+DLLEXPORT bool createFileByteReadStreamState(const char *in_filename,
 	FileByteStreamState *in_pFileByteStreamState);
 
 

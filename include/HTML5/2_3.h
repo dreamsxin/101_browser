@@ -17,6 +17,7 @@
 #ifndef _2_3_h
 #define _2_3_h
 
+#include "MiniStdlib/declspec.h"
 #include "MiniStdlib/cstdbool.h"
 #include "Util/Iterator.h"
 #include "Util/Unicode.h"
@@ -39,15 +40,9 @@ bool compareTokensASCIICaseInsensitive(UnicodeCodePoint p1, UnicodeCodePoint p2)
 /*
  * Returns true if the strings are identical; false otherwise
  */
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool compareStringsCaseSensitive(SingleIterator in_it, void* in_iteratorState0, void* in_iteratorState1);
+DLLEXPORT bool compareStringsCaseSensitive(SingleIterator in_it, void* in_iteratorState0, void* in_iteratorState1);
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool compareStringsASCIICaseInsensitive(SingleIterator in_it, void* in_iteratorState0, void* in_iteratorState1);
+DLLEXPORT bool compareStringsASCIICaseInsensitive(SingleIterator in_it, void* in_iteratorState0, void* in_iteratorState1);
 
 /* Not implemented yet */
 #if 0
@@ -57,19 +52,10 @@ bool compareStringsCompatibilityCaseless(SingleIterator in_it, void* in_iterator
 UnicodeCodePoint tokenToASCIILowercase(UnicodeCodePoint in_p);
 UnicodeCodePoint tokenToASCIIUppercase(UnicodeCodePoint in_p);
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-void convertStringToASCIILowercase(char* in_string);
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-void convertStringToASCIIUppercase(char* in_string);
+DLLEXPORT void convertStringToASCIILowercase(char* in_string);
+DLLEXPORT void convertStringToASCIIUppercase(char* in_string);
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool prefixMatch(SingleIterator in_it, void* in_patternState, void* in_stringState);
+DLLEXPORT bool prefixMatch(SingleIterator in_it, void* in_patternState, void* in_stringState);
 
 #ifdef __cplusplus
 }

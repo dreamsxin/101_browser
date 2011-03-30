@@ -18,6 +18,7 @@
 #define _MTAx_IO_MemoryByteStream_h
 
 #include "MiniStdlib/cstdint.h"
+#include "MiniStdlib/declspec.h"
 #include "IO/ByteStreamInterface.h"
 
 typedef struct
@@ -27,17 +28,12 @@ typedef struct
 	size_t bufferPos;
 } MemoryByteStreamReadState;
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-void initMemoryByteStreamReadState(
+DLLEXPORT void initMemoryByteStreamReadState(
 	MemoryByteStreamReadState *in_pMemoryByteStreamReadState,
 	const void *in_pBuffer, size_t in_bufferSize);
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-size_t memoryByteReadStreamRead(void *in_out_pMemoryByteStreamReadState, void *out_pBuffer, size_t in_count);
+DLLEXPORT size_t memoryByteReadStreamRead(void *in_out_pMemoryByteStreamReadState, 
+	void *out_pBuffer, size_t in_count);
 
 const ByteStreamReadInterface cMemoryStreamReadInterface = { &memoryByteReadStreamRead };
 

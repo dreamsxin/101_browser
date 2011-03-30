@@ -20,15 +20,14 @@
 #include "MiniStdlib/cstdbool.h"
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstddef.h"
+#include "MiniStdlib/declspec.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool checkBitmask(const void *in_pBuffer, size_t in_bufferSize, const void *in_pMaskIdentifierBits, const void *in_pMaskValueBits);
+DLLEXPORT bool checkBitmask(const void *in_pBuffer, size_t in_bufferSize, 
+	const void *in_pMaskIdentifierBits, const void *in_pMaskValueBits);
 
 #ifdef __cplusplus
 }

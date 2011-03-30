@@ -25,11 +25,7 @@ typedef struct
 	volatile unsigned int currentIndex;
 } PassedData;
 
-void 
-#ifdef _WIN32
-__stdcall
-#endif	
-func1(void *in_pData)
+void COROUTINE_CALL func1(void *in_pData)
 {
 	volatile PassedData *pData = (volatile PassedData*) in_pData;
 
@@ -42,11 +38,7 @@ func1(void *in_pData)
 	}
 }
 
-void
-#ifdef _WIN32
-__stdcall
-#endif
-func2(void *in_pData)
+void COROUTINE_CALL func2(void *in_pData)
 {
 	volatile PassedData *pData = (volatile PassedData*) in_pData;
 

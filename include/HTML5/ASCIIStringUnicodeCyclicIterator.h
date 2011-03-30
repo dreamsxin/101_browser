@@ -27,6 +27,7 @@
  * iterator that causes an infinite loop in those cases.
  */
 
+#include "MiniStdlib/declspec.h"
 #include "Util/Iterator.h"
 #include "Util/Unicode.h"
 
@@ -45,10 +46,7 @@ typedef struct
 	UnicodeCodePoint codePoint;
 } ASCIIStringUnicodeCyclicIteratorState;
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-SingleIterator asciiStringUnicodeCyclicIterator_create();
+DLLEXPORT SingleIterator asciiStringUnicodeCyclicIterator_create();
 
 /*
  * PRE:ASCIIStringUnicodeCyclicIterator_h_38: string != NULL
@@ -59,10 +57,7 @@ SingleIterator asciiStringUnicodeCyclicIterator_create();
  * POST:ASCIIStringUnicodeCyclicIterator_h_43: the result obeys INV:ASCIIStringUnicodeCyclicIterator_h_26
  * POST:ASCIIStringUnicodeCyclicIterator_h_44: the result obeys INV:ASCIIStringUnicodeCyclicIterator_h_27
  */
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-ASCIIStringUnicodeCyclicIteratorState asciiStringUnicodeCyclicIteratorState_create(char* string);
+DLLEXPORT ASCIIStringUnicodeCyclicIteratorState asciiStringUnicodeCyclicIteratorState_create(char* string);
 
 #ifdef __cplusplus
 }

@@ -25,6 +25,7 @@
 
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstdbool.h"
+#include "MiniStdlib/declspec.h"
 #include "BigNumber/BigInteger.h"
 #include "Util/Unicode.h"
 
@@ -36,15 +37,9 @@ extern "C" {
  * For 1 <= month <= 12 this function returns the number of days in the month
  * if month is out of this interval, 0 is returned.
  */
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-uint8_t numberOfDaysInMonthOfYear(uint8_t month, UnsignedBigInteger year);
+DLLEXPORT uint8_t numberOfDaysInMonthOfYear(uint8_t month, UnsignedBigInteger year);
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool isDigit(UnicodeCodePoint in_p);
+DLLEXPORT bool isDigit(UnicodeCodePoint in_p);
 
 #ifdef __cplusplus
 }

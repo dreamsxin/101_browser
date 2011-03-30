@@ -18,6 +18,7 @@
 #define _MTAx_IO_CoroutineStream_h
 
 #include "MiniStdlib/cstdint.h"
+#include "Coroutine/Coroutine.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,11 +43,7 @@ typedef struct
 	CoroutineStreamKickoffData kickoffData;
 } CoroutineStateAndKickoff;
 
-void
-#ifdef _WIN32
-	__stdcall
-#endif
-coroutineStreamKickoff(void *in_pCoroutineStateAndKickoff);
+void COROUTINE_CALL coroutineStreamKickoff(void *in_pCoroutineStateAndKickoff);
 
 bool coroutineStreamStart(void *in_pStreamState, 
 	CoroutineDescriptor *out_pThisCoroutine,

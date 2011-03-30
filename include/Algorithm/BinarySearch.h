@@ -20,11 +20,8 @@
 #include "Algorithm/CompareResult.h"
 #include "MiniStdlib/cstdint.h"
  // for size_t
-#ifdef __cplusplus
-#include <cstddef>
-#else
-#include <stddef.h>
-#endif
+#include "MiniStdlib/cstddef.h"
+#include "MiniStdlib/declspec.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,11 +40,8 @@ extern "C" {
  * in_pCompare: a comparator function taking a pointer to in_pToFind and a pointer of an array
  *              element
  */
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-size_t binarySearch(const void* in_pToFind, const void* in_pFirst, size_t in_count, size_t in_size,
-					IntermediateCompareResult (*in_pCompare)(const void* in_pToFind, const void* in_pDatum));
+DLLEXPORT size_t binarySearch(const void* in_pToFind, const void* in_pFirst, size_t in_count, size_t in_size,
+	IntermediateCompareResult (*in_pCompare)(const void* in_pToFind, const void* in_pDatum));
 
 #ifdef __cplusplus
 }

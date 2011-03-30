@@ -22,8 +22,8 @@ void initBitReadState(BitReadState *in_pBitReadState)
 	in_pBitReadState->bitCountInBuffer = 0;
 }
 
-bool readBits(BitReadState *in_pBitReadState, void* in_pReaderState,  bool (*in_pReadByte)(void*, uint8_t*), 
-	void* in_pBuffer, size_t in_bitsCount)
+bool readBits(BitReadState *in_pBitReadState, void* in_pReaderState,  
+	bool (*in_pReadByte)(void*, uint8_t*), void* in_pBuffer, size_t in_bitsCount)
 {
 	uint8_t *currentBufferElement = (uint8_t *) in_pBuffer;
 	size_t currentBitIndex; // counter in the loop

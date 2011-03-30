@@ -19,6 +19,9 @@
 
 #include <ucontext.h>
 #include <signal.h> // for SIGSTKSZ
+#include "MiniStdlib/cstdbool.h"
+
+#define COROUTINE_CALL
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,7 +30,7 @@ extern "C" {
 typedef ucontext_t CoroutineDescriptor;
 
 bool createCoroutine(size_t in_stackSize, 
-	void (*in_pFiberFunc)(void*), 
+	void (COROUTINE_CALL * in_pFiberFunc)(void*), 
 	void* in_pParam, 
 	volatile CoroutineDescriptor *out_pCoroutineDescriptor);
 
@@ -57,4 +60,3 @@ void deleteCoroutine(CoroutineDescriptor *in_pCoroutine);
 #endif
 
 #endif
-

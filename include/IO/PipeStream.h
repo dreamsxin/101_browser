@@ -22,6 +22,7 @@
 #include "IO/CoroutineStream.h"
 #include "MiniStdlib/cstdbool.h"
 #include "MiniStdlib/climits.h"
+#include "MiniStdlib/declspec.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,30 +53,18 @@ typedef struct
  * in_pOtherCoroutineStartup: the function that the created coroutine will jump into
  * in_pUserData: user data to be sent to the new created coroutine
  */
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
+DLLEXPORT bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	bool in_isOtherStreamReader,
 	CoroutineDescriptor *out_pThisCoroutine,
 	CoroutineDescriptor *out_pOtherCoroutine,
 	void (*in_pOtherCoroutineStartup)(void *in_pStreamState, void *in_pUserData),
 	void *in_pUserData);
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-void deletePipeStreamState(PipeStreamState *out_pPipeStreamState);
+DLLEXPORT void deletePipeStreamState(PipeStreamState *out_pPipeStreamState);
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t in_count);
+DLLEXPORT size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t in_count);
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, size_t in_count);
+DLLEXPORT size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, size_t in_count);
 
 #ifdef __cplusplus
 }

@@ -19,6 +19,7 @@
 
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstdbool.h"
+#include "MiniStdlib/declspec.h"
 
 // for size_t
 #ifdef __cplusplus
@@ -39,10 +40,7 @@ typedef struct _UnsignedBigInteger
 } UnsignedBigInteger;
 
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool initUnsignedBigIntegerUC(UnsignedBigInteger* in_pNumber, uint32_t in_value);
+DLLEXPORT bool initUnsignedBigIntegerUC(UnsignedBigInteger* in_pNumber, uint32_t in_value);
 
 /*
  * Creates a number using the passed limbs. Note that we will allocate 
@@ -53,19 +51,13 @@ bool initUnsignedBigIntegerUC(UnsignedBigInteger* in_pNumber, uint32_t in_value)
  * Return value: 1 on success
  *               0 on failure
  */
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool initUnsignedBigIntegerUCA(UnsignedBigInteger* in_pNumber, 
+DLLEXPORT bool initUnsignedBigIntegerUCA(UnsignedBigInteger* in_pNumber, 
 							   uint32_t* limbs, size_t limbsCount);
 
 /*
  * Deallocates the used memory and sets the number to zero
  */
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-void freeUnsignedBigInteger(UnsignedBigInteger* in_pNumber);
+DLLEXPORT void freeUnsignedBigInteger(UnsignedBigInteger* in_pNumber);
 
 struct SignedBigInteger
 {
@@ -73,15 +65,9 @@ struct SignedBigInteger
 	bool isNegative;
 };
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-bool isZero(UnsignedBigInteger const * const in_pcInt);
+DLLEXPORT bool isZero(UnsignedBigInteger const * const in_pcInt);
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-uint32_t incUB(UnsignedBigInteger* in_pInt);
+DLLEXPORT uint32_t incUB(UnsignedBigInteger* in_pInt);
 
 /*!
  * Adds in_c to in_pInt.
@@ -93,10 +79,7 @@ uint32_t incUB(UnsignedBigInteger* in_pInt);
  *              return the value that would go into the highest
  *              digit
  */
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-uint32_t addUBUC(UnsignedBigInteger* in_pInt, uint32_t in_c);
+DLLEXPORT uint32_t addUBUC(UnsignedBigInteger* in_pInt, uint32_t in_c);
 
 /*!
  * Multiplies in_pInt with in_c.
@@ -108,15 +91,9 @@ uint32_t addUBUC(UnsignedBigInteger* in_pInt, uint32_t in_c);
  *              return the value that would go into the highest
  *              digit
  */
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-uint32_t mulUBUC(UnsignedBigInteger* in_pInt, uint32_t in_c);
+DLLEXPORT uint32_t mulUBUC(UnsignedBigInteger* in_pInt, uint32_t in_c);
 
-#ifdef _WIN32
-__declspec(dllexport)
-#endif
-uint32_t modUBUC(UnsignedBigInteger const * const  in_pInt, uint32_t in_c);
+DLLEXPORT uint32_t modUBUC(UnsignedBigInteger const * const  in_pInt, uint32_t in_c);
 
 /* Internal helper functions */
 uint32_t applyCarry(UnsignedBigInteger* in_pInt, uint32_t in_c);
