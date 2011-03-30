@@ -4,24 +4,10 @@ wget http://www.cl.cam.ac.uk/~mgk25/ucs/examples/UTF-8-test.txt -O ../testfiles/
 
 wget http://unicode.org/Public/UNIDATA/PropList.txt -O ../data/Unicode/PropList.txt
 
-wget http://www.whatwg.org/specs/web-apps/current-work/ -O html.html
-java -cp htmlparser-1.2.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_html_idl.xslt --input-html=html.html --output-xml=../data/idl/temp_.idl
-sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/generated/html.idl
 
-
-wget http://www.whatwg.org/specs/web-workers/current-work/ -O webworkers.html
-java -cp htmlparser-1.2.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_webworkers_idl.xslt --input-html=webworkers.html --output-xml=../data/idl/temp_.idl
-sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/generated/webworkers.idl
-
-
-wget http://dev.w3.org/html5/websockets/ -O websockets.html
-java -cp htmlparser-1.2.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_websockets_idl.xslt --input-html=websockets.html --output-xml=../data/idl/temp_.idl
-sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/generated/websockets.idl
-
-
-wget http://dev.w3.org/html5/webstorage/ -O webstorage.html
-java -cp htmlparser-1.2.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_webstorage_idl.xslt --input-html=webstorage.html --output-xml=../data/idl/temp_.idl
-sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/generated/webstorage.idl
+wget http://www.whatwg.org/specs/web-apps/current-work/complete.html -O complete.html
+java -cp htmlparser-1.2.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_webapps_idl.xslt --input-html=complete.html --output-xml=../data/idl/temp_.idl
+sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/generated/webapps.idl
 
 
 wget http://dev.w3.org/geo/api/spec-source.html -O geolocation.html
@@ -35,10 +21,6 @@ sed -e '1d' -e "s/&lt;/</" -e "s/&lt;/</" -e "s/&gt;/>/" -e "s/&gt;/>/" ../data/
 
 
 rm ../data/idl/temp_.idl
-rm html.html
-rm webworkers.html
-rm websockets.html
-rm webdatabase.html
-rm webstorage.html
+rm complete.html
 rm geolocation.html
 rm xproc.html

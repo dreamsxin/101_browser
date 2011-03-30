@@ -7,7 +7,7 @@
 
   <xsl:template match="/">
     <xsl:call-template name="main">
-      <xsl:with-param name="moduleName">html5</xsl:with-param>
+      <xsl:with-param name="moduleName">webapps</xsl:with-param>
     </xsl:call-template>
   </xsl:template>
 </xsl:stylesheet>
