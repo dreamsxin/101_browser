@@ -4,9 +4,9 @@ wget http://www.cl.cam.ac.uk/~mgk25/ucs/examples/UTF-8-test.txt -O ../testfiles/
 
 wget http://unicode.org/Public/UNIDATA/PropList.txt -O ../data/Unicode/PropList.txt
 
-wget http://www.whatwg.org/specs/web-apps/current-work/ -O html5.html
-java -cp htmlparser-1.2.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_html5_idl.xslt --input-html=html5.html --output-xml=../data/idl/temp_.idl
-sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/html5.idl
+wget http://www.whatwg.org/specs/web-apps/current-work/ -O html.html
+java -cp htmlparser-1.2.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_html_idl.xslt --input-html=html.html --output-xml=../data/idl/temp_.idl
+sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/html.idl
 
 
 wget http://www.whatwg.org/specs/web-workers/current-work/ -O webworkers.html
@@ -40,7 +40,7 @@ sed -e '1d' -e "s/&lt;/</" -e "s/&lt;/</" -e "s/&gt;/>/" -e "s/&gt;/>/" ../data/
 
 
 rm ../data/idl/temp_.idl
-rm html5.html
+rm html.html
 rm webworkers.html
 rm websockets.html
 rm webdatabase.html
