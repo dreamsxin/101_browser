@@ -1,1 +1,0 @@
-For recreating html5.idl, webworkers.idl, webdatabase.idl call ../util/create_dynamic_idl.bat
