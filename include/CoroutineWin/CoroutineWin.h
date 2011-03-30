@@ -20,37 +20,15 @@
 #include <windows.h>
 #include "MiniStdlib/cstdbool.h"
 
+typedef LPVOID CoroutineDescriptor;
+#define COROUTINE_KICKOFF_CALL __stdcall
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef LPVOID CoroutineDescriptor;
-#define COROUTINE_KICKOFF_CALL __stdcall
-
-__declspec(dllexport) bool createCoroutine(
-	size_t in_stackSize,  
-	void (COROUTINE_KICKOFF_CALL * in_pFiberFunc)(void*), 
-	void* in_pParam, 
-	volatile CoroutineDescriptor *out_pCoroutineDescriptor);
-
-__declspec(dllexport) void switchToCoroutine(
-	CoroutineDescriptor * in_pCurrentCoroutine, 
-	CoroutineDescriptor *in_pNextCoroutine);
-
-/*!
- * Return value:
- * true - sucess
- * false - failure
- */
-__declspec(dllexport) bool convertThreadToCoroutine(
-	CoroutineDescriptor *out_pCoroutineDescriptor);
-
-__declspec(dllexport) bool convertCoroutineToThread();
-
 // getCurrentCoroutine is only used internally
 CoroutineDescriptor getCurrentCoroutine();
-
-__declspec(dllexport) void deleteCoroutine(CoroutineDescriptor *in_pCoroutine);
 
 #ifdef __cplusplus
 }

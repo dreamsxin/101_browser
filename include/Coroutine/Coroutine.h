@@ -17,6 +17,8 @@
 #ifndef _MTAx_Coroutine_Coroutine_h
 #define _MTAx_Coroutine_Coroutine_h
 
+#include "MiniStdlib/declspec.h"
+
 #if defined(_WIN32)
 # include "CoroutineWin/CoroutineWin.h"
 #elif defined(__unix)
@@ -24,5 +26,51 @@
 #else
 # error Your OS seems not to be supported
 #endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*!
+* Return value:
+* true - sucess
+* false - failure
+*/
+DLLEXPORT bool createCoroutine(size_t in_stackSize, 
+	void (COROUTINE_KICKOFF_CALL * in_pFiberFunc)(void*), 
+	void* in_pParam, 
+	volatile CoroutineDescriptor *out_pCoroutineDescriptor);
+
+DLLEXPORT void switchToCoroutine(
+	CoroutineDescriptor * in_pCurrentCoroutine, 
+	CoroutineDescriptor *in_pNextCoroutine);
+
+/*!
+* Return value:
+* true - sucess
+* false - failure
+*/
+DLLEXPORT bool convertThreadToCoroutine(
+	CoroutineDescriptor *out_pCoroutineDescriptor);
+
+/*!
+* Return value:
+* true - sucess
+* false - failure
+*/
+DLLEXPORT bool convertCoroutineToThread();
+
+/*!
+* Warning: Under Posix you must never call it on a coroutine 
+* that was not created by createCoroutine.
+* 
+* You have been warned.
+*/
+DLLEXPORT void deleteCoroutine(CoroutineDescriptor *in_pCoroutine);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif
