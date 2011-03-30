@@ -20,7 +20,7 @@ namespace MTAx
 {
 	namespace Crypto
 	{
-		__declspec(dllexport) CryptoContext allocRandomNumberContext()
+		CryptoContext allocRandomNumberContext()
 		{
 			HCRYPTPROV hCryptProv = NULL;
 
@@ -33,12 +33,12 @@ namespace MTAx
 			return hCryptProv;
 		}
 
-		__declspec(dllexport) void freeRandomNumberContext(CryptoContext pContext)
+		void freeRandomNumberContext(CryptoContext pContext)
 		{
 			CryptReleaseContext(pContext, 0);
 		}
 
-		__declspec(dllexport) void getRandomBytes(CryptoContext context, 
+		void getRandomBytes(CryptoContext context, 
 			size_t count, void* buffer)
 		{
 			CryptGenRandom(context, count, static_cast<BYTE*>(buffer));
