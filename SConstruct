@@ -44,7 +44,8 @@ PNG = env.Clone()
 PNG.SharedLibrary('bin/PNG', Glob('src/PNG/*.c')+Glob('src/PNG/*.cpp'))
 
 IO = env.Clone()
-IO.SharedLibrary('bin/IO', Glob('src/IO/*.c'))
+IO.Append(LIBS = ['MiniStdlib'])
+IO.SharedLibrary('bin/IO', Glob('src/IO/*.c'), LIBPATH = ['#/lib'])
 
 GIF = env.Clone()
 GIF.SharedLibrary('bin/GIF', Glob('src/GIF/*.c'))
