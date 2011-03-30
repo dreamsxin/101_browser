@@ -57,13 +57,13 @@ void writeFun(PipeStreamState *in_pPipeStreamState, unsigned int in_bytesToRead)
 	test(pipeStreamWrite(in_pPipeStreamState, data, 3) == MIN(3, in_bytesToRead-1));
 }
 
-void readerCoroutineFun(PipeStreamState *in_pPipeStreamState, void *in_pUserdata)
+void readerCoroutineFun(void *in_pPipeStreamState, void *in_pUserdata)
 {
 	unsigned int *bytesToRead = (unsigned int *) in_pUserdata;
 	readFun(in_pPipeStreamState, *bytesToRead);
 }
 
-void writerCoroutineFun(PipeStreamState *in_pPipeStreamState, void *in_pUserdata)
+void writerCoroutineFun(void *in_pPipeStreamState, void *in_pUserdata)
 {
 	unsigned int *bytesToRead = (unsigned int *) in_pUserdata;
 	writeFun(in_pPipeStreamState, *bytesToRead);

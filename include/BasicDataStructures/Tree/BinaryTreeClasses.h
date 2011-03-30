@@ -34,10 +34,10 @@ public:
 		BinaryTreeNode<Type, NodePropertyType> *in_parent, 
 		BinaryTreeNode<Type, NodePropertyType> *in_left=NULL,  
 		BinaryTreeNode<Type, NodePropertyType> *in_right=NULL) : 
-	mDatum(in_datum),
 	mpParent(in_parent), 
 	mpLeft(in_left), 
-	mpRight(in_right) { }
+	mpRight(in_right),
+	mDatum(in_datum) { }
 
 	inline const Type& datum()
 	{

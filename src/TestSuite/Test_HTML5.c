@@ -123,14 +123,15 @@ typedef struct
 	MemoryByteStreamReadState *pReadState;
 } Test_2_4_Userdata;
 
-void test_2_4_Coroutine(PipeStreamState *in_pPipeStreamState, void *in_pUserData)
+void test_2_4_Coroutine(void *in_pPipeStreamState, void *in_pUserData)
 {
+	PipeStreamState *pPipeStreamState = (PipeStreamState *) in_pPipeStreamState;
 	ByteStreamWriteInterface pipeStreamWriteInterface = { &pipeStreamWrite };
 
 	Test_2_4_Userdata *pUserData = (Test_2_4_Userdata *) in_pUserData;
 
 	convertUTF8toCodepoints(cMemoryStreamReadInterface, pUserData->pReadState, 
-		pipeStreamWriteInterface, in_pPipeStreamState);
+		pipeStreamWriteInterface, pPipeStreamState);
 }
 
 void test_2_4()
