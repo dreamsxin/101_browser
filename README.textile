@@ -22,7 +22,7 @@ h4. 2.1.1 Windows
 
 Windows Vista/Server 2008/7 (currently only tested under Windows 7, but the other ones should work). Note that not all parts of 101_browser will work under Windows XP or older, because some parts are using APIs that were introduced with Vista to simplify the code or add features.
 
-In other words: don't even attempt to get it to tun on Windows XP or older. It will spare you frustration.
+In other words: don't even attempt to get it to tun on Windows XP or older. It will save you frustration.
 
 h4. 2.1.2 Linux
 
@@ -36,11 +36,7 @@ h3. 2.2 Required software for building
 
 h4. 2.2.1 Windows
 
-Visual Studio 2008/2010.
-
-At the moment it is not obvious which one is better to choose: on the one hand I'm currently working 
-with VS 2010 and don't update the VS 2008 solutions regularly anymore. On the other hand not all projects have been ported
-to the new version. At least for beginners VS 2010 should be the better choice.
+Visual Studio 2010.
 
 h4. 2.2.2 Linux
 
@@ -50,7 +46,7 @@ h2. 3. Building
 
 h3. 3.1 Windows
 
-Use the 101_browser_vs2008.sln/101_browser_vs2010.sln file in the root folder.
+Use the 101_browser_vs2010.sln file in the root folder.
 
 h3. 3.2 Linux
 
