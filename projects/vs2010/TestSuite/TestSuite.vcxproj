@@ -61,7 +61,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <Profile>true</Profile>
       <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;CoroutineWin.lib;CPU.lib;GIF.lib;HTML5.lib;IO.lib;MiniStdlib.lib;PNG.lib;RFC1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;CoroutineWin.lib;GIF.lib;HTML5.lib;IO.lib;MiniStdlib.lib;PNG.lib;RFC1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -83,7 +83,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <Profile>true</Profile>
       <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;CoroutineWin.lib;CPU.lib;GIF.lib;HTML5.lib;IO.lib;MiniStdlib.lib;PNG.lib;RFC1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Algorithm.lib;BigNumber.lib;CoroutineWin.lib;GIF.lib;HTML5.lib;IO.lib;MiniStdlib.lib;PNG.lib;RFC1950.lib;Unicode.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -97,7 +97,6 @@
     <ClCompile Include="..\..\..\src\TestSuite\Test_BasicDataStructures_Tree.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_BigNumber.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_Coroutine.c" />
-    <ClCompile Include="..\..\..\src\TestSuite\Test_CPU.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_GIF.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_HTML5.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_Interval.cpp" />
@@ -125,9 +124,6 @@
     </ProjectReference>
     <ProjectReference Include="..\CoroutineWin\CoroutineWin.vcxproj">
       <Project>{a6ea98fe-d4ca-4d80-a963-d84a3233651d}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\CPU\CPU.vcxproj">
-      <Project>{8bb562b5-9a8f-475b-8cc8-e305454cbd05}</Project>
     </ProjectReference>
     <ProjectReference Include="..\GIF\GIF.vcxproj">
       <Project>{5fa06546-f277-4928-8478-41c474490ae6}</Project>

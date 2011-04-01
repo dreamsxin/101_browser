@@ -49,8 +49,6 @@ int main()
 	testHTML5();
 	wprintf(L"Testing GIF\n");
 	testGIF();
-	wprintf(L"Testing CPU\n");
-	testCPU();
 	wprintf(L"Testing Coroutine\n");
 	test_Coroutine();
 	wprintf(L"Testing PNG\n");
