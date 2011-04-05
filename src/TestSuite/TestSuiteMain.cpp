@@ -23,35 +23,35 @@
 
 int main()
 {
-	wprintf(L"Testing MiniStdlib\n");
+	printf("Testing MiniStdlib\n");
 	test_MiniStdlib();
-	wprintf(L"Testing Interval\n");
+	printf("Testing Interval\n");
 	testInterval();
-	wprintf(L"Testing Algorithm\n");
+	printf("Testing Algorithm\n");
 	testAlgorithm();
-	wprintf(L"Testing BasicDataStructures Tree\n");
+	printf("Testing BasicDataStructures Tree\n");
 	testBasicDataStructuresTree();
-	wprintf(L"Testing TriangleStripBorderIterator\n");
+	printf("Testing TriangleStripBorderIterator\n");
 	testTriangleStripBorderIterator();
-	wprintf(L"Testing OuterBorderIterator\n");
+	printf("Testing OuterBorderIterator\n");
 	testOuterBorderIterator();
-	wprintf(L"Testing BigNumber\n");
+	printf("Testing BigNumber\n");
 	testBigNumber();
-	wprintf(L"Testing RFC 1950\n");
+	printf("Testing RFC 1950\n");
 	test_RFC1950();
-	wprintf(L"Testing ASCIIStringUnicodeIterator\n");
+	printf("Testing ASCIIStringUnicodeIterator\n");
 	testASCIIStringUnicodeIterator();
-	wprintf(L"Testing Unicode\n");
+	printf("Testing Unicode\n");
 	testUnicode();
-	wprintf(L"Testing IO\n");
+	printf("Testing IO\n");
 	test_IO();
-	wprintf(L"Testing HTML5\n");
+	printf("Testing HTML5\n");
 	testHTML5();
-	wprintf(L"Testing GIF\n");
+	printf("Testing GIF\n");
 	testGIF();
-	wprintf(L"Testing Coroutine\n");
+	printf("Testing Coroutine\n");
 	test_Coroutine();
-	wprintf(L"Testing PNG\n");
+	printf("Testing PNG\n");
 	test_PNG();
 
 	return 0;

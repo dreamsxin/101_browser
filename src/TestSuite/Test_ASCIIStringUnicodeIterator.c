@@ -17,6 +17,7 @@
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
 #include "HTML5/ASCIIStringUnicodeIterator.h"
+#include <stdlib.h> // for NULL
 
 void testASCIIStringUnicodeIterator()
 {

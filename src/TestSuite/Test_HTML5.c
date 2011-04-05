@@ -630,16 +630,16 @@ void test_2_5_6()
 
 void testHTML5()
 {
-	wprintf(L"Testing 2.3\n");
+	printf("Testing 2.3\n");
 	test_2_3();
-	wprintf(L"Testing 2.4\n");
+	printf("Testing 2.4\n");
 	test_2_4();
-	wprintf(L"Testing 2.5.1\n");
+	printf("Testing 2.5.1\n");
 	test_2_5_1();
-	wprintf(L"Testing 2.5.4.1\n");
+	printf("Testing 2.5.4.1\n");
 	test_2_5_4_1();
-	wprintf(L"Testing 2.5.5\n");
+	printf("Testing 2.5.5\n");
 	test_2_5_5();
-	wprintf(L"Testing 2.5.6\n");
+	printf("Testing 2.5.6\n");
 	test_2_5_6();
 }

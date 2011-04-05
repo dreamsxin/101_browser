@@ -15,11 +15,12 @@
  */
 
 #include "TestSuite/TestAlgorithm.h"
+#include <stdio.h>
 
 void testAlgorithm()
 {
-	wprintf(L"Testing Algorithm - BinarySearch\n");
+	printf("Testing Algorithm - BinarySearch\n");
 	testAlgorithm_BinarySearch();
-	wprintf(L"Testing Algorithm - BitRead\n");
+	printf("Testing Algorithm - BitRead\n");
 	testAlgorithm_BitRead();
 }

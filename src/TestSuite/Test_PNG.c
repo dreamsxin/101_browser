@@ -40,6 +40,6 @@ void test_PNG_CRC()
 
 void test_PNG()
 {
-	wprintf(L"Testing PNG - CRC\n");
+	printf("Testing PNG - CRC\n");
 	test_PNG_CRC();
 }

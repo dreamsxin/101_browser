@@ -18,17 +18,20 @@
 #include "TestSuite/TestSuite.h"
 #include "IO/PipeStream.h"
 #include "MiniStdlib/minmax.h"
+#include <stdio.h>
 #include <string.h>
 
-void readFun(PipeStreamState *in_pPipeStreamState, unsigned int in_bytesToRead)
+void readFun(void *in_pPipeStreamState, unsigned int in_bytesToRead)
 {
+	PipeStreamState *pPipeStreamState = (PipeStreamState *) in_pPipeStreamState;
+
 	uint8_t data[32];
 	size_t readCount;
 	unsigned int idx;
 
 	memset(data, 0xFF, 32);
 
-	wprintf(L"Reading %u bytes\n", in_bytesToRead);
+	printf("Reading %u bytes\n", in_bytesToRead);
 	
 	readCount = pipeStreamRead(in_pPipeStreamState, data, in_bytesToRead);
 
@@ -40,20 +43,22 @@ void readFun(PipeStreamState *in_pPipeStreamState, unsigned int in_bytesToRead)
 	}
 }
 
-void writeFun(PipeStreamState *in_pPipeStreamState, unsigned int in_bytesToRead)
+void writeFun(void *in_pPipeStreamState, unsigned int in_bytesToRead)
 {
+	PipeStreamState *pPipeStreamState = (PipeStreamState *) in_pPipeStreamState;
+
 	uint8_t data[3];
 
 	data[0] = 0;
 
-	wprintf(L"Writing 1 byte\n");
+	printf("Writing 1 byte\n");
 	test(pipeStreamWrite(in_pPipeStreamState, data, 1) == 1);
 
 	data[0] = 1;
 	data[1] = 2;
 	data[2] = 3;
 
-	wprintf(L"Writing 3 bytes\n");
+	printf("Writing 3 bytes\n");
 	test(pipeStreamWrite(in_pPipeStreamState, data, 3) == MIN(3, in_bytesToRead-1));
 }
 
@@ -116,6 +121,6 @@ void test_IO_PipeStream()
 
 void test_IO()
 {
-	wprintf(L"Testing IO - PipeStream\n");
+	printf("Testing IO - PipeStream\n");
 	test_IO_PipeStream();
 }

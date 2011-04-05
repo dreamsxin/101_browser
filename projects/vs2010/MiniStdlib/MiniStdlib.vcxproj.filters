@@ -48,7 +48,7 @@
     <ClInclude Include="..\..\..\include\MiniStdlib\declspec.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\MiniStdlib\cwchar.h">
+    <ClInclude Include="..\..\..\include\MiniStdlib\string_macros.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

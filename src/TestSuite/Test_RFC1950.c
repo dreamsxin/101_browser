@@ -38,8 +38,8 @@ void test_RFC1950_zlib()
 
 void test_RFC1950()
 {
-	wprintf(L"Testing RFC 1950 - adler32\n");
+	printf("Testing RFC 1950 - adler32\n");
 	test_RFC1950_adler32();
-	wprintf(L"Testing RFC 1950 - zlib\n");
+	printf("Testing RFC 1950 - zlib\n");
 	test_RFC1950_zlib();
 }

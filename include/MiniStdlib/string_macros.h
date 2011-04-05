@@ -1,5 +1,5 @@
 /*
-* Copyright 2008-2011 Wolfgang Keller
+* Copyright 2011 Wolfgang Keller
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,19 +14,16 @@
 * limitations under the License.
 */
 
-#ifndef _MTAx_MiniStdlib_cwchar_h
-#define _MTAx_MiniStdlib_cwchar_h
+#ifndef _MTAx_MiniStdlib_string_macros_h
+#define _MTAx_MiniStdlib_string_macros_h
 
-#ifdef __cplusplus
-#include <cwchar>
-#else
-#include <wchar.h>
-#endif
+#define _TO_STRING(x) #x
+#define TO_STRING(x) _TO_STRING(x)
 
-#ifndef _WIN32
-/* we really need 2 macros here since - for example else _CRT_WIDE(__FILE__) will be expanded to L__FILE__ */
-#define __CRT_WIDE(x) L ## x
-#define _CRT_WIDE(x) __CRT_WIDE(x)
-#endif
+#define _WIDEN(x) L ## x
+#define WIDEN(x) _WIDEN(x)
+
+#define _APPEND(x, y) x ## y
+#define APPEND(x, y) _APPEND(x, y)
 
 #endif
