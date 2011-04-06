@@ -44,9 +44,9 @@ bool createCoroutine(size_t in_stackSize,
 	return true;
 }
 
-void switchToCoroutine(CoroutineDescriptor * in_pCurrentCoroutine, CoroutineDescriptor *in_pNextCoroutine)
+bool switchToCoroutine(CoroutineDescriptor * in_pCurrentCoroutine, CoroutineDescriptor *in_pNextCoroutine)
 {
-	swapcontext(in_pCurrentCoroutine, in_pNextCoroutine);
+	return swapcontext(in_pCurrentCoroutine, in_pNextCoroutine) != 0;
 }
 
 bool convertThreadToCoroutine(

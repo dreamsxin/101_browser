@@ -34,25 +34,22 @@ bool createCoroutine(
 		return false;
 }
 
-#ifdef _WIN32
-#pragma warning(push)
-#pragma warning(disable : 4100)
-#endif
-void switchToCoroutine(
-	CoroutineDescriptor * in_pCurrentCoroutine, 
+bool switchToCoroutine(
+	CoroutineDescriptor *in_pCurrentCoroutine, 
 	CoroutineDescriptor *in_pNextCoroutine)
 {
 	if (in_pNextCoroutine != NULL)
 	{
 		// Under Windows this is no problem - but it will cause problems under Linux
-		assert(getCurrentCoroutine() == *in_pCurrentCoroutine);
+		if (in_pCurrentCoroutine != NULL)
+			assert(getCurrentCoroutine() == *in_pCurrentCoroutine);
 
 		SwitchToFiber(*in_pNextCoroutine);
+		return true;
 	}
+	else
+		return false;
 }
-#ifdef _WIN32
-#pragma warning(pop)
-#endif
 
 CoroutineDescriptor getCurrentCoroutine()
 {

@@ -41,8 +41,14 @@ DLLEXPORT bool createCoroutine(size_t in_stackSize,
 	void* in_pParam, 
 	volatile CoroutineDescriptor *out_pCoroutineDescriptor);
 
-DLLEXPORT void switchToCoroutine(
-	CoroutineDescriptor * in_pCurrentCoroutine, 
+/*!
+* Switches to the coroutine in_pNextCoroutine
+* Under Posix you will have to pass in_pCurrentCoroutine since we have to store
+* the current context.
+* Under Windows we may pass NULL here.
+*/
+DLLEXPORT bool switchToCoroutine(
+	CoroutineDescriptor *in_pCurrentCoroutine, 
 	CoroutineDescriptor *in_pNextCoroutine);
 
 /*!
@@ -71,6 +77,5 @@ DLLEXPORT void deleteCoroutine(CoroutineDescriptor *in_pCoroutine);
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif
