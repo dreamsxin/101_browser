@@ -25,7 +25,7 @@ size_t extendedBidirectionalStreamRead(
 
 	if (pExtendedBidirectionalStreamState->mWhichSideToExtend != pExtendedBidirectionalStreamState->mStreamState.mCurrentSide)
 		return bidirectionalStreamRead(&pExtendedBidirectionalStreamState->mStreamState, out_pBuffer, in_count);
-	
+
 	return 0;
 }
 
