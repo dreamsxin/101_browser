@@ -19,6 +19,10 @@
 
 #include "IO/BidirectionalStream.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
 	BidirectionalStreamState mStreamState;
@@ -30,5 +34,18 @@ typedef struct
 	*/
 	bool mIsExtendedSideReading;
 } ExtendedBidirectionalStreamState;
+
+
+DLLEXPORT size_t extendedBidirectionalStreamRead(
+	void *in_out_pExtendedBidirectionalStreamState, 
+	void *out_pBuffer, size_t in_count);
+
+DLLEXPORT size_t extendedBidirectionalStreamWrite(
+	void *in_out_pExtendedBidirectionalStreamState, 
+	const void *in_pBuffer, size_t in_count);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

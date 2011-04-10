@@ -16,3 +16,28 @@
 
 #include "IO/ExtendedBidirectionalStream.h"
 
+size_t extendedBidirectionalStreamRead(
+	void *in_out_pExtendedBidirectionalStreamState, 
+	void *out_pBuffer, size_t in_count)
+{
+	ExtendedBidirectionalStreamState *pExtendedBidirectionalStreamState = 
+		(ExtendedBidirectionalStreamState *) in_out_pExtendedBidirectionalStreamState;
+
+	if (pExtendedBidirectionalStreamState->mWhichSideToExtend != pExtendedBidirectionalStreamState->mStreamState.mCurrentSide)
+		return bidirectionalStreamRead(&pExtendedBidirectionalStreamState->mStreamState, out_pBuffer, in_count);
+	
+	return 0;
+}
+
+size_t extendedBidirectionalStreamWrite(
+	void *in_out_pExtendedBidirectionalStreamState, 
+	const void *in_pBuffer, size_t in_count)
+{
+	ExtendedBidirectionalStreamState *pExtendedBidirectionalStreamState = 
+		(ExtendedBidirectionalStreamState *) in_out_pExtendedBidirectionalStreamState;
+
+	if (pExtendedBidirectionalStreamState->mWhichSideToExtend != pExtendedBidirectionalStreamState->mStreamState.mCurrentSide)
+		return bidirectionalStreamWrite(&pExtendedBidirectionalStreamState->mStreamState, in_pBuffer, in_count);
+
+	return 0;
+}

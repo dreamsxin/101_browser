@@ -23,8 +23,6 @@
 
 void readFun(void *in_pPipeStreamState, unsigned int in_bytesToRead)
 {
-	PipeStreamState *pPipeStreamState = (PipeStreamState *) in_pPipeStreamState;
-
 	uint8_t data[32];
 	size_t readCount;
 	unsigned int idx;
@@ -45,8 +43,6 @@ void readFun(void *in_pPipeStreamState, unsigned int in_bytesToRead)
 
 void writeFun(void *in_pPipeStreamState, unsigned int in_bytesToRead)
 {
-	PipeStreamState *pPipeStreamState = (PipeStreamState *) in_pPipeStreamState;
-
 	uint8_t data[3];
 
 	data[0] = 0;
