@@ -38,8 +38,6 @@ typedef enum
 typedef struct
 {
 	CoroutineDescriptor *mpCoroutineDescriptor;
-	const uint8_t * volatile mpCurrentBuffer;
-	volatile size_t mCurrentBufferSize;
 	volatile BidirectionalHalfStreamAction mAction;
 } BidirectionalHalfStreamState;
 
@@ -47,6 +45,9 @@ typedef struct
 {
 	// this has to be the first member of the struct because it will be casted
 	CoroutineStreamFunctions mFunctions;
+
+	const uint8_t * volatile mpCurrentBuffer;
+	volatile size_t mCurrentBufferSize;
 	
 	BidirectionalHalfStreamState mHalfStreamStates[2];
 	uint8_t mCurrentSide;

@@ -96,8 +96,13 @@ size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, si
 {
 	PipeStreamState *pPipeStreamState = (PipeStreamState*) in_out_pPipeStreamState;
 	
+	/*
+	* The last parameter is false since we don't have to reset the buffer
+	* (although it wouldn't mind)
+	*/
 	return coroutineStreamWrite(
 		in_out_pPipeStreamState, 
 		in_pBuffer, in_count, 
-		&pPipeStreamState->mpCurrentBuffer, &pPipeStreamState->mCurrentBufferSize);
+		&pPipeStreamState->mpCurrentBuffer, &pPipeStreamState->mCurrentBufferSize, 
+		false);
 }

@@ -56,9 +56,17 @@ size_t coroutineStreamRead(void *in_out_pStreamState,
 	void *out_pBuffer, size_t in_count, 
 	const uint8_t * volatile *in_ppCurrentBuffer, volatile size_t * in_pCurrentBufferSize);
 
+/*!
+* Parameters:
+* in_resetBuffer: if set to true, after writing we set
+* *in_pCurrentBufferSize to 0
+* *in_ppCurrentBuffer to NULL and
+* (theoretically the former could be left - but is good style to do!)
+*/
 size_t coroutineStreamWrite(void *in_out_pStreamState, 
 	const void *in_pBuffer, size_t in_count, 
-	const uint8_t * volatile *in_ppCurrentBuffer, volatile size_t * in_pCurrentBufferSize);
+	const uint8_t * volatile *in_ppCurrentBuffer, volatile size_t * in_pCurrentBufferSize, 
+	bool in_resetBuffer);
 
 #ifdef __cplusplus
 }

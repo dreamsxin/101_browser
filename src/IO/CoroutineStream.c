@@ -103,12 +103,19 @@ switch_to_writer:
 size_t coroutineStreamWrite(
 	void *in_out_pStreamState, 
 	const void *in_pBuffer, size_t in_count, 
-	const uint8_t * volatile *in_ppCurrentBuffer, volatile size_t * in_pCurrentBufferSize)
+	const uint8_t * volatile *in_ppCurrentBuffer, volatile size_t * in_pCurrentBufferSize, 
+	bool in_resetBuffer)
 {
-	(*in_ppCurrentBuffer) = (const uint8_t*) in_pBuffer;
+	*in_ppCurrentBuffer = (const uint8_t*) in_pBuffer;
 	*in_pCurrentBufferSize = in_count;
 
-	(((CoroutineStreamFunctions*) in_out_pStreamState)->mpfSwitchCoroutine)(in_out_pStreamState);
+	((CoroutineStreamFunctions*) in_out_pStreamState)->mpfSwitchCoroutine(in_out_pStreamState);
+
+	if (in_resetBuffer)
+	{
+		*in_ppCurrentBuffer = NULL;
+		*in_pCurrentBufferSize = 0;
+	}
 
 	return in_count - *in_pCurrentBufferSize;
 }
