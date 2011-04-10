@@ -74,9 +74,9 @@ At the time of writing (26th of December 2010) only the Standard library of C/C+
 
 \section{IO}
 
-\subsection{PipeStream}
+\subsection{CoroutineStream}
 
-\includegraphics[width=130mm]{uml/PipeStream_read_activity.png}
+\includegraphics[width=130mm]{uml/CoroutineStream_read_activity.png}
 
 Things that you should check to validate the model:
 
@@ -91,7 +91,7 @@ Call & Remark & Desired action \\
 \hline
   \texttt{read(in\_count)} & \texttt{in\_count} $>$ 0 and \texttt{in\_count} $==$ \texttt{currentBufferSize} & Don't switch coroutine \\
 \hline
-  \texttt{read(in\_count)} & \texttt{in\_count} $>$ 0 and \texttt{in\_count} $>$ \texttt{currentBufferSize} & Wwitch coroutine \\
+  \texttt{read(in\_count)} & \texttt{in\_count} $>$ 0 and \texttt{in\_count} $>$ \texttt{currentBufferSize} & Switch coroutine \\
 \hline
 \end{tabular}
 
