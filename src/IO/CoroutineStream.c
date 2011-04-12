@@ -30,24 +30,29 @@ void COROUTINE_KICKOFF_CALL coroutineStreamKickoff(void *in_pCoroutineStateAndKi
 
 	(*stateAndKickoff.kickoffData.mpStartup)(stateAndKickoff.pState, stateAndKickoff.kickoffData.mpUserData);
 
+	if (stateAndKickoff.kickoffData.mpTerminateFun)
+		(*stateAndKickoff.kickoffData.mpTerminateFun)(stateAndKickoff.pState);
+
 	while (1)
 	{
-		(*stateAndKickoff.kickoffData.mpTerminateLoopFun)(stateAndKickoff.pState);
+		(*stateAndKickoff.kickoffData.mpTerminalLoopFun)(stateAndKickoff.pState);
 	}
 }
 
 bool coroutineStreamStart(void *in_pStreamState, 
 	CoroutineDescriptor *out_pThisCoroutine,
 	CoroutineDescriptor *out_pOtherCoroutine,
-	void (*in_pfTerminalFunction)(void *in_out_pStreamState),
 	void (*in_pOtherCoroutineStartup)(void *in_pStreamState, void *in_pUserData),
+	void (*in_pfTerminate)(void *in_out_pStreamState),
+	void (*in_pfTerminalLoopFunction)(void *in_out_pStreamState),
 	void *in_pUserData)
 {
 	CoroutineStateAndKickoff stateAndKickoff;
 	
 	stateAndKickoff.pState = in_pStreamState;
 	stateAndKickoff.kickoffData.mpStartup = in_pOtherCoroutineStartup;
-	stateAndKickoff.kickoffData.mpTerminateLoopFun = in_pfTerminalFunction;
+	stateAndKickoff.kickoffData.mpTerminateFun = in_pfTerminate;
+	stateAndKickoff.kickoffData.mpTerminalLoopFun = in_pfTerminalLoopFunction;
 	stateAndKickoff.kickoffData.mpUserData = in_pUserData;
 
 	if (!convertThreadToCoroutine(out_pThisCoroutine))

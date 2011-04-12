@@ -32,8 +32,11 @@ typedef struct
 typedef struct
 {
 	void (*mpStartup)(void *in_pStreamState, void *in_pUserData);
-	void (*mpTerminateLoopFun)(void*);
-	// Data to pass to the other coroutine
+	//! Does the termination of the coroutine
+	void (*mpTerminateFun)(void*);
+	//! The function to run in the loop that is executed after termination
+	void (*mpTerminalLoopFun)(void*);
+	//! Data to pass to the other coroutine
 	void *mpUserData;
 } CoroutineStreamKickoffData;
 
@@ -48,8 +51,9 @@ void COROUTINE_KICKOFF_CALL coroutineStreamKickoff(void *in_pCoroutineStateAndKi
 bool coroutineStreamStart(void *in_pStreamState, 
 	CoroutineDescriptor *out_pThisCoroutine,
 	CoroutineDescriptor *out_pOtherCoroutine,
-	void (*in_pfTerminalFunction)(void *in_out_pStreamState),
 	void (*in_pOtherCoroutineStartup)(void *in_pStreamState, void *in_pUserData),
+	void (*in_pfTerminate)(void *in_out_pStreamState),
+	void (*in_pfTerminalLoopFunction)(void *in_out_pStreamState),
 	void *in_pUserData);
 
 size_t coroutineStreamRead(void *in_out_pStreamState, 

@@ -15,6 +15,7 @@
 */
 
 #include "IO/ExtendedBidirectionalStream.h"
+#include <assert.h>
 
 size_t extendedBidirectionalStreamRead(
 	void *in_out_pExtendedBidirectionalStreamState, 
@@ -23,10 +24,34 @@ size_t extendedBidirectionalStreamRead(
 	ExtendedBidirectionalStreamState *pExtendedBidirectionalStreamState = 
 		(ExtendedBidirectionalStreamState *) in_out_pExtendedBidirectionalStreamState;
 
-	if (pExtendedBidirectionalStreamState->mWhichSideToExtend != pExtendedBidirectionalStreamState->mStreamState.mCurrentSide)
-		return bidirectionalStreamRead(&pExtendedBidirectionalStreamState->mStreamState, out_pBuffer, in_count);
+	if (pExtendedBidirectionalStreamState->mStreamState.mCurrentSide != pExtendedBidirectionalStreamState->mWhichSideToExtend)
+	{
+		if (pExtendedBidirectionalStreamState->mIsExtendedSideReading)
+			return SIZE_MAX;
+		else
+		{
+			/*
+			* TODO: From where does this invariant follow?
+			*/
+			assert(bidirectionalStreamIsReadingPossible(in_out_pExtendedBidirectionalStreamState));
 
-	return 0;
+			return bidirectionalStreamRead(in_out_pExtendedBidirectionalStreamState, out_pBuffer, in_count);
+		}
+	}
+	else
+	{
+		if (!bidirectionalStreamIsReadingPossible(in_out_pExtendedBidirectionalStreamState))
+		{
+			bidirectionalStreamWrite(in_out_pExtendedBidirectionalStreamState, NULL, 0);
+
+			if (!bidirectionalStreamIsReadingPossible(in_out_pExtendedBidirectionalStreamState))
+				return SIZE_MAX;
+		}
+
+		assert(bidirectionalStreamIsReadingPossible(in_out_pExtendedBidirectionalStreamState));
+		pExtendedBidirectionalStreamState->mIsExtendedSideReading = true;
+		return bidirectionalStreamRead(in_out_pExtendedBidirectionalStreamState, out_pBuffer, in_count);
+	}
 }
 
 size_t extendedBidirectionalStreamWrite(
@@ -36,8 +61,32 @@ size_t extendedBidirectionalStreamWrite(
 	ExtendedBidirectionalStreamState *pExtendedBidirectionalStreamState = 
 		(ExtendedBidirectionalStreamState *) in_out_pExtendedBidirectionalStreamState;
 
-	if (pExtendedBidirectionalStreamState->mWhichSideToExtend != pExtendedBidirectionalStreamState->mStreamState.mCurrentSide)
-		return bidirectionalStreamWrite(&pExtendedBidirectionalStreamState->mStreamState, in_pBuffer, in_count);
+	if (pExtendedBidirectionalStreamState->mStreamState.mCurrentSide != pExtendedBidirectionalStreamState->mWhichSideToExtend)
+	{
+		if (!pExtendedBidirectionalStreamState->mIsExtendedSideReading)
+			return SIZE_MAX;
+		else
+		{
+			/*
+			* TODO: From where does this invariant follow?
+			*/
+			assert(bidirectionalStreamIsWritingPossible(in_out_pExtendedBidirectionalStreamState));
 
-	return 0;
+			return bidirectionalStreamWrite(in_out_pExtendedBidirectionalStreamState, in_pBuffer, in_count);
+		}
+	}
+	else
+	{
+		if (!bidirectionalStreamIsWritingPossible(in_out_pExtendedBidirectionalStreamState))
+		{
+			bidirectionalStreamRead(in_out_pExtendedBidirectionalStreamState, NULL, 0);
+
+			if (!bidirectionalStreamIsWritingPossible(in_out_pExtendedBidirectionalStreamState))
+				return SIZE_MAX;
+		}
+
+		assert(bidirectionalStreamIsWritingPossible(in_out_pExtendedBidirectionalStreamState));
+		pExtendedBidirectionalStreamState->mIsExtendedSideReading = true;
+		return bidirectionalStreamWrite(in_out_pExtendedBidirectionalStreamState, in_pBuffer, in_count);
+	}
 }

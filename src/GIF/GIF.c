@@ -357,7 +357,13 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		/*
 		 * Q: Why is it necessary to set currentCodeWord to 0?
 		 * A: Since the code word can have 8 or less bits, the higher byte would
-		 *    not be initialized correctly.
+		 *    not be initialized correctly otherwise.
+		 *
+		 *    To understand this, imagine that we wouldn't set it to 0 (i. e. the
+		 *    upper byte has some arbitrary value) and read 8 or less bits.
+		 *    readBits will set the correct value for the lower byte (since this
+		 *    is what it is supposed to do). But it will not change the value
+		 *    of the upper byte, meaning we get a wrong code word.
 		 */
 		currentCodeWord = 0;
 

@@ -16,6 +16,7 @@
 
 #include "MiniStdlib/xchg.h"
 #include "IO/PipeStream.h"
+#include <assert.h>
 
 void xchgAndSwitchCoroutine(void *in_out_pPipeStreamState)
 {
@@ -30,19 +31,34 @@ void xchgAndSwitchCoroutine(void *in_out_pPipeStreamState)
 	switchToCoroutine(pPipeStreamState->mpOtherCoroutineDescriptor, pPipeStreamState->mpCurrentCoroutineDescriptor);
 }
 
+void pipeStreamTerminateRead(void *in_out_pPipeStreamState)
+{
+	// nothing
+}
+
 void pipeStreamTerminalLoopRead(void *in_out_pPipeStreamState)
 {
-	// equals pipeStreamRead(in_out_pPipeStreamState, NULL, 0);
+	// The code of this function has to equal to pipeStreamWrite(in_out_pPipeStreamState, NULL, 0);
 
 	(((CoroutineStreamFunctions*) in_out_pPipeStreamState)->mpfSwitchCoroutine)(in_out_pPipeStreamState);
 }
 
-void pipeStreamTerminalLoopWrite(void *in_out_pPipeStreamState)
+// POST:PipeStream_c_45: NULL == ((PipeStreamState*) in_out_pPipeStreamState)->mpCurrentBuffer
+// POST:PipeStream_c_46: 0 == ((PipeStreamState*) in_out_pPipeStreamState)->mCurrentBufferSize
+void pipeStreamTerminateWrite(void *in_out_pPipeStreamState)
 {
-	// equals pipeStreamWrite(in_out_pPipeStreamState, NULL, 0);
-
 	((PipeStreamState*) in_out_pPipeStreamState)->mpCurrentBuffer = NULL;
 	((PipeStreamState*) in_out_pPipeStreamState)->mCurrentBufferSize = 0;
+}
+
+void pipeStreamTerminalLoopWrite(void *in_out_pPipeStreamState)
+{
+	// The code of this function has to equal to pipeStreamWrite(in_out_pPipeStreamState, NULL, 0);
+
+	// Follows from POST:PipeStream_c_45
+	assert(NULL == ((PipeStreamState*) in_out_pPipeStreamState)->mpCurrentBuffer);
+	// Follows from POST:PipeStream_c_46
+	assert(0 == ((PipeStreamState*) in_out_pPipeStreamState)->mCurrentBufferSize);
 
 	(((CoroutineStreamFunctions*) in_out_pPipeStreamState)->mpfSwitchCoroutine)(in_out_pPipeStreamState);
 }
@@ -67,8 +83,9 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	return coroutineStreamStart(out_pPipeStreamState,
 		out_pThisCoroutine,
 		out_pOtherCoroutine,
-		in_isOtherStreamReader ? pipeStreamTerminalLoopRead : pipeStreamTerminalLoopWrite,
 		in_pOtherCoroutineStartup,
+		in_isOtherStreamReader ? pipeStreamTerminateRead : pipeStreamTerminateWrite,
+		in_isOtherStreamReader ? pipeStreamTerminalLoopRead : pipeStreamTerminalLoopWrite,
 		in_pUserData);
 }
 

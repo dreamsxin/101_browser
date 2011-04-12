@@ -46,6 +46,15 @@ void bidirectionalStreamTerminalLoop(void *in_out_pBidirectionalStreamState)
 	assert(BidirectionalHalfStreamActionNoAction == 
 		pBidirectionalStreamState->mHalfStreamStates[pBidirectionalStreamState->mCurrentSide].mAction);
 
+	/*
+	* Let's assure that in all cases this function works correctly:
+	*
+	* Other coroutine calling
+	* read(0): 
+	* read(in_count) (in_count > 0): 
+	* write(0):
+	* write(in_count) (in_count > 0): 
+	*/
 	if (bidirectionalStreamIsWritingPossible(in_out_pBidirectionalStreamState))
 	{
 		bidirectionalStreamWrite(in_out_pBidirectionalStreamState, NULL, 0);
@@ -102,8 +111,9 @@ bool bidirectionalStreamInit(BidirectionalStreamState *out_pBidirectionalStreamS
 	return coroutineStreamStart(out_pBidirectionalStreamState,
 		out_pThisCoroutine,
 		out_pOtherCoroutine,
-		bidirectionalStreamTerminalLoop,
 		in_pOtherCoroutineStartup,
+		NULL,
+		bidirectionalStreamTerminalLoop,
 		in_pUserData);
 }
 

@@ -23,14 +23,19 @@
 extern "C" {
 #endif
 
+/*!
+* Invariants:
+* INV:IO_ExtendedBidirectionalStream_h_28: 
+*      mIsExtendedSideReading => mStreamState.mHalfStreamStates[mWhichSideToExtend].mAction != 
+*/
 typedef struct
 {
 	BidirectionalStreamState mStreamState;
-	// which side shall get the extended behaviour
+	//! which side shall get the extended behaviour
 	uint8_t mWhichSideToExtend;
-	/*
-	* Is true if the side having the extended behaviour is in the "reading loop"
-	* and false if it is in the "writing loop".
+	/*!
+	* mIsExtendedSideReading is true if the side having the extended behaviour
+	* is in the "reading loop" and false if it is in the "writing loop".
 	*/
 	bool mIsExtendedSideReading;
 } ExtendedBidirectionalStreamState;
