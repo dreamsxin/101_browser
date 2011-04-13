@@ -40,16 +40,35 @@ size_t extendedBidirectionalStreamRead(
 	}
 	else
 	{
+		/*
+		* Q: Why do we already set this flag here and not further down
+		*    when calling bidirectionalStreamRead?
+		* A: If we have to call bidirectionalStreamWrite and after this the after coroutine
+		*    calls extendedBidirectionalStreamWrite, this call could become blocked because
+		*    mIsExtendedSideReading could be false.
+		*/
+		// LBL:ExtendedBidirectionalStream_c_50
+		pExtendedBidirectionalStreamState->mIsExtendedSideReading = true;
+		
 		if (!bidirectionalStreamIsReadingPossible(in_out_pExtendedBidirectionalStreamState))
 		{
+			// LBL:ExtendedBidirectionalStream_c_55
 			bidirectionalStreamWrite(in_out_pExtendedBidirectionalStreamState, NULL, 0);
-
-			if (!bidirectionalStreamIsReadingPossible(in_out_pExtendedBidirectionalStreamState))
-				return SIZE_MAX;
 		}
 
+		/*
+		* Q: Why does this assertion hold?
+		* A: If LBL:ExtendedBidirectionalStream_c_55 was never reached, it obviously holds.
+		*    Now we have to consider the case that it was reached.
+		*    The !bidirectionalStreamIsReadingPossible(...) can only not hold if
+		*    pExtendedBidirectionalStreamState->mStreamState.mHalfStreamStates[pExtendedBidirectionalStreamState->mStreamState.mCurrentSide].mAction 
+		*    == BidirectionalHalfStreamActionReading
+		*    But this is only set if extendedBidirectionalStreamWrite was called.
+		*    Since such a call gets blocked because true == pExtendedBidirectionalStreamState->mIsExtendedSideReading
+		*    (because of LBL:ExtendedBidirectionalStream_c_50 this is fulfilled) we get the assertion.
+		*/
 		assert(bidirectionalStreamIsReadingPossible(in_out_pExtendedBidirectionalStreamState));
-		pExtendedBidirectionalStreamState->mIsExtendedSideReading = true;
+		
 		return bidirectionalStreamRead(in_out_pExtendedBidirectionalStreamState, out_pBuffer, in_count);
 	}
 }
@@ -77,16 +96,35 @@ size_t extendedBidirectionalStreamWrite(
 	}
 	else
 	{
+		/*
+		* Q: Why do we already unset this flag here and not further down
+		*    when calling bidirectionalStreamWrite?
+		* A: If we have to call bidirectionalStreamRead and after this the after coroutine
+		*    calls extendedBidirectionalStreamRead, this call could become blocked because
+		*    mIsExtendedSideReading could be false.
+		*/
+		// LBL:ExtendedBidirectionalStream_c_106
+		pExtendedBidirectionalStreamState->mIsExtendedSideReading = false;
+
 		if (!bidirectionalStreamIsWritingPossible(in_out_pExtendedBidirectionalStreamState))
 		{
+			// LBL:ExtendedBidirectionalStream_c_111
 			bidirectionalStreamRead(in_out_pExtendedBidirectionalStreamState, NULL, 0);
-
-			if (!bidirectionalStreamIsWritingPossible(in_out_pExtendedBidirectionalStreamState))
-				return SIZE_MAX;
 		}
 
+		/*
+		* Q: Why does this assertion hold?
+		* A: If LBL:ExtendedBidirectionalStream_c_111 was never reached, it obviously holds.
+		*    Now we have to consider the case that it was reached.
+		*    The !bidirectionalStreamIsWritingPossible(...) can only not hold if
+		*    pExtendedBidirectionalStreamState->mStreamState.mHalfStreamStates[pExtendedBidirectionalStreamState->mStreamState.mCurrentSide].mAction 
+		*    == BidirectionalHalfStreamActionWriting
+		*    But this is only set if extendedBidirectionalStreamRead was called.
+		*    Since such a call gets blocked because false == pExtendedBidirectionalStreamState->mIsExtendedSideReading
+		*    (because of LBL:ExtendedBidirectionalStream_c_106 this is fulfilled) we get the assertion.
+		*/
 		assert(bidirectionalStreamIsWritingPossible(in_out_pExtendedBidirectionalStreamState));
-		pExtendedBidirectionalStreamState->mIsExtendedSideReading = true;
+		
 		return bidirectionalStreamWrite(in_out_pExtendedBidirectionalStreamState, in_pBuffer, in_count);
 	}
 }
