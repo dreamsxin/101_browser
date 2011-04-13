@@ -70,8 +70,6 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	void (*in_pOtherCoroutineStartup)(void *in_pStreamState, void *in_pUserData),
 	void *in_pUserData)
 {
-	//CoroutineStateAndKickoff stateAndKickoff;
-	
 	out_pPipeStreamState->mFunctions.mpfSwitchCoroutine = xchgAndSwitchCoroutine;
 
 	out_pPipeStreamState->mpCurrentBuffer = NULL;
