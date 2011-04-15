@@ -517,7 +517,6 @@ module webapps
     readonly attribute unsigned long videoWidth;
     readonly attribute unsigned long videoHeight;
              attribute DOMString poster;
-    [PutForwards=value] attribute DOMSettableTokenList audio; 
   };
 
   [NamedConstructor=Audio(),
@@ -591,6 +590,7 @@ module webapps
              attribute boolean controls;
              attribute double volume;
              attribute boolean muted;
+             attribute boolean defaultMuted;
   
     // tracks
   
@@ -598,7 +598,7 @@ module webapps
     readonly attribute ExclusiveTrackList videoTracks;
   
     readonly attribute TextTrack[] textTracks;
-    MutableTextTrack addTrack(in DOMString kind, in optional DOMString label, in optional DOMString language);
+    MutableTextTrack addTextTrack(in DOMString kind, in optional DOMString label, in optional DOMString language);
   
   };
 
@@ -612,8 +612,10 @@ module webapps
 
   interface TrackList {
     readonly attribute unsigned long length;
-    DOMString getName(in unsigned long index);
+    DOMString getLabel(in unsigned long index);
     DOMString getLanguage(in unsigned long index);
+  
+             attribute Function onchange;
   };
   
   interface MultipleTrackList : TrackList {
@@ -629,6 +631,11 @@ module webapps
 
   [Constructor]
   interface MediaController {
+    readonly attribute TimeRanges buffered;
+    readonly attribute TimeRanges seekable;
+    readonly attribute double duration;
+             attribute double currentTime;
+  
     readonly attribute boolean paused;
     void play();
     void pause();
@@ -639,8 +646,8 @@ module webapps
              attribute double volume;
              attribute boolean muted;
   
-    void seek(in double delta);
-  
+             attribute Function ondurationchange;
+             attribute Function ontimeupdate;
              attribute Function onplay;
              attribute Function onpause;
              attribute Function onratechange;
@@ -884,7 +891,7 @@ module webapps
     readonly attribute HTMLCollection rows;
     HTMLElement insertRow(in optional long index);
     void deleteRow(in long index);
-             attribute DOMString summary;
+             attribute DOMString border;
   };
 
   interface HTMLTableCaptionElement : HTMLElement {};
@@ -2083,11 +2090,11 @@ module webapps
   interface HTMLTableElement {
              attribute DOMString align;
              attribute DOMString bgColor;
-             attribute DOMString border;
              attribute DOMString cellPadding;
              attribute DOMString cellSpacing;
              attribute DOMString frame;
              attribute DOMString rules;
+             attribute DOMString summary;
              attribute DOMString width;
   };
 
