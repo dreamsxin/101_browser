@@ -17,15 +17,17 @@
 #include "IO/BitRead.h"
 #include <assert.h>
 
-void initBitReadState(BitReadState *in_pBitReadState)
+void initBitReadState(BitReadState *in_pBitReadState, void *in_pByteStreamState, 
+	ByteStreamReadInterface in_readInterface)
 {
 	in_pBitReadState->bitCountInBuffer = 0;
+	in_pBitReadState->pByteStreamState = in_pByteStreamState;
+	in_pBitReadState->readInterface = in_readInterface;
 }
 
-bool readBits(BitReadState *in_pBitReadState, void* in_pReaderState,  
-	bool (*in_pReadByte)(void*, uint8_t*), void* in_pBuffer, size_t in_bitsCount)
+bool readBitsLittleEndian(BitReadState *in_pBitReadState, void* out_pBuffer, size_t in_bitsCount)
 {
-	uint8_t *currentBufferElement = (uint8_t *) in_pBuffer;
+	uint8_t *currentBufferElement = (uint8_t *) out_pBuffer;
 	size_t currentBitIndex; // counter in the loop
 
 	for (currentBitIndex = 0; currentBitIndex < in_bitsCount; ++currentBitIndex)
@@ -35,7 +37,7 @@ bool readBits(BitReadState *in_pBitReadState, void* in_pReaderState,
 
 		if (in_pBitReadState->bitCountInBuffer == 0)
 		{
-			if (!in_pReadByte(in_pReaderState, &in_pBitReadState->buffer))
+			if ((*in_pBitReadState->readInterface.pRead)(in_pBitReadState->pByteStreamState, &in_pBitReadState->buffer, 1) != 1)
 			{
 				return false;
 			}
@@ -51,7 +53,7 @@ bool readBits(BitReadState *in_pBitReadState, void* in_pReaderState,
 			*currentBufferElement = 0;
 		}
 
-		position = (8-in_pBitReadState->bitCountInBuffer) % 8;
+		position = (8-in_pBitReadState->bitCountInBuffer);
 		currentBit = (in_pBitReadState->buffer >> position) & 1;
 		*currentBufferElement |= (currentBit<<(currentBitIndex % 8));
 		in_pBitReadState->bitCountInBuffer--;

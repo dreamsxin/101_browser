@@ -271,42 +271,53 @@ void init_Image_Data_StreamState(Image_Data_StreamState *in_pStreamState, FILE* 
 	in_pStreamState->endOfStream = false;
 }
 
-bool read_Image_Data_Byte(void *in_pStreamState, uint8_t* in_pBuffer)
+//bool read_Image_Data_Byte(void *in_pStreamState, uint8_t* in_pBuffer)
+size_t read_Image_Data_byteStreamInterface(void *in_out_pByteStreamState, void *out_pBuffer, size_t in_count)
 {
-	Image_Data_StreamState *pStreamState = (Image_Data_StreamState*) in_pStreamState;
+	Image_Data_StreamState *pStreamState = (Image_Data_StreamState*) in_out_pByteStreamState;
+
+	// A limitation of this function is that we can read only one byte at a time
+	assert(in_count == 1);
+
+	if (in_count != 1)
+		return 0;
 
 	if (pStreamState->endOfStream)
-		return false;
+		return 0;
 
+	/*
+	* If we read the current block completely, we read the size of the next block
+	*/
 	if (pStreamState->Read_Bytes == pStreamState->Block_Size_Bytes)
 	{
 		if (fread(&pStreamState->Block_Size_Bytes, sizeof(pStreamState->Block_Size_Bytes), 1, pStreamState->file) != 1)
-			return false;
+			return 0;
 
 		if (pStreamState->Block_Size_Bytes == 0)
 		{
 			pStreamState->endOfStream = true;
-			return false;
+			return 0;
 		}
 
 		pStreamState->Read_Bytes = 0;
 	}
 
-	if (fread(in_pBuffer, 1, 1, pStreamState->file) != 1)
+	if (fread(out_pBuffer, 1, 1, pStreamState->file) != 1)
 	{
 		pStreamState->endOfStream = true;
-		return false;
+		return 0;
 	}
 
 	pStreamState->Read_Bytes++;
 
-	return true;
+	return 1;
 }
 
 ReadResult read_Image_Data(FILE* in_gifFile)
 {
 	uint8_t LZW_Minimum_Code_Size;
 	BitReadState bitReadState;
+	ByteStreamReadInterface bitReadInterface = { read_Image_Data_byteStreamInterface };
 	Image_Data_StreamState streamState;
 	LZW_Tree *pTree;
 	LZW_Stack *pStack;
@@ -330,7 +341,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 	// ASGN:GIF_314
 	stopCode = startCode+1;
 
-	initBitReadState(&bitReadState);
+	initBitReadState(&bitReadState, &streamState, bitReadInterface);
 	init_Image_Data_StreamState(&streamState, in_gifFile);
 
 	pTree = (LZW_Tree *) malloc(sizeof(LZW_Tree));
@@ -361,13 +372,13 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		 *
 		 *    To understand this, imagine that we wouldn't set it to 0 (i. e. the
 		 *    upper byte has some arbitrary value) and read 8 or less bits.
-		 *    readBits will set the correct value for the lower byte (since this
+		 *    readBitsLittleEndian will set the correct value for the lower byte (since this
 		 *    is what it is supposed to do). But it will not change the value
 		 *    of the upper byte, meaning we get a wrong code word.
 		 */
 		currentCodeWord = 0;
 
-		if (!readBits(&bitReadState, &streamState, read_Image_Data_Byte, &currentCodeWord, currentCodeWordBitCount))
+		if (!readBitsLittleEndian(&bitReadState, &currentCodeWord, currentCodeWordBitCount))
 		{
 			free(pTree);
 			free(pStack);
@@ -505,7 +516,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 	}
 
 	// If there is no terminator block return failure
-	if (readBits(&bitReadState, &streamState, read_Image_Data_Byte, &currentCodeWord, currentCodeWordBitCount))
+	if (readBitsLittleEndian(&bitReadState, &currentCodeWord, currentCodeWordBitCount))
 	{
 		return ReadResultInvalidData;
 	}

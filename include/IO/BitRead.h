@@ -28,6 +28,8 @@
 #include "MiniStdlib/cstddef.h"
 #include "MiniStdlib/declspec.h"
 
+#include "IO/ByteStreamInterface.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -45,9 +47,13 @@ typedef struct
 	 * acts as a kind of binary shift register.
 	 */
 	uint8_t buffer;
+
+	void *pByteStreamState;
+	ByteStreamReadInterface readInterface;
 } BitReadState;
 
-DLLEXPORT void initBitReadState(BitReadState *in_pBitReadState);
+DLLEXPORT void initBitReadState(BitReadState *in_pBitReadState, void *in_pByteStreamState, 
+	ByteStreamReadInterface in_readInterface);
 
 /*!
  * Reads in_bitsCount bits from the file.
@@ -56,8 +62,7 @@ DLLEXPORT void initBitReadState(BitReadState *in_pBitReadState);
  * true if successful
  * false if not
  */
-DLLEXPORT bool readBits(BitReadState *in_pBitReadState, void* in_pReaderState, 
-	bool (*in_pReadByte)(void*, uint8_t*), void* in_pBuffer, size_t in_bitsCount);
+DLLEXPORT bool readBitsLittleEndian(BitReadState *in_pBitReadState, void* out_pBuffer, size_t in_bitsCount);
 
 #ifdef __cplusplus
 }
