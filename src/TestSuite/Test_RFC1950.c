@@ -19,7 +19,6 @@
 #include "RFC1950/RFC1950_adler32.h"
 #include "RFC1950/RFC1950_zlib.h"
 #include "MiniStdlib/MTAx_cstdio.h"
-#include "IO/FileByteStream.h"
 #include "MiniStdlib/cstdbool.h"
 #include <string.h> // for strlen
 

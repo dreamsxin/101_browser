@@ -39,6 +39,8 @@ int main()
 	testBigNumber();
 	printf("Testing RFC 1950\n");
 	test_RFC1950();
+	printf("Testing RFC 1951\n");
+	test_RFC1951();
 	printf("Testing ASCIIStringUnicodeIterator\n");
 	testASCIIStringUnicodeIterator();
 	printf("Testing Unicode\n");

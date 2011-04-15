@@ -17,7 +17,6 @@
 #ifndef _MTAx_RFC1950_zlib_h
 #define _MTAx_RFC1950_zlib_h
 
-#include "MiniStdlib/MTAx_cstdio.h"
 #include "MiniStdlib/cstdbool.h"
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/declspec.h"
