@@ -1,3 +1,7 @@
+h2. Subfolder "deflate"
+
+zeros.raw is taken from zlib 1.2.5's (http://zlib.net/) folder contrib/puff.
+
 h2. Subfolder "gif"
 
 h3. Subfolder fileformat.info

@@ -33,9 +33,10 @@ typedef struct
 DLLEXPORT size_t fileByteReadStreamRead(void *in_out_pFileByteStreamState, 
 	void *out_pBuffer, size_t in_count);
 
-DLLEXPORT bool createFileByteReadStreamState(const char *in_filename,
+DLLEXPORT bool fileByteReadStreamState_create(const char *in_filename,
 	FileByteStreamState *in_pFileByteStreamState);
 
+DLLEXPORT void fileByteReadStreamState_destroy(FileByteStreamState *in_pFileByteStreamState);
 
 #ifdef __cplusplus
 }

@@ -44,6 +44,7 @@ uint32_t CRC_update(uint32_t in_currentCRC, uint8_t in_currentByte)
 
 	for (currentBitIdx = 0; currentBitIdx < 8; ++currentBitIdx)
 	{
+		// the least significant bit is the coefficient of the x^31 term
 		if (byteCRC & 1)
 		{
 			byteCRC = cCRC_polynomial ^ (byteCRC >> 1);

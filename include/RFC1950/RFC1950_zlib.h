@@ -17,11 +17,13 @@
 #ifndef _MTAx_RFC1950_zlib_h
 #define _MTAx_RFC1950_zlib_h
 
-#include "Util/ReadResult.h"
 #include "MiniStdlib/MTAx_cstdio.h"
-#include "MiniStdlib/cstdint.h"
-#include "IO/ByteStreamInterface.h"
 #include "MiniStdlib/cstdbool.h"
+#include "MiniStdlib/cstdint.h"
+#include "MiniStdlib/declspec.h"
+
+#include "IO/ByteStreamInterface.h"
+#include "Util/ReadResult.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -65,7 +67,7 @@ typedef struct
 
 #pragma pack(pop)
 
-void parseRFC1950(ByteStreamReadInterface in_readStream, void *in_pStreamState, bool in_supportPresetDictionary);
+DLLEXPORT void parseRFC1950(ByteStreamReadInterface in_readStream, void *in_pStreamState, bool in_supportPresetDictionary);
 
 #ifdef __cplusplus
 }

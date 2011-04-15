@@ -28,10 +28,16 @@ size_t fileByteReadStreamRead(void *in_out_pFileByteStreamState,
 	return fread(out_pBuffer, 1, in_count, pFileByteStreamState->mFile);
 }
 
-bool createFileByteReadStreamState(const char *in_filename,
+bool fileByteReadStreamState_create(const char *in_filename,
 	FileByteStreamState *in_pFileByteStreamState)
 {
 	in_pFileByteStreamState->mFile = MTAx_fopen(in_filename, "rb");
 
 	return in_pFileByteStreamState->mFile != NULL;
+}
+
+void fileByteReadStreamState_destroy(FileByteStreamState *in_pFileByteStreamState)
+{
+	fclose(in_pFileByteStreamState->mFile);
+	in_pFileByteStreamState->mFile = NULL;
 }
