@@ -329,7 +329,9 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 
 	uint16_t currentCodeWord;
 
+#if 0
 	size_t pixelsWritten = 0;
+#endif
 
 	if (fread(&LZW_Minimum_Code_Size, sizeof(LZW_Minimum_Code_Size), 1, in_gifFile) != 1)
 		return ReadResultPrematureEndOfStream;
@@ -378,7 +380,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		 */
 		currentCodeWord = 0;
 
-		if (!readBitsLittleEndian(&bitReadState, &currentCodeWord, currentCodeWordBitCount))
+		if (readBitsLittleEndian(&bitReadState, &currentCodeWord, currentCodeWordBitCount) != currentCodeWordBitCount)
 		{
 			free(pTree);
 			free(pStack);
@@ -493,7 +495,9 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 				printf("%u ", pCurrentNode->lastCode);
 #endif
 
+#if 0
 				pixelsWritten++;
+#endif
 			}
 		}
 
@@ -515,8 +519,18 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		currentTableIndex++;
 	}
 
+	if (streamState.Read_Bytes != streamState.Block_Size_Bytes)
+	{
+		return ReadResultInvalidData;
+	}
+
+	if (fread(&streamState.Block_Size_Bytes, sizeof(streamState.Block_Size_Bytes), 1, in_gifFile) != 1)
+	{
+		return ReadResultPrematureEndOfStream;
+	}
+
 	// If there is no terminator block return failure
-	if (readBitsLittleEndian(&bitReadState, &currentCodeWord, currentCodeWordBitCount))
+	if (0 != streamState.Block_Size_Bytes)
 	{
 		return ReadResultInvalidData;
 	}

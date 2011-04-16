@@ -30,7 +30,7 @@ void initBitReadState(BitReadState *in_pBitReadState, void *in_pByteStreamState,
 	in_pBitReadState->readInterface = in_readInterface;
 }
 
-bool readBitsLittleEndian(BitReadState *in_pBitReadState, void* out_pBuffer, size_t in_bitsCount)
+size_t readBitsLittleEndian(BitReadState *in_pBitReadState, void* out_pBuffer, size_t in_bitsCount)
 {
 	uint8_t *currentBufferElement = (uint8_t *) out_pBuffer;
 	size_t currentBitIndex; // counter in the loop
@@ -44,7 +44,7 @@ bool readBitsLittleEndian(BitReadState *in_pBitReadState, void* out_pBuffer, siz
 		{
 			if ((*in_pBitReadState->readInterface.pRead)(in_pBitReadState->pByteStreamState, &in_pBitReadState->buffer, 1) != 1)
 			{
-				return false;
+				return currentBitIndex;
 			}
 
 			in_pBitReadState->bitCountInBuffer = 8;
@@ -69,5 +69,5 @@ bool readBitsLittleEndian(BitReadState *in_pBitReadState, void* out_pBuffer, siz
 		}
 	}
 
-	return true;
+	return in_bitsCount;
 }

@@ -62,7 +62,7 @@ DLLEXPORT void initBitReadState(BitReadState *in_pBitReadState, void *in_pByteSt
  * true if successful
  * false if not
  */
-DLLEXPORT bool readBitsLittleEndian(BitReadState *in_pBitReadState, void* out_pBuffer, size_t in_bitsCount);
+DLLEXPORT size_t readBitsLittleEndian(BitReadState *in_pBitReadState, void* out_pBuffer, size_t in_bitsCount);
 
 #ifdef __cplusplus
 }
