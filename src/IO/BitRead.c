@@ -21,6 +21,11 @@ void initBitReadState(BitReadState *in_pBitReadState, void *in_pByteStreamState,
 	ByteStreamReadInterface in_readInterface)
 {
 	in_pBitReadState->bitCountInBuffer = 0;
+	/*
+	* There is no need to initialize in_pBitReadState->buffer
+	* since we set in_pBitReadState->bitCountInBuffer = 0
+	* so that the buffer contains no data.
+	*/
 	in_pBitReadState->pByteStreamState = in_pByteStreamState;
 	in_pBitReadState->readInterface = in_readInterface;
 }
