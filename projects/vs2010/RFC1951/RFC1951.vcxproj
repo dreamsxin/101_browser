@@ -83,6 +83,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\src\RFC1951\RFC1951.c" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IO\IO.vcxproj">
+      <Project>{13a1ed8a-63a2-4eae-88dd-3f8811a4b673}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

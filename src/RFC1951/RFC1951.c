@@ -15,4 +15,10 @@
 */
 
 #include "RFC1951/RFC1951.h"
+#include "IO/BitRead.h"
 
+void parseRFC1951(ByteStreamReadInterface in_readStream, void *in_pStreamState)
+{
+	BitReadState bitReadState;
+	initBitReadState(&bitReadState, in_pStreamState, in_readStream);
+}
