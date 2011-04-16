@@ -19,12 +19,13 @@
 
 #include "MiniStdlib/declspec.h"
 #include "IO/ByteStreamInterface.h"
+#include "Util/ReadResult.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-DLLEXPORT void parseRFC1951(ByteStreamReadInterface in_readStream, void *in_pStreamState);
+DLLEXPORT ReadResult parseRFC1951(ByteStreamReadInterface in_readStream, void *in_pStreamState);
 
 #ifdef __cplusplus
 }

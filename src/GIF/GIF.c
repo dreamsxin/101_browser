@@ -317,7 +317,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 {
 	uint8_t LZW_Minimum_Code_Size;
 	BitReadState bitReadState;
-	ByteStreamReadInterface bitReadInterface = { read_Image_Data_byteStreamInterface };
+	ByteStreamReadInterface bitReadInterface = { read_Image_Data_byteStreamInterface, NULL };
 	Image_Data_StreamState streamState;
 	LZW_Tree *pTree;
 	LZW_Stack *pStack;

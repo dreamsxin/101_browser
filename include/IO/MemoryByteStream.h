@@ -21,6 +21,10 @@
 #include "MiniStdlib/declspec.h"
 #include "IO/ByteStreamInterface.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
 	const uint8_t *buffer;
@@ -35,6 +39,11 @@ DLLEXPORT void initMemoryByteStreamReadState(
 DLLEXPORT size_t memoryByteReadStreamRead(void *in_out_pMemoryByteStreamReadState, 
 	void *out_pBuffer, size_t in_count);
 
-const ByteStreamReadInterface cMemoryStreamReadInterface = { &memoryByteReadStreamRead };
+// TODO: implement pIsTerminated
+const ByteStreamReadInterface cMemoryStreamReadInterface = { &memoryByteReadStreamRead, NULL };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

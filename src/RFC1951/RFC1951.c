@@ -17,8 +17,41 @@
 #include "RFC1951/RFC1951.h"
 #include "IO/BitRead.h"
 
-void parseRFC1951(ByteStreamReadInterface in_readStream, void *in_pStreamState)
+ReadResult notImplemented(ByteStreamReadInterface in_readStream, void *in_pStreamState) { return ReadResultNotImplemented; }
+ReadResult invalidData(ByteStreamReadInterface in_readStream, void *in_pStreamState) { return ReadResultInvalidData; }
+
+ReadResult readDataCompressedWithDynamicHuffmanCodes(ByteStreamReadInterface in_readStream, void *in_pStreamState)
+{
+	return ReadResultOK;
+}
+
+ReadResult (*pfTypeFunctions[4])(ByteStreamReadInterface in_readStream, void *in_pStreamState) = {
+	notImplemented, 
+	notImplemented, 
+	readDataCompressedWithDynamicHuffmanCodes,
+	invalidData
+};
+
+ReadResult parseRFC1951(ByteStreamReadInterface in_readStream, void *in_pStreamState)
 {
 	BitReadState bitReadState;
+	uint8_t last, type;
+	ReadResult readResult;
+
 	initBitReadState(&bitReadState, in_pStreamState, in_readStream);
+
+	do
+	{
+		if (readBitsLittleEndian(&bitReadState, &last, 1) != 1)
+			return ReadResultPrematureEndOfStream;
+		if (readBitsLittleEndian(&bitReadState, &type, 2) != 2)
+			return ReadResultPrematureEndOfStream;
+
+		readResult = pfTypeFunctions[type](in_readStream, in_pStreamState);
+
+		if (readResult != ReadResultOK)
+			return readResult;
+	} while (!last);
+
+	return ReadResultOK;
 }

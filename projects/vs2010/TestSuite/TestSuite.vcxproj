@@ -144,6 +144,9 @@
     <ProjectReference Include="..\RFC1950\RFC1950.vcxproj">
       <Project>{28bfb0ab-dcec-4383-a146-f32756b31677}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\RFC1951\RFC1951.vcxproj">
+      <Project>{d75e6c70-3d71-44e6-be11-6d714ef2906f}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Unicode\Unicode.vcxproj">
       <Project>{dcc383e7-20ee-4cf5-8491-22f24c5772db}</Project>
     </ProjectReference>

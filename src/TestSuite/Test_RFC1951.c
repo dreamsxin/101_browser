@@ -29,6 +29,8 @@ void test_RFC1951()
 
 	if (result)
 	{
+		test(ReadResultOK == parseRFC1951(cFileByteStreamInterface, &fileByteStreamState));
+
 		fileByteReadStreamState_destroy(&fileByteStreamState);
 	}
 }

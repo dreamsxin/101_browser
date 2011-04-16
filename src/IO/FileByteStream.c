@@ -17,7 +17,6 @@
 #include "IO/FileByteStream.h"
 #include "IO/ByteStreamInterface.h"
 
-const ByteStreamReadInterface cFileByteStreamInterface = { &fileByteReadStreamRead };
 
 size_t fileByteReadStreamRead(void *in_out_pFileByteStreamState, 
 	void *out_pBuffer, size_t in_count)
