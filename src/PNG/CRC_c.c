@@ -15,6 +15,9 @@
  */
 
 #include "PNG/CRC.h"
+#include "MiniStdlib/cstdbool.h"
+#include <stdio.h>
+#include <omp.h>
 
 const uint32_t cInitialCRC = 0xFFFFFFFF;
 /*
@@ -37,25 +40,46 @@ uint32_t CRC_init()
 	return cInitialCRC;
 }
 
-uint32_t CRC_update(uint32_t in_currentCRC, uint8_t in_currentByte)
+uint32_t crc_table_entry(uint8_t in_index)
 {
-	uint8_t currentBitIdx;
-	uint32_t byteCRC = (in_currentCRC ^ in_currentByte) & 0xFF;
+	static bool crcTableInitialized = false;
+	static uint32_t crcTable[256];
 
-	for (currentBitIdx = 0; currentBitIdx < 8; ++currentBitIdx)
+	if (!crcTableInitialized)
 	{
-		// the least significant bit is the coefficient of the x^31 term
-		if (byteCRC & 1)
+#pragma omp parallel
 		{
-			byteCRC = cCRC_polynomial ^ (byteCRC >> 1);
+			int index;
+			uint8_t currentBitIndex;
+			uint32_t crcValue;
+
+#pragma omp for private(currentBitIndex, crcValue)
+			for (index = 0; index < 256; index++)
+			{
+				crcValue = (uint32_t) index;
+
+				for (currentBitIndex = 0; currentBitIndex < 8; currentBitIndex++)
+				{
+					// the least significant bit is the coefficient of the x^31 term
+					if (crcValue & 1)
+						crcValue = cCRC_polynomial ^ (crcValue >> 1);
+					else
+						crcValue >>= 1;
+				}
+
+				crcTable[index] = crcValue;
+			}
 		}
-		else
-		{
-			byteCRC >>= 1;
-		}
+
+		crcTableInitialized = true;
 	}
 
-	return (in_currentCRC >> 8) ^ byteCRC;
+	return crcTable[in_index];
+}
+
+uint32_t CRC_update(uint32_t in_currentCRC, uint8_t in_currentByte)
+{
+	return crc_table_entry((in_currentCRC ^ in_currentByte) & 0xFF) ^ (in_currentCRC >> 8);
 }
 
 uint32_t CRC_terminate(uint32_t in_currentCRC)

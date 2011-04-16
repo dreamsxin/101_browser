@@ -25,7 +25,7 @@
 extern "C" {
 #endif
 
-DLLEXPORT ReadResult parseRFC1951(ByteStreamReadInterface in_readStream, void *in_pStreamState);
+DLLEXPORT ReadResult parseRFC1951(void *in_pStreamState, ByteStreamReadInterface in_readStream);
 
 #ifdef __cplusplus
 }
