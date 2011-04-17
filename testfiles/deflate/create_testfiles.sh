@@ -1,6 +1,8 @@
 #!/bin/bash
 
 ./create_random.sh 0
+# Why this renaming? We don't want to ignore this file in
+# the repository (random* is ignored (see .gitignore)
 mv random0 null
 mv random0.raw null.raw
 ./create_random.sh 1024
