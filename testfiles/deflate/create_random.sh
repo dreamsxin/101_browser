@@ -1,9 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 
-dd if=/dev/urandom of=random1024 bs=1024 count=1
-gzip -c random1024 -n > random.gz
-tail -c +11 random.gz > foo # Strip the first 10 bytes
-head -c -8 foo > random1024.raw # Strip the last 8 bytes
+if [ ${1} -eq 0 ]; then
+cp /dev/null random0
+else
+dd if=/dev/urandom of="random${1}" bs=$1 count=1
+fi
+gzip -9 -c "random${1}" -n > random.gz
+tail -c +11 random.gz > foo       # Strip the first 10 bytes
+head -c -8 foo > "random${1}.raw" # Strip the last 8 bytes
 
 rm foo
 rm random.gz

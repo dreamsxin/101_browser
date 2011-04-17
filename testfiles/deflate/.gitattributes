@@ -1,5 +1,5 @@
 *.sh -crlf
-random1024 binary
+null binary
 
 # We already have
 # *.raw binary
