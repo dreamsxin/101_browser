@@ -17,6 +17,7 @@
 #include "PNG/CRC.h"
 #include "MiniStdlib/cstdbool.h"
 #include <stdio.h>
+#include <assert.h>
 #include <omp.h>
 
 const uint32_t cInitialCRC = 0xFFFFFFFF;
@@ -34,17 +35,11 @@ const uint32_t cInitialCRC = 0xFFFFFFFF;
  * bit of the 32-bit CRC is defined to be the coefficient of the x^31 term."
  */
 const uint32_t cCRC_polynomial = 0xedb88320;
+static bool crcTableInitialized = false;
+static uint32_t crcTable[256];
 
-uint32_t CRC_init()
+void initCRC_Table()
 {
-	return cInitialCRC;
-}
-
-uint32_t crc_table_entry(uint8_t in_index)
-{
-	static bool crcTableInitialized = false;
-	static uint32_t crcTable[256];
-
 	if (!crcTableInitialized)
 	{
 #pragma omp parallel
@@ -73,13 +68,19 @@ uint32_t crc_table_entry(uint8_t in_index)
 
 		crcTableInitialized = true;
 	}
-
-	return crcTable[in_index];
 }
 
+uint32_t CRC_init()
+{
+	if (!crcTableInitialized)
+		initCRC_Table();
+	
+	return cInitialCRC;
+}
 uint32_t CRC_update(uint32_t in_currentCRC, uint8_t in_currentByte)
 {
-	return crc_table_entry((in_currentCRC ^ in_currentByte) & 0xFF) ^ (in_currentCRC >> 8);
+	assert(crcTableInitialized);
+	return crcTable[(in_currentCRC ^ in_currentByte) & 0xFF] ^ (in_currentCRC >> 8);
 }
 
 uint32_t CRC_terminate(uint32_t in_currentCRC)

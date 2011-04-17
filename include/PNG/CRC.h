@@ -27,13 +27,24 @@ extern "C" {
 #endif
 
 DLLEXPORT uint32_t CRC_init();
+
+/*!
+* Precondition: the function CRC_init() was called before.
+*/
 DLLEXPORT uint32_t CRC_update(uint32_t in_currentCRC, uint8_t in_currentByte);
+
 DLLEXPORT uint32_t CRC_terminate(uint32_t in_currentCRC);
+
+/*!
+* Precondition: the function CRC_init() was called before.
+*/
 DLLEXPORT uint32_t CRC_foldl(uint32_t in_currentCRC, uint8_t *in_buffer, size_t in_bufferSize);
+
 DLLEXPORT uint32_t CRC_compute(uint8_t *in_buffer, size_t in_bufferSize);
 
 /*!
  * The function CRC_stateUpdate is for using with fread_withState (IO/fread.h).
+ * Precondition: the function CRC_init() was called before.
  */
 DLLEXPORT void CRC_stateUpdate(void *in_pState, const void *in_pBuffer, size_t in_count);
 
