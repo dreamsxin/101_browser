@@ -1,0 +1,4 @@
+random1024: 1024 random bytes
+random1024.raw: a deflate compressed version of random1024.
+
+Both files were created using create_random.sh.

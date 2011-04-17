@@ -1,0 +1,7 @@
+*.sh -crlf
+random1024 binary
+
+# We already have
+# *.raw binary
+# in the .gitattributes in the root folder. So there is no necessity
+# to redefine it.
