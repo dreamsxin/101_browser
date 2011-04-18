@@ -57,7 +57,7 @@ DLLEXPORT bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	bool in_isOtherStreamReader,
 	CoroutineDescriptor *out_pThisCoroutine,
 	CoroutineDescriptor *out_pOtherCoroutine,
-	void (*in_pOtherCoroutineStartup)(void *in_pStreamState, void *in_pUserData),
+	void (*in_pOtherCoroutineStartup)(void *in_out_pStreamState, void *in_pUserData),
 	void *in_pUserData);
 
 DLLEXPORT void deletePipeStreamState(PipeStreamState *out_pPipeStreamState);
@@ -65,6 +65,9 @@ DLLEXPORT void deletePipeStreamState(PipeStreamState *out_pPipeStreamState);
 DLLEXPORT size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t in_count);
 
 DLLEXPORT size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, size_t in_count);
+
+DLLEXPORT ByteStreamReadInterface getPipeStreamReadInterface();
+DLLEXPORT ByteStreamWriteInterface getPipeStreamWriteInterface();
 
 #ifdef __cplusplus
 }

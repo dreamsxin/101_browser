@@ -14,9 +14,21 @@
 * limitations under the License.
 */
 
-#include "MiniStdlib/xchg.h"
 #include "IO/PipeStream.h"
+#include "MiniStdlib/xchg.h"
 #include <assert.h>
+
+ByteStreamReadInterface getPipeStreamReadInterface()
+{
+	ByteStreamReadInterface out_interface = { pipeStreamRead, NULL };
+	return out_interface;
+}
+
+ByteStreamWriteInterface getPipeStreamWriteInterface()
+{
+	ByteStreamWriteInterface out_interface = { pipeStreamWrite };
+	return out_interface;
+}
 
 void xchgAndSwitchCoroutine(void *in_out_pPipeStreamState)
 {
@@ -67,7 +79,7 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	bool in_isOtherStreamReader,
 	CoroutineDescriptor *out_pThisCoroutine,
 	CoroutineDescriptor *out_pOtherCoroutine,
-	void (*in_pOtherCoroutineStartup)(void *in_pStreamState, void *in_pUserData),
+	void (*in_pOtherCoroutineStartup)(void *in_out_pStreamState, void *in_pUserData),
 	void *in_pUserData)
 {
 	out_pPipeStreamState->mFunctions.mpfSwitchCoroutine = xchgAndSwitchCoroutine;

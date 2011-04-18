@@ -17,10 +17,10 @@
 #include "RFC1951/RFC1951.h"
 #include "IO/BitRead.h"
 
-static ReadResult notImplemented(BitReadState *in_pBitReadState, ByteStreamReadInterface in_readStream) { return ReadResultNotImplemented; }
-static ReadResult invalidData(BitReadState *in_pBitReadState, ByteStreamReadInterface in_readStream) { return ReadResultInvalidData; }
+static ReadResult notImplemented(BitReadState *in_pBitReadState, ByteStreamReadInterface in_readInterface) { return ReadResultNotImplemented; }
+static ReadResult invalidData(BitReadState *in_pBitReadState, ByteStreamReadInterface in_readInterface) { return ReadResultInvalidData; }
 
-ReadResult readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadState, ByteStreamReadInterface in_readStream)
+ReadResult readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadState, ByteStreamReadInterface in_readInterface)
 {
 	uint16_t literalCodesCount = 0;
 	uint8_t distanceCodesCount, codeLengthCodesCount;
@@ -51,20 +51,21 @@ ReadResult readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadSt
 	return ReadResultOK;
 }
 
-ReadResult (*pfTypeFunctions[4])(BitReadState *in_pBitReadState, ByteStreamReadInterface in_readStream) = {
+ReadResult (*pfTypeFunctions[4])(BitReadState *in_pBitReadState, ByteStreamReadInterface in_readInterface) = {
 	notImplemented, 
 	notImplemented, 
 	readDataCompressedWithDynamicHuffmanCodes,
 	invalidData
 };
 
-ReadResult parseRFC1951(void *in_pStreamState, ByteStreamReadInterface in_readStream)
+ReadResult parseRFC1951(void *in_out_pReadStreamState, ByteStreamReadInterface in_readInterface, 
+	void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface)
 {
 	BitReadState bitReadState;
 	uint8_t last, type;
 	ReadResult readResult;
 
-	initBitReadState(&bitReadState, in_pStreamState, in_readStream);
+	initBitReadState(&bitReadState, in_out_pReadStreamState, in_readInterface);
 
 	do
 	{
@@ -73,7 +74,7 @@ ReadResult parseRFC1951(void *in_pStreamState, ByteStreamReadInterface in_readSt
 		if (readBitsLittleEndian(&bitReadState, &type, 2) != 2)
 			return ReadResultPrematureEndOfStream;
 
-		readResult = pfTypeFunctions[type](&bitReadState, in_readStream);
+		readResult = pfTypeFunctions[type](&bitReadState, in_readInterface);
 
 		if (readResult != ReadResultOK)
 			return readResult;

@@ -19,18 +19,60 @@
 
 #include "RFC1951/RFC1951.h"
 #include "IO/FileByteStream.h"
+#include "IO/PipeStream.h"
 
-void test_RFC1951()
+void zerosOtherCoroutine(void *in_out_pStreamState, void *in_pUserData)
 {
-	FileByteStreamState fileByteStreamState;
-	bool result = fileByteReadStreamState_create("testfiles/deflate/zeros.raw", &fileByteStreamState);
+	size_t readCount = 0;
+	uint8_t buffer;
+
+	while (pipeStreamRead(in_out_pStreamState, &buffer, 1) == 1)
+	{
+		readCount++;
+	}
+}
+
+void test_RFC1951_File(const char *in_filenameRaw, const char *in_filenameReference)
+{
+	FileByteStreamState rawFileByteStreamState, referenceFileByteStreamState;
+	bool result = fileByteReadStreamState_create(in_filenameRaw, &rawFileByteStreamState);
 
 	test(result);
 
 	if (result)
 	{
-		test(ReadResultOK == parseRFC1951(&fileByteStreamState, cFileByteStreamInterface));
+		//test(ReadResultOK == parseRFC1951(&rawFileByteStreamState, cFileByteStreamInterface));
 
-		fileByteReadStreamState_destroy(&fileByteStreamState);
+		fileByteReadStreamState_destroy(&rawFileByteStreamState);
 	}
+}
+
+void test_RFC1951_zeros()
+{
+	PipeStreamState pipeStreamState;
+	CoroutineDescriptor thisCoroutine, otherCoroutine;
+	FileByteStreamState rawFileByteStreamState;
+	bool result;
+	
+	result = fileByteReadStreamState_create("testfiles/deflate/zeros.raw", &rawFileByteStreamState);
+	test(result);
+
+	if (!result)
+		return;
+
+	result = initPipeStreamState(&pipeStreamState, true, &thisCoroutine, &otherCoroutine, 
+		&zerosOtherCoroutine, NULL);
+
+	if (!result)
+		return;
+
+	test(ReadResultOK == parseRFC1951(&rawFileByteStreamState, cFileByteStreamInterface, &pipeStreamState, getPipeStreamWriteInterface()));
+
+	fileByteReadStreamState_destroy(&rawFileByteStreamState);
+}
+
+void test_RFC1951()
+{
+	test_RFC1951_zeros();
+	//test_RFC1951_File("testfiles/deflate/random1024.raw", "testfiles/deflate/random1024");
 }
