@@ -17,10 +17,35 @@
 #include "RFC1951/RFC1951.h"
 #include "IO/BitRead.h"
 
-static ReadResult notImplemented(BitReadState *in_pBitReadState, ByteStreamReadInterface in_readInterface) { return ReadResultNotImplemented; }
-static ReadResult invalidData(BitReadState *in_pBitReadState, ByteStreamReadInterface in_readInterface) { return ReadResultInvalidData; }
+static ReadResult notImplemented(BitReadState *in_pBitReadState) { return ReadResultNotImplemented; }
+static ReadResult invalidData(BitReadState *in_pBitReadState) { return ReadResultInvalidData; }
 
-ReadResult readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadState, ByteStreamReadInterface in_readInterface)
+ReadResult readDataNoCompression(BitReadState *in_pBitReadState)
+{
+	uint16_t len, nlen;
+
+	/*
+	* 3.2.4. Non-compressed blocks (BTYPE=00)
+	*
+    * Any bits of input up to the next byte boundary are ignored.
+    * The rest of the block consists of the following information:
+    * 
+    *      0   1   2   3   4...
+    *    +---+---+---+---+================================+
+    *    |  LEN  | NLEN  |... LEN bytes of literal data...|
+    *    +---+---+---+---+================================+
+    * 
+    * LEN is the number of data bytes in the block.  NLEN is the
+    * one's complement of LEN.
+	*/
+
+	// Pay attention: the following lines only work on little-endian processors
+
+
+	return ReadResultOK;
+}
+
+ReadResult readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadState)
 {
 	uint16_t literalCodesCount = 0;
 	uint8_t distanceCodesCount, codeLengthCodesCount;
@@ -51,8 +76,8 @@ ReadResult readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadSt
 	return ReadResultOK;
 }
 
-ReadResult (*pfTypeFunctions[4])(BitReadState *in_pBitReadState, ByteStreamReadInterface in_readInterface) = {
-	notImplemented, 
+ReadResult (*pfTypeFunctions[4])(BitReadState *in_pBitReadState) = {
+	readDataNoCompression, 
 	notImplemented, 
 	readDataCompressedWithDynamicHuffmanCodes,
 	invalidData
@@ -74,7 +99,7 @@ ReadResult parseRFC1951(void *in_out_pReadStreamState, ByteStreamReadInterface i
 		if (readBitsLittleEndian(&bitReadState, &type, 2) != 2)
 			return ReadResultPrematureEndOfStream;
 
-		readResult = pfTypeFunctions[type](&bitReadState, in_readInterface);
+		readResult = pfTypeFunctions[type](&bitReadState);
 
 		if (readResult != ReadResultOK)
 			return readResult;

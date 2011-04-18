@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\MiniStdlib\climits.h" />
+    <ClInclude Include="..\..\..\include\MiniStdlib\csetjmp.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\cstdbool.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\cstddef.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\cstdint.h" />

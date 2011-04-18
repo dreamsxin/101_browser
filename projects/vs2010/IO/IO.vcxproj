@@ -96,6 +96,7 @@
     <ClInclude Include="..\..\..\include\IO\ByteStreamInterface.h" />
     <ClInclude Include="..\..\..\include\IO\MemoryByteStream.h" />
     <ClInclude Include="..\..\..\include\IO\PipeStream.h" />
+    <ClInclude Include="..\..\..\include\IO\SetjmpStream.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\IO\BidirectionalStream.c" />

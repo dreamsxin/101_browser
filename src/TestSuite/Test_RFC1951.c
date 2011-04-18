@@ -34,17 +34,29 @@ void zerosOtherCoroutine(void *in_out_pStreamState, void *in_pUserData)
 
 void test_RFC1951_File(const char *in_filenameRaw, const char *in_filenameReference)
 {
-	FileByteStreamState rawFileByteStreamState, referenceFileByteStreamState;
-	bool result = fileByteReadStreamState_create(in_filenameRaw, &rawFileByteStreamState);
-
+	PipeStreamState pipeStreamState;
+	CoroutineDescriptor thisCoroutine, otherCoroutine;
+	FileByteStreamState rawFileByteStreamState;
+	bool result;
+	
+	result = fileByteReadStreamState_create(in_filenameRaw, 
+		&rawFileByteStreamState);
 	test(result);
 
-	if (result)
-	{
-		//test(ReadResultOK == parseRFC1951(&rawFileByteStreamState, cFileByteStreamInterface));
+	if (!result)
+		return;
 
-		fileByteReadStreamState_destroy(&rawFileByteStreamState);
-	}
+	result = initPipeStreamState(&pipeStreamState, true, &thisCoroutine, &otherCoroutine, 
+		&zerosOtherCoroutine, NULL);
+	test(result);
+
+	if (!result)
+		return;
+
+	test(ReadResultOK == parseRFC1951(&rawFileByteStreamState, cFileByteStreamInterface, 
+		&pipeStreamState, getPipeStreamWriteInterface()));
+
+	fileByteReadStreamState_destroy(&rawFileByteStreamState);
 }
 
 void test_RFC1951_zeros()
@@ -54,7 +66,8 @@ void test_RFC1951_zeros()
 	FileByteStreamState rawFileByteStreamState;
 	bool result;
 	
-	result = fileByteReadStreamState_create("testfiles/deflate/zeros.raw", &rawFileByteStreamState);
+	result = fileByteReadStreamState_create("testfiles/deflate/zeros.raw", 
+		&rawFileByteStreamState);
 	test(result);
 
 	if (!result)
@@ -62,11 +75,13 @@ void test_RFC1951_zeros()
 
 	result = initPipeStreamState(&pipeStreamState, true, &thisCoroutine, &otherCoroutine, 
 		&zerosOtherCoroutine, NULL);
+	test(result);
 
 	if (!result)
 		return;
 
-	test(ReadResultOK == parseRFC1951(&rawFileByteStreamState, cFileByteStreamInterface, &pipeStreamState, getPipeStreamWriteInterface()));
+	test(ReadResultOK == parseRFC1951(&rawFileByteStreamState, cFileByteStreamInterface, 
+		&pipeStreamState, getPipeStreamWriteInterface()));
 
 	fileByteReadStreamState_destroy(&rawFileByteStreamState);
 }
@@ -74,5 +89,5 @@ void test_RFC1951_zeros()
 void test_RFC1951()
 {
 	test_RFC1951_zeros();
-	//test_RFC1951_File("testfiles/deflate/random1024.raw", "testfiles/deflate/random1024");
+	test_RFC1951_File("testfiles/deflate/random1024.raw", "testfiles/deflate/random1024");
 }
