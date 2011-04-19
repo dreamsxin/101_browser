@@ -66,7 +66,7 @@ void test_RFC1951_zeros()
 	FileByteStreamState rawFileByteStreamState;
 	bool result;
 	
-	result = fileByteReadStreamState_create("testfiles/deflate/zeros.raw", 
+	result = fileByteReadStreamState_create("testfiles/rfc1950_rfc1951/zeros.raw", 
 		&rawFileByteStreamState);
 	test(result);
 
@@ -89,5 +89,5 @@ void test_RFC1951_zeros()
 void test_RFC1951()
 {
 	test_RFC1951_zeros();
-	test_RFC1951_File("testfiles/deflate/random1024.raw", "testfiles/deflate/random1024");
+	test_RFC1951_File("testfiles/rfc1950_rfc1951/random1024.raw", "testfiles/rfc1950_rfc1951/random1024");
 }
