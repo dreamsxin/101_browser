@@ -107,6 +107,7 @@
     <ClCompile Include="..\..\..\src\IO\fread.c" />
     <ClCompile Include="..\..\..\src\IO\MemoryByteStream.c" />
     <ClCompile Include="..\..\..\src\IO\PipeStream.c" />
+    <ClCompile Include="..\..\..\src\IO\SetjmpStream.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoroutineWin\CoroutineWin.vcxproj">

@@ -18,7 +18,29 @@
 #define _IO_SetjmpStream_h
 
 #include "MiniStdlib/csetjmp.h"
+#include "IO/ByteStreamInterface.h"
 
+typedef struct
+{
+	jmp_buf mJmp_buf;
+	int mLongjmpValue;
+	void *pByteStreamState;
+	ByteStreamReadInterface mReadInterface;
+} SetjmpStreamState;
 
+/*!
+* Initializes in_pSetjmpStream and calls setjmp
+*
+* Precondition: in_longjmpValue != 0 (because of limitations
+* of setjmp/longjmp this is surely not what you want).
+* PRE:SetjmpStream_h:36
+*
+* Return value: the result of setjmp
+*/
+int setjmpStreamInitAndSetjmp(
+	SetjmpStreamState *out_pSetjmpStreamState, int in_longjmpValue, 
+	void *in_pByteStreamState, ByteStreamReadInterface in_readInterface);
+
+size_t setjmpStreamRead(void *in_out_pSetjmpStreamState, void *out_pBuffer, size_t in_count);
 
 #endif

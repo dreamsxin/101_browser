@@ -1,5 +1,7 @@
 *.sh -crlf
 null binary
+pngcrush* binary
+*.zlib binary
 
 # We already have
 # *.raw binary

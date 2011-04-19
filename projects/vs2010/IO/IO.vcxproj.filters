@@ -71,5 +71,8 @@
     <ClCompile Include="..\..\..\src\IO\ExtendedBidirectionalStream.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\IO\SetjmpStream.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
