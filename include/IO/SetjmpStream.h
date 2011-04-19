@@ -26,7 +26,7 @@ extern "C" {
 
 typedef struct
 {
-	jmp_buf mJmpBuffer;
+	jmp_buf *mpJmpBuffer;
 	int mLongjmpValue;
 	void *pByteStreamState;
 	ByteStreamReadInterface mReadInterface;
@@ -42,7 +42,7 @@ typedef struct
 * Return value: the result of setjmp
 */
 int setjmpStreamInitAndSetjmp(SetjmpStreamState *out_pSetjmpStreamState, 
-	int in_longjmpValue, 
+	jmp_buf *in_pJmpBuffer, int in_longjmpValue, 
 	void *in_pByteStreamState, ByteStreamReadInterface in_readInterface);
 
 size_t setjmpStreamRead(void *in_out_pSetjmpStreamState, 
@@ -53,10 +53,10 @@ size_t setjmpStreamRead(void *in_out_pSetjmpStreamState,
 * allocated ressources before rethrowing it.
 */
 int setjmpStreamXchgAndSetjmp(SetjmpStreamState *in_out_pSetjmpStreamState, 
-	jmp_buf in_jmpBuffer);
+	jmp_buf *in_pJmpBuffer);
 
 void setjmpStreamXchgAndLongjmp(SetjmpStreamState *in_out_pSetjmpStreamState, 
-	jmp_buf in_jmpBuffer);
+	jmp_buf *in_pJmpBuffer);
 
 #ifdef __cplusplus
 }

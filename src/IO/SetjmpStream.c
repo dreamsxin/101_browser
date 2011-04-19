@@ -19,17 +19,19 @@
 #include "MiniStdlib/xchg.h"
 
 int setjmpStreamInitAndSetjmp(
-	SetjmpStreamState *out_pSetjmpStreamState, int in_longjmpValue, 
+	SetjmpStreamState *out_pSetjmpStreamState, 
+	jmp_buf *in_pJmpBuffer, int in_longjmpValue, 
 	void *in_pByteStreamState, ByteStreamReadInterface in_readInterface)
 {
 	// Because of PRE:SetjmpStream_h:36
 	assert(in_longjmpValue != 0);
 
+	out_pSetjmpStreamState->mpJmpBuffer = in_pJmpBuffer;
 	out_pSetjmpStreamState->mLongjmpValue = in_longjmpValue;
 	out_pSetjmpStreamState->pByteStreamState = in_pByteStreamState;
 	out_pSetjmpStreamState->mReadInterface = in_readInterface;
 	
-	return setjmp(out_pSetjmpStreamState->mJmpBuffer);
+	return setjmp(*out_pSetjmpStreamState->mpJmpBuffer);
 }
 
 size_t setjmpStreamRead(void *in_out_pSetjmpStreamState, void *out_pBuffer, size_t in_count)
@@ -37,21 +39,21 @@ size_t setjmpStreamRead(void *in_out_pSetjmpStreamState, void *out_pBuffer, size
 	SetjmpStreamState *pSetjmpStreamState = (SetjmpStreamState*) in_out_pSetjmpStreamState;
 
 	if (pSetjmpStreamState->mReadInterface.pRead(pSetjmpStreamState->pByteStreamState, out_pBuffer, in_count) != in_count)
-		longjmp(pSetjmpStreamState->mJmpBuffer, pSetjmpStreamState->mLongjmpValue);
+		longjmp(*pSetjmpStreamState->mpJmpBuffer, pSetjmpStreamState->mLongjmpValue);
 
 	return in_count;
 }
 
 int setjmpStreamXchgAndSetjmp(SetjmpStreamState *in_out_pSetjmpStreamState, 
-	jmp_buf in_jmpBuffer)
+	jmp_buf *in_pJmpBuffer)
 {
-	xchg(in_out_pSetjmpStreamState->mJmpBuffer, in_jmpBuffer, sizeof(jmp_buf));
-	return setjmp(in_out_pSetjmpStreamState->mJmpBuffer);
+	xchg(*in_out_pSetjmpStreamState->mpJmpBuffer, in_pJmpBuffer, sizeof(jmp_buf*));
+	return setjmp(*in_out_pSetjmpStreamState->mpJmpBuffer);
 }
 
 void setjmpStreamXchgAndLongjmp(SetjmpStreamState *in_out_pSetjmpStreamState, 
-	jmp_buf in_jmpBuffer)
+	jmp_buf *in_pJmpBuffer)
 {
-	xchg(in_out_pSetjmpStreamState->mJmpBuffer, in_jmpBuffer, sizeof(jmp_buf));
-	longjmp(in_out_pSetjmpStreamState->mJmpBuffer, in_out_pSetjmpStreamState->mLongjmpValue);
+	xchg(in_out_pSetjmpStreamState->mpJmpBuffer, in_pJmpBuffer, sizeof(jmp_buf*));
+	longjmp(*in_out_pSetjmpStreamState->mpJmpBuffer, in_out_pSetjmpStreamState->mLongjmpValue);
 }
