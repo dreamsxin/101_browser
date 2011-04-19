@@ -21,22 +21,32 @@
 #include "IO/FileByteStream.h"
 #include "IO/PipeStream.h"
 
-void zerosOtherCoroutine(void *in_out_pStreamState, void *in_pUserData)
+void fileOtherCoroutine(void *in_out_pStreamState, void *in_pUserData)
 {
-	size_t readCount = 0;
-	uint8_t buffer;
+	size_t readCount;
+	uint8_t buffer0, buffer1;
 
-	while (pipeStreamRead(in_out_pStreamState, &buffer, 1) == 1)
+	while (pipeStreamRead(in_out_pStreamState, &buffer0, 1) == 1)
 	{
-		readCount++;
+		readCount = fileByteReadStreamRead(in_pUserData, &buffer1, 1);
+		if (readCount != 1)
+		{
+			test(readCount == 1);
+		}
+		if (buffer0 != buffer1)
+		{
+			test(buffer0 == buffer1);
+		}
 	}
+
+	test(fileByteReadStreamRead(in_pUserData, &buffer1, 1) == 0);
 }
 
 void test_RFC1951_File(const char *in_filenameRaw, const char *in_filenameReference)
 {
 	PipeStreamState pipeStreamState;
 	CoroutineDescriptor thisCoroutine, otherCoroutine;
-	FileByteStreamState rawFileByteStreamState;
+	FileByteStreamState rawFileByteStreamState, referenceFileByteStreamState;
 	bool result;
 	
 	result = fileByteReadStreamState_create(in_filenameRaw, 
@@ -46,8 +56,15 @@ void test_RFC1951_File(const char *in_filenameRaw, const char *in_filenameRefere
 	if (!result)
 		return;
 
+	result = fileByteReadStreamState_create(in_filenameReference, 
+		&referenceFileByteStreamState);
+	test(result);
+
+	if (!result)
+		return;
+
 	result = initPipeStreamState(&pipeStreamState, true, &thisCoroutine, &otherCoroutine, 
-		&zerosOtherCoroutine, NULL);
+		fileOtherCoroutine, &referenceFileByteStreamState);
 	test(result);
 
 	if (!result)
@@ -56,7 +73,25 @@ void test_RFC1951_File(const char *in_filenameRaw, const char *in_filenameRefere
 	test(ReadResultOK == parseRFC1951(&rawFileByteStreamState, cFileByteStreamInterface, 
 		&pipeStreamState, getPipeStreamWriteInterface()));
 
+	/*
+	* If we don't insert this code we won't change to the other coroutine
+	* to see if we really sent all data.
+	*/
+	pipeStreamWrite(&pipeStreamState, NULL, 0);
+	
+	fileByteReadStreamState_destroy(&referenceFileByteStreamState);
 	fileByteReadStreamState_destroy(&rawFileByteStreamState);
+}
+
+void zerosOtherCoroutine(void *in_out_pStreamState, void *in_pUserData)
+{
+	size_t readCount = 0;
+	uint8_t buffer;
+
+	while (pipeStreamRead(in_out_pStreamState, &buffer, 1) == 1)
+	{
+		readCount++;
+	}
 }
 
 void test_RFC1951_zeros()
@@ -83,6 +118,12 @@ void test_RFC1951_zeros()
 	test(ReadResultOK == parseRFC1951(&rawFileByteStreamState, cFileByteStreamInterface, 
 		&pipeStreamState, getPipeStreamWriteInterface()));
 
+	/*
+	* If we don't insert this code we won't change to the other coroutine
+	* to see if we really sent all data.
+	*/
+	pipeStreamWrite(&pipeStreamState, NULL, 0);
+
 	fileByteReadStreamState_destroy(&rawFileByteStreamState);
 }
 
@@ -90,4 +131,6 @@ void test_RFC1951()
 {
 	test_RFC1951_zeros();
 	test_RFC1951_File("testfiles/rfc1950_rfc1951/random1024.raw", "testfiles/rfc1950_rfc1951/random1024");
+	test_RFC1951_File("testfiles/rfc1950_rfc1951/random65535.raw", "testfiles/rfc1950_rfc1951/random65535");
+	test_RFC1951_File("testfiles/rfc1950_rfc1951/random65536.raw", "testfiles/rfc1950_rfc1951/random65536");
 }

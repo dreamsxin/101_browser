@@ -16,13 +16,18 @@
 
 #include "RFC1951/RFC1951.h"
 #include "IO/BitRead.h"
+#include "IO/SetjmpStream.h"
 
-static ReadResult notImplemented(BitReadState *in_pBitReadState) { return ReadResultNotImplemented; }
-static ReadResult invalidData(BitReadState *in_pBitReadState) { return ReadResultInvalidData; }
+static ReadResult notImplemented(BitReadState *in_pBitReadState, void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface) { return ReadResultNotImplemented; }
+static ReadResult invalidData(BitReadState *in_pBitReadState, void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface) { return ReadResultInvalidData; }
 
-ReadResult readDataNoCompression(BitReadState *in_pBitReadState)
+ReadResult readDataNoCompression(BitReadState *in_pBitReadState, 
+	void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface)
 {
-	uint16_t len, nlen;
+	uint16_t len, nlen, currentByteIndex;
+	uint8_t currentByte;
+
+	bitReadStateFlush(in_pBitReadState);
 
 	/*
 	* 3.2.4. Non-compressed blocks (BTYPE=00)
@@ -40,35 +45,45 @@ ReadResult readDataNoCompression(BitReadState *in_pBitReadState)
 	*/
 
 	// Pay attention: the following lines only work on little-endian processors
+	(*in_pBitReadState->readInterface.pRead)(in_pBitReadState->pByteStreamState, &len, sizeof(len));
+	(*in_pBitReadState->readInterface.pRead)(in_pBitReadState->pByteStreamState, &nlen, sizeof(nlen));
 
+	if (len != (uint16_t) ~nlen)
+	{
+		return ReadResultInvalidData;
+	}
+
+	for (currentByteIndex = 0; currentByteIndex < len; currentByteIndex++)
+	{
+		(*in_pBitReadState->readInterface.pRead)(in_pBitReadState->pByteStreamState, &currentByte, sizeof(currentByte));
+		
+		if ((*in_writeInterface.pWrite)(in_out_pWriteStreamState, &currentByte, 1) != 1)
+			return ReadResultWriteError;
+	}
 
 	return ReadResultOK;
 }
 
-ReadResult readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadState)
+ReadResult readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadState, 
+	void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface)
 {
 	uint16_t literalCodesCount = 0;
 	uint8_t distanceCodesCount, codeLengthCodesCount;
 
-	if (readBitsLittleEndian(in_pBitReadState, &literalCodesCount, 5) != 5)
-		return ReadResultPrematureEndOfStream;
+	readBitsLittleEndian(in_pBitReadState, &literalCodesCount, 5);
 	literalCodesCount += 257;
 
 	if (literalCodesCount > 286)
 		return ReadResultInvalidData;
 
-	if (readBitsLittleEndian(in_pBitReadState, &distanceCodesCount, 5) != 5)
-		return ReadResultPrematureEndOfStream;
+	readBitsLittleEndian(in_pBitReadState, &distanceCodesCount, 5);
 	distanceCodesCount += 1;
 
 	if (distanceCodesCount > 32) // perhaps 30?
 		return ReadResultInvalidData;
 
-	if (readBitsLittleEndian(in_pBitReadState, &codeLengthCodesCount, 4) != 4)
-		return ReadResultPrematureEndOfStream;
+	readBitsLittleEndian(in_pBitReadState, &codeLengthCodesCount, 4);
 	codeLengthCodesCount += 4;
-
-	
 	
 	
 
@@ -76,7 +91,8 @@ ReadResult readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadSt
 	return ReadResultOK;
 }
 
-ReadResult (*pfTypeFunctions[4])(BitReadState *in_pBitReadState) = {
+ReadResult (*pfTypeFunctions[4])(BitReadState *in_pBitReadState, 
+	void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface) = {
 	readDataNoCompression, 
 	notImplemented, 
 	readDataCompressedWithDynamicHuffmanCodes,
@@ -87,19 +103,29 @@ ReadResult parseRFC1951(void *in_out_pReadStreamState, ByteStreamReadInterface i
 	void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface)
 {
 	BitReadState bitReadState;
+	SetjmpStreamState setjmpStreamState;
+	ByteStreamReadInterface setjmpStreamInterface = getSetjmpStreamReadReadInterface();
+	jmp_buf jmpBuf;
+	int result;
+
 	uint8_t last, type;
 	ReadResult readResult;
 
-	initBitReadState(&bitReadState, in_out_pReadStreamState, in_readInterface);
+	// The = is correct here
+	if (result = setjmpStreamInitAndSetjmp(&setjmpStreamState, &jmpBuf, ReadResultPrematureEndOfStream, 
+		in_out_pReadStreamState, in_readInterface))
+	{
+		return (ReadResult) result;
+	}
+
+	initBitReadState(&bitReadState, &setjmpStreamState, setjmpStreamInterface);
 
 	do
 	{
-		if (readBitsLittleEndian(&bitReadState, &last, 1) != 1)
-			return ReadResultPrematureEndOfStream;
-		if (readBitsLittleEndian(&bitReadState, &type, 2) != 2)
-			return ReadResultPrematureEndOfStream;
+		readBitsLittleEndian(&bitReadState, &last, 1);
+		readBitsLittleEndian(&bitReadState, &type, 2);
 
-		readResult = pfTypeFunctions[type](&bitReadState);
+		readResult = pfTypeFunctions[type](&bitReadState, in_out_pWriteStreamState, in_writeInterface);
 
 		if (readResult != ReadResultOK)
 			return readResult;

@@ -52,7 +52,7 @@ typedef struct
 	ByteStreamReadInterface readInterface;
 } BitReadState;
 
-DLLEXPORT void initBitReadState(BitReadState *in_pBitReadState, void *in_pByteStreamState, 
+DLLEXPORT void initBitReadState(BitReadState *out_pBitReadState, void *in_pByteStreamState, 
 	ByteStreamReadInterface in_readInterface);
 
 /*!
@@ -63,6 +63,8 @@ DLLEXPORT void initBitReadState(BitReadState *in_pBitReadState, void *in_pByteSt
  * false if not
  */
 DLLEXPORT size_t readBitsLittleEndian(BitReadState *in_pBitReadState, void* out_pBuffer, size_t in_bitsCount);
+
+DLLEXPORT void bitReadStateFlush(BitReadState *in_out_pBitReadState);
 
 #ifdef __cplusplus
 }

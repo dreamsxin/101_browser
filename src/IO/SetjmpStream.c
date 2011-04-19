@@ -57,3 +57,9 @@ void setjmpStreamXchgAndLongjmp(SetjmpStreamState *in_out_pSetjmpStreamState,
 	xchg(in_out_pSetjmpStreamState->mpJmpBuffer, in_pJmpBuffer, sizeof(jmp_buf*));
 	longjmp(*in_out_pSetjmpStreamState->mpJmpBuffer, in_out_pSetjmpStreamState->mLongjmpValue);
 }
+
+ByteStreamReadInterface getSetjmpStreamReadReadInterface()
+{
+	ByteStreamReadInterface out_interface = {setjmpStreamRead, NULL};
+	return out_interface;
+}

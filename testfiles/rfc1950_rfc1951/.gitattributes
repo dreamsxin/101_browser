@@ -2,6 +2,7 @@
 null binary
 pngcrush* binary
 *.zlib binary
+type1* binary
 
 # We already have
 # *.raw binary

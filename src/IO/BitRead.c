@@ -17,17 +17,17 @@
 #include "IO/BitRead.h"
 #include <assert.h>
 
-void initBitReadState(BitReadState *in_pBitReadState, void *in_pByteStreamState, 
+void initBitReadState(BitReadState *out_pBitReadState, void *in_pByteStreamState, 
 	ByteStreamReadInterface in_readInterface)
 {
-	in_pBitReadState->bitCountInBuffer = 0;
+	out_pBitReadState->bitCountInBuffer = 0;
 	/*
 	* There is no need to initialize in_pBitReadState->buffer
 	* since we set in_pBitReadState->bitCountInBuffer = 0
 	* so that the buffer contains no data.
 	*/
-	in_pBitReadState->pByteStreamState = in_pByteStreamState;
-	in_pBitReadState->readInterface = in_readInterface;
+	out_pBitReadState->pByteStreamState = in_pByteStreamState;
+	out_pBitReadState->readInterface = in_readInterface;
 }
 
 size_t readBitsLittleEndian(BitReadState *in_pBitReadState, void* out_pBuffer, size_t in_bitsCount)
@@ -70,4 +70,9 @@ size_t readBitsLittleEndian(BitReadState *in_pBitReadState, void* out_pBuffer, s
 	}
 
 	return in_bitsCount;
+}
+
+void bitReadStateFlush(BitReadState *in_out_pBitReadState)
+{
+	in_out_pBitReadState->bitCountInBuffer = 0;
 }

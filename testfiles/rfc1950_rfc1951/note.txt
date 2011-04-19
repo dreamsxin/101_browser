@@ -1,0 +1,8 @@
+The files
+
+type1_8_0(.raw)
+type1_8_1(.raw)
+
+were created using
+./create_random.sh 8
+but renamed after.

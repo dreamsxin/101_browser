@@ -5,6 +5,8 @@
 # the repository (random* is ignored (see .gitignore)
 mv random0 null
 mv random0.raw null.raw
+
+./create_random.sh 8
 ./create_random.sh 1024
 ./create_random.sh 65536
 
