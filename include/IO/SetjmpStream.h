@@ -20,9 +20,13 @@
 #include "MiniStdlib/csetjmp.h"
 #include "IO/ByteStreamInterface.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
-	jmp_buf mJmp_buf;
+	jmp_buf mJmpBuffer;
 	int mLongjmpValue;
 	void *pByteStreamState;
 	ByteStreamReadInterface mReadInterface;
@@ -37,10 +41,25 @@ typedef struct
 *
 * Return value: the result of setjmp
 */
-int setjmpStreamInitAndSetjmp(
-	SetjmpStreamState *out_pSetjmpStreamState, int in_longjmpValue, 
+int setjmpStreamInitAndSetjmp(SetjmpStreamState *out_pSetjmpStreamState, 
+	int in_longjmpValue, 
 	void *in_pByteStreamState, ByteStreamReadInterface in_readInterface);
 
-size_t setjmpStreamRead(void *in_out_pSetjmpStreamState, void *out_pBuffer, size_t in_count);
+size_t setjmpStreamRead(void *in_out_pSetjmpStreamState, 
+	void *out_pBuffer, size_t in_count);
+
+/*!
+* These two functions are intended for "catching the exception" for freeing 
+* allocated ressources before rethrowing it.
+*/
+int setjmpStreamXchgAndSetjmp(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	jmp_buf in_jmpBuffer);
+
+void setjmpStreamXchgAndLongjmp(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	jmp_buf in_jmpBuffer);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

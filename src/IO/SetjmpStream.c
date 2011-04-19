@@ -16,6 +16,7 @@
 
 #include "IO/SetjmpStream.h"
 #include <assert.h>
+#include "MiniStdlib/xchg.h"
 
 int setjmpStreamInitAndSetjmp(
 	SetjmpStreamState *out_pSetjmpStreamState, int in_longjmpValue, 
@@ -28,7 +29,7 @@ int setjmpStreamInitAndSetjmp(
 	out_pSetjmpStreamState->pByteStreamState = in_pByteStreamState;
 	out_pSetjmpStreamState->mReadInterface = in_readInterface;
 	
-	return setjmp(out_pSetjmpStreamState->mJmp_buf);
+	return setjmp(out_pSetjmpStreamState->mJmpBuffer);
 }
 
 size_t setjmpStreamRead(void *in_out_pSetjmpStreamState, void *out_pBuffer, size_t in_count)
@@ -36,7 +37,21 @@ size_t setjmpStreamRead(void *in_out_pSetjmpStreamState, void *out_pBuffer, size
 	SetjmpStreamState *pSetjmpStreamState = (SetjmpStreamState*) in_out_pSetjmpStreamState;
 
 	if (pSetjmpStreamState->mReadInterface.pRead(pSetjmpStreamState->pByteStreamState, out_pBuffer, in_count) != in_count)
-		longjmp(pSetjmpStreamState->mJmp_buf, pSetjmpStreamState->mLongjmpValue);
+		longjmp(pSetjmpStreamState->mJmpBuffer, pSetjmpStreamState->mLongjmpValue);
 
 	return in_count;
+}
+
+int setjmpStreamXchgAndSetjmp(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	jmp_buf in_jmpBuffer)
+{
+	xchg(in_out_pSetjmpStreamState->mJmpBuffer, in_jmpBuffer, sizeof(jmp_buf));
+	return setjmp(in_out_pSetjmpStreamState->mJmpBuffer);
+}
+
+void setjmpStreamXchgAndLongjmp(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	jmp_buf in_jmpBuffer)
+{
+	xchg(in_out_pSetjmpStreamState->mJmpBuffer, in_jmpBuffer, sizeof(jmp_buf));
+	longjmp(in_out_pSetjmpStreamState->mJmpBuffer, in_out_pSetjmpStreamState->mLongjmpValue);
 }
