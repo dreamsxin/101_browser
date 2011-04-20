@@ -1,0 +1,8 @@
+http://camendesign.com/code/video_for_everybody/test.html
+(more exactly:
+http://clips.vorwaerts-gmbh.de/big_buck_bunny.ogv
+http://clips.vorwaerts-gmbh.de/big_buck_bunny.webm
+http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4
+http://clips.vorwaerts-gmbh.de/VfE.ogv
+http://clips.vorwaerts-gmbh.de/VfE_html5.mp4
+http://clips.vorwaerts-gmbh.de/VfE.webm

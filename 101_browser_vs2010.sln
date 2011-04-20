@@ -53,6 +53,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CryptoWin", "projects\vs201
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RFC1951", "projects\vs2010\RFC1951\RFC1951.vcxproj", "{D75E6C70-3D71-44E6-BE11-6D714EF2906F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ISO_base_media_file_format", "projects\vs2010\ISO_base_media_file_format\ISO_base_media_file_format.vcxproj", "{4BCFBE44-32BA-441F-A99B-AE8BC688A839}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -375,6 +377,18 @@ Global
 		{D75E6C70-3D71-44E6-BE11-6D714EF2906F}.LIB Release|Win32.Build.0 = Release|Win32
 		{D75E6C70-3D71-44E6-BE11-6D714EF2906F}.Release|Win32.ActiveCfg = Release|Win32
 		{D75E6C70-3D71-44E6-BE11-6D714EF2906F}.Release|Win32.Build.0 = Release|Win32
+		{4BCFBE44-32BA-441F-A99B-AE8BC688A839}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4BCFBE44-32BA-441F-A99B-AE8BC688A839}.Debug|Win32.Build.0 = Debug|Win32
+		{4BCFBE44-32BA-441F-A99B-AE8BC688A839}.LIB ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{4BCFBE44-32BA-441F-A99B-AE8BC688A839}.LIB ASM Debug|Win32.Build.0 = Debug|Win32
+		{4BCFBE44-32BA-441F-A99B-AE8BC688A839}.LIB ASM Release|Win32.ActiveCfg = Release|Win32
+		{4BCFBE44-32BA-441F-A99B-AE8BC688A839}.LIB ASM Release|Win32.Build.0 = Release|Win32
+		{4BCFBE44-32BA-441F-A99B-AE8BC688A839}.LIB Debug|Win32.ActiveCfg = Debug|Win32
+		{4BCFBE44-32BA-441F-A99B-AE8BC688A839}.LIB Debug|Win32.Build.0 = Debug|Win32
+		{4BCFBE44-32BA-441F-A99B-AE8BC688A839}.LIB Release|Win32.ActiveCfg = Release|Win32
+		{4BCFBE44-32BA-441F-A99B-AE8BC688A839}.LIB Release|Win32.Build.0 = Release|Win32
+		{4BCFBE44-32BA-441F-A99B-AE8BC688A839}.Release|Win32.ActiveCfg = Release|Win32
+		{4BCFBE44-32BA-441F-A99B-AE8BC688A839}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

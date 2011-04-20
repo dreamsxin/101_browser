@@ -91,5 +91,10 @@ doc/*.toc
 # Don't include T083 test data, since I'm not sure whether this is legal...
 testfiles/T083v1_0/*
 
-testfiles/video/*
+# Video files
+*.mov
+*.webm
+*.mp4
+*.ogv
+
 
