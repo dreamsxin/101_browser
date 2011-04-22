@@ -6,6 +6,7 @@ wget http://www.cl.cam.ac.uk/~mgk25/ucs/examples/UTF-8-test.txt -O ../testfiles/
 wget http://unicode.org/Public/UNIDATA/PropList.txt -O ../data/Unicode/PropList.txt
 
 
+
 wget http://www.whatwg.org/specs/web-apps/current-work/complete.html -O complete.html
 java -cp htmlparser-1.2.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_webapps_idl.xslt --input-html=complete.html --output-xml=../data/idl/temp_.idl
 sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/generated/webapps.idl
@@ -26,4 +27,4 @@ rm complete.html
 rm geolocation.html
 rm xproc.html
 
-set PATH=%OLDPATH%
+REM set PATH=%OLDPATH%

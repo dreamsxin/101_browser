@@ -612,6 +612,7 @@ module webapps
 
   interface TrackList {
     readonly attribute unsigned long length;
+    DOMString getID(in unsigned long index);
     DOMString getLabel(in unsigned long index);
     DOMString getLanguage(in unsigned long index);
   
@@ -637,6 +638,7 @@ module webapps
              attribute double currentTime;
   
     readonly attribute boolean paused;
+    readonly attribute TimeRanges played;
     void play();
     void pause();
   
@@ -645,6 +647,14 @@ module webapps
   
              attribute double volume;
              attribute boolean muted;
+  
+             attribute Function onemptied;
+             attribute Function onloadedmetadata;
+             attribute Function onloadeddata;
+             attribute Function oncanplay;
+             attribute Function oncanplaythrough;
+             attribute Function onplaying;
+             attribute Function onwaiting;
   
              attribute Function ondurationchange;
              attribute Function ontimeupdate;

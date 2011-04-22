@@ -1,2 +1,3 @@
 *.txt -crlf
 *.idl -crlf
+matroska/specdata.xml -crlf
