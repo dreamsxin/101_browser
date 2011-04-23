@@ -30,7 +30,7 @@ void initBitReadState(BitReadState *out_pBitReadState, void *in_pByteStreamState
 	out_pBitReadState->readInterface = in_readInterface;
 }
 
-size_t readBitsLittleEndian(BitReadState *in_pBitReadState, void* out_pBuffer, size_t in_bitsCount)
+size_t readBits(BitReadState *in_pBitReadState, void* out_pBuffer, size_t in_bitsCount, bool in_littleEndian)
 {
 	uint8_t *currentBufferElement = (uint8_t *) out_pBuffer;
 	size_t currentBitIndex; // counter in the loop
@@ -58,9 +58,26 @@ size_t readBitsLittleEndian(BitReadState *in_pBitReadState, void* out_pBuffer, s
 			*currentBufferElement = 0;
 		}
 
-		position = (8-in_pBitReadState->bitCountInBuffer);
-		currentBit = (in_pBitReadState->buffer >> position) & 1;
-		*currentBufferElement |= (currentBit<<(currentBitIndex % 8));
+		if (in_littleEndian)
+		{
+			// position is the bit index of the bit that we want to read now
+			position = (8-in_pBitReadState->bitCountInBuffer);
+			// we copy the bit at position into currentBit
+			currentBit = (in_pBitReadState->buffer >> position) & 1;
+			// we shift it to the right position
+			*currentBufferElement |= (currentBit<<(currentBitIndex % 8));
+		}
+		else
+		{
+			// position is the bit index of the bit that we want to read now
+			position = in_pBitReadState->bitCountInBuffer;
+			// we copy the bit at position into currentBit
+			currentBit = (in_pBitReadState->buffer >> position) & 1;
+			// Shift the new bit into the buffer from the low side
+			*currentBufferElement <<= 1;
+			*currentBufferElement |= currentBit;
+		}
+
 		in_pBitReadState->bitCountInBuffer--;
 
 		if ((currentBitIndex+1) % 8 == 0)
@@ -69,7 +86,19 @@ size_t readBitsLittleEndian(BitReadState *in_pBitReadState, void* out_pBuffer, s
 		}
 	}
 
+	assert(currentBitIndex == in_bitsCount);
+
 	return in_bitsCount;
+}
+
+size_t readBitsLittleEndian(BitReadState *in_pBitReadState, void* out_pBuffer, size_t in_bitsCount)
+{
+	return readBits(in_pBitReadState, out_pBuffer, in_bitsCount, true);
+}
+
+size_t readBitsBigEndian(BitReadState *in_pBitReadState, void* out_pBuffer, size_t in_bitsCount)
+{
+	return readBits(in_pBitReadState, out_pBuffer, in_bitsCount, false);
 }
 
 void bitReadStateFlush(BitReadState *in_out_pBitReadState)

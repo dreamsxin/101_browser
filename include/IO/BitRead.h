@@ -56,13 +56,14 @@ DLLEXPORT void initBitReadState(BitReadState *out_pBitReadState, void *in_pByteS
 	ByteStreamReadInterface in_readInterface);
 
 /*!
- * Reads in_bitsCount bits from the file.
+ * Reads in_bitsCount bits from the file beginning from the lowest (little endian) or
+ * highest (big endian) bit.
  * 
  * Return value:
- * true if successful
- * false if not
+ * number of read bits
  */
 DLLEXPORT size_t readBitsLittleEndian(BitReadState *in_pBitReadState, void* out_pBuffer, size_t in_bitsCount);
+DLLEXPORT size_t readBitsBigEndian(BitReadState *in_pBitReadState, void* out_pBuffer, size_t in_bitsCount);
 
 DLLEXPORT void bitReadStateFlush(BitReadState *in_out_pBitReadState);
 
