@@ -55,7 +55,7 @@ ReadResult readDataNoCompression(BitReadState *in_pBitReadState,
 
 	for (currentByteIndex = 0; currentByteIndex < len; currentByteIndex++)
 	{
-		(*in_pBitReadState->readInterface.pRead)(in_pBitReadState->pByteStreamState, &currentByte, sizeof(currentByte));
+		(*in_pBitReadState->readInterface.pRead)(in_pBitReadState->pByteStreamState, &currentByte, 1);
 		
 		if ((*in_writeInterface.pWrite)(in_out_pWriteStreamState, &currentByte, 1) != 1)
 			return ReadResultWriteError;
@@ -73,14 +73,31 @@ ReadResult readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadSt
 	readBitsLittleEndian(in_pBitReadState, &literalCodesCount, 5);
 	literalCodesCount += 257;
 
+	/*
+	 * 5 Bits: HLIT, # of Literal/Length codes - 257 (257 - 286)
+	 */
 	if (literalCodesCount > 286)
 		return ReadResultInvalidData;
 
 	readBitsLittleEndian(in_pBitReadState, &distanceCodesCount, 5);
 	distanceCodesCount += 1;
 
-	if (distanceCodesCount > 32) // perhaps 30?
+	/*
+	* Open question: why does the puff code check whether we have more than
+	* 30 distance codes while RFC 1951 says in 
+	* chapter "3.2.7. Compression with dynamic Huffman codes (BTYPE=10)":
+	* "5 Bits: HDIST, # of Distance codes - 1        (1 - 32)"
+	*
+	* Quote from puff.c
+	* if (nlen > MAXLCODES || ndist > MAXDCODES)
+	*     return -3; 
+	*
+	* (where MAXDCODES equals 30)
+	*/
+#if 0
+	if (distanceCodesCount > 30)
 		return ReadResultInvalidData;
+#endif
 
 	readBitsLittleEndian(in_pBitReadState, &codeLengthCodesCount, 4);
 	codeLengthCodesCount += 4;
