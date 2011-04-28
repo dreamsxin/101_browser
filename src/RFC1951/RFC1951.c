@@ -17,8 +17,8 @@
 #include "RFC1951/RFC1951.h"
 #include "IO/BitRead.h"
 #include "IO/SetjmpStream.h"
+#include <string.h>
 
-static ReadResult notImplemented(BitReadState *in_pBitReadState, void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface) { return ReadResultNotImplemented; }
 static ReadResult invalidData(BitReadState *in_pBitReadState, void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface) { return ReadResultInvalidData; }
 
 ReadResult readDataNoCompression(BitReadState *in_pBitReadState, 
@@ -32,16 +32,16 @@ ReadResult readDataNoCompression(BitReadState *in_pBitReadState,
 	/*
 	* 3.2.4. Non-compressed blocks (BTYPE=00)
 	*
-    * Any bits of input up to the next byte boundary are ignored.
-    * The rest of the block consists of the following information:
-    * 
-    *      0   1   2   3   4...
-    *    +---+---+---+---+================================+
-    *    |  LEN  | NLEN  |... LEN bytes of literal data...|
-    *    +---+---+---+---+================================+
-    * 
-    * LEN is the number of data bytes in the block.  NLEN is the
-    * one's complement of LEN.
+	* Any bits of input up to the next byte boundary are ignored.
+	* The rest of the block consists of the following information:
+	* 
+	*      0   1   2   3   4...
+	*    +---+---+---+---+================================+
+	*    |  LEN  | NLEN  |... LEN bytes of literal data...|
+	*    +---+---+---+---+================================+
+	* 
+	* LEN is the number of data bytes in the block.  NLEN is the
+	* one's complement of LEN.
 	*/
 
 	// Pay attention: the following lines only work on little-endian processors
@@ -56,10 +56,48 @@ ReadResult readDataNoCompression(BitReadState *in_pBitReadState,
 	for (currentByteIndex = 0; currentByteIndex < len; currentByteIndex++)
 	{
 		(*in_pBitReadState->readInterface.pRead)(in_pBitReadState->pByteStreamState, &currentByte, 1);
-		
+
 		if ((*in_writeInterface.pWrite)(in_out_pWriteStreamState, &currentByte, 1) != 1)
 			return ReadResultWriteError;
 	}
+
+	return ReadResultOK;
+}
+
+#define LITERAL_VALUE_RANGE_BOUNDARY_COUNT 4
+#define FIXED_HUFFMAN_CODE_LENGTH_COUNT 288
+
+ReadResult readDataCompressedWithFixedHuffmanCodes(BitReadState *in_pBitReadState, 
+	void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface)
+{
+	static bool tableInitialized = false;
+
+	if (!tableInitialized)
+	{
+		int literalValueRangeBoundaries[LITERAL_VALUE_RANGE_BOUNDARY_COUNT+1] = 
+		{ 0, 144, 256, 280, FIXED_HUFFMAN_CODE_LENGTH_COUNT };
+		uint8_t literalCodeLengthsInArea[LITERAL_VALUE_RANGE_BOUNDARY_COUNT] = { 8, 9, 7, 8 };
+		uint8_t codeLengths[FIXED_HUFFMAN_CODE_LENGTH_COUNT];
+
+#pragma omp parallel
+		{
+			int idx;
+
+#pragma omp for
+			for (idx = 0; idx < LITERAL_VALUE_RANGE_BOUNDARY_COUNT; idx++)
+			{
+				memset(codeLengths+literalValueRangeBoundaries[idx], literalCodeLengthsInArea[idx], 
+					literalValueRangeBoundaries[idx+1]-literalValueRangeBoundaries[idx]);
+			}
+		}
+
+		// ...
+
+		memset(codeLengths, 5, FIXED_HUFFMAN_CODE_LENGTH_COUNT);
+
+		// ...
+	}
+
 
 	return ReadResultOK;
 }
@@ -74,8 +112,8 @@ ReadResult readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadSt
 	literalCodesCount += 257;
 
 	/*
-	 * 5 Bits: HLIT, # of Literal/Length codes - 257 (257 - 286)
-	 */
+	* 5 Bits: HLIT, # of Literal/Length codes - 257 (257 - 286)
+	*/
 	if (literalCodesCount > 286)
 		return ReadResultInvalidData;
 
@@ -101,8 +139,8 @@ ReadResult readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadSt
 
 	readBitsLittleEndian(in_pBitReadState, &codeLengthCodesCount, 4);
 	codeLengthCodesCount += 4;
-	
-	
+
+
 
 
 	return ReadResultOK;
@@ -110,10 +148,10 @@ ReadResult readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadSt
 
 ReadResult (*pfTypeFunctions[4])(BitReadState *in_pBitReadState, 
 	void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface) = {
-	readDataNoCompression, 
-	notImplemented, 
-	readDataCompressedWithDynamicHuffmanCodes,
-	invalidData
+		readDataNoCompression, 
+		readDataCompressedWithFixedHuffmanCodes, 
+		readDataCompressedWithDynamicHuffmanCodes,
+		invalidData
 };
 
 ReadResult parseRFC1951(void *in_out_pReadStreamState, ByteStreamReadInterface in_readInterface, 

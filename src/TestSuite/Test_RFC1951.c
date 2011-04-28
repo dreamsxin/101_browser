@@ -130,6 +130,8 @@ void test_RFC1951_zeros()
 void test_RFC1951()
 {
 	test_RFC1951_zeros();
+
+	test_RFC1951_File("testfiles/rfc1950_rfc1951/null.raw", "testfiles/rfc1950_rfc1951/null");
 	test_RFC1951_File("testfiles/rfc1950_rfc1951/random1024.raw", "testfiles/rfc1950_rfc1951/random1024");
 	test_RFC1951_File("testfiles/rfc1950_rfc1951/random65535.raw", "testfiles/rfc1950_rfc1951/random65535");
 	test_RFC1951_File("testfiles/rfc1950_rfc1951/random65536.raw", "testfiles/rfc1950_rfc1951/random65536");
