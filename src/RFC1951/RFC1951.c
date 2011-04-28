@@ -78,17 +78,12 @@ ReadResult readDataCompressedWithFixedHuffmanCodes(BitReadState *in_pBitReadStat
 		{ 0, 144, 256, 280, FIXED_HUFFMAN_CODE_LENGTH_COUNT };
 		uint8_t literalCodeLengthsInArea[LITERAL_VALUE_RANGE_BOUNDARY_COUNT] = { 8, 9, 7, 8 };
 		uint8_t codeLengths[FIXED_HUFFMAN_CODE_LENGTH_COUNT];
+		int idx;
 
-#pragma omp parallel
+		for (idx = 0; idx < LITERAL_VALUE_RANGE_BOUNDARY_COUNT; idx++)
 		{
-			int idx;
-
-#pragma omp for
-			for (idx = 0; idx < LITERAL_VALUE_RANGE_BOUNDARY_COUNT; idx++)
-			{
-				memset(codeLengths+literalValueRangeBoundaries[idx], literalCodeLengthsInArea[idx], 
-					literalValueRangeBoundaries[idx+1]-literalValueRangeBoundaries[idx]);
-			}
+			memset(codeLengths+literalValueRangeBoundaries[idx], literalCodeLengthsInArea[idx], 
+				literalValueRangeBoundaries[idx+1]-literalValueRangeBoundaries[idx]);
 		}
 
 		// ...
