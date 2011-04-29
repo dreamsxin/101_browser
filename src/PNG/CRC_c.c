@@ -66,7 +66,7 @@ static uint32_t initializeCrcTableAndReturnInitialCrc()
 {
 	initCRC_Table();
 	crcInitFun = initialCrc;
-	return cInitialCRC;
+	return initialCrc();
 }
 
 static uint32_t initialCrc()
