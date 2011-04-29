@@ -17,12 +17,7 @@
 #ifndef _MTAx_IO_ByteStreamInterface_h
 #define _MTAx_IO_ByteStreamInterface_h
 
-#include "MiniStdlib/cstdint.h"
-/* 
- * gcc requires this header file for a definition of size_t
- */
 #include "MiniStdlib/cstddef.h"
-#include "MiniStdlib/cstdbool.h"
 
 #ifdef __cplusplus
 extern "C" {
