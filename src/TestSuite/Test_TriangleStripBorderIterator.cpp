@@ -83,4 +83,3 @@ void testTriangleStripBorderIterator()
 	w.push_back(2);
 	testIterator(v, w, &triangleStripBorderIteratorState_create<unsigned int>, itInterface);
 }
-
