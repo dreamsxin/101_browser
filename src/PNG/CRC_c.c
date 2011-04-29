@@ -16,7 +16,6 @@
 
 #include "PNG/CRC.h"
 #include "MiniStdlib/cstdbool.h"
-#include <assert.h>
 
 const uint32_t cInitialCRC = 0xFFFFFFFF;
 /*
@@ -82,7 +81,6 @@ uint32_t CRC_init()
 
 uint32_t CRC_update(uint32_t in_currentCRC, uint8_t in_currentByte)
 {
-	assert(crcTableInitialized);
 	return crcTable[(in_currentCRC ^ in_currentByte) & 0xFF] ^ (in_currentCRC >> 8);
 }
 
