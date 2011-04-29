@@ -33,44 +33,53 @@ const uint32_t cInitialCRC = 0xFFFFFFFF;
 * bit of the 32-bit CRC is defined to be the coefficient of the x^31 term."
 */
 const uint32_t cCRC_polynomial = 0xedb88320;
-static bool crcTableInitialized = false;
 static uint32_t crcTable[256];
 
 void initCRC_Table()
 {
-	if (!crcTableInitialized)
+	int index;
+	uint8_t currentBitIndex;
+	uint32_t crcValue;
+
+	for (index = 0; index < 256; index++)
 	{
-		int index;
-		uint8_t currentBitIndex;
-		uint32_t crcValue;
+		crcValue = (uint32_t) index;
 
-		for (index = 0; index < 256; index++)
+		for (currentBitIndex = 0; currentBitIndex < 8; currentBitIndex++)
 		{
-			crcValue = (uint32_t) index;
-
-			for (currentBitIndex = 0; currentBitIndex < 8; currentBitIndex++)
-			{
-				// the least significant bit is the coefficient of the x^31 term
-				if (crcValue & 1)
-					crcValue = cCRC_polynomial ^ (crcValue >> 1);
-				else
-					crcValue >>= 1;
-			}
-
-			crcTable[index] = crcValue;
+			// the least significant bit is the coefficient of the x^31 term
+			if (crcValue & 1)
+				crcValue = cCRC_polynomial ^ (crcValue >> 1);
+			else
+				crcValue >>= 1;
 		}
 
-		crcTableInitialized = true;
+		crcTable[index] = crcValue;
 	}
+}
+
+static uint32_t initializeCrcTableAndReturnInitialCrc();
+static uint32_t initialCrc();
+
+uint32_t (*crcInitFun)() = initializeCrcTableAndReturnInitialCrc;
+
+static uint32_t initializeCrcTableAndReturnInitialCrc()
+{
+	initCRC_Table();
+	crcInitFun = initialCrc;
+	return cInitialCRC;
+}
+
+static uint32_t initialCrc()
+{
+	return cInitialCRC;
 }
 
 uint32_t CRC_init()
 {
-	if (!crcTableInitialized)
-		initCRC_Table();
-
-	return cInitialCRC;
+	return (*crcInitFun)();
 }
+
 uint32_t CRC_update(uint32_t in_currentCRC, uint8_t in_currentByte)
 {
 	assert(crcTableInitialized);
