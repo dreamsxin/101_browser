@@ -39,7 +39,7 @@ DLLEXPORT bool fileByteReadStreamState_create(const char *in_filename,
 
 DLLEXPORT void fileByteReadStreamState_destroy(FileByteStreamState *in_pFileByteStreamState);
 
-const ByteStreamReadInterface cFileByteStreamInterface = { &fileByteReadStreamRead, NULL };
+const ByteStreamReadInterface cFileByteStreamInterface = { fileByteReadStreamRead };
 
 #ifdef __cplusplus
 }

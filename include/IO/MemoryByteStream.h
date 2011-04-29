@@ -39,8 +39,7 @@ DLLEXPORT void initMemoryByteStreamReadState(
 DLLEXPORT size_t memoryByteReadStreamRead(void *in_out_pMemoryByteStreamReadState, 
 	void *out_pBuffer, size_t in_count);
 
-// TODO: implement pIsTerminated
-const ByteStreamReadInterface cMemoryStreamReadInterface = { &memoryByteReadStreamRead, NULL };
+const ByteStreamReadInterface cMemoryStreamReadInterface = { &memoryByteReadStreamRead };
 
 #ifdef __cplusplus
 }

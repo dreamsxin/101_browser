@@ -60,6 +60,6 @@ void setjmpStreamXchgAndLongjmp(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 ByteStreamReadInterface getSetjmpStreamReadReadInterface()
 {
-	ByteStreamReadInterface out_interface = {setjmpStreamRead, NULL};
+	ByteStreamReadInterface out_interface = { setjmpStreamRead };
 	return out_interface;
 }

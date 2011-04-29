@@ -20,7 +20,7 @@
 
 ByteStreamReadInterface getPipeStreamReadInterface()
 {
-	ByteStreamReadInterface out_interface = { pipeStreamRead, NULL };
+	ByteStreamReadInterface out_interface = { pipeStreamRead };
 	return out_interface;
 }
 
