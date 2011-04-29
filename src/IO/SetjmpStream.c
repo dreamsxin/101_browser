@@ -18,7 +18,7 @@
 #include <assert.h>
 #include "MiniStdlib/xchg.h"
 
-int setjmpStreamInitAndSetjmp(
+void setjmpStreamInit(
 	SetjmpStreamState *out_pSetjmpStreamState, 
 	jmp_buf *in_pJmpBuffer, int in_longjmpValue, 
 	void *in_pByteStreamState, ByteStreamReadInterface in_readInterface)
@@ -30,8 +30,6 @@ int setjmpStreamInitAndSetjmp(
 	out_pSetjmpStreamState->mLongjmpValue = in_longjmpValue;
 	out_pSetjmpStreamState->pByteStreamState = in_pByteStreamState;
 	out_pSetjmpStreamState->mReadInterface = in_readInterface;
-	
-	return setjmp(*out_pSetjmpStreamState->mpJmpBuffer);
 }
 
 size_t setjmpStreamRead(void *in_out_pSetjmpStreamState, void *out_pBuffer, size_t in_count)

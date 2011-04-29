@@ -34,15 +34,13 @@ typedef struct
 } SetjmpStreamState;
 
 /*!
-* Initializes in_pSetjmpStream and calls setjmp
+* Initializes in_pSetjmpStream. It does *not* call setjmp.
 *
 * Precondition: in_longjmpValue != 0 (because of limitations
 * of setjmp/longjmp this is surely not what you want).
 * PRE:SetjmpStream_h:36
-*
-* Return value: the result of setjmp
 */
-DLLEXPORT int setjmpStreamInitAndSetjmp(SetjmpStreamState *out_pSetjmpStreamState, 
+DLLEXPORT void setjmpStreamInit(SetjmpStreamState *out_pSetjmpStreamState, 
 	jmp_buf *in_pJmpBuffer, int in_longjmpValue, 
 	void *in_pByteStreamState, ByteStreamReadInterface in_readInterface);
 
