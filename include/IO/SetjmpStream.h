@@ -30,34 +30,59 @@ typedef struct
 	jmp_buf *mpJmpBuffer;
 	int mLongjmpValue;
 	void *pByteStreamState;
+} SetjmpStreamUtilData;
+
+typedef struct
+{
+	SetjmpStreamUtilData utilData;
 	ByteStreamReadInterface mReadInterface;
-} SetjmpStreamState;
+} SetjmpReadStreamState;
+
+typedef struct
+{
+	SetjmpStreamUtilData utilData;
+	ByteStreamWriteInterface mWriteInterface;
+} SetjmpWriteStreamState;
 
 /*!
-* Initializes in_pSetjmpStream. It does *not* call setjmp.
+* setjmpReadStreamInit and setjmpWriteStreamInit
+*
+* Initialize in_pSetjmpStreamState. Does *not* call setjmp.
 *
 * Precondition: in_longjmpValue != 0 (because of limitations
 * of setjmp/longjmp this is surely not what you want).
 * PRE:SetjmpStream_h:36
 */
-DLLEXPORT void setjmpStreamInit(SetjmpStreamState *out_pSetjmpStreamState, 
+DLLEXPORT void setjmpReadStreamInit(SetjmpReadStreamState *out_pSetjmpStreamState, 
 	jmp_buf *in_pJmpBuffer, int in_longjmpValue, 
 	void *in_pByteStreamState, ByteStreamReadInterface in_readInterface);
 
+DLLEXPORT void setjmpWriteStreamInit(SetjmpWriteStreamState *out_pSetjmpStreamState, 
+	jmp_buf *in_pJmpBuffer, int in_longjmpValue, 
+	void *in_pByteStreamState, ByteStreamWriteInterface in_writeInterface);
+
+void setjmpStreamUtilDataInit(SetjmpStreamUtilData *out_pSetjmpStreamUtilData, 
+	jmp_buf *in_pJmpBuffer, int in_longjmpValue, void *in_pByteStreamState);
+
 DLLEXPORT size_t setjmpStreamRead(void *in_out_pSetjmpStreamState, 
 	void *out_pBuffer, size_t in_count);
+
+DLLEXPORT size_t setjmpStreamWrite(void *in_out_pSetjmpStreamState, 
+	const void *out_pBuffer, size_t in_count);
 
 /*!
 * These two functions are intended for "catching the exception" for freeing 
 * allocated ressources before rethrowing it.
 */
-DLLEXPORT int setjmpStreamXchgAndSetjmp(SetjmpStreamState *in_out_pSetjmpStreamState, 
+DLLEXPORT int setjmpStreamXchgAndSetjmp(SetjmpStreamUtilData *in_out_pSetjmpStreamUtilData, 
 	jmp_buf *in_pJmpBuffer);
 
-DLLEXPORT void setjmpStreamXchgAndLongjmp(SetjmpStreamState *in_out_pSetjmpStreamState, 
+DLLEXPORT void setjmpStreamXchgAndLongjmp(SetjmpStreamUtilData *in_out_pSetjmpStreamUtilData, 
 	jmp_buf *in_pJmpBuffer);
 
-DLLEXPORT ByteStreamReadInterface getSetjmpStreamReadReadInterface();
+DLLEXPORT ByteStreamReadInterface getSetjmpReadStreamReadInterface();
+
+DLLEXPORT ByteStreamWriteInterface getSetjmpWriteStreamReadInterface();
 
 #ifdef __cplusplus
 }

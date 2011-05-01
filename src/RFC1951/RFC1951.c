@@ -153,15 +153,15 @@ ReadResult parseRFC1951(void *in_out_pReadStreamState, ByteStreamReadInterface i
 	void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface)
 {
 	BitReadState bitReadState;
-	SetjmpStreamState setjmpStreamState;
-	ByteStreamReadInterface setjmpStreamInterface = getSetjmpStreamReadReadInterface();
+	SetjmpReadStreamState setjmpReadStreamState;
+	ByteStreamReadInterface setjmpStreamInterface = getSetjmpReadStreamReadInterface();
 	jmp_buf jmpBuf;
 	int result;
 
 	uint8_t last, type;
 	ReadResult readResult;
 
-	setjmpStreamInit(&setjmpStreamState, &jmpBuf, ReadResultPrematureEndOfStream, 
+	setjmpReadStreamInit(&setjmpReadStreamState, &jmpBuf, ReadResultPrematureEndOfStream, 
 		in_out_pReadStreamState, in_readInterface);
 
 	// The = is correct here
@@ -170,7 +170,7 @@ ReadResult parseRFC1951(void *in_out_pReadStreamState, ByteStreamReadInterface i
 		return (ReadResult) result;
 	}
 
-	initBitReadState(&bitReadState, &setjmpStreamState, setjmpStreamInterface);
+	initBitReadState(&bitReadState, &setjmpReadStreamState, setjmpStreamInterface);
 
 	do
 	{
