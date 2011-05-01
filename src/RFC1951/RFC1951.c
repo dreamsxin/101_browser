@@ -19,10 +19,15 @@
 #include "IO/SetjmpStream.h"
 #include <string.h>
 
-static ReadResult invalidData(BitReadState *in_pBitReadState, void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface) { return ReadResultInvalidData; }
+static void invalidData(BitReadState *in_pBitReadState, 
+	SetjmpWriteStreamState *in_out_pWriteStreamState, 
+	ByteStreamWriteInterface in_writeInterface)
+{
+	longjmp(*in_out_pWriteStreamState->utilData.mpJmpBuffer, ReadResultInvalidData);
+}
 
-ReadResult readDataNoCompression(BitReadState *in_pBitReadState, 
-	void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface)
+void readDataNoCompression(BitReadState *in_pBitReadState, 
+	SetjmpWriteStreamState *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface)
 {
 	uint16_t len, nlen, currentByteIndex;
 	uint8_t currentByte;
@@ -49,26 +54,20 @@ ReadResult readDataNoCompression(BitReadState *in_pBitReadState,
 	(*in_pBitReadState->readInterface.pRead)(in_pBitReadState->pByteStreamState, &nlen, sizeof(nlen));
 
 	if (len != (uint16_t) ~nlen)
-	{
-		return ReadResultInvalidData;
-	}
+		longjmp(*in_out_pWriteStreamState->utilData.mpJmpBuffer, ReadResultInvalidData);
 
 	for (currentByteIndex = 0; currentByteIndex < len; currentByteIndex++)
 	{
 		(*in_pBitReadState->readInterface.pRead)(in_pBitReadState->pByteStreamState, &currentByte, 1);
-
-		if ((*in_writeInterface.pWrite)(in_out_pWriteStreamState, &currentByte, 1) != 1)
-			return ReadResultWriteError;
+		(*in_writeInterface.pWrite)(in_out_pWriteStreamState, &currentByte, 1);
 	}
-
-	return ReadResultOK;
 }
 
 #define LITERAL_VALUE_RANGE_BOUNDARY_COUNT 4
 #define FIXED_HUFFMAN_CODE_LENGTH_COUNT 288
 
-ReadResult readDataCompressedWithFixedHuffmanCodes(BitReadState *in_pBitReadState, 
-	void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface)
+void readDataCompressedWithFixedHuffmanCodes(BitReadState *in_pBitReadState, 
+	SetjmpWriteStreamState *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface)
 {
 	static bool tableInitialized = false;
 
@@ -94,11 +93,11 @@ ReadResult readDataCompressedWithFixedHuffmanCodes(BitReadState *in_pBitReadStat
 	}
 
 
-	return ReadResultOK;
+	// ...
 }
 
-ReadResult readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadState, 
-	void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface)
+void readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadState, 
+	SetjmpWriteStreamState *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface)
 {
 	uint16_t literalCodesCount = 0;
 	uint8_t distanceCodesCount, codeLengthCodesCount;
@@ -110,7 +109,7 @@ ReadResult readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadSt
 	* 5 Bits: HLIT, # of Literal/Length codes - 257 (257 - 286)
 	*/
 	if (literalCodesCount > 286)
-		return ReadResultInvalidData;
+		longjmp(*in_out_pWriteStreamState->utilData.mpJmpBuffer, ReadResultInvalidData);
 
 	readBitsLittleEndian(in_pBitReadState, &distanceCodesCount, 5);
 	distanceCodesCount += 1;
@@ -135,14 +134,11 @@ ReadResult readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadSt
 	readBitsLittleEndian(in_pBitReadState, &codeLengthCodesCount, 4);
 	codeLengthCodesCount += 4;
 
-
-
-
-	return ReadResultOK;
+	// ...
 }
 
-ReadResult (*pfTypeFunctions[4])(BitReadState *in_pBitReadState, 
-	void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface) = {
+void (*pfTypeFunctions[4])(BitReadState *in_pBitReadState, 
+	SetjmpWriteStreamState *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface) = {
 		readDataNoCompression, 
 		readDataCompressedWithFixedHuffmanCodes, 
 		readDataCompressedWithDynamicHuffmanCodes,
@@ -153,8 +149,10 @@ ReadResult parseRFC1951(void *in_out_pReadStreamState, ByteStreamReadInterface i
 	void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface)
 {
 	BitReadState bitReadState;
+
 	SetjmpReadStreamState setjmpReadStreamState;
-	ByteStreamReadInterface setjmpStreamInterface = getSetjmpReadStreamReadInterface();
+	SetjmpWriteStreamState setjmpWriteStreamState;
+
 	jmp_buf jmpBuf;
 	int result;
 
@@ -164,23 +162,21 @@ ReadResult parseRFC1951(void *in_out_pReadStreamState, ByteStreamReadInterface i
 	setjmpReadStreamInit(&setjmpReadStreamState, &jmpBuf, ReadResultPrematureEndOfStream, 
 		in_out_pReadStreamState, in_readInterface);
 
+	setjmpWriteStreamInit(&setjmpWriteStreamState, &jmpBuf, ReadResultWriteError, 
+		in_out_pWriteStreamState, in_writeInterface);
+
 	// The = is correct here
 	if (result = setjmp(jmpBuf))
-	{
 		return (ReadResult) result;
-	}
 
-	initBitReadState(&bitReadState, &setjmpReadStreamState, setjmpStreamInterface);
+	initBitReadState(&bitReadState, &setjmpReadStreamState, getSetjmpReadStreamReadInterface());
 
 	do
 	{
 		readBitsLittleEndian(&bitReadState, &last, 1);
 		readBitsLittleEndian(&bitReadState, &type, 2);
 
-		readResult = pfTypeFunctions[type](&bitReadState, in_out_pWriteStreamState, in_writeInterface);
-
-		if (readResult != ReadResultOK)
-			return readResult;
+		pfTypeFunctions[type](&bitReadState, &setjmpWriteStreamState, getSetjmpWriteStreamReadInterface());
 	} while (!last);
 
 	return ReadResultOK;
