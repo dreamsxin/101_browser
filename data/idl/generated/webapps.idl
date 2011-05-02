@@ -140,9 +140,7 @@ module webapps
              attribute Function onchange;
              attribute Function onclick;
              attribute Function oncontextmenu;
-  
              attribute Function oncuechange;
-  
              attribute Function ondblclick;
              attribute Function ondrag;
              attribute Function ondragend;
@@ -263,9 +261,7 @@ module webapps
              attribute Function onchange;
              attribute Function onclick;
              attribute Function oncontextmenu;
-  
              attribute Function oncuechange;
-  
              attribute Function ondblclick;
              attribute Function ondrag;
              attribute Function ondragend;
@@ -593,13 +589,10 @@ module webapps
              attribute boolean defaultMuted;
   
     // tracks
-  
     readonly attribute MultipleTrackList audioTracks;
     readonly attribute ExclusiveTrackList videoTracks;
-  
     readonly attribute TextTrack[] textTracks;
     MutableTextTrack addTextTrack(in DOMString kind, in optional DOMString label, in optional DOMString language);
-  
   };
 
   interface MediaError {
@@ -613,6 +606,7 @@ module webapps
   interface TrackList {
     readonly attribute unsigned long length;
     DOMString getID(in unsigned long index);
+    DOMString getKind(in unsigned long index);
     DOMString getLabel(in unsigned long index);
     DOMString getLanguage(in unsigned long index);
   
@@ -1299,9 +1293,7 @@ module webapps
              attribute Function onchange;
              attribute Function onclick;
              attribute Function oncontextmenu;
-  
              attribute Function oncuechange;
-  
              attribute Function ondblclick;
              attribute Function ondrag;
              attribute Function ondragend;
