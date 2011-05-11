@@ -111,10 +111,13 @@ size_t coroutineStreamWrite(
 	const uint8_t * volatile *in_ppCurrentBuffer, volatile size_t * in_pCurrentBufferSize, 
 	bool in_resetBuffer)
 {
+	size_t out_writtenCount;
+	
 	*in_ppCurrentBuffer = (const uint8_t*) in_pBuffer;
 	*in_pCurrentBufferSize = in_count;
 
 	((CoroutineStreamFunctions*) in_out_pStreamState)->mpfSwitchCoroutine(in_out_pStreamState);
+	out_writtenCount = in_count - *in_pCurrentBufferSize;
 
 	if (in_resetBuffer)
 	{
@@ -122,5 +125,5 @@ size_t coroutineStreamWrite(
 		*in_pCurrentBufferSize = 0;
 	}
 
-	return in_count - *in_pCurrentBufferSize;
+	return out_writtenCount;
 }
