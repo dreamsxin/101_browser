@@ -63,7 +63,7 @@ void test_RFC1951_File(const char *in_filenameRaw, const char *in_filenameRefere
 	if (!result)
 		return;
 
-	result = initPipeStreamState(&pipeStreamState, true, &thisCoroutine, &otherCoroutine, 
+	result = pipeStreamInit(&pipeStreamState, true, &thisCoroutine, &otherCoroutine, 
 		fileOtherCoroutine, &referenceFileByteStreamState);
 	test(result);
 
@@ -91,7 +91,19 @@ void zerosOtherCoroutine(void *in_out_pStreamState, void *in_pUserData)
 	while (pipeStreamRead(in_out_pStreamState, &buffer, 1) == 1)
 	{
 		readCount++;
+
+		if (buffer != 0x00)
+			test(0x00 == buffer);
 	}
+
+	/*
+	* The code for parsing of deflate data is incomplete, so I commented
+	* this testcase.
+	*/
+#if 0
+	printf("Testing whether we have read the correct amount of 0x00 bytes.\n");
+	test(1234567 == readCount);
+#endif
 }
 
 void test_RFC1951_zeros()
@@ -108,7 +120,7 @@ void test_RFC1951_zeros()
 	if (!result)
 		return;
 
-	result = initPipeStreamState(&pipeStreamState, true, &thisCoroutine, &otherCoroutine, 
+	result = pipeStreamInit(&pipeStreamState, true, &thisCoroutine, &otherCoroutine, 
 		&zerosOtherCoroutine, NULL);
 	test(result);
 

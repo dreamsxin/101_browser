@@ -67,7 +67,7 @@ bool coroutineStreamStart(void *in_pStreamState,
 }
 
 size_t coroutineStreamRead(void *in_out_pStreamState, 
-	void *out_pBuffer, size_t in_count, 
+	void *out_pBuffer, size_t in_count,
 	const uint8_t * volatile *in_ppCurrentBuffer, volatile size_t * in_pCurrentBufferSize)
 {
 	uint8_t *pBuffer = (uint8_t*) out_pBuffer;

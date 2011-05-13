@@ -19,6 +19,23 @@
 #include "IO/SetjmpStream.h"
 #include <string.h>
 
+typedef struct
+{
+	uint16_t *count;       /* number of symbols of each length */
+    uint16_t *symbol;      /* canonically ordered symbols */
+} HuffmanNode;
+
+#define MAXIMUM_BITS_IN_A_CODE 15
+
+void constructHuffmanTree(HuffmanNode *in_pNode, uint8_t *in_pLengths, size_t in_lengthsCount)
+{
+	size_t currentLength;
+	
+	/* count number of codes of each length */
+	for (currentLength = 0; currentLength <= MAXIMUM_BITS_IN_A_CODE; currentLength++)
+		in_pNode->count[currentLength] = 0;
+}
+
 static void invalidData(BitReadState *in_pBitReadState, 
 	SetjmpWriteStreamState *in_out_pWriteStreamState, 
 	ByteStreamWriteInterface in_writeInterface)
@@ -64,32 +81,43 @@ void readDataNoCompression(BitReadState *in_pBitReadState,
 }
 
 #define LITERAL_VALUE_RANGE_BOUNDARY_COUNT 4
-#define FIXED_HUFFMAN_CODE_LENGTH_COUNT 288
+
+#define FIXED_HUFFMAN_CODE_LENGTHS_COUNT 288
+#define MAXIMUM_NUMBER_OF_LITERAL_LENGTH_CODES 286           /* maximum number of literal/length codes */
+#define MAXIMUM_NUMBER_OF_DISTANCE_CODES 30
 
 void readDataCompressedWithFixedHuffmanCodes(BitReadState *in_pBitReadState, 
 	SetjmpWriteStreamState *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface)
 {
 	static bool tableInitialized = false;
+	HuffmanNode lengthCode, distanceCode;
+	static uint16_t lencnt[MAXIMUM_BITS_IN_A_CODE+1], lensym[FIXED_HUFFMAN_CODE_LENGTHS_COUNT];
+    static uint16_t distcnt[MAXIMUM_BITS_IN_A_CODE+1], distsym[MAXIMUM_NUMBER_OF_DISTANCE_CODES];
 
 	if (!tableInitialized)
 	{
-		int literalValueRangeBoundaries[LITERAL_VALUE_RANGE_BOUNDARY_COUNT+1] = 
-		{ 0, 144, 256, 280, FIXED_HUFFMAN_CODE_LENGTH_COUNT };
-		uint8_t literalCodeLengthsInArea[LITERAL_VALUE_RANGE_BOUNDARY_COUNT] = { 8, 9, 7, 8 };
-		uint8_t codeLengths[FIXED_HUFFMAN_CODE_LENGTH_COUNT];
-		int idx;
+		uint8_t codeLengths[FIXED_HUFFMAN_CODE_LENGTHS_COUNT];
 
-		for (idx = 0; idx < LITERAL_VALUE_RANGE_BOUNDARY_COUNT; idx++)
 		{
-			memset(codeLengths+literalValueRangeBoundaries[idx], literalCodeLengthsInArea[idx], 
-				literalValueRangeBoundaries[idx+1]-literalValueRangeBoundaries[idx]);
+			const uint16_t literalValueRangeBoundaries[LITERAL_VALUE_RANGE_BOUNDARY_COUNT+1] = 
+			{ 0, 144, 256, 280, FIXED_HUFFMAN_CODE_LENGTHS_COUNT };
+			const uint8_t literalCodeLengthsInArea[LITERAL_VALUE_RANGE_BOUNDARY_COUNT] = { 8, 9, 7, 8 };
+			uint8_t idx;
+
+			for (idx = 0; idx < LITERAL_VALUE_RANGE_BOUNDARY_COUNT; idx++)
+			{
+				memset(codeLengths+literalValueRangeBoundaries[idx], literalCodeLengthsInArea[idx], 
+					literalValueRangeBoundaries[idx+1]-literalValueRangeBoundaries[idx]);
+			}
 		}
+		lengthCode.count = lencnt;
+		lengthCode.symbol = lensym;
+		constructHuffmanTree(&lengthCode, codeLengths, FIXED_HUFFMAN_CODE_LENGTHS_COUNT);
 
-		// ...
-
-		memset(codeLengths, 5, FIXED_HUFFMAN_CODE_LENGTH_COUNT);
-
-		// ...
+		memset(codeLengths, 5, MAXIMUM_NUMBER_OF_DISTANCE_CODES);
+		distanceCode.count = distcnt;
+		distanceCode.symbol = distsym;
+		constructHuffmanTree(&distanceCode, codeLengths, MAXIMUM_NUMBER_OF_DISTANCE_CODES);
 	}
 
 
@@ -157,7 +185,6 @@ ReadResult parseRFC1951(void *in_out_pReadStreamState, ByteStreamReadInterface i
 	int result;
 
 	uint8_t last, type;
-	ReadResult readResult;
 
 	setjmpReadStreamInit(&setjmpReadStreamState, &jmpBuf, ReadResultPrematureEndOfStream, 
 		in_out_pReadStreamState, in_readInterface);

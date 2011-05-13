@@ -75,13 +75,15 @@ void pipeStreamTerminalLoopWrite(void *in_out_pPipeStreamState)
 	(((CoroutineStreamFunctions*) in_out_pPipeStreamState)->mpfSwitchCoroutine)(in_out_pPipeStreamState);
 }
 
-bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
+bool pipeStreamInit(PipeStreamState *out_pPipeStreamState,
 	bool in_isOtherStreamReader,
 	CoroutineDescriptor *out_pThisCoroutine,
 	CoroutineDescriptor *out_pOtherCoroutine,
 	void (*in_pOtherCoroutineStartup)(void *in_out_pStreamState, void *in_pUserData),
 	void *in_pUserData)
 {
+	bool out_result;
+	
 	out_pPipeStreamState->mFunctions.mpfSwitchCoroutine = xchgAndSwitchCoroutine;
 
 	out_pPipeStreamState->mpCurrentBuffer = NULL;
@@ -90,13 +92,20 @@ bool initPipeStreamState(PipeStreamState *out_pPipeStreamState,
 	out_pPipeStreamState->mpCurrentCoroutineDescriptor = out_pThisCoroutine;
 	out_pPipeStreamState->mpOtherCoroutineDescriptor = out_pOtherCoroutine;
 
-	return coroutineStreamStart(out_pPipeStreamState,
+	out_result = coroutineStreamStart(out_pPipeStreamState,
 		out_pThisCoroutine,
 		out_pOtherCoroutine,
 		in_pOtherCoroutineStartup,
 		in_isOtherStreamReader ? pipeStreamTerminateRead : pipeStreamTerminateWrite,
 		in_isOtherStreamReader ? pipeStreamTerminalLoopRead : pipeStreamTerminalLoopWrite,
 		in_pUserData);
+
+	if (in_isOtherStreamReader)
+	{
+		(out_pPipeStreamState->mFunctions.mpfSwitchCoroutine)(out_pPipeStreamState);
+	}
+
+	return out_result;
 }
 
 void deletePipeStreamState(PipeStreamState *out_pPipeStreamState)

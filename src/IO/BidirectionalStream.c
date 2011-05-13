@@ -132,6 +132,18 @@ size_t bidirectionalStreamRead(void *in_out_pBidirectionalStreamState, void *out
 
 	assert(BidirectionalHalfStreamActionNoAction == pStreamState->mHalfStreamStates[pStreamState->mCurrentSide].mAction);
 
+	/*
+	* Q: Why do we only set this variable in case of 0 != in_count?
+	* A: If we have 0 == in_count, coroutineStreamRead will simply switch the coroutine.
+	*    With
+	*    pStreamState->mHalfStreamStates[pStreamState->mCurrentSide].mAction == BidirectionalHalfStreamActionReading
+	*    any reading attempt of the other coroutine would be blocked. 
+	*    But enabling the other coroutine is exactly the purpose of calling 
+	*    bidirectionalStreamRead with 0 == in_count.
+	*
+	*    Note that in case of pStreamState->mCurrentBufferSize (where we require
+	*    *not* to switch the coroutine) this causes no harm.
+	*/
 	if (0 != in_count)
 	{
 		pStreamState->mHalfStreamStates[pStreamState->mCurrentSide].mAction = BidirectionalHalfStreamActionReading;
@@ -165,6 +177,9 @@ size_t bidirectionalStreamWrite(void *in_out_pBidirectionalStreamState, const vo
 		// Error
 		return SIZE_MAX;
 
+	/*
+	* See comment in bidirectionalStreamRead concerning this code block.
+	*/
 	if (0 != in_count)
 	{
 		pStreamState->mHalfStreamStates[pStreamState->mCurrentSide].mAction = BidirectionalHalfStreamActionWriting;

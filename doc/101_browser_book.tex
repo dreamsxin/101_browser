@@ -1,7 +1,9 @@
 \documentclass[10pt]{scrbook}
 \usepackage[utf8]{inputenc}
+\usepackage{listings} % for listings, of course ;-)
 \usepackage{amssymb}
 \usepackage{graphicx} % for \includegraphics
+\lstset{language=C++}
 \author{Wolfgang Keller}
 \title{Documentation of 101\_browser}
 \begin{document}
@@ -79,20 +81,86 @@ At the time of writing (26th of December 2010) only the Standard library of C/C+
 
 Things that you should check to validate the model:
 
-\begin{tabular}{| l | l | l |}
+\begin{tabular}{| l | l | p{4.9cm} | l |}
 \hline
-Call & Remark & Desired action \\
+\# & Call & Remark & Desired action \\
 \hline
 \hline
-  \texttt{read(0)} & & Switch coroutine \\
+  1 & \texttt{read(0)} & & Switch coroutine \\
 \hline
-  \texttt{read(in\_count)} & \texttt{in\_count} $>$ 0 and \texttt{in\_count} $<$ \texttt{currentBufferSize} & Don't switch coroutine \\
 \hline
-  \texttt{read(in\_count)} & \texttt{in\_count} $>$ 0 and \texttt{in\_count} $==$ \texttt{currentBufferSize} & Don't switch coroutine \\
+  2 & \texttt{read(in\_count)} & $\texttt{in\_count} > 0$ and $\texttt{in\_count} < \texttt{currentBufferSize}$ & Don't switch coroutine \\
 \hline
-  \texttt{read(in\_count)} & \texttt{in\_count} $>$ 0 and \texttt{in\_count} $>$ \texttt{currentBufferSize} & Switch coroutine \\
+  3 & \texttt{read(in\_count)} & $\texttt{in\_count} > 0$ and $\texttt{in\_count} == \texttt{currentBufferSize}$ & Don't switch coroutine \\
+\hline
+  4 & \texttt{read(in\_count)} & $\texttt{in\_count} > 0$ and $\texttt{in\_count} > \texttt{currentBufferSize}$ & Switch coroutine \\
 \hline
 \end{tabular}
+\\
+
+Why do we require the function to behave like this?
+
+Lets go through the cases:
+
+\paragraph{Case 1} \texttt{read(0)} is actually intended for switching the coroutine
+
+\paragraph{Case 2} If we want to read data and data is available we can simply read it -- this should be obvious
+
+\paragraph{Case 3} The reason why we don't switch the coroutine in case \texttt{in\_count} $>$ 0 and \texttt{in\_count} $==$ \texttt{currentBufferSize} is that we want to handle data as soon as possible. Additionally if we would the code of the reader coroutine in ``PipeStream example 2 -- reader coroutine'' (Listing \ref{lst:pipestream3}) would never reach the test.
+
+\paragraph{Case 4} This should be obvious: if there is not enough data available we have to switch the coroutine
+
+\subsection{PipeStream}
+
+We have to store whether we already read data 
+
+Imagine the following example:
+
+\begin{lstlisting}[caption=PipeStream example 1 -- writer coroutine, label=lst:pipestream0]
+pipeStreamInit(&state, ...);
+
+// we write nothing
+
+// Now we terminate to call the other coroutine
+pipeStreamWrite(&state, NULL, 0);
+\end{lstlisting}
+
+\begin{lstlisting}[caption=PipeStream example 1 -- reader coroutine, label=lst:pipestream1]
+size_t readCount = 0;
+uint8_t buffer;
+
+while (pipeStreamRead(&state, &buffer, 1))
+	readCount++;
+
+test(0 == readCount);
+\end{lstlisting}
+
+When calling \lstinline|pipeStreamWrite(&state, NULL, 0);| we switch to the other coroutine. Here we will call \lstinline|pipeStreamRead(&state, &buffer, 1);| This will switch back to the writer coroutine. The line \lstinline|test(READ_SIZE == readCount);| gets never called.
+
+We can not easily change the source code since the following one is correct:
+
+\begin{lstlisting}[caption=PipeStream example 2 -- writer coroutine, label=lst:pipestream2]
+uint8_t buffer[2];
+
+pipeStreamInit(&state, ...);
+
+write(&state, buffer, 2);
+
+// Now we terminate to call the other coroutine
+pipeStreamWrite(&state, NULL, 0);
+\end{lstlisting}
+
+\begin{lstlisting}[caption=PipeStream example 2 -- reader coroutine, label=lst:pipestream3]
+size_t readCount = 0;
+uint8_t buffer;
+
+while (pipeStreamRead(&state, &buffer, 1))
+	readCount++;
+
+test(2 == readCount);
+\end{lstlisting}
+
+So we solve this problem by switching to the other coroutine when initializing the PipeStream.
 
 \part{Bits and pieces}
 

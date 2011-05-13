@@ -166,7 +166,7 @@ void test_2_4()
 		test_2_4_userdata.pInputBytes = inputBytes;
 		test_2_4_userdata.pReadState = &readState;
 
-		result = initPipeStreamState(&pipeStreamState, false, &thisCoroutine, &otherCoroutine, 
+		result = pipeStreamInit(&pipeStreamState, false, &thisCoroutine, &otherCoroutine, 
 			&test_2_4_Coroutine, &test_2_4_userdata);
 
 		test(result);
