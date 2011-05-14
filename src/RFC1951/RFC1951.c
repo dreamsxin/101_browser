@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+#include "MiniStdlib/memset.h"
 #include "RFC1951/RFC1951.h"
 #include "IO/BitRead.h"
 #include "IO/SetjmpStream.h"
@@ -27,13 +28,23 @@ typedef struct
 
 #define MAXIMUM_BITS_IN_A_CODE 15
 
-void constructHuffmanTree(HuffmanNode *in_pNode, uint8_t *in_pLengths, size_t in_lengthsCount)
+/*
+* Preconditions:
+* PRE:RFC1951_c_32: in_pNode->count has a size of at least MAXIMUM_BITS_IN_A_CODE+1
+* PRE:RFC1951_c_33: 0 <= in_pLengths[i] <= MAXBITS for all i in 0..in_lengthsCount
+*/
+void constructHuffmanTree(HuffmanNode *in_pNode, uint16_t *in_pLengths, size_t in_lengthsCount)
 {
-	size_t currentLength;
-	
-	/* count number of codes of each length */
-	for (currentLength = 0; currentLength <= MAXIMUM_BITS_IN_A_CODE; currentLength++)
-		in_pNode->count[currentLength] = 0;
+	size_t currentLength, currentSymbol;
+
+	// No buffer overflow because of PRE:RFC1951_c_32
+	memset(in_pNode->count, 0, sizeof(uint16_t)*(MAXIMUM_BITS_IN_A_CODE+1));
+
+	for (currentSymbol = 0; currentSymbol < in_lengthsCount; currentSymbol++)
+		// No buffer overflow because of PRE:RFC1951_c_33
+		(in_pNode->count[in_pLengths[currentSymbol]])++;
+
+
 }
 
 static void invalidData(BitReadState *in_pBitReadState, 
@@ -82,7 +93,7 @@ void readDataNoCompression(BitReadState *in_pBitReadState,
 
 #define LITERAL_VALUE_RANGE_BOUNDARY_COUNT 4
 
-#define FIXED_HUFFMAN_CODE_LENGTHS_COUNT 288
+#define FIXED_LITERALLENGTH_HUFFMAN_CODES_COUNT 288
 #define MAXIMUM_NUMBER_OF_LITERAL_LENGTH_CODES 286           /* maximum number of literal/length codes */
 #define MAXIMUM_NUMBER_OF_DISTANCE_CODES 30
 
@@ -91,30 +102,30 @@ void readDataCompressedWithFixedHuffmanCodes(BitReadState *in_pBitReadState,
 {
 	static bool tableInitialized = false;
 	HuffmanNode lengthCode, distanceCode;
-	static uint16_t lencnt[MAXIMUM_BITS_IN_A_CODE+1], lensym[FIXED_HUFFMAN_CODE_LENGTHS_COUNT];
+	static uint16_t lencnt[MAXIMUM_BITS_IN_A_CODE+1], lensym[FIXED_LITERALLENGTH_HUFFMAN_CODES_COUNT];
     static uint16_t distcnt[MAXIMUM_BITS_IN_A_CODE+1], distsym[MAXIMUM_NUMBER_OF_DISTANCE_CODES];
 
 	if (!tableInitialized)
 	{
-		uint8_t codeLengths[FIXED_HUFFMAN_CODE_LENGTHS_COUNT];
+		uint16_t codeLengths[FIXED_LITERALLENGTH_HUFFMAN_CODES_COUNT];
 
 		{
 			const uint16_t literalValueRangeBoundaries[LITERAL_VALUE_RANGE_BOUNDARY_COUNT+1] = 
-			{ 0, 144, 256, 280, FIXED_HUFFMAN_CODE_LENGTHS_COUNT };
+			{ 0, 144, 256, 280, FIXED_LITERALLENGTH_HUFFMAN_CODES_COUNT };
 			const uint8_t literalCodeLengthsInArea[LITERAL_VALUE_RANGE_BOUNDARY_COUNT] = { 8, 9, 7, 8 };
 			uint8_t idx;
 
 			for (idx = 0; idx < LITERAL_VALUE_RANGE_BOUNDARY_COUNT; idx++)
 			{
-				memset(codeLengths+literalValueRangeBoundaries[idx], literalCodeLengthsInArea[idx], 
+				memset2(codeLengths+literalValueRangeBoundaries[idx], literalCodeLengthsInArea[idx], 
 					literalValueRangeBoundaries[idx+1]-literalValueRangeBoundaries[idx]);
 			}
 		}
 		lengthCode.count = lencnt;
 		lengthCode.symbol = lensym;
-		constructHuffmanTree(&lengthCode, codeLengths, FIXED_HUFFMAN_CODE_LENGTHS_COUNT);
+		constructHuffmanTree(&lengthCode, codeLengths, FIXED_LITERALLENGTH_HUFFMAN_CODES_COUNT);
 
-		memset(codeLengths, 5, MAXIMUM_NUMBER_OF_DISTANCE_CODES);
+		memset2(codeLengths, 5, MAXIMUM_NUMBER_OF_DISTANCE_CODES);
 		distanceCode.count = distcnt;
 		distanceCode.symbol = distsym;
 		constructHuffmanTree(&distanceCode, codeLengths, MAXIMUM_NUMBER_OF_DISTANCE_CODES);

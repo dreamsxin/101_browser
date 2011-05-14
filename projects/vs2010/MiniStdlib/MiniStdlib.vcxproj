@@ -18,6 +18,7 @@
     <ClInclude Include="..\..\..\include\MiniStdlib\cstdint.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\declspec.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\HexDigit.h" />
+    <ClInclude Include="..\..\..\include\MiniStdlib\memset.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\minmax.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\MTAx_cstdio.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\MTAx_cstdlib.h" />
@@ -27,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\MiniStdlib\HexDigit.c" />
+    <ClCompile Include="..\..\..\src\MiniStdlib\memset.c" />
     <ClCompile Include="..\..\..\src\MiniStdlib\MTAx_cstdio.c" />
     <ClCompile Include="..\..\..\src\MiniStdlib\safe_free.c" />
     <ClCompile Include="..\..\..\src\MiniStdlib\xchg.c" />
