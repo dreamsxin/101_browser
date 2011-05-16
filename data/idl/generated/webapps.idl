@@ -40,7 +40,7 @@ module webapps
   typedef sequence<any> PropertyValueArray;
   
   interface PropertyNodeList : NodeList {
-    readonly attribute PropertyValueArray values;
+    PropertyValueArray getValues();
   };
 
   interface DOMTokenList {
@@ -733,6 +733,7 @@ module webapps
              attribute unsigned long height;
   
     DOMString toDataURL(in optional DOMString type, in any... args);
+    void toBlob(in FileCallback, in optional DOMString type, in any... args);
   
     object getContext(in DOMString contextId, in any... args);
   };
@@ -795,11 +796,11 @@ module webapps
     void arc(in double x, in double y, in double radius, in double startAngle, in double endAngle, in optional boolean anticlockwise);
     void fill();
     void stroke();
+    void drawSystemFocusRing(in Element element);
+    boolean drawCustomFocusRing(in Element element);
+    void scrollPathIntoView();
     void clip();
     boolean isPointInPath(in double x, in double y);
-  
-    // focus management
-    boolean drawFocusRing(in Element element, in double xCaret, in double yCaret, in optional boolean canDrawCustom);
   
     // text
              attribute DOMString font; // (default 10px sans-serif)
@@ -1032,7 +1033,8 @@ module webapps
     void select();
              attribute unsigned long selectionStart;
              attribute unsigned long selectionEnd;
-    void setSelectionRange(in unsigned long start, in unsigned long end);
+             attribute DOMString selectionDirection;
+    void setSelectionRange(in unsigned long start, in unsigned long end, in optional DOMString direction);
   };
 
   interface HTMLButtonElement : HTMLElement {
@@ -1145,7 +1147,8 @@ module webapps
     void select();
              attribute unsigned long selectionStart;
              attribute unsigned long selectionEnd;
-    void setSelectionRange(in unsigned long start, in unsigned long end);
+             attribute DOMString selectionDirection;
+    void setSelectionRange(in unsigned long start, in unsigned long end, in optional DOMString direction);
   };
 
   interface HTMLKeygenElement : HTMLElement {
