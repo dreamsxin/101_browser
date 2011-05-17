@@ -27,4 +27,4 @@ rm complete.html
 rm geolocation.html
 rm xproc.html
 
-REM set PATH=%OLDPATH%
+set PATH=%OLDPATH%
