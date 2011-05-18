@@ -456,6 +456,7 @@ module webapps
   interface HTMLImageElement : HTMLElement {
              attribute DOMString alt;
              attribute DOMString src;
+             attribute DOMString crossOrigin;
              attribute DOMString useMap;
              attribute boolean isMap;
              attribute unsigned long width;
@@ -543,6 +544,7 @@ module webapps
     // network state
              attribute DOMString src;
     readonly attribute DOMString currentSrc;
+             attribute DOMString crossOrigin;
     const unsigned short NETWORK_EMPTY = 0;
     const unsigned short NETWORK_IDLE = 1;
     const unsigned short NETWORK_LOADING = 2;
@@ -1273,6 +1275,7 @@ module webapps
   
     // the user agent
     readonly attribute Navigator navigator; 
+    readonly attribute External external;
     readonly attribute ApplicationCache applicationCache;
   
     // user prompts
@@ -1495,6 +1498,11 @@ module webapps
   [Supplemental, NoInterfaceObject]
   interface NavigatorStorageUtils {
     void yieldForStorageUpdates();
+  };
+
+  interface External {
+    void AddSearchProvider(in DOMString engineURL);
+    unsigned long IsSearchProviderInstalled(in DOMString engineURL);
   };
 
   interface DataTransfer {
