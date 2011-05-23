@@ -88,7 +88,7 @@ int main()
 {
 	FileReadStream stream;
 
-	if (!stream.open("testfiles/pdf/swf_file_format_spec_v10.pdf"))
+	if (!stream.open("testfiles/pdf/amf0_spec_121207.pdf"))
 		exit(1);
 
 	readPdf(&stream);
