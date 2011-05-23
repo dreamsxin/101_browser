@@ -60,6 +60,12 @@ void readDataNoCompression(BitReadState *in_pBitReadState,
 	uint16_t len, nlen, currentByteIndex;
 	uint8_t currentByte;
 
+	/*
+	* Q: Why is this line very important?
+	* A: If it wasn't here we would get a problem when there is a block after 
+	*    this uncompressed block (we would read data from the buffer instead of
+	*    new data).
+	*/
 	bitReadStateFlush(in_pBitReadState);
 
 	/*
