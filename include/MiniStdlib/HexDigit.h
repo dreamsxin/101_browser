@@ -28,6 +28,8 @@ extern "C" {
 bool convertHexDigitToNumber(UnicodeCodePoint token, uint8_t *out_pNumber, 
 	bool in_acceptUppercase, bool in_acceptLowercase);
 
+void convertNumberToHexDigits(uint8_t in_number, bool in_lowercase, char out_characters[2]);
+
 #ifdef __cplusplus
 }
 #endif

@@ -39,3 +39,28 @@ bool convertHexDigitToNumber(UnicodeCodePoint token, uint8_t *out_pNumber,
 		return false;
 	}
 }
+
+void convertNumberToHexDigits(uint8_t in_number, bool in_lowercase, char out_characters[2])
+{
+	uint8_t nibbles[2] = { in_number >> 4, in_number & 0x0F };
+	uint8_t idx;
+
+	for (idx = 0; idx < 2; idx++)
+	{
+		if (nibbles[idx] < 0xA)
+			out_characters[idx] = '0' + nibbles[idx];
+		else
+		{
+			nibbles[idx] -= 0xA;
+			
+			if (in_lowercase)
+			{
+				out_characters[idx] = 'a' + nibbles[idx];
+			}
+			else
+			{
+				out_characters[idx] = 'A' + nibbles[idx];
+			}
+		}
+	}
+}
