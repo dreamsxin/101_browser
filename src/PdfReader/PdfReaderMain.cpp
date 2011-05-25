@@ -15,6 +15,8 @@
  */
 
 #include "BasicDataStructures/Stream/FileReadStream.h"
+#include "IO/ByteStreamInterface.h"
+#include "Util/ReadResult.h"
 #include <cstdlib>
 #include <cstring>
 #include <list>
@@ -52,6 +54,14 @@ bool readComment(FileReadStream* in_pStream)
 	}
 
 	return true;
+}
+
+// See section 7.5.2 File Header
+ReadResult readFileHeader(FileReadStream* in_pStream)
+{
+
+	
+	return ReadResultOK;
 }
 
 void readPdf(FileReadStream* in_pStream)
