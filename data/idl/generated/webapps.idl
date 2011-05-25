@@ -735,7 +735,7 @@ module webapps
              attribute unsigned long height;
   
     DOMString toDataURL(in optional DOMString type, in any... args);
-    void toBlob(in FileCallback, in optional DOMString type, in any... args);
+    void toBlob(in FileCallback callback, in optional DOMString type, in any... args);
   
     object getContext(in DOMString contextId, in any... args);
   };
@@ -1759,8 +1759,8 @@ module webapps
   };
   EventSource implements EventTarget;
 
-  [Constructor(in DOMString url, in optional DOMString protocols)]
-  [Constructor(in DOMString url, in optional DOMString[] protocols)]
+  [Constructor(in DOMString url, in optional DOMString protocols),
+   Constructor(in DOMString url, in optional DOMString[] protocols)]
   interface WebSocket {
     readonly attribute DOMString url;
   
