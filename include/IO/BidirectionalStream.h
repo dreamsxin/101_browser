@@ -19,6 +19,7 @@
 
 #include "Coroutine/Coroutine.h"
 #include "IO/CoroutineStream.h"
+#include "IO/ByteStreamInterface.h"
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/declspec.h"
 
@@ -44,28 +45,29 @@ typedef struct
 typedef struct
 {
 	// this has to be the first member of the struct because it will be casted
-	CoroutineStreamFunctions mFunctions;
+	CoroutineStreamInterface mCoroutineStreamInterface;
 
 	const uint8_t * volatile mpCurrentBuffer;
 	volatile size_t mCurrentBufferSize;
 	
 	BidirectionalHalfStreamState mHalfStreamStates[2];
 	uint8_t mCurrentSide;
-} BidirectionalStreamState;
+} BidirectionalStream;
 
-DLLEXPORT bool bidirectionalStreamIsReadingPossible(void *in_pBidirectionalStreamState);
 
-DLLEXPORT bool bidirectionalStreamIsWritingPossible(void *in_pBidirectionalStreamState);
+DLLEXPORT bool bidirectionalStreamIsReadingPossible(void *in_pBidirectionalStream);
 
-DLLEXPORT bool bidirectionalStreamInit(BidirectionalStreamState *out_pBidirectionalStreamState, 
-CoroutineDescriptor *out_pThisCoroutine,
-CoroutineDescriptor *out_pOtherCoroutine,
-void (*in_pOtherCoroutineStartup)(void *in_pStreamState, void *in_pUserData),
-void *in_pUserData);
+DLLEXPORT bool bidirectionalStreamIsWritingPossible(void *in_pBidirectionalStream);
 
-DLLEXPORT size_t bidirectionalStreamRead(void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count);
+DLLEXPORT bool bidirectionalStreamInit(BidirectionalStream *out_pBidirectionalStream, 
+	CoroutineDescriptor *out_pThisCoroutine,
+	CoroutineDescriptor *out_pOtherCoroutine,
+	void (*in_pOtherCoroutineStartup)(void *in_pStream, void *in_pUserData),
+	void *in_pUserData);
 
-DLLEXPORT size_t bidirectionalStreamWrite(void *in_out_pBidirectionalStreamState, const void *in_pBuffer, size_t in_count);
+DLLEXPORT size_t bidirectionalStreamRead(void *in_out_pBidirectionalStream, void *out_pBuffer, size_t in_count);
+
+DLLEXPORT size_t bidirectionalStreamWrite(void *in_out_pBidirectionalStream, const void *in_pBuffer, size_t in_count);
 
 #ifdef __cplusplus
 }

@@ -19,6 +19,7 @@
 
 #include "MiniStdlib/cstdint.h"
 #include "Coroutine/Coroutine.h"
+#include "IO/ByteStreamInterface.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,8 +27,10 @@ extern "C" {
 
 typedef struct
 {
+	ByteStreamInterface mByteStreamInterface;
+	// mpfSwitchCoroutine is only for internal use!
 	void (*mpfSwitchCoroutine)(void *);
-} CoroutineStreamFunctions;
+} CoroutineStreamInterface;
 
 typedef struct
 {
@@ -63,9 +66,9 @@ size_t coroutineStreamRead(void *in_out_pStreamState,
 /*!
 * Parameters:
 * in_resetBuffer: if set to true, after writing we set
-* *in_pCurrentBufferSize to 0
-* *in_ppCurrentBuffer to NULL and
-* (theoretically the former could be left - but is good style to do!)
+* 1. *in_pCurrentBufferSize to 0
+* 2. *in_ppCurrentBuffer to NULL and
+* (theoretically 2. could be left - but is good style to do!)
 */
 size_t coroutineStreamWrite(void *in_out_pStreamState, 
 	const void *in_pBuffer, size_t in_count, 

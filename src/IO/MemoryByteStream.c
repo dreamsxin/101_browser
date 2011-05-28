@@ -19,27 +19,29 @@
 #include <assert.h>
 #include <string.h> // for memcpy
 
-
-void initMemoryByteStreamReadState(
-	MemoryByteStreamReadState *in_pMemoryByteStreamReadState,
+void memoryByteStreamInit(MemoryByteStream *in_pMemoryByteStream,
 	const void *in_pBuffer, size_t in_bufferSize)
 {
-	in_pMemoryByteStreamReadState->buffer = (const uint8_t*) in_pBuffer;
-	in_pMemoryByteStreamReadState->bufferSize = in_bufferSize;
-	in_pMemoryByteStreamReadState->bufferPos = 0;
+	memset(&in_pMemoryByteStream->mByteStreamInterface, 0, 
+		sizeof(in_pMemoryByteStream->mByteStreamInterface));
+	in_pMemoryByteStream->mByteStreamInterface.mpfRead = memoryByteReadStreamRead;
+
+	in_pMemoryByteStream->buffer = (const uint8_t*) in_pBuffer;
+	in_pMemoryByteStream->bufferSize = in_bufferSize;
+	in_pMemoryByteStream->bufferPos = 0;
 }
 
-size_t memoryByteReadStreamRead(void *in_out_pMemoryByteStreamReadState, 
+size_t memoryByteReadStreamRead(void *in_out_pMemoryByteStream, 
 	void *out_pBuffer, size_t in_count)
 {
-	MemoryByteStreamReadState *pMemoryByteStreamReadState = 
-		(MemoryByteStreamReadState *) in_out_pMemoryByteStreamReadState;
+	MemoryByteStream *pMemoryByteStream = 
+		(MemoryByteStream *) in_out_pMemoryByteStream;
 
-	in_count = MIN(in_count, pMemoryByteStreamReadState->bufferSize - pMemoryByteStreamReadState->bufferPos);
-	memcpy(out_pBuffer, pMemoryByteStreamReadState->buffer+pMemoryByteStreamReadState->bufferPos, in_count);
-	pMemoryByteStreamReadState->bufferPos += in_count;
+	in_count = MIN(in_count, pMemoryByteStream->bufferSize - pMemoryByteStream->bufferPos);
+	memcpy(out_pBuffer, pMemoryByteStream->buffer+pMemoryByteStream->bufferPos, in_count);
+	pMemoryByteStream->bufferPos += in_count;
 
-	assert(pMemoryByteStreamReadState->bufferPos <= pMemoryByteStreamReadState->bufferSize);
+	assert(pMemoryByteStream->bufferPos <= pMemoryByteStream->bufferSize);
 
 	return in_count;
 }

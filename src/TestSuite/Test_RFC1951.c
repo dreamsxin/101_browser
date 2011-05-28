@@ -44,40 +44,40 @@ void fileOtherCoroutine(void *in_out_pStreamState, void *in_pUserData)
 
 void test_RFC1951_File(const char *in_filenameRaw, const char *in_filenameReference)
 {
-	PipeStreamState pipeStreamState;
+	PipeStream pipeStream;
 	CoroutineDescriptor thisCoroutine, otherCoroutine;
 	FileByteStreamState rawFileByteStreamState, referenceFileByteStreamState;
 	bool result;
 	
-	result = fileByteReadStreamState_create(in_filenameRaw, 
+	result = fileByteReadStreamStateInit(in_filenameRaw, 
 		&rawFileByteStreamState);
 	test(result);
 
 	if (!result)
 		return;
 
-	result = fileByteReadStreamState_create(in_filenameReference, 
+	result = fileByteReadStreamStateInit(in_filenameReference, 
 		&referenceFileByteStreamState);
 	test(result);
 
 	if (!result)
 		return;
 
-	result = pipeStreamInit(&pipeStreamState, true, &thisCoroutine, &otherCoroutine, 
+	result = pipeStreamInit(&pipeStream, true, &thisCoroutine, &otherCoroutine, 
 		fileOtherCoroutine, &referenceFileByteStreamState);
 	test(result);
 
 	if (!result)
 		return;
 
-	test(ReadResultOK == parseRFC1951(&rawFileByteStreamState, cFileByteStreamInterface, 
-		&pipeStreamState, getPipeStreamWriteInterface()));
+	test(ReadResultOK == parseRFC1951((ByteStreamInterface*) &rawFileByteStreamState, 
+		(ByteStreamInterface*) &pipeStream));
 
 	/*
 	* If we don't insert this code we won't change to the other coroutine
 	* to see if we really sent all data.
 	*/
-	pipeStreamWrite(&pipeStreamState, NULL, 0);
+	pipeStreamWrite(&pipeStream, NULL, 0);
 	
 	fileByteReadStreamState_destroy(&referenceFileByteStreamState);
 	fileByteReadStreamState_destroy(&rawFileByteStreamState);
@@ -108,33 +108,33 @@ void zerosOtherCoroutine(void *in_out_pStreamState, void *in_pUserData)
 
 void test_RFC1951_zeros()
 {
-	PipeStreamState pipeStreamState;
+	PipeStream pipeStream;
 	CoroutineDescriptor thisCoroutine, otherCoroutine;
 	FileByteStreamState rawFileByteStreamState;
 	bool result;
 	
-	result = fileByteReadStreamState_create("testfiles/rfc1950_rfc1951/zeros.raw", 
+	result = fileByteReadStreamStateInit("testfiles/rfc1950_rfc1951/zeros.raw", 
 		&rawFileByteStreamState);
 	test(result);
 
 	if (!result)
 		return;
 
-	result = pipeStreamInit(&pipeStreamState, true, &thisCoroutine, &otherCoroutine, 
+	result = pipeStreamInit(&pipeStream, true, &thisCoroutine, &otherCoroutine, 
 		&zerosOtherCoroutine, NULL);
 	test(result);
 
 	if (!result)
 		return;
 
-	test(ReadResultOK == parseRFC1951(&rawFileByteStreamState, cFileByteStreamInterface, 
-		&pipeStreamState, getPipeStreamWriteInterface()));
+	test(ReadResultOK == parseRFC1951((ByteStreamInterface*) &rawFileByteStreamState, 
+		(ByteStreamInterface*) &pipeStream));
 
 	/*
 	* If we don't insert this code we won't change to the other coroutine
 	* to see if we really sent all data.
 	*/
-	pipeStreamWrite(&pipeStreamState, NULL, 0);
+	pipeStreamWrite(&pipeStream, NULL, 0);
 
 	fileByteReadStreamState_destroy(&rawFileByteStreamState);
 }

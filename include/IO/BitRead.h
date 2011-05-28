@@ -48,12 +48,10 @@ typedef struct
 	 */
 	uint8_t buffer;
 
-	void *pByteStreamState;
-	ByteStreamReadInterface readInterface;
+	void *mpSuperByteStream;
 } BitReadState;
 
-DLLEXPORT void initBitReadState(BitReadState *out_pBitReadState, void *in_pByteStreamState, 
-	ByteStreamReadInterface in_readInterface);
+DLLEXPORT void bitReadStateInit(BitReadState *out_pBitReadState, void *in_pSuperByteStream);
 
 /*!
  * Reads in_bitsCount bits from the file beginning from the lowest (little endian) or

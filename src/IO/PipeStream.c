@@ -18,29 +18,17 @@
 #include "MiniStdlib/xchg.h"
 #include <assert.h>
 
-ByteStreamReadInterface getPipeStreamReadInterface()
+void xchgAndSwitchCoroutine(void *in_out_pPipeStream)
 {
-	ByteStreamReadInterface out_interface = { pipeStreamRead };
-	return out_interface;
-}
-
-ByteStreamWriteInterface getPipeStreamWriteInterface()
-{
-	ByteStreamWriteInterface out_interface = { pipeStreamWrite };
-	return out_interface;
-}
-
-void xchgAndSwitchCoroutine(void *in_out_pPipeStreamState)
-{
-	PipeStreamState *pPipeStreamState = (PipeStreamState *) in_out_pPipeStreamState;
+	PipeStream *pPipeStream = (PipeStream*) in_out_pPipeStream;
 	
-	xchg(&pPipeStreamState->mpCurrentCoroutineDescriptor, 
-		&pPipeStreamState->mpOtherCoroutineDescriptor, sizeof(CoroutineDescriptor*));
+	xchg(&pPipeStream->mpCurrentCoroutineDescriptor, 
+		&pPipeStream->mpOtherCoroutineDescriptor, sizeof(CoroutineDescriptor*));
 	/*
 	* Note that we just exchanged the two coroutine descriptors; that's why we
 	* have this strange order.
 	*/
-	switchToCoroutine(pPipeStreamState->mpOtherCoroutineDescriptor, pPipeStreamState->mpCurrentCoroutineDescriptor);
+	switchToCoroutine(pPipeStream->mpOtherCoroutineDescriptor, pPipeStream->mpCurrentCoroutineDescriptor);
 }
 
 void pipeStreamTerminateRead(void *in_out_pPipeStreamState)
@@ -52,30 +40,30 @@ void pipeStreamTerminalLoopRead(void *in_out_pPipeStreamState)
 {
 	// The code of this function has to equal to pipeStreamWrite(in_out_pPipeStreamState, NULL, 0);
 
-	(((CoroutineStreamFunctions*) in_out_pPipeStreamState)->mpfSwitchCoroutine)(in_out_pPipeStreamState);
+	(((CoroutineStreamInterface*) in_out_pPipeStreamState)->mpfSwitchCoroutine)(in_out_pPipeStreamState);
 }
 
 // POST:PipeStream_c_45: NULL == ((PipeStreamState*) in_out_pPipeStreamState)->mpCurrentBuffer
 // POST:PipeStream_c_46: 0 == ((PipeStreamState*) in_out_pPipeStreamState)->mCurrentBufferSize
-void pipeStreamTerminateWrite(void *in_out_pPipeStreamState)
+void pipeStreamTerminateWrite(void *in_out_pPipeStream)
 {
-	((PipeStreamState*) in_out_pPipeStreamState)->mpCurrentBuffer = NULL;
-	((PipeStreamState*) in_out_pPipeStreamState)->mCurrentBufferSize = 0;
+	((PipeStream*) in_out_pPipeStream)->mpCurrentBuffer = NULL;
+	((PipeStream*) in_out_pPipeStream)->mCurrentBufferSize = 0;
 }
 
-void pipeStreamTerminalLoopWrite(void *in_out_pPipeStreamState)
+void pipeStreamTerminalLoopWrite(void *in_out_pPipeStream)
 {
 	// The code of this function has to equal to pipeStreamWrite(in_out_pPipeStreamState, NULL, 0);
 
 	// Follows from POST:PipeStream_c_45
-	assert(NULL == ((PipeStreamState*) in_out_pPipeStreamState)->mpCurrentBuffer);
+	assert(NULL == ((PipeStream*) in_out_pPipeStream)->mpCurrentBuffer);
 	// Follows from POST:PipeStream_c_46
-	assert(0 == ((PipeStreamState*) in_out_pPipeStreamState)->mCurrentBufferSize);
+	assert(0 == ((PipeStream*) in_out_pPipeStream)->mCurrentBufferSize);
 
-	(((CoroutineStreamFunctions*) in_out_pPipeStreamState)->mpfSwitchCoroutine)(in_out_pPipeStreamState);
+	(((CoroutineStreamInterface*) in_out_pPipeStream)->mpfSwitchCoroutine)(in_out_pPipeStream);
 }
 
-bool pipeStreamInit(PipeStreamState *out_pPipeStreamState,
+bool pipeStreamInit(PipeStream *out_pPipeStream,
 	bool in_isOtherStreamReader,
 	CoroutineDescriptor *out_pThisCoroutine,
 	CoroutineDescriptor *out_pOtherCoroutine,
@@ -84,15 +72,19 @@ bool pipeStreamInit(PipeStreamState *out_pPipeStreamState,
 {
 	bool out_result;
 	
-	out_pPipeStreamState->mFunctions.mpfSwitchCoroutine = xchgAndSwitchCoroutine;
+	memset(&out_pPipeStream->mCoroutineStreamInterface.mByteStreamInterface, 0, 
+		sizeof(out_pPipeStream->mCoroutineStreamInterface.mByteStreamInterface));
+	out_pPipeStream->mCoroutineStreamInterface.mByteStreamInterface.mpfRead = pipeStreamRead;
+	out_pPipeStream->mCoroutineStreamInterface.mByteStreamInterface.mpfWrite = pipeStreamWrite;
+	out_pPipeStream->mCoroutineStreamInterface.mpfSwitchCoroutine = xchgAndSwitchCoroutine;
 
-	out_pPipeStreamState->mpCurrentBuffer = NULL;
-	out_pPipeStreamState->mCurrentBufferSize = 0;
+	out_pPipeStream->mpCurrentBuffer = NULL;
+	out_pPipeStream->mCurrentBufferSize = 0;
 
-	out_pPipeStreamState->mpCurrentCoroutineDescriptor = out_pThisCoroutine;
-	out_pPipeStreamState->mpOtherCoroutineDescriptor = out_pOtherCoroutine;
+	out_pPipeStream->mpCurrentCoroutineDescriptor = out_pThisCoroutine;
+	out_pPipeStream->mpOtherCoroutineDescriptor = out_pOtherCoroutine;
 
-	out_result = coroutineStreamStart(out_pPipeStreamState,
+	out_result = coroutineStreamStart(out_pPipeStream,
 		out_pThisCoroutine,
 		out_pOtherCoroutine,
 		in_pOtherCoroutineStartup,
@@ -102,43 +94,43 @@ bool pipeStreamInit(PipeStreamState *out_pPipeStreamState,
 
 	if (in_isOtherStreamReader)
 	{
-		(out_pPipeStreamState->mFunctions.mpfSwitchCoroutine)(out_pPipeStreamState);
+		(out_pPipeStream->mCoroutineStreamInterface.mpfSwitchCoroutine)(out_pPipeStream);
 	}
 
 	return out_result;
 }
 
-void deletePipeStreamState(PipeStreamState *out_pPipeStreamState)
+void pipeStreamDelete(PipeStream *out_pPipeStream)
 {
-	deleteCoroutine(out_pPipeStreamState->mpOtherCoroutineDescriptor);
-	out_pPipeStreamState->mpOtherCoroutineDescriptor = NULL;
-	out_pPipeStreamState->mpCurrentCoroutineDescriptor = NULL;
+	deleteCoroutine(out_pPipeStream->mpOtherCoroutineDescriptor);
+	out_pPipeStream->mpOtherCoroutineDescriptor = NULL;
+	out_pPipeStream->mpCurrentCoroutineDescriptor = NULL;
 
-	out_pPipeStreamState->mpCurrentBuffer = NULL;
-	out_pPipeStreamState->mCurrentBufferSize = 0;
+	out_pPipeStream->mpCurrentBuffer = NULL;
+	out_pPipeStream->mCurrentBufferSize = 0;
 }
 
-size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t in_count)
+size_t pipeStreamRead(void *in_out_pPipeStream, void *out_pBuffer, size_t in_count)
 {
-	PipeStreamState *pPipeStreamState = (PipeStreamState*) in_out_pPipeStreamState;
+	PipeStream *pPipeStreamState = (PipeStream*) in_out_pPipeStream;
 
 	return coroutineStreamRead(
-		in_out_pPipeStreamState, 
+		in_out_pPipeStream, 
 		out_pBuffer, in_count, 
 		&pPipeStreamState->mpCurrentBuffer, &pPipeStreamState->mCurrentBufferSize);
 }
 
-size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, size_t in_count)
+size_t pipeStreamWrite(void *in_out_pPipeStream, const void *in_pBuffer, size_t in_count)
 {
-	PipeStreamState *pPipeStreamState = (PipeStreamState*) in_out_pPipeStreamState;
+	PipeStream *pPipeStream = (PipeStream*) in_out_pPipeStream;
 	
 	/*
 	* The last parameter is false since we don't have to reset the buffer
 	* (although it wouldn't mind)
 	*/
 	return coroutineStreamWrite(
-		in_out_pPipeStreamState, 
+		in_out_pPipeStream, 
 		in_pBuffer, in_count, 
-		&pPipeStreamState->mpCurrentBuffer, &pPipeStreamState->mCurrentBufferSize, 
+		&pPipeStream->mpCurrentBuffer, &pPipeStream->mCurrentBufferSize, 
 		false);
 }

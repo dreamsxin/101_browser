@@ -120,26 +120,25 @@ void test_2_3()
 typedef struct
 {
 	uint8_t *pInputBytes;
-	MemoryByteStreamReadState *pReadState;
+	MemoryByteStream *pMemoryByteStream;
 } Test_2_4_Userdata;
 
-void test_2_4_Coroutine(void *in_pPipeStreamState, void *in_pUserData)
+void test_2_4_Coroutine(void *in_pPipeStream, void *in_pUserData)
 {
-	PipeStreamState *pPipeStreamState = (PipeStreamState *) in_pPipeStreamState;
-	ByteStreamWriteInterface pipeStreamWriteInterface = { &pipeStreamWrite };
+	PipeStream *pPipeStream = (PipeStream *) in_pPipeStream;
 
 	Test_2_4_Userdata *pUserData = (Test_2_4_Userdata *) in_pUserData;
 
-	convertUTF8toCodepoints(cMemoryStreamReadInterface, pUserData->pReadState, 
-		pipeStreamWriteInterface, pPipeStreamState);
+	convertUTF8toCodepoints((ByteStreamInterface*) pUserData->pMemoryByteStream, 
+		(ByteStreamInterface*) pPipeStream);
 }
 
 void test_2_4()
 {
 	Test_2_4_Userdata test_2_4_userdata;
 	bool result;
-	MemoryByteStreamReadState readState;
-	PipeStreamState pipeStreamState;
+	MemoryByteStream memoryByteStream;
+	PipeStream pipeStream;
 	CoroutineDescriptor thisCoroutine;
 	CoroutineDescriptor otherCoroutine;
 	size_t idx;
@@ -161,12 +160,12 @@ void test_2_4()
 		uint8_t inputBytes[] = { 0x41, 0x98, 0xBA, 0x42, 0xE2, 0x98, 0x43, 0xE2, 0x98, 0xBA, 0xE2, 0x98 };
 		UnicodeCodePoint outputCodepoints[] = { 'A', 0xFFFD, 0xFFFD, 'B', 0xFFFD, 'C', 0x263A, 0xFFFD };
 
-		initMemoryByteStreamReadState(&readState, inputBytes, sizeof(inputBytes));
+		memoryByteStreamInit(&memoryByteStream, inputBytes, sizeof(inputBytes));
 
 		test_2_4_userdata.pInputBytes = inputBytes;
-		test_2_4_userdata.pReadState = &readState;
+		test_2_4_userdata.pMemoryByteStream = &memoryByteStream;
 
-		result = pipeStreamInit(&pipeStreamState, false, &thisCoroutine, &otherCoroutine, 
+		result = pipeStreamInit(&pipeStream, false, &thisCoroutine, &otherCoroutine, 
 			&test_2_4_Coroutine, &test_2_4_userdata);
 
 		test(result);
@@ -175,16 +174,16 @@ void test_2_4()
 
 		for (idx = 0; idx < sizeof(outputCodepoints) / sizeof(UnicodeCodePoint); idx++)
 		{
-			readCount = pipeStreamRead(&pipeStreamState, &currentCodePoint, sizeof(UnicodeCodePoint));
+			readCount = pipeStreamRead(&pipeStream, &currentCodePoint, sizeof(UnicodeCodePoint));
 
 			test(readCount == sizeof(UnicodeCodePoint));
 			test(currentCodePoint == outputCodepoints[idx]);
 		}
 
-		readCount = pipeStreamRead(&pipeStreamState, &currentCodePoint, sizeof(UnicodeCodePoint));
+		readCount = pipeStreamRead(&pipeStream, &currentCodePoint, sizeof(UnicodeCodePoint));
 		test(0 == readCount);
 
-		deletePipeStreamState(&pipeStreamState);
+		pipeStreamDelete(&pipeStream);
 	}
 }
 

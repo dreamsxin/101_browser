@@ -1,12 +1,31 @@
+/*
+* Copyright 2008-2011 Wolfgang Keller
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
 #include "RFC1950/RFC1950_zlib.h"
 
-void parseRFC1950(void *in_pStreamState, ByteStreamReadInterface in_readStream, bool in_supportPresetDictionary)
+ReadResult parseRFC1950(
+	ByteStreamInterface *in_out_pReadStreamInterface, 
+	ByteStreamInterface *in_out_pWriteStreamInterface, 
+	bool in_supportPresetDictionary)
 {
 	ZlibStreamHeader header;
 	uint16_t LZ77_window_size;
 	uint32_t DICTID;
 
-	if ((*in_readStream.pRead)(in_pStreamState, &header, sizeof(header)) != sizeof(header))
+	if ((*in_out_pReadStreamInterface->mpfRead)(in_out_pReadStreamInterface, &header, sizeof(header)) != sizeof(header))
 	{
 		// TODO - error
 	}
@@ -70,9 +89,11 @@ void parseRFC1950(void *in_pStreamState, ByteStreamReadInterface in_readStream, 
 
 	if (header.FLG.fields.FDICT)
 	{
-		if ((*in_readStream.pRead)(in_pStreamState, &DICTID, sizeof(DICTID)) != sizeof(DICTID))
+		if ((*in_out_pReadStreamInterface->mpfRead)(in_out_pReadStreamInterface, &DICTID, sizeof(DICTID)) != sizeof(DICTID))
 		{
 			// TODO - error
 		}
 	}
+
+	return ReadResultOK;
 }

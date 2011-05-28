@@ -16,18 +16,19 @@
 
 #include "IO/BitRead.h"
 #include <assert.h>
+#include <string.h>
 
-void initBitReadState(BitReadState *out_pBitReadState, void *in_pByteStreamState, 
-	ByteStreamReadInterface in_readInterface)
+void bitReadStateInit(BitReadState *out_pBitReadState, void *in_pSuperByteStream)
 {
+	assert(((ByteStreamInterface*) in_pSuperByteStream)->mpfRead != NULL);
+	
 	out_pBitReadState->bitCountInBuffer = 0;
 	/*
 	* There is no need to initialize in_pBitReadState->buffer
 	* since we set in_pBitReadState->bitCountInBuffer = 0
 	* so that the buffer contains no data.
 	*/
-	out_pBitReadState->pByteStreamState = in_pByteStreamState;
-	out_pBitReadState->readInterface = in_readInterface;
+	out_pBitReadState->mpSuperByteStream = in_pSuperByteStream;
 }
 
 size_t readBits(BitReadState *in_pBitReadState, void* out_pBuffer, size_t in_bitsCount, bool in_littleEndian)
@@ -42,7 +43,10 @@ size_t readBits(BitReadState *in_pBitReadState, void* out_pBuffer, size_t in_bit
 
 		if (in_pBitReadState->bitCountInBuffer == 0)
 		{
-			if ((*in_pBitReadState->readInterface.pRead)(in_pBitReadState->pByteStreamState, &in_pBitReadState->buffer, 1) != 1)
+			ByteStreamInterface *in_pByteStreamInterface = (ByteStreamInterface*) 
+				in_pBitReadState->mpSuperByteStream;
+			
+			if ((*in_pByteStreamInterface->mpfRead)(in_pBitReadState->mpSuperByteStream, &in_pBitReadState->buffer, 1) != 1)
 			{
 				return currentBitIndex;
 			}

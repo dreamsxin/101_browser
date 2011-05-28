@@ -27,19 +27,17 @@ extern "C" {
 
 typedef struct
 {
+	ByteStreamInterface mByteStreamInterface;
 	const uint8_t *buffer;
 	size_t bufferSize;
 	size_t bufferPos;
-} MemoryByteStreamReadState;
+} MemoryByteStream;
 
-DLLEXPORT void initMemoryByteStreamReadState(
-	MemoryByteStreamReadState *in_pMemoryByteStreamReadState,
+DLLEXPORT void memoryByteStreamInit(MemoryByteStream *in_pMemoryByteStream,
 	const void *in_pBuffer, size_t in_bufferSize);
 
 DLLEXPORT size_t memoryByteReadStreamRead(void *in_out_pMemoryByteStreamReadState, 
 	void *out_pBuffer, size_t in_count);
-
-const ByteStreamReadInterface cMemoryStreamReadInterface = { &memoryByteReadStreamRead };
 
 #ifdef __cplusplus
 }

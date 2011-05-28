@@ -113,7 +113,7 @@ bool instr_append(
 	return true;
 }
 
-bool instr_append_emit(ByteStreamWriteInterface in_writeInterface, void *in_pWriteState, 
+bool instr_append_emit(ByteStreamInterface *in_pWriteByteStream, 
 	UTF8ParseState *out_pParserState, 
 	uint8_t in_currentByte, 
 	uint8_t in_out_pReadBytes[], uint8_t *in_out_pReadBytesCount)
@@ -125,18 +125,18 @@ bool instr_append_emit(ByteStreamWriteInterface in_writeInterface, void *in_pWri
 
 	codePoint = createCodePoint(in_out_pReadBytes, *in_out_pReadBytesCount);
 
-	bytesWritten = in_writeInterface.pWrite(in_pWriteState, &codePoint, sizeof(UnicodeCodePoint));
+	bytesWritten = in_pWriteByteStream->mpfWrite(in_pWriteByteStream, &codePoint, sizeof(UnicodeCodePoint));
 
 	*in_out_pReadBytesCount = 0;
 
 	return bytesWritten == sizeof(UnicodeCodePoint);
 }
 
-bool instr_error(ByteStreamWriteInterface in_writeInterface, void *in_pWriteState, 
+bool instr_error(ByteStreamInterface *in_pWriteByteStream, 
 	UTF8ParseState *out_pParserState, uint8_t *out_pReadBytesCount)
 {
 	UnicodeCodePoint replacementCharacter = 0xFFFD;
-	size_t bytesWritten = in_writeInterface.pWrite(in_pWriteState, &replacementCharacter, sizeof(UnicodeCodePoint));
+	size_t bytesWritten = in_pWriteByteStream->mpfWrite(in_pWriteByteStream, &replacementCharacter, sizeof(UnicodeCodePoint));
 	
 	*out_pParserState = UTF8ParseState_Start;
 	*out_pReadBytesCount = 0;
@@ -144,19 +144,19 @@ bool instr_error(ByteStreamWriteInterface in_writeInterface, void *in_pWriteStat
 	return bytesWritten == sizeof(UnicodeCodePoint);
 }
 
-bool instr_action_of_Start(ByteStreamWriteInterface in_writeInterface, void *in_pWriteState, 
+bool instr_action_of_Start(ByteStreamInterface *in_pWriteByteStream, 
 	UTF8ParseState *out_pParserState, 
 	uint8_t in_currentByte, 
 	uint8_t in_out_pReadBytes[], uint8_t *in_out_pReadBytesCount)
 {
 	if (in_currentByte <= 0x7F)
 	{
-		return instr_append_emit(in_writeInterface, in_pWriteState, out_pParserState, 
+		return instr_append_emit(in_pWriteByteStream, out_pParserState, 
 			in_currentByte, in_out_pReadBytes, in_out_pReadBytesCount);
 	}
 	else if (in_currentByte <= 0xBF)
 	{
-		return instr_error(in_writeInterface, in_pWriteState, out_pParserState, in_out_pReadBytesCount);
+		return instr_error(in_pWriteByteStream, out_pParserState, in_out_pReadBytesCount);
 	}
 	else if (in_currentByte <= 0xC1)
 	{
@@ -221,16 +221,14 @@ bool instr_action_of_Start(ByteStreamWriteInterface in_writeInterface, void *in_
 	else
 	{
 		assert(in_currentByte == 0xFE || in_currentByte == 0xFF);
-		return instr_error(in_writeInterface, in_pWriteState, out_pParserState, in_out_pReadBytesCount);
+		return instr_error(in_pWriteByteStream, out_pParserState, in_out_pReadBytesCount);
 	}
 }
 
 
 void convertUTF8toCodepoints(
-	ByteStreamReadInterface in_readInterface, 
-	void *in_pReadState,
-	ByteStreamWriteInterface in_writeInterface,
-	void *in_pWriteState)
+	ByteStreamInterface *in_pReadByteStream,
+	ByteStreamInterface *in_pWriteByteStream)
 {
 	UTF8ParseState parserState = UTF8ParseState_Start;
 	
@@ -241,13 +239,13 @@ void convertUTF8toCodepoints(
 
 	while (1)
 	{
-		size_t currentReadCount = (*in_readInterface.pRead)(in_pReadState, &currentByte, 1);
+		size_t currentReadCount = (*in_pReadByteStream->mpfRead)(in_pReadByteStream, &currentByte, 1);
 
 		if (currentReadCount == 0)
 		{
 			if (parserState != UTF8ParseState_Start)
 			{
-				bool result = instr_error(in_writeInterface, in_pWriteState, &parserState, &readBytesCount);
+				bool result = instr_error(in_pWriteByteStream, &parserState, &readBytesCount);
 
 				// TODO handle result
 			}
@@ -257,7 +255,7 @@ void convertUTF8toCodepoints(
 
 		if (parserState == UTF8ParseState_Start)
 		{
-			bool result = instr_action_of_Start(in_writeInterface, in_pWriteState, 
+			bool result = instr_action_of_Start(in_pWriteByteStream, 
 				&parserState, currentByte, readBytes, &readBytesCount);
 
 			// TODO handle result
@@ -266,11 +264,11 @@ void convertUTF8toCodepoints(
 		{
 			if (currentByte <= 0x7F || currentByte >= 0xC0)
 			{
-				bool result = instr_error(in_writeInterface, in_pWriteState, &parserState, &readBytesCount);
+				bool result = instr_error(in_pWriteByteStream, &parserState, &readBytesCount);
 
 				// TODO handle result
 
-				instr_action_of_Start(in_writeInterface, in_pWriteState, &parserState, currentByte, readBytes, &readBytesCount);
+				instr_action_of_Start(in_pWriteByteStream, &parserState, currentByte, readBytes, &readBytesCount);
 			}
 			else
 			{
@@ -279,7 +277,7 @@ void convertUTF8toCodepoints(
 
 				if (UTF8ParseState_X_error == parserState)
 				{
-					bool result = instr_error(in_writeInterface, in_pWriteState, &parserState, &readBytesCount);
+					bool result = instr_error(in_pWriteByteStream, &parserState, &readBytesCount);
 
 					// TODO handle result
 				}
@@ -301,7 +299,7 @@ void convertUTF8toCodepoints(
 				}
 				else if (UTF8ParseState_X_append_emit == parserState)
 				{
-					bool result = instr_append_emit(in_writeInterface, in_pWriteState, &parserState, 
+					bool result = instr_append_emit(in_pWriteByteStream, &parserState, 
 						currentByte, readBytes, &readBytesCount);
 
 					// TODO handle result

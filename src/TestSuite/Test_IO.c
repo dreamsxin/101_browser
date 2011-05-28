@@ -46,7 +46,7 @@ void testPipeStreamEvil()
 	* The example in the documentation is simplified for simplicity
 	* 
 	*/
-	PipeStreamState pipeStreamState;
+	PipeStream pipeStream;
 	CoroutineDescriptor thisCoroutine;
 	CoroutineDescriptor otherCoroutine;
 	EvilTestdata testdata;
@@ -56,7 +56,7 @@ void testPipeStreamEvil()
 		testdata.endOfFunctionReached = false;
 		testdata.readCount = 0;
 
-		result = pipeStreamInit(&pipeStreamState, true, 
+		result = pipeStreamInit(&pipeStream, true, 
 			&thisCoroutine, &otherCoroutine, 
 			&evilReadFun, &testdata);
 
@@ -67,12 +67,12 @@ void testPipeStreamEvil()
 
 		// we write nothing
 
-		pipeStreamWrite(&pipeStreamState, NULL, 0);
+		pipeStreamWrite(&pipeStream, NULL, 0);
 
 		test(testdata.endOfFunctionReached);
 		test(0 == testdata.readCount);
 
-		deletePipeStreamState(&pipeStreamState);
+		pipeStreamDelete(&pipeStream);
 	}
 
 	{
@@ -81,7 +81,7 @@ void testPipeStreamEvil()
 		testdata.endOfFunctionReached = false;
 		testdata.readCount = 0;
 
-		result = pipeStreamInit(&pipeStreamState, true, 
+		result = pipeStreamInit(&pipeStream, true, 
 			&thisCoroutine, &otherCoroutine, 
 			&evilReadFun, &testdata);
 
@@ -90,14 +90,14 @@ void testPipeStreamEvil()
 		if (!result)
 			return;
 
-		pipeStreamWrite(&pipeStreamState, data, sizeof(data));
+		pipeStreamWrite(&pipeStream, data, sizeof(data));
 
-		pipeStreamWrite(&pipeStreamState, NULL, 0);
+		pipeStreamWrite(&pipeStream, NULL, 0);
 
 		test(testdata.endOfFunctionReached);
 		test(2 == testdata.readCount);
 
-		deletePipeStreamState(&pipeStreamState);
+		pipeStreamDelete(&pipeStream);
 	}
 }
 
@@ -154,7 +154,7 @@ void writerCoroutineFun(void *in_pPipeStreamState, void *in_pUserdata)
 
 void pipeStreamOtherTests()
 {
-	PipeStreamState pipeStreamState;
+	PipeStream pipeStream;
 	CoroutineDescriptor thisCoroutine;
 	CoroutineDescriptor otherCoroutine;
 	unsigned int bytesToReadArray[] = { 2, 32 };
@@ -163,7 +163,7 @@ void pipeStreamOtherTests()
 	// Test 1, 2: the current coroutine is the writer and 2 or 32 bytes are read
 	for (idx = 0; idx < 2; idx++)
 	{
-		bool result = pipeStreamInit(&pipeStreamState, true, 
+		bool result = pipeStreamInit(&pipeStream, true, 
 			&thisCoroutine, &otherCoroutine, 
 			&readerCoroutineFun, bytesToReadArray+idx);
 
@@ -172,16 +172,16 @@ void pipeStreamOtherTests()
 		if (!result)
 			return;
 
-		writeFun(&pipeStreamState, bytesToReadArray[idx]);
-		test(pipeStreamWrite(&pipeStreamState, NULL, 0) == 0);
+		writeFun(&pipeStream, bytesToReadArray[idx]);
+		test(pipeStreamWrite(&pipeStream, NULL, 0) == 0);
 
-		deletePipeStreamState(&pipeStreamState);
+		pipeStreamDelete(&pipeStream);
 	}
 
 	// Test 3, 4: the current coroutine is the reader and 2 or 32 bytes are read
 	for (idx = 0; idx < 2; idx++)
 	{
-		bool result = pipeStreamInit(&pipeStreamState, false, 
+		bool result = pipeStreamInit(&pipeStream, false, 
 			&thisCoroutine, &otherCoroutine, 
 			&writerCoroutineFun, bytesToReadArray+idx);
 
@@ -190,10 +190,10 @@ void pipeStreamOtherTests()
 		if (!result)
 			return;
 
-		readFun(&pipeStreamState, bytesToReadArray[idx]);
-		test(pipeStreamRead(&pipeStreamState, NULL, 0) == 0);
+		readFun(&pipeStream, bytesToReadArray[idx]);
+		test(pipeStreamRead(&pipeStream, NULL, 0) == 0);
 
-		deletePipeStreamState(&pipeStreamState);
+		pipeStreamDelete(&pipeStream);
 	}
 }
 

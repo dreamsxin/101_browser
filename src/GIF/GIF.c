@@ -257,14 +257,17 @@ ReadResult read_Image_Descriptor(FILE* in_gifFile, Image_Descriptor* in_pImageDe
 
 typedef struct
 {
+	ByteStreamInterface mByteStreamInterface;
 	FILE* file;
 	uint8_t Block_Size_Bytes;
 	uint8_t Read_Bytes;
 	bool endOfStream;
 } Image_Data_StreamState;
 
-void init_Image_Data_StreamState(Image_Data_StreamState *in_pStreamState, FILE* in_file)
+void init_Image_Data_StreamState(ByteStreamInterface in_byteStreamInterface, 
+	Image_Data_StreamState *in_pStreamState, FILE* in_file)
 {
+	in_pStreamState->mByteStreamInterface = in_byteStreamInterface;
 	in_pStreamState->file = in_file;
 	in_pStreamState->Block_Size_Bytes = 0;
 	in_pStreamState->Read_Bytes = 0;
@@ -317,7 +320,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 {
 	uint8_t LZW_Minimum_Code_Size;
 	BitReadState bitReadState;
-	ByteStreamReadInterface bitReadInterface = { read_Image_Data_byteStreamInterface };
+	ByteStreamInterface bitReadInterface = { read_Image_Data_byteStreamInterface, NULL, NULL };
 	Image_Data_StreamState streamState;
 	LZW_Tree *pTree;
 	LZW_Stack *pStack;
@@ -343,8 +346,8 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 	// ASGN:GIF_314
 	stopCode = startCode+1;
 
-	initBitReadState(&bitReadState, &streamState, bitReadInterface);
-	init_Image_Data_StreamState(&streamState, in_gifFile);
+	init_Image_Data_StreamState(bitReadInterface, &streamState, in_gifFile);
+	bitReadStateInit(&bitReadState, &streamState);
 
 	pTree = (LZW_Tree *) malloc(sizeof(LZW_Tree));
 

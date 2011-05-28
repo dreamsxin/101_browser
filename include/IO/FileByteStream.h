@@ -28,18 +28,17 @@ extern "C" {
 
 typedef struct
 {
+	ByteStreamInterface mByteStreamInterface;
 	FILE *mFile;
 } FileByteStreamState;
 
 DLLEXPORT size_t fileByteReadStreamRead(void *in_out_pFileByteStreamState, 
 	void *out_pBuffer, size_t in_count);
 
-DLLEXPORT bool fileByteReadStreamState_create(const char *in_filename,
+DLLEXPORT bool fileByteReadStreamStateInit(const char *in_filename,
 	FileByteStreamState *in_pFileByteStreamState);
 
 DLLEXPORT void fileByteReadStreamState_destroy(FileByteStreamState *in_pFileByteStreamState);
-
-const ByteStreamReadInterface cFileByteStreamInterface = { fileByteReadStreamRead };
 
 #ifdef __cplusplus
 }

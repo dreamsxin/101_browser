@@ -30,10 +30,8 @@ extern "C" {
 #endif
 
 DLLEXPORT void convertUTF8toCodepoints(
-	ByteStreamReadInterface in_readInterface, 
-	void *in_pReadState,
-	ByteStreamWriteInterface in_writeInterface,
-	void *in_pWriteState);
+	ByteStreamInterface *in_pReadByteStream,
+	ByteStreamInterface *in_pWriteByteStream);
 
 #ifdef __cplusplus
 }

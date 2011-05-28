@@ -30,7 +30,7 @@ extern "C" {
 */
 typedef struct
 {
-	BidirectionalStreamState mStreamState;
+	BidirectionalStream mBidirectionalStream;
 	//! which side shall get the extended behaviour
 	uint8_t mWhichSideToExtend;
 	/*!

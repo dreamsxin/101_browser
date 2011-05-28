@@ -26,7 +26,7 @@ void COROUTINE_KICKOFF_CALL coroutineStreamKickoff(void *in_pCoroutineStateAndKi
 	* No exchanging of descriptors since it hasn't been done originally when switching to
 	* this coroutine.
 	*/
-	(((CoroutineStreamFunctions*) stateAndKickoff.pState)->mpfSwitchCoroutine)(stateAndKickoff.pState);
+	(((CoroutineStreamInterface*) stateAndKickoff.pState)->mpfSwitchCoroutine)(stateAndKickoff.pState);
 
 	(*stateAndKickoff.kickoffData.mpStartup)(stateAndKickoff.pState, stateAndKickoff.kickoffData.mpUserData);
 
@@ -61,7 +61,7 @@ bool coroutineStreamStart(void *in_pStreamState,
 	if (!createCoroutine(0, coroutineStreamKickoff, &stateAndKickoff, out_pOtherCoroutine))
 		return false;
 
-	(((CoroutineStreamFunctions*) in_pStreamState)->mpfSwitchCoroutine)(in_pStreamState);
+	(((CoroutineStreamInterface*) in_pStreamState)->mpfSwitchCoroutine)(in_pStreamState);
 
 	return true;
 }
@@ -94,7 +94,7 @@ size_t coroutineStreamRead(void *in_out_pStreamState,
 		// switch to writer
 switch_to_writer:
 
-		(((CoroutineStreamFunctions *) in_out_pStreamState)->mpfSwitchCoroutine)(in_out_pStreamState);
+		(((CoroutineStreamInterface *) in_out_pStreamState)->mpfSwitchCoroutine)(in_out_pStreamState);
 
 		bytesToReadInCurrentIterationCount = MIN(in_count-bytesRead, *in_pCurrentBufferSize);
 
@@ -116,7 +116,7 @@ size_t coroutineStreamWrite(
 	*in_ppCurrentBuffer = (const uint8_t*) in_pBuffer;
 	*in_pCurrentBufferSize = in_count;
 
-	((CoroutineStreamFunctions*) in_out_pStreamState)->mpfSwitchCoroutine(in_out_pStreamState);
+	((CoroutineStreamInterface*) in_out_pStreamState)->mpfSwitchCoroutine(in_out_pStreamState);
 	out_writtenCount = in_count - *in_pCurrentBufferSize;
 
 	if (in_resetBuffer)

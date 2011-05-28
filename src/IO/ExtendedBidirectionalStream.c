@@ -24,7 +24,7 @@ size_t extendedBidirectionalStreamRead(
 	ExtendedBidirectionalStreamState *pExtendedBidirectionalStreamState = 
 		(ExtendedBidirectionalStreamState *) in_out_pExtendedBidirectionalStreamState;
 
-	if (pExtendedBidirectionalStreamState->mStreamState.mCurrentSide != pExtendedBidirectionalStreamState->mWhichSideToExtend)
+	if (pExtendedBidirectionalStreamState->mBidirectionalStream.mCurrentSide != pExtendedBidirectionalStreamState->mWhichSideToExtend)
 	{
 		if (pExtendedBidirectionalStreamState->mIsExtendedSideReading)
 			return SIZE_MAX;
@@ -80,7 +80,7 @@ size_t extendedBidirectionalStreamWrite(
 	ExtendedBidirectionalStreamState *pExtendedBidirectionalStreamState = 
 		(ExtendedBidirectionalStreamState *) in_out_pExtendedBidirectionalStreamState;
 
-	if (pExtendedBidirectionalStreamState->mStreamState.mCurrentSide != pExtendedBidirectionalStreamState->mWhichSideToExtend)
+	if (pExtendedBidirectionalStreamState->mBidirectionalStream.mCurrentSide != pExtendedBidirectionalStreamState->mWhichSideToExtend)
 	{
 		if (!pExtendedBidirectionalStreamState->mIsExtendedSideReading)
 			return SIZE_MAX;

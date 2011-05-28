@@ -31,14 +31,14 @@ extern "C" {
 typedef struct
 {
 	// this has to be the first member of the struct because it will be casted
-	CoroutineStreamFunctions mFunctions;
+	CoroutineStreamInterface mCoroutineStreamInterface;
 
 	const uint8_t * volatile mpCurrentBuffer;
 	volatile size_t mCurrentBufferSize;
 
 	CoroutineDescriptor *mpCurrentCoroutineDescriptor;
 	CoroutineDescriptor *mpOtherCoroutineDescriptor;
-} PipeStreamState;
+} PipeStream;
 
 
 /*!
@@ -56,21 +56,18 @@ typedef struct
 * in_pOtherCoroutineStartup: the function that the created coroutine will jump into
 * in_pUserData: user data to be sent to the new created coroutine
 */
-DLLEXPORT bool pipeStreamInit(PipeStreamState *out_pPipeStreamState,
+DLLEXPORT bool pipeStreamInit(PipeStream *out_pPipeStream,
 	bool in_isOtherStreamReader,
 	CoroutineDescriptor *out_pThisCoroutine,
 	CoroutineDescriptor *out_pOtherCoroutine,
 	void (*in_pOtherCoroutineStartup)(void *in_out_pStreamState, void *in_pUserData),
 	void *in_pUserData);
 
-DLLEXPORT void deletePipeStreamState(PipeStreamState *out_pPipeStreamState);
+DLLEXPORT void pipeStreamDelete(PipeStream *out_pPipeStream);
 
-DLLEXPORT size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t in_count);
+DLLEXPORT size_t pipeStreamRead(void *in_out_pPipeStream, void *out_pBuffer, size_t in_count);
 
-DLLEXPORT size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, size_t in_count);
-
-DLLEXPORT ByteStreamReadInterface getPipeStreamReadInterface();
-DLLEXPORT ByteStreamWriteInterface getPipeStreamWriteInterface();
+DLLEXPORT size_t pipeStreamWrite(void *in_out_pPipeStream, const void *in_pBuffer, size_t in_count);
 
 #ifdef __cplusplus
 }
