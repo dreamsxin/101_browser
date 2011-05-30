@@ -237,7 +237,7 @@ module webapps
              attribute DOMString accessKey;
     readonly attribute DOMString accessKeyLabel;
              attribute boolean draggable;
-    [PutForwards=value] attribute DOMSettableTokenList dropzone;
+    [PutForwards=value] readonly attribute DOMSettableTokenList dropzone;
              attribute DOMString contentEditable;
     readonly attribute boolean isContentEditable;
              attribute HTMLMenuElement contextMenu;
@@ -813,18 +813,22 @@ module webapps
     TextMetrics measureText(in DOMString text);
   
     // drawing images
-    void drawImage(in HTMLImageElement image, in double dx, in double dy, in optional double dw, in double dh);
+    void drawImage(in HTMLImageElement image, in double dx, in double dy);
+    void drawImage(in HTMLImageElement image, in double dx, in double dy, in double dw, in double dh);
     void drawImage(in HTMLImageElement image, in double sx, in double sy, in double sw, in double sh, in double dx, in double dy, in double dw, in double dh);
-    void drawImage(in HTMLCanvasElement image, in double dx, in double dy, in optional double dw, in double dh);
+    void drawImage(in HTMLCanvasElement image, in double dx, in double dy);
+    void drawImage(in HTMLCanvasElement image, in double dx, in double dy, in double dw, in double dh);
     void drawImage(in HTMLCanvasElement image, in double sx, in double sy, in double sw, in double sh, in double dx, in double dy, in double dw, in double dh);
-    void drawImage(in HTMLVideoElement image, in double dx, in double dy, in optional double dw, in double dh);
+    void drawImage(in HTMLVideoElement image, in double dx, in double dy);
+    void drawImage(in HTMLVideoElement image, in double dx, in double dy, in double dw, in double dh);
     void drawImage(in HTMLVideoElement image, in double sx, in double sy, in double sw, in double sh, in double dx, in double dy, in double dw, in double dh);
   
     // pixel manipulation
     ImageData createImageData(in double sw, in double sh);
     ImageData createImageData(in ImageData imagedata);
     ImageData getImageData(in double sx, in double sy, in double sw, in double sh);
-    void putImageData(in ImageData imagedata, in double dx, in double dy, in optional double dirtyX, in double dirtyY, in double dirtyWidth, in double dirtyHeight);
+    void putImageData(in ImageData imagedata, in double dx, in double dy);
+    void putImageData(in ImageData imagedata, in double dx, in double dy, in double dirtyX, in double dirtyY, in double dirtyWidth, in double dirtyHeight);
   };
   
   interface CanvasGradient {
@@ -1286,7 +1290,7 @@ module webapps
     any showModalDialog(in DOMString url, in optional any argument);
   
     // cross-document messaging
-    void postMessage(in any message, in DOMString targetOrigin, in optional MessagePortArray ports);
+    void postMessage(in any message, in DOMString targetOrigin, in optional sequence<MessagePort> ports);
   
     // event handler IDL attributes
              attribute Function onabort;
@@ -1671,7 +1675,7 @@ module webapps
 
   [Supplemental, NoInterfaceObject]
   interface DedicatedWorkerGlobalScope : WorkerGlobalScope {
-    void postMessage(in any message, in optional MessagePortArray ports);
+    void postMessage(in any message, in optional sequence<MessagePort> ports);
              attribute Function onmessage;
   };
 
@@ -1700,7 +1704,7 @@ module webapps
   interface Worker : AbstractWorker {
     void terminate();
   
-    void postMessage(in any message, in optional MessagePortArray ports);
+    void postMessage(in any message, in optional sequence<MessagePort> ports);
              attribute Function onmessage;
   };
 
@@ -1737,8 +1741,8 @@ module webapps
     readonly attribute DOMString origin;
     readonly attribute DOMString lastEventId;
     readonly attribute WindowProxy source;
-    readonly attribute MessagePortArray ports;
-    void initMessageEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in any dataArg, in DOMString originArg, in DOMString lastEventIdArg, in WindowProxy sourceArg, in MessagePortArray portsArg);
+    readonly attribute MessagePort[] ports;
+    void initMessageEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in any dataArg, in DOMString originArg, in DOMString lastEventIdArg, in WindowProxy sourceArg, in sequence<MessagePort> portsArg);
   };
 
   [Constructor(in DOMString url)]
@@ -1774,12 +1778,16 @@ module webapps
   
     // networking
              attribute Function onopen;
-             attribute Function onmessage;
-             attribute Function onerror;
              attribute Function onclose;
     readonly attribute DOMString protocol;
+    void close(in optional unsigned short code, in optional DOMString reason);
+  
+    // messaging
+             attribute Function onmessage;
+             attribute object binaryType;
     void send(in DOMString data);
-    void close();
+    void send(in ArrayBuffer data);
+    void send(in Blob data);
   };
   WebSocket implements EventTarget;
 
@@ -1796,10 +1804,8 @@ module webapps
     readonly attribute MessagePort port2;
   };
 
-  typedef sequence<MessagePort> MessagePortArray;
-  
   interface MessagePort {
-    void postMessage(in any message, in optional MessagePortArray ports);
+    void postMessage(in any message, in optional sequence<MessagePort> ports);
     void start();
     void close();
   
