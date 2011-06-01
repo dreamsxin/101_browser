@@ -1634,7 +1634,7 @@ module webapps
     const unsigned short CLOSED = 3;
     readonly attribute unsigned short readyState;
   
-    void send(in DOMString text);
+    void send(in DOMString text); 
     void addStream(in Stream stream);
     void removeStream(in Stream stream);
     readonly attribute Stream[] localStreams;
@@ -1645,8 +1645,6 @@ module webapps
     // connection quality information
              attribute Function onconnecting;
              attribute Function onopen;
-             attribute Function onerror;
-             attribute Function onclose;
              attribute Function onmessage;
              attribute Function onaddstream;
              attribute Function onremovestream;
@@ -1780,11 +1778,11 @@ module webapps
              attribute Function onopen;
              attribute Function onclose;
     readonly attribute DOMString protocol;
-    void close(in optional unsigned short code, in optional DOMString reason);
+    void close(in optional unsigned long code, in optional DOMString reason);
   
     // messaging
              attribute Function onmessage;
-             attribute object binaryType;
+             attribute DOMString binaryType;
     void send(in DOMString data);
     void send(in ArrayBuffer data);
     void send(in Blob data);
@@ -1795,7 +1793,7 @@ module webapps
     readonly attribute boolean wasClean;
     readonly attribute unsigned long code;
     readonly attribute DOMString reason;
-    void initCloseEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in boolean wasCleanArg, in unsigned long codeArg, in unsigned long reasonArg);
+    void initCloseEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in boolean wasCleanArg, in unsigned long codeArg, in DOMString reasonArg);
   };
 
   [Constructor]
