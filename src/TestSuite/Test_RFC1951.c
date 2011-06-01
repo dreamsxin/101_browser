@@ -20,13 +20,17 @@
 #include "RFC1951/RFC1951.h"
 #include "IO/FileByteStream.h"
 #include "IO/PipeStream.h"
+#include <assert.h>
 
-void fileOtherCoroutine(void *in_out_pStreamState, void *in_pUserData)
+void fileOtherCoroutine(ByteStreamReference in_byteStreamReference, void *in_pUserData)
 {
 	size_t readCount;
 	uint8_t buffer0, buffer1;
 
-	while (pipeStreamRead(in_out_pStreamState, &buffer0, 1) == 1)
+	assert(in_byteStreamReference.mByteStreamInterface.mpfRead != NULL);
+
+	while ((*in_byteStreamReference.mByteStreamInterface.mpfRead)
+		(in_byteStreamReference.mpByteStreamState, &buffer0, 1) == 1)
 	{
 		readCount = fileByteReadStreamRead(in_pUserData, &buffer1, 1);
 		if (readCount != 1)
@@ -45,33 +49,36 @@ void fileOtherCoroutine(void *in_out_pStreamState, void *in_pUserData)
 void test_RFC1951_File(const char *in_filenameRaw, const char *in_filenameReference)
 {
 	PipeStreamState pipeStreamState;
+	ByteStreamInterface pipeStreamInterface;
+
 	CoroutineDescriptor thisCoroutine, otherCoroutine;
 	FileByteStreamState rawFileByteStreamState, referenceFileByteStreamState;
 	bool result;
 	
-	result = fileByteReadStreamState_create(in_filenameRaw, 
+	result = fileByteReadStreamStateInit(in_filenameRaw, 
 		&rawFileByteStreamState);
 	test(result);
 
 	if (!result)
 		return;
 
-	result = fileByteReadStreamState_create(in_filenameReference, 
+	result = fileByteReadStreamStateInit(in_filenameReference, 
 		&referenceFileByteStreamState);
 	test(result);
 
 	if (!result)
 		return;
 
-	result = pipeStreamInit(&pipeStreamState, true, &thisCoroutine, &otherCoroutine, 
+	result = pipeStreamInit(&pipeStreamState, &pipeStreamInterface, 
+		true, &thisCoroutine, &otherCoroutine, 
 		fileOtherCoroutine, &referenceFileByteStreamState);
 	test(result);
 
 	if (!result)
 		return;
 
-	test(ReadResultOK == parseRFC1951(&rawFileByteStreamState, cFileByteStreamInterface, 
-		&pipeStreamState, getPipeStreamWriteInterface()));
+	test(ReadResultOK == parseRFC1951(&rawFileByteStreamState, getFileByteStreamInterface(), 
+		&pipeStreamState, pipeStreamInterface));
 
 	/*
 	* If we don't insert this code we won't change to the other coroutine
@@ -79,16 +86,19 @@ void test_RFC1951_File(const char *in_filenameRaw, const char *in_filenameRefere
 	*/
 	pipeStreamWrite(&pipeStreamState, NULL, 0);
 	
-	fileByteReadStreamState_destroy(&referenceFileByteStreamState);
-	fileByteReadStreamState_destroy(&rawFileByteStreamState);
+	fileByteReadStreamStateDestroy(&referenceFileByteStreamState);
+	fileByteReadStreamStateDestroy(&rawFileByteStreamState);
 }
 
-void zerosOtherCoroutine(void *in_out_pStreamState, void *in_pUserData)
+void zerosOtherCoroutine(ByteStreamReference in_byteStreamReference, void *in_pUserData)
 {
 	size_t readCount = 0;
 	uint8_t buffer;
 
-	while (pipeStreamRead(in_out_pStreamState, &buffer, 1) == 1)
+	assert(in_byteStreamReference.mByteStreamInterface.mpfRead != NULL);
+
+	while ((*in_byteStreamReference.mByteStreamInterface.mpfRead)
+		(in_byteStreamReference.mpByteStreamState, &buffer, 1) == 1)
 	{
 		readCount++;
 
@@ -109,26 +119,28 @@ void zerosOtherCoroutine(void *in_out_pStreamState, void *in_pUserData)
 void test_RFC1951_zeros()
 {
 	PipeStreamState pipeStreamState;
+	ByteStreamInterface pipeStreamInterface;
 	CoroutineDescriptor thisCoroutine, otherCoroutine;
 	FileByteStreamState rawFileByteStreamState;
 	bool result;
 	
-	result = fileByteReadStreamState_create("testfiles/rfc1950_rfc1951/zeros.raw", 
+	result = fileByteReadStreamStateInit("testfiles/rfc1950_rfc1951/zeros.raw", 
 		&rawFileByteStreamState);
 	test(result);
 
 	if (!result)
 		return;
 
-	result = pipeStreamInit(&pipeStreamState, true, &thisCoroutine, &otherCoroutine, 
+	result = pipeStreamInit(&pipeStreamState, &pipeStreamInterface, 
+		true, &thisCoroutine, &otherCoroutine, 
 		&zerosOtherCoroutine, NULL);
 	test(result);
 
 	if (!result)
 		return;
 
-	test(ReadResultOK == parseRFC1951(&rawFileByteStreamState, cFileByteStreamInterface, 
-		&pipeStreamState, getPipeStreamWriteInterface()));
+	test(ReadResultOK == parseRFC1951(&rawFileByteStreamState, getFileByteStreamInterface(), 
+		&pipeStreamState, pipeStreamInterface));
 
 	/*
 	* If we don't insert this code we won't change to the other coroutine
@@ -136,7 +148,7 @@ void test_RFC1951_zeros()
 	*/
 	pipeStreamWrite(&pipeStreamState, NULL, 0);
 
-	fileByteReadStreamState_destroy(&rawFileByteStreamState);
+	fileByteReadStreamStateDestroy(&rawFileByteStreamState);
 }
 
 void test_RFC1951()

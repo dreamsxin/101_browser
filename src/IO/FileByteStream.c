@@ -15,8 +15,7 @@
  */
 
 #include "IO/FileByteStream.h"
-#include "IO/ByteStreamInterface.h"
-
+#include <string.h>
 
 size_t fileByteReadStreamRead(void *in_out_pFileByteStreamState, 
 	void *out_pBuffer, size_t in_count)
@@ -27,7 +26,7 @@ size_t fileByteReadStreamRead(void *in_out_pFileByteStreamState,
 	return fread(out_pBuffer, 1, in_count, pFileByteStreamState->mFile);
 }
 
-bool fileByteReadStreamState_create(const char *in_filename,
+bool fileByteReadStreamStateInit(const char *in_filename,
 	FileByteStreamState *in_pFileByteStreamState)
 {
 	in_pFileByteStreamState->mFile = MTAx_fopen(in_filename, "rb");
@@ -35,8 +34,16 @@ bool fileByteReadStreamState_create(const char *in_filename,
 	return in_pFileByteStreamState->mFile != NULL;
 }
 
-void fileByteReadStreamState_destroy(FileByteStreamState *in_pFileByteStreamState)
+void fileByteReadStreamStateDestroy(FileByteStreamState *in_pFileByteStreamState)
 {
 	fclose(in_pFileByteStreamState->mFile);
 	in_pFileByteStreamState->mFile = NULL;
+}
+
+ByteStreamInterface getFileByteStreamInterface()
+{
+	ByteStreamInterface out_byteStreamInterface;
+	memset(&out_byteStreamInterface, 0, sizeof(out_byteStreamInterface));
+	out_byteStreamInterface.mpfRead = fileByteReadStreamRead;
+	return out_byteStreamInterface;
 }

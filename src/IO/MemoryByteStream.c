@@ -20,7 +20,7 @@
 #include <string.h> // for memcpy
 
 
-void initMemoryByteStreamReadState(
+void memoryByteStreamReadStateInit(
 	MemoryByteStreamReadState *in_pMemoryByteStreamReadState,
 	const void *in_pBuffer, size_t in_bufferSize)
 {
@@ -42,4 +42,12 @@ size_t memoryByteReadStreamRead(void *in_out_pMemoryByteStreamReadState,
 	assert(pMemoryByteStreamReadState->bufferPos <= pMemoryByteStreamReadState->bufferSize);
 
 	return in_count;
+}
+
+ByteStreamInterface getMemoryByteStreamReadInterface()
+{
+	ByteStreamInterface out_byteStreamInterface;
+	memset(&out_byteStreamInterface, 0, sizeof(out_byteStreamInterface));
+	out_byteStreamInterface.mpfRead = memoryByteReadStreamRead;
+	return out_byteStreamInterface;
 }

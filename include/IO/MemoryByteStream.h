@@ -19,7 +19,7 @@
 
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/declspec.h"
-#include "IO/ByteStreamInterface.h"
+#include "IO/ByteStream.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,14 +32,14 @@ typedef struct
 	size_t bufferPos;
 } MemoryByteStreamReadState;
 
-DLLEXPORT void initMemoryByteStreamReadState(
+DLLEXPORT void memoryByteStreamReadStateInit(
 	MemoryByteStreamReadState *in_pMemoryByteStreamReadState,
 	const void *in_pBuffer, size_t in_bufferSize);
 
 DLLEXPORT size_t memoryByteReadStreamRead(void *in_out_pMemoryByteStreamReadState, 
 	void *out_pBuffer, size_t in_count);
 
-const ByteStreamReadInterface cMemoryStreamReadInterface = { &memoryByteReadStreamRead };
+DLLEXPORT ByteStreamInterface getMemoryByteStreamReadInterface();
 
 #ifdef __cplusplus
 }

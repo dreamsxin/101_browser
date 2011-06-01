@@ -21,7 +21,7 @@
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/declspec.h"
 
-#include "IO/ByteStreamInterface.h"
+#include "IO/ByteStream.h"
 #include "Util/ReadResult.h"
 
 #ifdef __cplusplus
@@ -66,7 +66,9 @@ typedef struct
 
 #pragma pack(pop)
 
-DLLEXPORT void parseRFC1950(void *in_pStreamState, ByteStreamReadInterface in_readStream, bool in_supportPresetDictionary);
+DLLEXPORT void parseRFC1950(void *in_pStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	bool in_supportPresetDictionary);
 
 #ifdef __cplusplus
 }

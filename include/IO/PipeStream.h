@@ -18,7 +18,7 @@
 #define _MTAx_IO_PipeStream_h
 
 #include "Coroutine/Coroutine.h"
-#include "IO/ByteStreamInterface.h"
+#include "IO/ByteStream.h"
 #include "IO/CoroutineStream.h"
 #include "MiniStdlib/cstdbool.h"
 #include "MiniStdlib/climits.h"
@@ -57,20 +57,18 @@ typedef struct
 * in_pUserData: user data to be sent to the new created coroutine
 */
 DLLEXPORT bool pipeStreamInit(PipeStreamState *out_pPipeStreamState,
+	ByteStreamInterface *out_pByteStreamInterface,
 	bool in_isOtherStreamReader,
 	CoroutineDescriptor *out_pThisCoroutine,
 	CoroutineDescriptor *out_pOtherCoroutine,
-	void (*in_pOtherCoroutineStartup)(void *in_out_pStreamState, void *in_pUserData),
+	void (*in_pOtherCoroutineStartup)(ByteStreamReference in_byteStreamReference, void *in_pUserData),
 	void *in_pUserData);
 
-DLLEXPORT void deletePipeStreamState(PipeStreamState *out_pPipeStreamState);
+DLLEXPORT void pipeStreamStateDestroy(PipeStreamState *out_pPipeStreamState);
 
 DLLEXPORT size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t in_count);
 
 DLLEXPORT size_t pipeStreamWrite(void *in_out_pPipeStreamState, const void *in_pBuffer, size_t in_count);
-
-DLLEXPORT ByteStreamReadInterface getPipeStreamReadInterface();
-DLLEXPORT ByteStreamWriteInterface getPipeStreamWriteInterface();
 
 #ifdef __cplusplus
 }

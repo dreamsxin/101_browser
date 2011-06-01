@@ -18,7 +18,7 @@
 #define _MTAx_HTML_2_4_h
 
 #include "MiniStdlib/declspec.h"
-#include "IO/ByteStreamInterface.h"
+#include "IO/ByteStream.h"
 
 /*
  * 2.4 UTF-8
@@ -30,9 +30,9 @@ extern "C" {
 #endif
 
 DLLEXPORT void convertUTF8toCodepoints(
-	ByteStreamReadInterface in_readInterface, 
+	ByteStreamInterface in_readInterface, 
 	void *in_pReadState,
-	ByteStreamWriteInterface in_writeInterface,
+	ByteStreamInterface in_writeInterface,
 	void *in_pWriteState);
 
 #ifdef __cplusplus

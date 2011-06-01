@@ -317,7 +317,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 {
 	uint8_t LZW_Minimum_Code_Size;
 	BitReadState bitReadState;
-	ByteStreamReadInterface bitReadInterface = { read_Image_Data_byteStreamInterface };
+	ByteStreamInterface bitReadInterface;
 	Image_Data_StreamState streamState;
 	LZW_Tree *pTree;
 	LZW_Stack *pStack;
@@ -328,6 +328,10 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 	uint8_t currentCodeWordBitCount;
 
 	uint16_t currentCodeWord;
+
+	// Initialize bitReadInterface
+	memset(&bitReadInterface, 0, sizeof(bitReadInterface));
+	bitReadInterface.mpfRead = read_Image_Data_byteStreamInterface;
 
 #if 0
 	size_t pixelsWritten = 0;

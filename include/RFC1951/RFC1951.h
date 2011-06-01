@@ -18,15 +18,15 @@
 #define _RFC1951_RFC1951_h
 
 #include "MiniStdlib/declspec.h"
-#include "IO/ByteStreamInterface.h"
+#include "IO/ByteStream.h"
 #include "Util/ReadResult.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-DLLEXPORT ReadResult parseRFC1951(void *in_out_pReadStreamState, ByteStreamReadInterface in_readInterface, 
-	void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface);
+DLLEXPORT ReadResult parseRFC1951(void *in_out_pReadStreamState, ByteStreamInterface in_readInterface, 
+	void *in_out_pWriteStreamState, ByteStreamInterface in_writeInterface);
 
 #ifdef __cplusplus
 }

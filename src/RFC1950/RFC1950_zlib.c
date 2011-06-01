@@ -1,12 +1,17 @@
 #include "RFC1950/RFC1950_zlib.h"
+#include <assert.h>
 
-void parseRFC1950(void *in_pStreamState, ByteStreamReadInterface in_readStream, bool in_supportPresetDictionary)
+void parseRFC1950(void *in_pStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	bool in_supportPresetDictionary)
 {
 	ZlibStreamHeader header;
 	uint16_t LZ77_window_size;
 	uint32_t DICTID;
 
-	if ((*in_readStream.pRead)(in_pStreamState, &header, sizeof(header)) != sizeof(header))
+	assert(in_byteStreamReadInterface.mpfRead != NULL);
+
+	if ((*in_byteStreamReadInterface.mpfRead)(in_pStreamState, &header, sizeof(header)) != sizeof(header))
 	{
 		// TODO - error
 	}
@@ -70,7 +75,7 @@ void parseRFC1950(void *in_pStreamState, ByteStreamReadInterface in_readStream, 
 
 	if (header.FLG.fields.FDICT)
 	{
-		if ((*in_readStream.pRead)(in_pStreamState, &DICTID, sizeof(DICTID)) != sizeof(DICTID))
+		if ((*in_byteStreamReadInterface.mpfRead)(in_pStreamState, &DICTID, sizeof(DICTID)) != sizeof(DICTID))
 		{
 			// TODO - error
 		}

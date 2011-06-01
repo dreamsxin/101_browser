@@ -123,15 +123,16 @@ typedef struct
 	MemoryByteStreamReadState *pReadState;
 } Test_2_4_Userdata;
 
-void test_2_4_Coroutine(void *in_pPipeStreamState, void *in_pUserData)
+void test_2_4_Coroutine(ByteStreamReference in_byteStreamReference, void *in_pUserData)
 {
-	PipeStreamState *pPipeStreamState = (PipeStreamState *) in_pPipeStreamState;
-	ByteStreamWriteInterface pipeStreamWriteInterface = { &pipeStreamWrite };
+	PipeStreamState *pPipeStreamState = (PipeStreamState *) in_byteStreamReference.mpByteStreamState;
 
 	Test_2_4_Userdata *pUserData = (Test_2_4_Userdata *) in_pUserData;
 
-	convertUTF8toCodepoints(cMemoryStreamReadInterface, pUserData->pReadState, 
-		pipeStreamWriteInterface, pPipeStreamState);
+	assert(in_byteStreamReference.mByteStreamInterface.mpfWrite != NULL);
+
+	convertUTF8toCodepoints(getMemoryByteStreamReadInterface(), pUserData->pReadState, 
+		in_byteStreamReference.mByteStreamInterface, in_byteStreamReference.mpByteStreamState);
 }
 
 void test_2_4()
@@ -140,6 +141,7 @@ void test_2_4()
 	bool result;
 	MemoryByteStreamReadState readState;
 	PipeStreamState pipeStreamState;
+	ByteStreamInterface pipeStreamInterface;
 	CoroutineDescriptor thisCoroutine;
 	CoroutineDescriptor otherCoroutine;
 	size_t idx;
@@ -161,13 +163,16 @@ void test_2_4()
 		uint8_t inputBytes[] = { 0x41, 0x98, 0xBA, 0x42, 0xE2, 0x98, 0x43, 0xE2, 0x98, 0xBA, 0xE2, 0x98 };
 		UnicodeCodePoint outputCodepoints[] = { 'A', 0xFFFD, 0xFFFD, 'B', 0xFFFD, 'C', 0x263A, 0xFFFD };
 
-		initMemoryByteStreamReadState(&readState, inputBytes, sizeof(inputBytes));
+		memoryByteStreamReadStateInit(&readState, inputBytes, sizeof(inputBytes));
 
 		test_2_4_userdata.pInputBytes = inputBytes;
 		test_2_4_userdata.pReadState = &readState;
 
-		result = pipeStreamInit(&pipeStreamState, false, &thisCoroutine, &otherCoroutine, 
+		result = pipeStreamInit(&pipeStreamState, &pipeStreamInterface,
+			false, &thisCoroutine, &otherCoroutine,
 			&test_2_4_Coroutine, &test_2_4_userdata);
+
+		assert(pipeStreamInterface.mpfRead != NULL);
 
 		test(result);
 		if (!result)
@@ -175,7 +180,8 @@ void test_2_4()
 
 		for (idx = 0; idx < sizeof(outputCodepoints) / sizeof(UnicodeCodePoint); idx++)
 		{
-			readCount = pipeStreamRead(&pipeStreamState, &currentCodePoint, sizeof(UnicodeCodePoint));
+			readCount = (*pipeStreamInterface.mpfRead)
+				(&pipeStreamState, &currentCodePoint, sizeof(UnicodeCodePoint));
 
 			test(readCount == sizeof(UnicodeCodePoint));
 			test(currentCodePoint == outputCodepoints[idx]);
@@ -184,7 +190,7 @@ void test_2_4()
 		readCount = pipeStreamRead(&pipeStreamState, &currentCodePoint, sizeof(UnicodeCodePoint));
 		test(0 == readCount);
 
-		deletePipeStreamState(&pipeStreamState);
+		pipeStreamStateDestroy(&pipeStreamState);
 	}
 }
 

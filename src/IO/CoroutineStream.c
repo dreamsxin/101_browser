@@ -26,30 +26,31 @@ void COROUTINE_KICKOFF_CALL coroutineStreamKickoff(void *in_pCoroutineStateAndKi
 	* No exchanging of descriptors since it hasn't been done originally when switching to
 	* this coroutine.
 	*/
-	(((CoroutineStreamFunctions*) stateAndKickoff.pState)->mpfSwitchCoroutine)(stateAndKickoff.pState);
+	(((CoroutineStreamFunctions*) stateAndKickoff.mByteStreamReference.mpByteStreamState)->mpfSwitchCoroutine)
+		(stateAndKickoff.mByteStreamReference.mpByteStreamState);
 
-	(*stateAndKickoff.kickoffData.mpStartup)(stateAndKickoff.pState, stateAndKickoff.kickoffData.mpUserData);
+	(*stateAndKickoff.kickoffData.mpStartup)(stateAndKickoff.mByteStreamReference, stateAndKickoff.kickoffData.mpUserData);
 
 	if (stateAndKickoff.kickoffData.mpTerminateFun)
-		(*stateAndKickoff.kickoffData.mpTerminateFun)(stateAndKickoff.pState);
+		(*stateAndKickoff.kickoffData.mpTerminateFun)(stateAndKickoff.mByteStreamReference.mpByteStreamState);
 
 	while (1)
 	{
-		(*stateAndKickoff.kickoffData.mpTerminalLoopFun)(stateAndKickoff.pState);
+		(*stateAndKickoff.kickoffData.mpTerminalLoopFun)(stateAndKickoff.mByteStreamReference.mpByteStreamState);
 	}
 }
 
-bool coroutineStreamStart(void *in_pStreamState, 
+bool coroutineStreamStart(ByteStreamReference in_byteStreamReference, 
 	CoroutineDescriptor *out_pThisCoroutine,
 	CoroutineDescriptor *out_pOtherCoroutine,
-	void (*in_pOtherCoroutineStartup)(void *in_pStreamState, void *in_pUserData),
+	void (*in_pOtherCoroutineStartup)(ByteStreamReference in_byteStreamReference, void *in_pUserData),
 	void (*in_pfTerminate)(void *in_out_pStreamState),
 	void (*in_pfTerminalLoopFunction)(void *in_out_pStreamState),
 	void *in_pUserData)
 {
 	CoroutineStateAndKickoff stateAndKickoff;
 	
-	stateAndKickoff.pState = in_pStreamState;
+	stateAndKickoff.mByteStreamReference = in_byteStreamReference;
 	stateAndKickoff.kickoffData.mpStartup = in_pOtherCoroutineStartup;
 	stateAndKickoff.kickoffData.mpTerminateFun = in_pfTerminate;
 	stateAndKickoff.kickoffData.mpTerminalLoopFun = in_pfTerminalLoopFunction;
@@ -61,7 +62,8 @@ bool coroutineStreamStart(void *in_pStreamState,
 	if (!createCoroutine(0, coroutineStreamKickoff, &stateAndKickoff, out_pOtherCoroutine))
 		return false;
 
-	(((CoroutineStreamFunctions*) in_pStreamState)->mpfSwitchCoroutine)(in_pStreamState);
+	(((CoroutineStreamFunctions*) in_byteStreamReference.mpByteStreamState)->mpfSwitchCoroutine)
+		(in_byteStreamReference.mpByteStreamState);
 
 	return true;
 }

@@ -18,8 +18,10 @@
 #include <assert.h>
 
 void initBitReadState(BitReadState *out_pBitReadState, void *in_pByteStreamState, 
-	ByteStreamReadInterface in_readInterface)
+	ByteStreamInterface in_readInterface)
 {
+	assert(in_readInterface.mpfRead != NULL);
+	
 	out_pBitReadState->bitCountInBuffer = 0;
 	/*
 	* There is no need to initialize in_pBitReadState->buffer
@@ -42,7 +44,7 @@ size_t readBits(BitReadState *in_pBitReadState, void* out_pBuffer, size_t in_bit
 
 		if (in_pBitReadState->bitCountInBuffer == 0)
 		{
-			if ((*in_pBitReadState->readInterface.pRead)(in_pBitReadState->pByteStreamState, &in_pBitReadState->buffer, 1) != 1)
+			if ((*in_pBitReadState->readInterface.mpfRead)(in_pBitReadState->pByteStreamState, &in_pBitReadState->buffer, 1) != 1)
 			{
 				return currentBitIndex;
 			}

@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-#ifndef _MTAx_IO_ByteStreamInterface_h
-#define _MTAx_IO_ByteStreamInterface_h
+#ifndef _MTAx_IO_ByteStream_h
+#define _MTAx_IO_ByteStream_h
 
 #include "MiniStdlib/cstddef.h"
+#include "MiniStdlib/cstdbool.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,13 +26,16 @@ extern "C" {
 
 typedef struct
 {
-	size_t (*pRead)(void *in_out_pByteStreamState, void *out_pBuffer, size_t in_count);
-} ByteStreamReadInterface;
+	size_t (*mpfRead)(void *in_out_pByteStreamInterface, void *out_pBuffer, size_t in_count);
+	size_t (*mpfWrite)(void *in_out_pByteStreamInterface, const void *in_pBuffer, size_t in_count);
+	bool (*mpfSeek)(void *in_out_pByteStreamInterface, long offset, int origin);
+} ByteStreamInterface;
 
 typedef struct
 {
-	size_t (*pWrite)(void *in_out_pByteStreamState, const void *in_pBuffer, size_t in_count);
-} ByteStreamWriteInterface;
+	ByteStreamInterface mByteStreamInterface;
+	void *mpByteStreamState;
+} ByteStreamReference;
 
 #ifdef __cplusplus
 }

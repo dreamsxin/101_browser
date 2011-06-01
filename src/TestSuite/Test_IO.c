@@ -20,6 +20,7 @@
 #include "MiniStdlib/minmax.h"
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 
 typedef struct
 {
@@ -27,12 +28,18 @@ typedef struct
 	volatile bool endOfFunctionReached;
 } EvilTestdata;
 
-void evilReadFun(void *in_pPipeStreamState, void *in_pUserdata)
+void evilReadFun(ByteStreamReference in_byteStreamReference, void *in_pUserdata)
 {
 	EvilTestdata *pTestdata = (EvilTestdata *) in_pUserdata;
 	uint8_t buffer;
 
-	while (pipeStreamRead(in_pPipeStreamState, &buffer, 1))
+	test(in_byteStreamReference.mByteStreamInterface.mpfRead != NULL);
+
+	if (NULL == in_byteStreamReference.mByteStreamInterface.mpfRead)
+		return;
+
+	while ((*in_byteStreamReference.mByteStreamInterface.mpfRead)
+		(in_byteStreamReference.mpByteStreamState, &buffer, 1))
 		pTestdata->readCount++;
 
 	pTestdata->endOfFunctionReached = true;
@@ -47,6 +54,7 @@ void testPipeStreamEvil()
 	* 
 	*/
 	PipeStreamState pipeStreamState;
+	ByteStreamInterface pipeStreamInterface;
 	CoroutineDescriptor thisCoroutine;
 	CoroutineDescriptor otherCoroutine;
 	EvilTestdata testdata;
@@ -56,8 +64,8 @@ void testPipeStreamEvil()
 		testdata.endOfFunctionReached = false;
 		testdata.readCount = 0;
 
-		result = pipeStreamInit(&pipeStreamState, true, 
-			&thisCoroutine, &otherCoroutine, 
+		result = pipeStreamInit(&pipeStreamState, &pipeStreamInterface,
+			true, &thisCoroutine, &otherCoroutine, 
 			&evilReadFun, &testdata);
 
 		test(result);
@@ -72,7 +80,7 @@ void testPipeStreamEvil()
 		test(testdata.endOfFunctionReached);
 		test(0 == testdata.readCount);
 
-		deletePipeStreamState(&pipeStreamState);
+		pipeStreamStateDestroy(&pipeStreamState);
 	}
 
 	{
@@ -81,8 +89,8 @@ void testPipeStreamEvil()
 		testdata.endOfFunctionReached = false;
 		testdata.readCount = 0;
 
-		result = pipeStreamInit(&pipeStreamState, true, 
-			&thisCoroutine, &otherCoroutine, 
+		result = pipeStreamInit(&pipeStreamState, &pipeStreamInterface, 
+			true, &thisCoroutine, &otherCoroutine, 
 			&evilReadFun, &testdata);
 
 		test(result);
@@ -97,23 +105,29 @@ void testPipeStreamEvil()
 		test(testdata.endOfFunctionReached);
 		test(2 == testdata.readCount);
 
-		deletePipeStreamState(&pipeStreamState);
+		pipeStreamStateDestroy(&pipeStreamState);
 	}
 }
 
 
 
-void readFun(void *in_pPipeStreamState, unsigned int in_bytesToRead)
+void readFun(ByteStreamReference in_byteStreamReference, unsigned int in_bytesToRead)
 {
 	uint8_t data[32];
 	size_t readCount;
 	unsigned int idx;
 
+	test(in_byteStreamReference.mByteStreamInterface.mpfRead != NULL);
+
+	if (NULL == in_byteStreamReference.mByteStreamInterface.mpfRead)
+		return;
+
 	memset(data, 0xFF, 32);
 
 	printf("Reading %u bytes\n", in_bytesToRead);
 	
-	readCount = pipeStreamRead(in_pPipeStreamState, data, in_bytesToRead);
+	readCount = (*in_byteStreamReference.mByteStreamInterface.mpfRead)
+		(in_byteStreamReference.mpByteStreamState, data, in_bytesToRead);
 
 	test(readCount == MIN(in_bytesToRead, 4));
 
@@ -123,38 +137,47 @@ void readFun(void *in_pPipeStreamState, unsigned int in_bytesToRead)
 	}
 }
 
-void writeFun(void *in_pPipeStreamState, unsigned int in_bytesToRead)
+void writeFun(ByteStreamReference in_byteStreamReference, unsigned int in_bytesToRead)
 {
 	uint8_t data[3];
+
+	test(in_byteStreamReference.mByteStreamInterface.mpfWrite != NULL);
+
+	if (NULL == in_byteStreamReference.mByteStreamInterface.mpfWrite)
+		return;
 
 	data[0] = 0;
 
 	printf("Writing 1 byte\n");
-	test(pipeStreamWrite(in_pPipeStreamState, data, 1) == 1);
+	test((*in_byteStreamReference.mByteStreamInterface.mpfWrite)
+		(in_byteStreamReference.mpByteStreamState, data, 1) == 1);
 
 	data[0] = 1;
 	data[1] = 2;
 	data[2] = 3;
 
 	printf("Writing 3 bytes\n");
-	test(pipeStreamWrite(in_pPipeStreamState, data, 3) == MIN(3, in_bytesToRead-1));
+	test((*in_byteStreamReference.mByteStreamInterface.mpfWrite)
+		(in_byteStreamReference.mpByteStreamState, data, 3) == MIN(3, in_bytesToRead-1));
 }
 
-void readerCoroutineFun(void *in_pPipeStreamState, void *in_pUserdata)
+void readerCoroutineFun(ByteStreamReference in_byteStreamReference, void *in_pUserdata)
 {
 	unsigned int *bytesToRead = (unsigned int *) in_pUserdata;
-	readFun(in_pPipeStreamState, *bytesToRead);
+	readFun(in_byteStreamReference, *bytesToRead);
 }
 
-void writerCoroutineFun(void *in_pPipeStreamState, void *in_pUserdata)
+void writerCoroutineFun(ByteStreamReference in_byteStreamReference, void *in_pUserdata)
 {
 	unsigned int *bytesToRead = (unsigned int *) in_pUserdata;
-	writeFun(in_pPipeStreamState, *bytesToRead);
+	writeFun(in_byteStreamReference, *bytesToRead);
 }
 
 void pipeStreamOtherTests()
 {
 	PipeStreamState pipeStreamState;
+	ByteStreamInterface pipeStreamInterface;
+	ByteStreamReference pipeStreamReference;
 	CoroutineDescriptor thisCoroutine;
 	CoroutineDescriptor otherCoroutine;
 	unsigned int bytesToReadArray[] = { 2, 32 };
@@ -163,8 +186,8 @@ void pipeStreamOtherTests()
 	// Test 1, 2: the current coroutine is the writer and 2 or 32 bytes are read
 	for (idx = 0; idx < 2; idx++)
 	{
-		bool result = pipeStreamInit(&pipeStreamState, true, 
-			&thisCoroutine, &otherCoroutine, 
+		bool result = pipeStreamInit(&pipeStreamState, &pipeStreamInterface, 
+			true, &thisCoroutine, &otherCoroutine, 
 			&readerCoroutineFun, bytesToReadArray+idx);
 
 		test(result);
@@ -172,17 +195,20 @@ void pipeStreamOtherTests()
 		if (!result)
 			return;
 
-		writeFun(&pipeStreamState, bytesToReadArray[idx]);
+		pipeStreamReference.mByteStreamInterface = pipeStreamInterface;
+		pipeStreamReference.mpByteStreamState = &pipeStreamState;
+
+		writeFun(pipeStreamReference, bytesToReadArray[idx]);
 		test(pipeStreamWrite(&pipeStreamState, NULL, 0) == 0);
 
-		deletePipeStreamState(&pipeStreamState);
+		pipeStreamStateDestroy(&pipeStreamState);
 	}
 
 	// Test 3, 4: the current coroutine is the reader and 2 or 32 bytes are read
 	for (idx = 0; idx < 2; idx++)
 	{
-		bool result = pipeStreamInit(&pipeStreamState, false, 
-			&thisCoroutine, &otherCoroutine, 
+		bool result = pipeStreamInit(&pipeStreamState, &pipeStreamInterface, 
+			false, &thisCoroutine, &otherCoroutine, 
 			&writerCoroutineFun, bytesToReadArray+idx);
 
 		test(result);
@@ -190,10 +216,13 @@ void pipeStreamOtherTests()
 		if (!result)
 			return;
 
-		readFun(&pipeStreamState, bytesToReadArray[idx]);
+		pipeStreamReference.mByteStreamInterface = pipeStreamInterface;
+		pipeStreamReference.mpByteStreamState = &pipeStreamState;
+
+		readFun(pipeStreamReference, bytesToReadArray[idx]);
 		test(pipeStreamRead(&pipeStreamState, NULL, 0) == 0);
 
-		deletePipeStreamState(&pipeStreamState);
+		pipeStreamStateDestroy(&pipeStreamState);
 	}
 }
 

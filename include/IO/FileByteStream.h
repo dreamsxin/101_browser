@@ -20,7 +20,7 @@
 #include "MiniStdlib/MTAx_cstdio.h"
 #include "MiniStdlib/cstdbool.h"
 #include "MiniStdlib/declspec.h"
-#include "IO/ByteStreamInterface.h"
+#include "IO/ByteStream.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,12 +34,12 @@ typedef struct
 DLLEXPORT size_t fileByteReadStreamRead(void *in_out_pFileByteStreamState, 
 	void *out_pBuffer, size_t in_count);
 
-DLLEXPORT bool fileByteReadStreamState_create(const char *in_filename,
+DLLEXPORT bool fileByteReadStreamStateInit(const char *in_filename,
 	FileByteStreamState *in_pFileByteStreamState);
 
-DLLEXPORT void fileByteReadStreamState_destroy(FileByteStreamState *in_pFileByteStreamState);
+DLLEXPORT void fileByteReadStreamStateDestroy(FileByteStreamState *in_pFileByteStreamState);
 
-const ByteStreamReadInterface cFileByteStreamInterface = { fileByteReadStreamRead };
+DLLEXPORT ByteStreamInterface getFileByteStreamInterface();
 
 #ifdef __cplusplus
 }

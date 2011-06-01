@@ -16,81 +16,85 @@
 
 #include "IO/SetjmpStream.h"
 #include <assert.h>
+#include <string.h> // for memset
 #include "MiniStdlib/xchg.h"
 
-void setjmpReadStreamInit(SetjmpReadStreamState *out_pSetjmpStreamState, 
+void setjmpStreamInit(SetjmpStreamState *out_pSetjmpStreamState, 
 	jmp_buf *in_pJmpBuffer, int in_longjmpValue, 
-	void *in_pByteStreamState, ByteStreamReadInterface in_readInterface)
-{
-	setjmpStreamUtilDataInit(&out_pSetjmpStreamState->utilData, 
-		in_pJmpBuffer, in_longjmpValue, in_pByteStreamState);
-	out_pSetjmpStreamState->mReadInterface = in_readInterface;
-}
-
-void setjmpWriteStreamInit(SetjmpWriteStreamState *out_pSetjmpStreamState, 
-	jmp_buf *in_pJmpBuffer, int in_longjmpValue, 
-	void *in_pByteStreamState, ByteStreamWriteInterface in_writeInterface)
-{
-	setjmpStreamUtilDataInit(&out_pSetjmpStreamState->utilData, 
-		in_pJmpBuffer, in_longjmpValue, in_pByteStreamState);
-	out_pSetjmpStreamState->mWriteInterface = in_writeInterface;
-}
-
-void setjmpStreamUtilDataInit(SetjmpStreamUtilData *out_pSetjmpStreamUtilData, 
-	jmp_buf *in_pJmpBuffer, int in_longjmpValue, void *in_pByteStreamState)
+	void *in_pSuperByteStreamState, ByteStreamInterface in_superByteStreamInterface)
 {
 	// Because of PRE:SetjmpStream_h:36
 	assert(in_longjmpValue != 0);
 
-	out_pSetjmpStreamUtilData->mpJmpBuffer = in_pJmpBuffer;
-	out_pSetjmpStreamUtilData->mLongjmpValue = in_longjmpValue;
-	out_pSetjmpStreamUtilData->pByteStreamState = in_pByteStreamState;
+	out_pSetjmpStreamState->mpJmpBuffer = in_pJmpBuffer;
+	out_pSetjmpStreamState->mLongjmpValue = in_longjmpValue;
+	out_pSetjmpStreamState->mpSuperByteStreamState = in_pSuperByteStreamState;
+	
+	out_pSetjmpStreamState->mSuperByteStreamInterface = in_superByteStreamInterface;
 }
 
 size_t setjmpStreamRead(void *in_out_pSetjmpStreamState, void *out_pBuffer, size_t in_count)
 {
-	SetjmpReadStreamState *pSetjmpReadStreamState = (SetjmpReadStreamState*) in_out_pSetjmpStreamState;
+	SetjmpStreamState *pSetjmpStreamState = (SetjmpStreamState*) in_out_pSetjmpStreamState;
 
-	if (pSetjmpReadStreamState->mReadInterface.pRead(pSetjmpReadStreamState->utilData.pByteStreamState, 
-		out_pBuffer, in_count) != in_count)
-		longjmp(*pSetjmpReadStreamState->utilData.mpJmpBuffer, pSetjmpReadStreamState->utilData.mLongjmpValue);
+	if (pSetjmpStreamState->mSuperByteStreamInterface.mpfRead != NULL)
+	{
+		if (pSetjmpStreamState->mSuperByteStreamInterface.mpfRead(pSetjmpStreamState->mpSuperByteStreamState, 
+			out_pBuffer, in_count) != in_count)
+			longjmp(*pSetjmpStreamState->mpJmpBuffer, pSetjmpStreamState->mLongjmpValue);
 
-	return in_count;
+		return in_count;
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 size_t setjmpStreamWrite(void *in_out_pSetjmpStreamState, const void *out_pBuffer, size_t in_count)
 {
-	SetjmpWriteStreamState *pSetjmpWriteStreamState = (SetjmpWriteStreamState*) in_out_pSetjmpStreamState;
+	SetjmpStreamState *pSetjmpStreamState = (SetjmpStreamState*) in_out_pSetjmpStreamState;
 
-	if (pSetjmpWriteStreamState->mWriteInterface.pWrite(pSetjmpWriteStreamState->utilData.pByteStreamState, 
-		out_pBuffer, in_count) != in_count)
-		longjmp(*pSetjmpWriteStreamState->utilData.mpJmpBuffer, pSetjmpWriteStreamState->utilData.mLongjmpValue);
+	if (pSetjmpStreamState->mSuperByteStreamInterface.mpfWrite != NULL)
+	{
+		if (pSetjmpStreamState->mSuperByteStreamInterface.mpfWrite(pSetjmpStreamState->mpSuperByteStreamState, 
+			out_pBuffer, in_count) != in_count)
+			longjmp(*pSetjmpStreamState->mpJmpBuffer, pSetjmpStreamState->mLongjmpValue);
 
-	return in_count;
+		return in_count;
+	}
+	else
+	{
+		return 0;
+	}
 }
 
-int setjmpStreamXchgAndSetjmp(SetjmpStreamUtilData *in_out_pSetjmpStreamUtilData, 
+int setjmpStreamXchgAndSetjmp(SetjmpStreamState *in_out_pSetjmpStreamState,
 	jmp_buf *in_pJmpBuffer)
 {
-	xchg(*in_out_pSetjmpStreamUtilData->mpJmpBuffer, in_pJmpBuffer, sizeof(jmp_buf*));
-	return setjmp(*in_out_pSetjmpStreamUtilData->mpJmpBuffer);
+	xchg(*in_out_pSetjmpStreamState->mpJmpBuffer, in_pJmpBuffer, sizeof(jmp_buf*));
+	return setjmp(*in_out_pSetjmpStreamState->mpJmpBuffer);
 }
 
-void setjmpStreamXchgAndLongjmp(SetjmpStreamUtilData *in_out_pSetjmpStreamUtilData, 
+void setjmpStreamXchgAndLongjmp(SetjmpStreamState *in_out_pSetjmpStreamState,
 	jmp_buf *in_pJmpBuffer)
 {
-	xchg(in_out_pSetjmpStreamUtilData->mpJmpBuffer, in_pJmpBuffer, sizeof(jmp_buf*));
-	longjmp(*in_out_pSetjmpStreamUtilData->mpJmpBuffer, in_out_pSetjmpStreamUtilData->mLongjmpValue);
+	xchg(in_out_pSetjmpStreamState->mpJmpBuffer, in_pJmpBuffer, sizeof(jmp_buf*));
+	longjmp(*in_out_pSetjmpStreamState->mpJmpBuffer, in_out_pSetjmpStreamState->mLongjmpValue);
 }
 
-ByteStreamReadInterface getSetjmpReadStreamReadInterface()
+DLLEXPORT ByteStreamInterface getSetjmpStreamByteStreamInterface(const SetjmpStreamState * in_pcSetjmpStreamState)
 {
-	ByteStreamReadInterface out_interface = { setjmpStreamRead };
-	return out_interface;
-}
+	ByteStreamInterface out_interface;
+	memset(&out_interface, 0, sizeof(out_interface));
 
-ByteStreamWriteInterface getSetjmpWriteStreamReadInterface()
-{
-	ByteStreamWriteInterface out_interface = { setjmpStreamWrite };
+	if (in_pcSetjmpStreamState->mSuperByteStreamInterface.mpfRead)
+		out_interface.mpfRead = setjmpStreamRead;
+
+	if (in_pcSetjmpStreamState->mSuperByteStreamInterface.mpfWrite)
+		out_interface.mpfWrite = setjmpStreamWrite;
+
+	// TODO Write support for seek
+
 	return out_interface;
 }

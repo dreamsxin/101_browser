@@ -86,12 +86,18 @@ bool bidirectionalStreamIsWritingPossible(void *in_pBidirectionalStreamState)
 }
 
 bool bidirectionalStreamInit(BidirectionalStreamState *out_pBidirectionalStreamState,
+	ByteStreamInterface *out_pByteStreamInterface,
 	CoroutineDescriptor *out_pThisCoroutine,
 	CoroutineDescriptor *out_pOtherCoroutine,
-	void (*in_pOtherCoroutineStartup)(void *in_pStreamState, void *in_pUserData),
+	void (*in_pOtherCoroutineStartup)(ByteStreamReference in_byteStreamReference, void *in_pUserData),
 	void *in_pUserData)
 {
 	uint8_t idx;
+	ByteStreamReference byteStreamReference;
+	byteStreamReference.mpByteStreamState = out_pBidirectionalStreamState;
+	memset(&byteStreamReference.mByteStreamInterface, 0, sizeof(byteStreamReference.mByteStreamInterface));
+	byteStreamReference.mByteStreamInterface.mpfRead = bidirectionalStreamRead;
+	byteStreamReference.mByteStreamInterface.mpfWrite = bidirectionalStreamWrite;
 	
 	out_pBidirectionalStreamState->mFunctions.mpfSwitchCoroutine = invertAndSwitchCoroutine;
 
@@ -108,7 +114,7 @@ bool bidirectionalStreamInit(BidirectionalStreamState *out_pBidirectionalStreamS
 
 	out_pBidirectionalStreamState->mCurrentSide = 0;
 
-	return coroutineStreamStart(out_pBidirectionalStreamState,
+	return coroutineStreamStart(byteStreamReference,
 		out_pThisCoroutine,
 		out_pOtherCoroutine,
 		in_pOtherCoroutineStartup,

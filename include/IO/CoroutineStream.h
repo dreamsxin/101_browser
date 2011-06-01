@@ -19,6 +19,7 @@
 
 #include "MiniStdlib/cstdint.h"
 #include "Coroutine/Coroutine.h"
+#include "IO/ByteStream.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,7 +32,7 @@ typedef struct
 
 typedef struct
 {
-	void (*mpStartup)(void *in_pStreamState, void *in_pUserData);
+	void (*mpStartup)(ByteStreamReference in_byteStreamReference, void *in_pUserData);
 	//! Does the termination of the coroutine
 	void (*mpTerminateFun)(void*);
 	//! The function to run in the loop that is executed after termination
@@ -42,16 +43,16 @@ typedef struct
 
 typedef struct
 {
-	void *pState;
+	ByteStreamReference mByteStreamReference;
 	CoroutineStreamKickoffData kickoffData;
 } CoroutineStateAndKickoff;
 
 void COROUTINE_KICKOFF_CALL coroutineStreamKickoff(void *in_pCoroutineStateAndKickoff);
 
-bool coroutineStreamStart(void *in_pStreamState, 
+bool coroutineStreamStart(ByteStreamReference in_byteStreamReference, 
 	CoroutineDescriptor *out_pThisCoroutine,
 	CoroutineDescriptor *out_pOtherCoroutine,
-	void (*in_pOtherCoroutineStartup)(void *in_pStreamState, void *in_pUserData),
+	void (*in_pOtherCoroutineStartup)(ByteStreamReference in_byteStreamReference, void *in_pUserData),
 	void (*in_pfTerminate)(void *in_out_pStreamState),
 	void (*in_pfTerminalLoopFunction)(void *in_out_pStreamState),
 	void *in_pUserData);

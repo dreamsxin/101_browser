@@ -28,7 +28,7 @@
 #include "MiniStdlib/cstddef.h"
 #include "MiniStdlib/declspec.h"
 
-#include "IO/ByteStreamInterface.h"
+#include "IO/ByteStream.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,11 +49,11 @@ typedef struct
 	uint8_t buffer;
 
 	void *pByteStreamState;
-	ByteStreamReadInterface readInterface;
+	ByteStreamInterface readInterface;
 } BitReadState;
 
 DLLEXPORT void initBitReadState(BitReadState *out_pBitReadState, void *in_pByteStreamState, 
-	ByteStreamReadInterface in_readInterface);
+	ByteStreamInterface in_readInterface);
 
 /*!
  * Reads in_bitsCount bits from the file beginning from the lowest (little endian) or

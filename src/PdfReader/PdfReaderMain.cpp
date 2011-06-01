@@ -15,7 +15,7 @@
  */
 
 #include "BasicDataStructures/Stream/FileReadStream.h"
-#include "IO/ByteStreamInterface.h"
+#include "IO/ByteStream.h"
 #include "Util/ReadResult.h"
 #include <cstdlib>
 #include <cstring>

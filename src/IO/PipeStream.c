@@ -18,18 +18,6 @@
 #include "MiniStdlib/xchg.h"
 #include <assert.h>
 
-ByteStreamReadInterface getPipeStreamReadInterface()
-{
-	ByteStreamReadInterface out_interface = { pipeStreamRead };
-	return out_interface;
-}
-
-ByteStreamWriteInterface getPipeStreamWriteInterface()
-{
-	ByteStreamWriteInterface out_interface = { pipeStreamWrite };
-	return out_interface;
-}
-
 void xchgAndSwitchCoroutine(void *in_out_pPipeStreamState)
 {
 	PipeStreamState *pPipeStreamState = (PipeStreamState *) in_out_pPipeStreamState;
@@ -76,13 +64,27 @@ void pipeStreamTerminalLoopWrite(void *in_out_pPipeStreamState)
 }
 
 bool pipeStreamInit(PipeStreamState *out_pPipeStreamState,
+	ByteStreamInterface *out_pByteStreamInterface,
 	bool in_isOtherStreamReader,
 	CoroutineDescriptor *out_pThisCoroutine,
 	CoroutineDescriptor *out_pOtherCoroutine,
-	void (*in_pOtherCoroutineStartup)(void *in_out_pStreamState, void *in_pUserData),
+	void (*in_pOtherCoroutineStartup)(ByteStreamReference in_byteStreamReference, void *in_pUserData),
 	void *in_pUserData)
 {
 	bool out_result;
+	ByteStreamReference byteStreamReference;
+
+	byteStreamReference.mpByteStreamState = out_pPipeStreamState;
+	memset(&byteStreamReference.mByteStreamInterface, 
+		0, sizeof(byteStreamReference.mByteStreamInterface));
+	if (in_isOtherStreamReader)
+	{
+		byteStreamReference.mByteStreamInterface.mpfRead = pipeStreamRead;
+	}
+	else
+	{
+		byteStreamReference.mByteStreamInterface.mpfWrite = pipeStreamWrite;
+	}
 	
 	out_pPipeStreamState->mFunctions.mpfSwitchCoroutine = xchgAndSwitchCoroutine;
 
@@ -92,7 +94,7 @@ bool pipeStreamInit(PipeStreamState *out_pPipeStreamState,
 	out_pPipeStreamState->mpCurrentCoroutineDescriptor = out_pThisCoroutine;
 	out_pPipeStreamState->mpOtherCoroutineDescriptor = out_pOtherCoroutine;
 
-	out_result = coroutineStreamStart(out_pPipeStreamState,
+	out_result = coroutineStreamStart(byteStreamReference,
 		out_pThisCoroutine,
 		out_pOtherCoroutine,
 		in_pOtherCoroutineStartup,
@@ -100,15 +102,26 @@ bool pipeStreamInit(PipeStreamState *out_pPipeStreamState,
 		in_isOtherStreamReader ? pipeStreamTerminalLoopRead : pipeStreamTerminalLoopWrite,
 		in_pUserData);
 
+	// See the example in the PipeStream chapter why we need this code block
 	if (in_isOtherStreamReader)
 	{
 		(out_pPipeStreamState->mFunctions.mpfSwitchCoroutine)(out_pPipeStreamState);
 	}
 
+	memset(out_pByteStreamInterface, 0, sizeof(*out_pByteStreamInterface));
+	if (in_isOtherStreamReader)
+	{
+		out_pByteStreamInterface->mpfWrite = pipeStreamWrite;
+	}
+	else
+	{
+		out_pByteStreamInterface->mpfRead = pipeStreamRead;
+	}
+
 	return out_result;
 }
 
-void deletePipeStreamState(PipeStreamState *out_pPipeStreamState)
+void pipeStreamStateDestroy(PipeStreamState *out_pPipeStreamState)
 {
 	deleteCoroutine(out_pPipeStreamState->mpOtherCoroutineDescriptor);
 	out_pPipeStreamState->mpOtherCoroutineDescriptor = NULL;

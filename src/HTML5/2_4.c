@@ -17,6 +17,7 @@
 #include "HTML5/2_4.h"
 #include "Algorithm/Bitmask.h"
 #include "Util/Unicode.h"
+#include "MiniStdlib/cstdint.h"
 #include <assert.h>
 
 typedef enum
@@ -113,7 +114,7 @@ bool instr_append(
 	return true;
 }
 
-bool instr_append_emit(ByteStreamWriteInterface in_writeInterface, void *in_pWriteState, 
+bool instr_append_emit(ByteStreamInterface in_writeInterface, void *in_pWriteState, 
 	UTF8ParseState *out_pParserState, 
 	uint8_t in_currentByte, 
 	uint8_t in_out_pReadBytes[], uint8_t *in_out_pReadBytesCount)
@@ -121,30 +122,35 @@ bool instr_append_emit(ByteStreamWriteInterface in_writeInterface, void *in_pWri
 	UnicodeCodePoint codePoint;
 	size_t bytesWritten;
 
+	assert(in_writeInterface.mpfWrite != NULL);
+
 	instr_append(out_pParserState, in_currentByte, in_out_pReadBytes, in_out_pReadBytesCount, UTF8ParseState_Start);
 
 	codePoint = createCodePoint(in_out_pReadBytes, *in_out_pReadBytesCount);
 
-	bytesWritten = in_writeInterface.pWrite(in_pWriteState, &codePoint, sizeof(UnicodeCodePoint));
+	bytesWritten = in_writeInterface.mpfWrite(in_pWriteState, &codePoint, sizeof(UnicodeCodePoint));
 
 	*in_out_pReadBytesCount = 0;
 
 	return bytesWritten == sizeof(UnicodeCodePoint);
 }
 
-bool instr_error(ByteStreamWriteInterface in_writeInterface, void *in_pWriteState, 
+bool instr_error(ByteStreamInterface in_writeInterface, void *in_pWriteState, 
 	UTF8ParseState *out_pParserState, uint8_t *out_pReadBytesCount)
 {
 	UnicodeCodePoint replacementCharacter = 0xFFFD;
-	size_t bytesWritten = in_writeInterface.pWrite(in_pWriteState, &replacementCharacter, sizeof(UnicodeCodePoint));
+
+	size_t bytesWritten = (*in_writeInterface.mpfWrite)(in_pWriteState, &replacementCharacter, sizeof(UnicodeCodePoint));
 	
+	assert(in_writeInterface.mpfWrite != NULL);
+
 	*out_pParserState = UTF8ParseState_Start;
 	*out_pReadBytesCount = 0;
 	
 	return bytesWritten == sizeof(UnicodeCodePoint);
 }
 
-bool instr_action_of_Start(ByteStreamWriteInterface in_writeInterface, void *in_pWriteState, 
+bool instr_action_of_Start(ByteStreamInterface in_writeInterface, void *in_pWriteState, 
 	UTF8ParseState *out_pParserState, 
 	uint8_t in_currentByte, 
 	uint8_t in_out_pReadBytes[], uint8_t *in_out_pReadBytesCount)
@@ -227,9 +233,9 @@ bool instr_action_of_Start(ByteStreamWriteInterface in_writeInterface, void *in_
 
 
 void convertUTF8toCodepoints(
-	ByteStreamReadInterface in_readInterface, 
+	ByteStreamInterface in_readInterface, 
 	void *in_pReadState,
-	ByteStreamWriteInterface in_writeInterface,
+	ByteStreamInterface in_writeInterface,
 	void *in_pWriteState)
 {
 	UTF8ParseState parserState = UTF8ParseState_Start;
@@ -238,10 +244,13 @@ void convertUTF8toCodepoints(
 	uint8_t readBytesCount = 0;
 
 	uint8_t currentByte;
+	
+	assert(in_readInterface.mpfRead != NULL);
+	assert(in_writeInterface.mpfWrite != NULL);
 
 	while (1)
 	{
-		size_t currentReadCount = (*in_readInterface.pRead)(in_pReadState, &currentByte, 1);
+		size_t currentReadCount = (*in_readInterface.mpfRead)(in_pReadState, &currentByte, 1);
 
 		if (currentReadCount == 0)
 		{

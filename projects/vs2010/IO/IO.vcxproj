@@ -93,7 +93,7 @@
     <ClInclude Include="..\..\..\include\IO\ExtendedBidirectionalStream.h" />
     <ClInclude Include="..\..\..\include\IO\FileByteStream.h" />
     <ClInclude Include="..\..\..\include\IO\fread.h" />
-    <ClInclude Include="..\..\..\include\IO\ByteStreamInterface.h" />
+    <ClInclude Include="..\..\..\include\IO\ByteStream.h" />
     <ClInclude Include="..\..\..\include\IO\MemoryByteStream.h" />
     <ClInclude Include="..\..\..\include\IO\PipeStream.h" />
     <ClInclude Include="..\..\..\include\IO\SetjmpStream.h" />

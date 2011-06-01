@@ -19,6 +19,7 @@
 #include "IO/BitRead.h"
 #include "IO/SetjmpStream.h"
 #include <string.h>
+#include <assert.h>
 
 typedef struct
 {
@@ -48,14 +49,15 @@ void constructHuffmanTree(HuffmanNode *in_pNode, uint16_t *in_pLengths, size_t i
 }
 
 static void invalidData(BitReadState *in_pBitReadState, 
-	SetjmpWriteStreamState *in_out_pWriteStreamState, 
-	ByteStreamWriteInterface in_writeInterface)
+	SetjmpStreamState *in_out_pWriteStreamState, 
+	ByteStreamInterface in_writeInterface)
 {
-	longjmp(*in_out_pWriteStreamState->utilData.mpJmpBuffer, ReadResultInvalidData);
+	longjmp(*in_out_pWriteStreamState->mpJmpBuffer, ReadResultInvalidData);
 }
 
 void readDataNoCompression(BitReadState *in_pBitReadState, 
-	SetjmpWriteStreamState *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface)
+	SetjmpStreamState *in_out_pWriteStreamState, 
+	ByteStreamInterface in_writeInterface)
 {
 	uint16_t len, nlen, currentByteIndex;
 	uint8_t currentByte;
@@ -84,16 +86,16 @@ void readDataNoCompression(BitReadState *in_pBitReadState,
 	*/
 
 	// Pay attention: the following lines only work on little-endian processors
-	(*in_pBitReadState->readInterface.pRead)(in_pBitReadState->pByteStreamState, &len, sizeof(len));
-	(*in_pBitReadState->readInterface.pRead)(in_pBitReadState->pByteStreamState, &nlen, sizeof(nlen));
+	(*in_pBitReadState->readInterface.mpfRead)(in_pBitReadState->pByteStreamState, &len, sizeof(len));
+	(*in_pBitReadState->readInterface.mpfRead)(in_pBitReadState->pByteStreamState, &nlen, sizeof(nlen));
 
 	if (len != (uint16_t) ~nlen)
-		longjmp(*in_out_pWriteStreamState->utilData.mpJmpBuffer, ReadResultInvalidData);
+		longjmp(*in_out_pWriteStreamState->mpJmpBuffer, ReadResultInvalidData);
 
 	for (currentByteIndex = 0; currentByteIndex < len; currentByteIndex++)
 	{
-		(*in_pBitReadState->readInterface.pRead)(in_pBitReadState->pByteStreamState, &currentByte, 1);
-		(*in_writeInterface.pWrite)(in_out_pWriteStreamState, &currentByte, 1);
+		(*in_pBitReadState->readInterface.mpfRead)(in_pBitReadState->pByteStreamState, &currentByte, 1);
+		(*in_writeInterface.mpfWrite)(in_out_pWriteStreamState, &currentByte, 1);
 	}
 }
 
@@ -104,7 +106,8 @@ void readDataNoCompression(BitReadState *in_pBitReadState,
 #define MAXIMUM_NUMBER_OF_DISTANCE_CODES 30
 
 void readDataCompressedWithFixedHuffmanCodes(BitReadState *in_pBitReadState, 
-	SetjmpWriteStreamState *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface)
+	SetjmpStreamState *in_out_pWriteStreamState, 
+	ByteStreamInterface in_writeInterface)
 {
 	static bool tableInitialized = false;
 	HuffmanNode lengthCode, distanceCode;
@@ -142,7 +145,8 @@ void readDataCompressedWithFixedHuffmanCodes(BitReadState *in_pBitReadState,
 }
 
 void readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadState, 
-	SetjmpWriteStreamState *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface)
+	SetjmpStreamState *in_out_pWriteStreamState, 
+	ByteStreamInterface in_writeInterface)
 {
 	uint16_t literalCodesCount = 0;
 	uint8_t distanceCodesCount, codeLengthCodesCount;
@@ -154,7 +158,7 @@ void readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadState,
 	* 5 Bits: HLIT, # of Literal/Length codes - 257 (257 - 286)
 	*/
 	if (literalCodesCount > 286)
-		longjmp(*in_out_pWriteStreamState->utilData.mpJmpBuffer, ReadResultInvalidData);
+		longjmp(*in_out_pWriteStreamState->mpJmpBuffer, ReadResultInvalidData);
 
 	readBitsLittleEndian(in_pBitReadState, &distanceCodesCount, 5);
 	distanceCodesCount += 1;
@@ -183,44 +187,48 @@ void readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadState,
 }
 
 void (*pfTypeFunctions[4])(BitReadState *in_pBitReadState, 
-	SetjmpWriteStreamState *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface) = {
+	SetjmpStreamState *in_out_pWriteStreamState, ByteStreamInterface in_writeInterface) = {
 		readDataNoCompression, 
 		readDataCompressedWithFixedHuffmanCodes, 
 		readDataCompressedWithDynamicHuffmanCodes,
 		invalidData
 };
 
-ReadResult parseRFC1951(void *in_out_pReadStreamState, ByteStreamReadInterface in_readInterface, 
-	void *in_out_pWriteStreamState, ByteStreamWriteInterface in_writeInterface)
+ReadResult parseRFC1951(void *in_out_pReadStreamState, ByteStreamInterface in_readInterface, 
+	void *in_out_pWriteStreamState, ByteStreamInterface in_writeInterface)
 {
 	BitReadState bitReadState;
 
-	SetjmpReadStreamState setjmpReadStreamState;
-	SetjmpWriteStreamState setjmpWriteStreamState;
+	SetjmpStreamState setjmpReadStreamState;
+	SetjmpStreamState setjmpWriteStreamState;
 
 	jmp_buf jmpBuf;
 	int result;
 
 	uint8_t last, type;
 
-	setjmpReadStreamInit(&setjmpReadStreamState, &jmpBuf, ReadResultPrematureEndOfStream, 
+	assert(in_readInterface.mpfRead != NULL);
+	assert(in_writeInterface.mpfWrite != NULL);
+
+	setjmpStreamInit(&setjmpReadStreamState, &jmpBuf, ReadResultPrematureEndOfStream, 
 		in_out_pReadStreamState, in_readInterface);
 
-	setjmpWriteStreamInit(&setjmpWriteStreamState, &jmpBuf, ReadResultWriteError, 
+	setjmpStreamInit(&setjmpWriteStreamState, &jmpBuf, ReadResultWriteError, 
 		in_out_pWriteStreamState, in_writeInterface);
 
 	// The = is correct here
 	if (result = setjmp(jmpBuf))
 		return (ReadResult) result;
 
-	initBitReadState(&bitReadState, &setjmpReadStreamState, getSetjmpReadStreamReadInterface());
+	initBitReadState(&bitReadState, &setjmpReadStreamState, getSetjmpStreamByteStreamInterface(&setjmpReadStreamState));
 
 	do
 	{
 		readBitsLittleEndian(&bitReadState, &last, 1);
 		readBitsLittleEndian(&bitReadState, &type, 2);
 
-		pfTypeFunctions[type](&bitReadState, &setjmpWriteStreamState, getSetjmpWriteStreamReadInterface());
+		pfTypeFunctions[type](&bitReadState, &setjmpWriteStreamState, 
+			getSetjmpStreamByteStreamInterface(&setjmpWriteStreamState));
 	} while (!last);
 
 	return ReadResultOK;
