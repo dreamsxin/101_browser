@@ -87,7 +87,7 @@ bool bidirectionalStreamIsWritingPossible(void *in_pBidirectionalStreamState)
 
 bool bidirectionalStreamInit(BidirectionalStreamState *out_pBidirectionalStreamState,
 	ByteStreamInterface *out_pByteStreamInterface,
-	bool in_startsThisCoroutineAsWriter,
+	bool in_startThisCoroutineAsWriter,
 	CoroutineDescriptor *out_pThisCoroutine,
 	CoroutineDescriptor *out_pOtherCoroutine,
 	void (*in_pOtherCoroutineStartup)(ByteStreamReference in_byteStreamReference, void *in_pUserData),
@@ -122,6 +122,16 @@ bool bidirectionalStreamInit(BidirectionalStreamState *out_pBidirectionalStreamS
 		NULL,
 		bidirectionalStreamTerminalLoop,
 		in_pUserData);
+}
+
+void bidirectionalStreamStateDestroy(BidirectionalStreamState *out_pBidirectionalStreamState)
+{
+	deleteCoroutine(out_pBidirectionalStreamState->mHalfStreamStates[1].mpCoroutineDescriptor);
+	out_pBidirectionalStreamState->mHalfStreamStates[0].mpCoroutineDescriptor = NULL;
+	out_pBidirectionalStreamState->mHalfStreamStates[1].mpCoroutineDescriptor = NULL;
+
+	out_pBidirectionalStreamState->mpCurrentBuffer = NULL;
+	out_pBidirectionalStreamState->mCurrentBufferSize = 0;
 }
 
 size_t bidirectionalStreamRead(void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count)
