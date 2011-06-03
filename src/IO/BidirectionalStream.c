@@ -87,6 +87,7 @@ bool bidirectionalStreamIsWritingPossible(void *in_pBidirectionalStreamState)
 
 bool bidirectionalStreamInit(BidirectionalStreamState *out_pBidirectionalStreamState,
 	ByteStreamInterface *out_pByteStreamInterface,
+	bool in_startsThisCoroutineAsWriter,
 	CoroutineDescriptor *out_pThisCoroutine,
 	CoroutineDescriptor *out_pOtherCoroutine,
 	void (*in_pOtherCoroutineStartup)(ByteStreamReference in_byteStreamReference, void *in_pUserData),

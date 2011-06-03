@@ -75,7 +75,7 @@ void testPipeStreamEvil()
 
 		// we write nothing
 
-		pipeStreamWrite(&pipeStreamState, NULL, 0);
+		(*pipeStreamInterface.mpfWrite)(&pipeStreamState, NULL, 0);
 
 		test(testdata.endOfFunctionReached);
 		test(0 == testdata.readCount);
@@ -98,9 +98,9 @@ void testPipeStreamEvil()
 		if (!result)
 			return;
 
-		pipeStreamWrite(&pipeStreamState, data, sizeof(data));
+		(*pipeStreamInterface.mpfWrite)(&pipeStreamState, data, sizeof(data));
 
-		pipeStreamWrite(&pipeStreamState, NULL, 0);
+		(*pipeStreamInterface.mpfWrite)(&pipeStreamState, NULL, 0);
 
 		test(testdata.endOfFunctionReached);
 		test(2 == testdata.readCount);
@@ -199,7 +199,7 @@ void pipeStreamOtherTests()
 		pipeStreamReference.mpByteStreamState = &pipeStreamState;
 
 		writeFun(pipeStreamReference, bytesToReadArray[idx]);
-		test(pipeStreamWrite(&pipeStreamState, NULL, 0) == 0);
+		test((*pipeStreamInterface.mpfWrite)(&pipeStreamState, NULL, 0) == 0);
 
 		pipeStreamStateDestroy(&pipeStreamState);
 	}
@@ -220,7 +220,7 @@ void pipeStreamOtherTests()
 		pipeStreamReference.mpByteStreamState = &pipeStreamState;
 
 		readFun(pipeStreamReference, bytesToReadArray[idx]);
-		test(pipeStreamRead(&pipeStreamState, NULL, 0) == 0);
+		test((*pipeStreamInterface.mpfRead)(&pipeStreamState, NULL, 0) == 0);
 
 		pipeStreamStateDestroy(&pipeStreamState);
 	}
@@ -239,4 +239,7 @@ void test_IO()
 {
 	printf("Testing IO - PipeStream\n");
 	test_IO_PipeStream();
+
+	printf("Testing IO - BidirectionalStream\n");
+	// TODO
 }
