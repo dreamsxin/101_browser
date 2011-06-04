@@ -85,7 +85,7 @@ bool bidirectionalStreamIsWritingPossible(void *in_pBidirectionalStreamState)
 	return (BidirectionalHalfStreamActionWriting != pStreamState->mHalfStreamStates[1- pStreamState->mCurrentSide].mAction);
 }
 
-bool bidirectionalStreamInit(BidirectionalStreamState *out_pBidirectionalStreamState,
+bool bidirectionalStreamInit(void *out_pBidirectionalStreamState,
 	ByteStreamInterface *out_pByteStreamInterface,
 	bool in_startThisCoroutineAsWriter,
 	CoroutineDescriptor *out_pThisCoroutine,
@@ -95,25 +95,28 @@ bool bidirectionalStreamInit(BidirectionalStreamState *out_pBidirectionalStreamS
 {
 	uint8_t idx;
 	ByteStreamReference byteStreamReference;
+	BidirectionalStreamState *pBidirectionalStreamState = 
+		(BidirectionalStreamState*) out_pBidirectionalStreamState;
+
 	byteStreamReference.mpByteStreamState = out_pBidirectionalStreamState;
 	memset(&byteStreamReference.mByteStreamInterface, 0, sizeof(byteStreamReference.mByteStreamInterface));
 	byteStreamReference.mByteStreamInterface.mpfRead = bidirectionalStreamRead;
 	byteStreamReference.mByteStreamInterface.mpfWrite = bidirectionalStreamWrite;
 	
-	out_pBidirectionalStreamState->mFunctions.mpfSwitchCoroutine = invertAndSwitchCoroutine;
+	pBidirectionalStreamState->mFunctions.mpfSwitchCoroutine = invertAndSwitchCoroutine;
 
-	out_pBidirectionalStreamState->mpCurrentBuffer = NULL;
-	out_pBidirectionalStreamState->mCurrentBufferSize = 0;
+	pBidirectionalStreamState->mpCurrentBuffer = NULL;
+	pBidirectionalStreamState->mCurrentBufferSize = 0;
 
-	out_pBidirectionalStreamState->mHalfStreamStates[0].mpCoroutineDescriptor = out_pThisCoroutine;
-	out_pBidirectionalStreamState->mHalfStreamStates[1].mpCoroutineDescriptor = out_pOtherCoroutine;
+	pBidirectionalStreamState->mHalfStreamStates[0].mpCoroutineDescriptor = out_pThisCoroutine;
+	pBidirectionalStreamState->mHalfStreamStates[1].mpCoroutineDescriptor = out_pOtherCoroutine;
 
 	for (idx = 0; idx < 2; idx++)
 	{
-		out_pBidirectionalStreamState->mHalfStreamStates[idx].mAction = BidirectionalHalfStreamActionNoAction;
+		pBidirectionalStreamState->mHalfStreamStates[idx].mAction = BidirectionalHalfStreamActionNoAction;
 	}
 
-	out_pBidirectionalStreamState->mCurrentSide = 0;
+	pBidirectionalStreamState->mCurrentSide = 0;
 
 	return coroutineStreamStart(byteStreamReference,
 		out_pThisCoroutine,

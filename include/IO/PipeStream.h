@@ -56,7 +56,7 @@ typedef struct
 * in_pOtherCoroutineStartup: the function that the created coroutine will jump into
 * in_pUserData: user data to be sent to the new created coroutine
 */
-DLLEXPORT bool pipeStreamInit(PipeStreamState *out_pPipeStreamState,
+DLLEXPORT bool pipeStreamInit(void *out_pPipeStreamState,
 	ByteStreamInterface *out_pByteStreamInterface,
 	bool in_isOtherStreamReader,
 	CoroutineDescriptor *out_pThisCoroutine,

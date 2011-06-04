@@ -125,8 +125,6 @@ typedef struct
 
 void test_2_4_Coroutine(ByteStreamReference in_byteStreamReference, void *in_pUserData)
 {
-	PipeStreamState *pPipeStreamState = (PipeStreamState *) in_byteStreamReference.mpByteStreamState;
-
 	Test_2_4_Userdata *pUserData = (Test_2_4_Userdata *) in_pUserData;
 
 	assert(in_byteStreamReference.mByteStreamInterface.mpfWrite != NULL);
@@ -172,10 +170,12 @@ void test_2_4()
 			false, &thisCoroutine, &otherCoroutine,
 			&test_2_4_Coroutine, &test_2_4_userdata);
 
-		assert(pipeStreamInterface.mpfRead != NULL);
-
 		test(result);
 		if (!result)
+			return;
+
+		test(pipeStreamInterface.mpfRead != NULL);
+		if (NULL == pipeStreamInterface.mpfRead)
 			return;
 
 		for (idx = 0; idx < sizeof(outputCodepoints) / sizeof(UnicodeCodePoint); idx++)

@@ -63,7 +63,7 @@ void pipeStreamTerminalLoopWrite(void *in_out_pPipeStreamState)
 	(((CoroutineStreamFunctions*) in_out_pPipeStreamState)->mpfSwitchCoroutine)(in_out_pPipeStreamState);
 }
 
-bool pipeStreamInit(PipeStreamState *out_pPipeStreamState,
+bool pipeStreamInit(void *out_pPipeStreamState,
 	ByteStreamInterface *out_pByteStreamInterface,
 	bool in_isOtherStreamReader,
 	CoroutineDescriptor *out_pThisCoroutine,
@@ -73,6 +73,7 @@ bool pipeStreamInit(PipeStreamState *out_pPipeStreamState,
 {
 	bool out_result;
 	ByteStreamReference byteStreamReference;
+	PipeStreamState *pPipeStreamState = (PipeStreamState*) out_pPipeStreamState;
 
 	byteStreamReference.mpByteStreamState = out_pPipeStreamState;
 	memset(&byteStreamReference.mByteStreamInterface, 
@@ -86,13 +87,13 @@ bool pipeStreamInit(PipeStreamState *out_pPipeStreamState,
 		byteStreamReference.mByteStreamInterface.mpfWrite = pipeStreamWrite;
 	}
 	
-	out_pPipeStreamState->mFunctions.mpfSwitchCoroutine = xchgAndSwitchCoroutine;
+	pPipeStreamState->mFunctions.mpfSwitchCoroutine = xchgAndSwitchCoroutine;
 
-	out_pPipeStreamState->mpCurrentBuffer = NULL;
-	out_pPipeStreamState->mCurrentBufferSize = 0;
+	pPipeStreamState->mpCurrentBuffer = NULL;
+	pPipeStreamState->mCurrentBufferSize = 0;
 
-	out_pPipeStreamState->mpCurrentCoroutineDescriptor = out_pThisCoroutine;
-	out_pPipeStreamState->mpOtherCoroutineDescriptor = out_pOtherCoroutine;
+	pPipeStreamState->mpCurrentCoroutineDescriptor = out_pThisCoroutine;
+	pPipeStreamState->mpOtherCoroutineDescriptor = out_pOtherCoroutine;
 
 	out_result = coroutineStreamStart(byteStreamReference,
 		out_pThisCoroutine,
@@ -105,7 +106,7 @@ bool pipeStreamInit(PipeStreamState *out_pPipeStreamState,
 	// See the example in the PipeStream chapter why we need this code block
 	if (in_isOtherStreamReader)
 	{
-		(out_pPipeStreamState->mFunctions.mpfSwitchCoroutine)(out_pPipeStreamState);
+		(pPipeStreamState->mFunctions.mpfSwitchCoroutine)(out_pPipeStreamState);
 	}
 
 	memset(out_pByteStreamInterface, 0, sizeof(*out_pByteStreamInterface));

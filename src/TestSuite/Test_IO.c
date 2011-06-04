@@ -17,7 +17,9 @@
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
 #include "IO/PipeStream.h"
+#include "IO/BidirectionalStream.h"
 #include "MiniStdlib/minmax.h"
+#include "MiniStdlib/cstdbool.h"
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
@@ -27,6 +29,16 @@ typedef struct
 	volatile size_t readCount;
 	volatile bool endOfFunctionReached;
 } EvilTestdata;
+
+typedef bool (*BidirectionalStreamInitFunction)(void *out_pStreamState,
+	ByteStreamInterface *out_pByteStreamInterface,
+	bool in_startThisCoroutineAsWriter,
+	CoroutineDescriptor *out_pThisCoroutine,
+	CoroutineDescriptor *out_pOtherCoroutine,
+	void (*in_pOtherCoroutineStartup)(ByteStreamReference in_byteStreamReference, void *in_pUserData),
+	void *in_pUserData);
+
+
 
 void evilReadFun(ByteStreamReference in_byteStreamReference, void *in_pUserdata)
 {

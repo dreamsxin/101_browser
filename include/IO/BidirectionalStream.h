@@ -57,7 +57,7 @@ DLLEXPORT bool bidirectionalStreamIsReadingPossible(void *in_pBidirectionalStrea
 
 DLLEXPORT bool bidirectionalStreamIsWritingPossible(void *in_pBidirectionalStreamState);
 
-DLLEXPORT bool bidirectionalStreamInit(BidirectionalStreamState *out_pBidirectionalStreamState,
+DLLEXPORT bool bidirectionalStreamInit(void *out_pBidirectionalStreamState,
 	ByteStreamInterface *out_pByteStreamInterface,
 	bool in_startThisCoroutineAsWriter,
 	CoroutineDescriptor *out_pThisCoroutine,
