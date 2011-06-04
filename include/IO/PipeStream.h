@@ -64,7 +64,7 @@ DLLEXPORT bool pipeStreamInit(void *out_pPipeStreamState,
 	void (*in_pOtherCoroutineStartup)(ByteStreamReference in_byteStreamReference, void *in_pUserData),
 	void *in_pUserData);
 
-DLLEXPORT void pipeStreamStateDestroy(PipeStreamState *out_pPipeStreamState);
+DLLEXPORT void pipeStreamStateDestroy(void *out_pPipeStreamState);
 
 DLLEXPORT size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t in_count);
 

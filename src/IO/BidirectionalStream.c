@@ -127,14 +127,17 @@ bool bidirectionalStreamInit(void *out_pBidirectionalStreamState,
 		in_pUserData);
 }
 
-void bidirectionalStreamStateDestroy(BidirectionalStreamState *out_pBidirectionalStreamState)
+void bidirectionalStreamStateDestroy(void *out_pBidirectionalStreamState)
 {
-	deleteCoroutine(out_pBidirectionalStreamState->mHalfStreamStates[1].mpCoroutineDescriptor);
-	out_pBidirectionalStreamState->mHalfStreamStates[0].mpCoroutineDescriptor = NULL;
-	out_pBidirectionalStreamState->mHalfStreamStates[1].mpCoroutineDescriptor = NULL;
+	BidirectionalStreamState *pBidirectionalStreamState = 
+		(BidirectionalStreamState*) out_pBidirectionalStreamState;
+	
+	deleteCoroutine(pBidirectionalStreamState->mHalfStreamStates[1].mpCoroutineDescriptor);
+	pBidirectionalStreamState->mHalfStreamStates[0].mpCoroutineDescriptor = NULL;
+	pBidirectionalStreamState->mHalfStreamStates[1].mpCoroutineDescriptor = NULL;
 
-	out_pBidirectionalStreamState->mpCurrentBuffer = NULL;
-	out_pBidirectionalStreamState->mCurrentBufferSize = 0;
+	pBidirectionalStreamState->mpCurrentBuffer = NULL;
+	pBidirectionalStreamState->mCurrentBufferSize = 0;
 }
 
 size_t bidirectionalStreamRead(void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count)

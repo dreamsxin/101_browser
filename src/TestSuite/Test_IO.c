@@ -30,13 +30,16 @@ typedef struct
 	volatile bool endOfFunctionReached;
 } EvilTestdata;
 
-typedef bool (*BidirectionalStreamInitFunction)(void *out_pStreamState,
+typedef bool (*CoroutineStreamInitFunction)(void *out_pStreamState,
 	ByteStreamInterface *out_pByteStreamInterface,
 	bool in_startThisCoroutineAsWriter,
 	CoroutineDescriptor *out_pThisCoroutine,
 	CoroutineDescriptor *out_pOtherCoroutine,
 	void (*in_pOtherCoroutineStartup)(ByteStreamReference in_byteStreamReference, void *in_pUserData),
 	void *in_pUserData);
+
+
+typedef void (*CoroutineStreamDestroyFunction)(void *out_pStreamState);
 
 
 
@@ -57,7 +60,9 @@ void evilReadFun(ByteStreamReference in_byteStreamReference, void *in_pUserdata)
 	pTestdata->endOfFunctionReached = true;
 }
 
-void testPipeStreamEvil()
+void testCoroutineStreamEvil(void *in_pStreamState,
+	CoroutineStreamInitFunction in_initFun, 
+	CoroutineStreamDestroyFunction in_destroyFun)
 {
 	/*
 	* See documentation (PipeStream example 1) for explanation 
@@ -65,8 +70,7 @@ void testPipeStreamEvil()
 	* The example in the documentation is simplified for simplicity
 	* 
 	*/
-	PipeStreamState pipeStreamState;
-	ByteStreamInterface pipeStreamInterface;
+	ByteStreamInterface byteStreamInterface;
 	CoroutineDescriptor thisCoroutine;
 	CoroutineDescriptor otherCoroutine;
 	EvilTestdata testdata;
@@ -76,7 +80,7 @@ void testPipeStreamEvil()
 		testdata.endOfFunctionReached = false;
 		testdata.readCount = 0;
 
-		result = pipeStreamInit(&pipeStreamState, &pipeStreamInterface,
+		result = (*in_initFun)(in_pStreamState, &byteStreamInterface,
 			true, &thisCoroutine, &otherCoroutine, 
 			&evilReadFun, &testdata);
 
@@ -87,12 +91,12 @@ void testPipeStreamEvil()
 
 		// we write nothing
 
-		(*pipeStreamInterface.mpfWrite)(&pipeStreamState, NULL, 0);
+		(*byteStreamInterface.mpfWrite)(in_pStreamState, NULL, 0);
 
 		test(testdata.endOfFunctionReached);
 		test(0 == testdata.readCount);
 
-		pipeStreamStateDestroy(&pipeStreamState);
+		(*in_destroyFun)(in_pStreamState);
 	}
 
 	{
@@ -101,7 +105,7 @@ void testPipeStreamEvil()
 		testdata.endOfFunctionReached = false;
 		testdata.readCount = 0;
 
-		result = pipeStreamInit(&pipeStreamState, &pipeStreamInterface, 
+		result = (*in_initFun)(in_pStreamState, &byteStreamInterface, 
 			true, &thisCoroutine, &otherCoroutine, 
 			&evilReadFun, &testdata);
 
@@ -110,14 +114,14 @@ void testPipeStreamEvil()
 		if (!result)
 			return;
 
-		(*pipeStreamInterface.mpfWrite)(&pipeStreamState, data, sizeof(data));
+		(*byteStreamInterface.mpfWrite)(in_pStreamState, data, sizeof(data));
 
-		(*pipeStreamInterface.mpfWrite)(&pipeStreamState, NULL, 0);
+		(*byteStreamInterface.mpfWrite)(in_pStreamState, NULL, 0);
 
 		test(testdata.endOfFunctionReached);
 		test(2 == testdata.readCount);
 
-		pipeStreamStateDestroy(&pipeStreamState);
+		(*in_destroyFun)(in_pStreamState);
 	}
 }
 
@@ -185,11 +189,12 @@ void writerCoroutineFun(ByteStreamReference in_byteStreamReference, void *in_pUs
 	writeFun(in_byteStreamReference, *bytesToRead);
 }
 
-void pipeStreamOtherTests()
+void testCoroutineStreamOther(void *in_pStreamState,
+	CoroutineStreamInitFunction in_initFun, 
+	CoroutineStreamDestroyFunction in_destroyFun)
 {
-	PipeStreamState pipeStreamState;
-	ByteStreamInterface pipeStreamInterface;
-	ByteStreamReference pipeStreamReference;
+	ByteStreamInterface byteStreamInterface;
+	ByteStreamReference byteStreamReference;
 	CoroutineDescriptor thisCoroutine;
 	CoroutineDescriptor otherCoroutine;
 	unsigned int bytesToReadArray[] = { 2, 32 };
@@ -198,7 +203,7 @@ void pipeStreamOtherTests()
 	// Test 1, 2: the current coroutine is the writer and 2 or 32 bytes are read
 	for (idx = 0; idx < 2; idx++)
 	{
-		bool result = pipeStreamInit(&pipeStreamState, &pipeStreamInterface, 
+		bool result = (*in_initFun)(in_pStreamState, &byteStreamInterface, 
 			true, &thisCoroutine, &otherCoroutine, 
 			&readerCoroutineFun, bytesToReadArray+idx);
 
@@ -207,19 +212,19 @@ void pipeStreamOtherTests()
 		if (!result)
 			return;
 
-		pipeStreamReference.mByteStreamInterface = pipeStreamInterface;
-		pipeStreamReference.mpByteStreamState = &pipeStreamState;
+		byteStreamReference.mByteStreamInterface = byteStreamInterface;
+		byteStreamReference.mpByteStreamState = in_pStreamState;
 
-		writeFun(pipeStreamReference, bytesToReadArray[idx]);
-		test((*pipeStreamInterface.mpfWrite)(&pipeStreamState, NULL, 0) == 0);
+		writeFun(byteStreamReference, bytesToReadArray[idx]);
+		test((*byteStreamInterface.mpfWrite)(in_pStreamState, NULL, 0) == 0);
 
-		pipeStreamStateDestroy(&pipeStreamState);
+		(*in_destroyFun)(in_pStreamState);
 	}
 
 	// Test 3, 4: the current coroutine is the reader and 2 or 32 bytes are read
 	for (idx = 0; idx < 2; idx++)
 	{
-		bool result = pipeStreamInit(&pipeStreamState, &pipeStreamInterface, 
+		bool result = (*in_initFun)(in_pStreamState, &byteStreamInterface, 
 			false, &thisCoroutine, &otherCoroutine, 
 			&writerCoroutineFun, bytesToReadArray+idx);
 
@@ -228,29 +233,33 @@ void pipeStreamOtherTests()
 		if (!result)
 			return;
 
-		pipeStreamReference.mByteStreamInterface = pipeStreamInterface;
-		pipeStreamReference.mpByteStreamState = &pipeStreamState;
+		byteStreamReference.mByteStreamInterface = byteStreamInterface;
+		byteStreamReference.mpByteStreamState = in_pStreamState;
 
-		readFun(pipeStreamReference, bytesToReadArray[idx]);
-		test((*pipeStreamInterface.mpfRead)(&pipeStreamState, NULL, 0) == 0);
+		readFun(byteStreamReference, bytesToReadArray[idx]);
+		test((*byteStreamInterface.mpfRead)(in_pStreamState, NULL, 0) == 0);
 
-		pipeStreamStateDestroy(&pipeStreamState);
+		(*in_destroyFun)(in_pStreamState);
 	}
 }
 
-void test_IO_PipeStream()
+void test_IO_CoroutineStream(void *in_pStreamState,
+	CoroutineStreamInitFunction in_initFun,
+	CoroutineStreamDestroyFunction in_destroyFun)
 {
-	printf("Testing PipeStream behaviour in \"evil\" cases.\n");
-	testPipeStreamEvil();
+	printf("Testing behaviour in \"evil\" cases.\n");
+	testCoroutineStreamEvil(in_pStreamState, in_initFun, in_destroyFun);
 
-	printf("Doing other PipeStream tests.\n");
-	pipeStreamOtherTests();
+	printf("Doing other tests.\n");
+	testCoroutineStreamOther(in_pStreamState, in_initFun, in_destroyFun);
 }
 
 void test_IO()
 {
+	PipeStreamState pipeStreamState;
+	
 	printf("Testing IO - PipeStream\n");
-	test_IO_PipeStream();
+	test_IO_CoroutineStream(&pipeStreamState, pipeStreamInit, pipeStreamStateDestroy);
 
 	printf("Testing IO - BidirectionalStream\n");
 	// TODO

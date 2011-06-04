@@ -65,7 +65,7 @@ DLLEXPORT bool bidirectionalStreamInit(void *out_pBidirectionalStreamState,
 	void (*in_pOtherCoroutineStartup)(ByteStreamReference in_byteStreamReference, void *in_pUserData),
 	void *in_pUserData);
 
-DLLEXPORT void bidirectionalStreamStateDestroy(BidirectionalStreamState *out_pBidirectionalStreamState);
+DLLEXPORT void bidirectionalStreamStateDestroy(void *out_pBidirectionalStreamState);
 
 DLLEXPORT size_t bidirectionalStreamRead(void *in_out_pBidirectionalStreamState, void *out_pBuffer, size_t in_count);
 

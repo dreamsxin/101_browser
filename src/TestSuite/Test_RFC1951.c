@@ -27,7 +27,10 @@ void fileOtherCoroutine(ByteStreamReference in_byteStreamReference, void *in_pUs
 	size_t readCount;
 	uint8_t buffer0, buffer1;
 
-	assert(in_byteStreamReference.mByteStreamInterface.mpfRead != NULL);
+	test(in_byteStreamReference.mByteStreamInterface.mpfRead != NULL);
+
+	if (NULL == in_byteStreamReference.mByteStreamInterface.mpfRead)
+		return;
 
 	while ((*in_byteStreamReference.mByteStreamInterface.mpfRead)
 		(in_byteStreamReference.mpByteStreamState, &buffer0, 1) == 1)
@@ -95,7 +98,10 @@ void zerosOtherCoroutine(ByteStreamReference in_byteStreamReference, void *in_pU
 	size_t readCount = 0;
 	uint8_t buffer;
 
-	assert(in_byteStreamReference.mByteStreamInterface.mpfRead != NULL);
+	test(in_byteStreamReference.mByteStreamInterface.mpfRead != NULL);
+
+	if (NULL == in_byteStreamReference.mByteStreamInterface.mpfRead)
+		return;
 
 	while ((*in_byteStreamReference.mByteStreamInterface.mpfRead)
 		(in_byteStreamReference.mpByteStreamState, &buffer, 1) == 1)

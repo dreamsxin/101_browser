@@ -122,14 +122,16 @@ bool pipeStreamInit(void *out_pPipeStreamState,
 	return out_result;
 }
 
-void pipeStreamStateDestroy(PipeStreamState *out_pPipeStreamState)
+void pipeStreamStateDestroy(void *out_pPipeStreamState)
 {
-	deleteCoroutine(out_pPipeStreamState->mpOtherCoroutineDescriptor);
-	out_pPipeStreamState->mpOtherCoroutineDescriptor = NULL;
-	out_pPipeStreamState->mpCurrentCoroutineDescriptor = NULL;
+	PipeStreamState *pPipeStreamState = (PipeStreamState*) out_pPipeStreamState;
+	
+	deleteCoroutine(pPipeStreamState->mpOtherCoroutineDescriptor);
+	pPipeStreamState->mpOtherCoroutineDescriptor = NULL;
+	pPipeStreamState->mpCurrentCoroutineDescriptor = NULL;
 
-	out_pPipeStreamState->mpCurrentBuffer = NULL;
-	out_pPipeStreamState->mCurrentBufferSize = 0;
+	pPipeStreamState->mpCurrentBuffer = NULL;
+	pPipeStreamState->mCurrentBufferSize = 0;
 }
 
 size_t pipeStreamRead(void *in_out_pPipeStreamState, void *out_pBuffer, size_t in_count)
