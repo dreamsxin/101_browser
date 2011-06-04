@@ -97,6 +97,7 @@ bool bidirectionalStreamInit(void *out_pBidirectionalStreamState,
 	ByteStreamReference byteStreamReference;
 	BidirectionalStreamState *pBidirectionalStreamState = 
 		(BidirectionalStreamState*) out_pBidirectionalStreamState;
+	bool out_result;
 
 	byteStreamReference.mpByteStreamState = out_pBidirectionalStreamState;
 	memset(&byteStreamReference.mByteStreamInterface, 0, sizeof(byteStreamReference.mByteStreamInterface));
@@ -118,13 +119,26 @@ bool bidirectionalStreamInit(void *out_pBidirectionalStreamState,
 
 	pBidirectionalStreamState->mCurrentSide = 0;
 
-	return coroutineStreamStart(byteStreamReference,
+	out_result = coroutineStreamStart(byteStreamReference,
 		out_pThisCoroutine,
 		out_pOtherCoroutine,
 		in_pOtherCoroutineStartup,
 		NULL,
 		bidirectionalStreamTerminalLoop,
 		in_pUserData);
+
+	if (out_result)
+	{
+		*out_pByteStreamInterface = byteStreamReference.mByteStreamInterface;
+
+		// See the example in the PipeStream chapter why we need this code block
+		if (in_startThisCoroutineAsWriter)
+		{
+			(pBidirectionalStreamState->mFunctions.mpfSwitchCoroutine)(out_pBidirectionalStreamState);
+		}
+	}
+
+	return out_result;
 }
 
 void bidirectionalStreamStateDestroy(void *out_pBidirectionalStreamState)

@@ -257,10 +257,11 @@ void test_IO_CoroutineStream(void *in_pStreamState,
 void test_IO()
 {
 	PipeStreamState pipeStreamState;
+	BidirectionalStreamState bidirectionalStreamState;
 	
 	printf("Testing IO - PipeStream\n");
 	test_IO_CoroutineStream(&pipeStreamState, pipeStreamInit, pipeStreamStateDestroy);
 
 	printf("Testing IO - BidirectionalStream\n");
-	// TODO
+	test_IO_CoroutineStream(&bidirectionalStreamState, bidirectionalStreamInit, bidirectionalStreamStateDestroy);
 }
