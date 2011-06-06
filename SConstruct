@@ -16,6 +16,9 @@ BigNumber.SharedLibrary('bin/BigNumber', Glob('src/BigNumber/*.c')+Glob('src/Big
 RFC1950 = env.Clone()
 RFC1950.SharedLibrary('bin/RFC1950', Glob('src/RFC1950/*.c')+Glob('src/RFC1950/*.cpp'))
 
+RFC1951 = env.Clone()
+RFC1951.SharedLibrary('bin/RFC1951', Glob('src/RFC1951/*.c'))
+
 font_server = env.Clone()
 font_server.Append(LIBS = ['MiniStdlib'])
 font_server.Program('bin/FontServer', Glob('src/FontServer/*.cpp'), LIBPATH = ['#/lib'])
@@ -34,9 +37,6 @@ Unicode.SharedLibrary('bin/Unicode', Glob('src/Unicode/*.c')+Glob('src/Unicode/*
 HTML5 = env.Clone()
 HTML5.SharedLibrary('bin/HTML5', Glob('src/HTML5/*.c')+Glob('src/HTML5/*.cpp'))
 
-CPU = env.Clone()
-CPU.SharedLibrary('bin/CPU', Glob('src/CPU/*.c'))
-
 CoroutinePosix = env.Clone()
 CoroutinePosix.SharedLibrary('bin/CoroutinePosix', Glob('src/CoroutinePosix/*.c'))
 
@@ -52,6 +52,6 @@ GIF.SharedLibrary('bin/GIF', Glob('src/GIF/*.c'))
 
 testsuite = env.Clone()
 # testsuite.Append(CCFLAGS = '-fprofile-arcs -ftest-coverage', LIBS = ['gcov'])
-testsuite.Append(LIBS = ['MiniStdlib', 'BigNumber', 'RFC1950', 'Unicode', 'HTML5', 'Algorithm', 'CPU', 'CoroutinePosix', 'GIF', 'IO', 'PNG'])
+testsuite.Append(LIBS = ['MiniStdlib', 'BigNumber', 'RFC1950', 'RFC1951', 'Unicode', 'HTML5', 'Algorithm', 'CoroutinePosix', 'GIF', 'IO', 'PNG'])
 testsuite.Program('bin/TestSuite', Glob('src/TestSuite/*.cpp')+Glob('src/TestSuite/*.c'), LIBPATH = ['#/bin','#/lib'])
 
