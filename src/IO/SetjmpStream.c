@@ -17,7 +17,7 @@
 #include "IO/SetjmpStream.h"
 #include <assert.h>
 #include <string.h> // for memset
-#include "MiniStdlib/xchg.h"
+#include "MiniStdlib/memory.h" // for memxchg
 
 void setjmpStreamInit(SetjmpStreamState *out_pSetjmpStreamState, 
 	jmp_buf *in_pJmpBuffer, int in_longjmpValue, 
@@ -72,14 +72,14 @@ size_t setjmpStreamWrite(void *in_out_pSetjmpStreamState, const void *out_pBuffe
 int setjmpStreamXchgAndSetjmp(SetjmpStreamState *in_out_pSetjmpStreamState,
 	jmp_buf *in_pJmpBuffer)
 {
-	xchg(*in_out_pSetjmpStreamState->mpJmpBuffer, in_pJmpBuffer, sizeof(jmp_buf*));
+	memxchg(*in_out_pSetjmpStreamState->mpJmpBuffer, in_pJmpBuffer, sizeof(jmp_buf*));
 	return setjmp(*in_out_pSetjmpStreamState->mpJmpBuffer);
 }
 
 void setjmpStreamXchgAndLongjmp(SetjmpStreamState *in_out_pSetjmpStreamState,
 	jmp_buf *in_pJmpBuffer)
 {
-	xchg(in_out_pSetjmpStreamState->mpJmpBuffer, in_pJmpBuffer, sizeof(jmp_buf*));
+	memxchg(in_out_pSetjmpStreamState->mpJmpBuffer, in_pJmpBuffer, sizeof(jmp_buf*));
 	longjmp(*in_out_pSetjmpStreamState->mpJmpBuffer, in_out_pSetjmpStreamState->mLongjmpValue);
 }
 

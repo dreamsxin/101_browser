@@ -14,8 +14,8 @@
 * limitations under the License.
 */
 
-#ifndef _MTAx_MiniStdlib_memset_h
-#define _MTAx_MiniStdlib_memset_h
+#ifndef _MTAx_MiniStdlib_memory_h
+#define _MTAx_MiniStdlib_memory_h
 
 #include "MiniStdlib/cstddef.h"
 
@@ -28,6 +28,15 @@ extern "C" {
 * 2*in_n bytes
 */
 void* memset2(void * in_out_ptr, int in_value, size_t in_num);
+
+
+/*
+* Exchanges the memory blocks pointed to in_p0 and in_p1 having
+* size of in_num bytes.
+*
+* Assumption: these memory block do not alias.
+*/
+void memxchg(void *in_p0, void *in_p1, size_t in_num);
 
 #ifdef __cplusplus
 }

@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-#include "MiniStdlib/memset.h"
+#include "MiniStdlib/memory.h"
 #include "MiniStdlib/cstdint.h"
 
 void* memset2(void * in_out_ptr, int in_value, size_t in_num)
@@ -23,8 +23,29 @@ void* memset2(void * in_out_ptr, int in_value, size_t in_num)
 
 	while (in_num--)
 	{
+		/*
+		* Note that the postincrement increments the adress the pointer 
+		* points to.
+		*/
 		*ptr++ = in_value;
 	}
 
 	return in_out_ptr;
+}
+
+void memxchg(void *in_p0, void *in_p1, size_t in_num)
+{
+	uint8_t *ptr0 = (uint8_t*) in_p0;
+	uint8_t *ptr1 = (uint8_t*) in_p1;
+
+	while (in_num--)
+	{
+		/*
+		* Note that the postincrement increments the adress the pointer 
+		* points to.
+		*/
+		uint8_t temp = *ptr0;
+		*ptr0++ = *ptr1;
+		*ptr1++ = temp;
+	}
 }

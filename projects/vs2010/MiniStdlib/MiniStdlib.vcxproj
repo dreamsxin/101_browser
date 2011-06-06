@@ -18,20 +18,18 @@
     <ClInclude Include="..\..\..\include\MiniStdlib\cstdint.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\declspec.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\HexDigit.h" />
-    <ClInclude Include="..\..\..\include\MiniStdlib\memset.h" />
+    <ClInclude Include="..\..\..\include\MiniStdlib\memory.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\minmax.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\MTAx_cstdio.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\MTAx_cstdlib.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\safe_free.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\string_macros.h" />
-    <ClInclude Include="..\..\..\include\MiniStdlib\xchg.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\MiniStdlib\HexDigit.c" />
-    <ClCompile Include="..\..\..\src\MiniStdlib\memset.c" />
+    <ClCompile Include="..\..\..\src\MiniStdlib\memory.c" />
     <ClCompile Include="..\..\..\src\MiniStdlib\MTAx_cstdio.c" />
     <ClCompile Include="..\..\..\src\MiniStdlib\safe_free.c" />
-    <ClCompile Include="..\..\..\src\MiniStdlib\xchg.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6C7C9FBB-39B4-42CC-A000-C0FF2F61388E}</ProjectGuid>

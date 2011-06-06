@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-#include "MiniStdlib/memset.h"
+#include "MiniStdlib/memory.h" // for memset2
 #include "RFC1951/RFC1951.h"
 #include "IO/BitRead.h"
 #include "IO/SetjmpStream.h"

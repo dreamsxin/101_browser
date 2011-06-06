@@ -22,7 +22,7 @@
 #include <stdio.h>  // for printf
 
 #include "MiniStdlib/safe_free.h" // for safe_free
-#include "MiniStdlib/xchg.h"
+#include "MiniStdlib/memory.h" // for memxchg
 
 #define IOCTL_ASYNC_IN CTL_CODE (FILE_DEVICE_UNKNOWN, 0x850, METHOD_BUFFERED, FILE_ANY_ACCESS)
 
@@ -239,7 +239,7 @@ begin_of_geolocationCoroutine_loop:
 					return;
 				}
 
-				xchg(&theBuffer, &theNextBuffer, sizeof(BYTE*));
+				memxchg(&theBuffer, &theNextBuffer, sizeof(BYTE*));
 			}
 		}
 	}

@@ -15,14 +15,14 @@
 */
 
 #include "IO/PipeStream.h"
-#include "MiniStdlib/xchg.h"
+#include "MiniStdlib/memory.h" // for memxchg
 #include <assert.h>
 
 void xchgAndSwitchCoroutine(void *in_out_pPipeStreamState)
 {
 	PipeStreamState *pPipeStreamState = (PipeStreamState *) in_out_pPipeStreamState;
 	
-	xchg(&pPipeStreamState->mpCurrentCoroutineDescriptor, 
+	memxchg(&pPipeStreamState->mpCurrentCoroutineDescriptor, 
 		&pPipeStreamState->mpOtherCoroutineDescriptor, sizeof(CoroutineDescriptor*));
 	/*
 	* Note that we just exchanged the two coroutine descriptors; that's why we
