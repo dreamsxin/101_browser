@@ -9,7 +9,8 @@ void parseRFC1950(void *in_pStreamState,
 	uint16_t LZ77_window_size;
 	uint32_t DICTID;
 
-	assert(in_byteStreamReadInterface.mpfRead != NULL);
+	if (NULL == in_byteStreamReadInterface.mpfRead)
+		return;
 
 	if ((*in_byteStreamReadInterface.mpfRead)(in_pStreamState, &header, sizeof(header)) != sizeof(header))
 	{
