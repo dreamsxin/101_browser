@@ -126,11 +126,15 @@ typedef struct
 void test_2_4_Coroutine(ByteStreamReference in_byteStreamReference, void *in_pUserData)
 {
 	Test_2_4_Userdata *pUserData = (Test_2_4_Userdata *) in_pUserData;
+	ReadResult readResult;
 
 	assert(in_byteStreamReference.mByteStreamInterface.mpfWrite != NULL);
 
-	convertUTF8toCodepoints(getMemoryByteStreamReadInterface(), pUserData->pReadState, 
-		in_byteStreamReference.mByteStreamInterface, in_byteStreamReference.mpByteStreamState);
+	readResult = convertUTF8toCodepoints(getMemoryByteStreamReadInterface(), 
+		pUserData->pReadState, in_byteStreamReference.mByteStreamInterface, 
+		in_byteStreamReference.mpByteStreamState);
+
+	test(ReadResultOK == readResult);
 }
 
 void test_2_4()

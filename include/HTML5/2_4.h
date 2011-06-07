@@ -19,6 +19,7 @@
 
 #include "MiniStdlib/declspec.h"
 #include "IO/ByteStream.h"
+#include "Util/ReadResult.h"
 
 /*
  * 2.4 UTF-8
@@ -29,7 +30,7 @@
 extern "C" {
 #endif
 
-DLLEXPORT void convertUTF8toCodepoints(
+DLLEXPORT ReadResult convertUTF8toCodepoints(
 	ByteStreamInterface in_readInterface, 
 	void *in_pReadState,
 	ByteStreamInterface in_writeInterface,
