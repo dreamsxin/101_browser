@@ -1261,6 +1261,7 @@ module webapps
     [Replaceable] readonly attribute BarProp scrollbars;
     [Replaceable] readonly attribute BarProp statusbar;
     [Replaceable] readonly attribute BarProp toolbar;
+             attribute DOMString status;
     void close();
     void stop();
     void focus();
@@ -1513,7 +1514,7 @@ module webapps
              attribute DOMString dropEffect;
              attribute DOMString effectAllowed;
   
-    readonly attribute DataTransferItems items;
+    readonly attribute DataTransferItemList items;
   
     void setDragImage(in Element image, in long x, in long y);
     void addElement(in Element element);
@@ -1526,7 +1527,7 @@ module webapps
     readonly attribute FileList files;
   };
 
-  interface DataTransferItems {
+  interface DataTransferItemList {
     readonly attribute unsigned long length;
     getter DataTransferItem (in unsigned long index);
     deleter void (in unsigned long index);
@@ -1667,6 +1668,8 @@ module webapps
   
     void close();
              attribute Function onerror;
+             attribute Function onoffline;
+             attribute Function ononline;
   };
   WorkerGlobalScope implements WorkerUtils;
   WorkerGlobalScope implements EventTarget;
@@ -1717,6 +1720,7 @@ module webapps
     readonly attribute WorkerNavigator navigator;
   };
   WorkerUtils implements WindowTimers;
+  WorkerUtils implements WindowBase64;
 
   interface WorkerNavigator {};
   WorkerNavigator implements NavigatorID;
