@@ -7,8 +7,8 @@ wget http://unicode.org/Public/UNIDATA/PropList.txt -O ../data/Unicode/PropList.
 wget http://matroska.svn.sourceforge.net/viewvc/matroska/trunk/foundation_src/spectool/specdata.xml?revision=HEAD -O ../data/matroska/specdata.xml
 
 wget http://www.whatwg.org/specs/web-apps/current-work/complete.html -O complete.html
-java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_webapps_idl.xslt --input-html=complete.html --output-xml=../data/idl/temp_.idl
-sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/generated/webapps_whatwg.idl
+java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_whatwg_webapps_idl.xslt --input-html=complete.html --output-xml=../data/idl/temp_.idl
+sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/generated/whatwg_webapps.idl
 
 
 wget http://dev.w3.org/geo/api/spec-source.html -O geolocation.html
