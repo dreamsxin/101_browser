@@ -57,6 +57,9 @@ module webapps
               attribute DOMString value;
   };
 
+  [NoInterfaceObject]
+  interface Transferable { };
+
   interface DOMStringMap {
     getter DOMString (in DOMString name);
     setter void (in DOMString name, in DOMString value);
@@ -1291,7 +1294,7 @@ module webapps
     any showModalDialog(in DOMString url, in optional any argument);
   
     // cross-document messaging
-    void postMessage(in any message, in DOMString targetOrigin, in optional sequence<MessagePort> ports);
+    void postMessage(in any message, in DOMString targetOrigin, in optional sequence<Transferable> transfer);
   
     // event handler IDL attributes
              attribute Function? onabort;
@@ -1676,7 +1679,7 @@ module webapps
 
   [Supplemental, NoInterfaceObject]
   interface DedicatedWorkerGlobalScope : WorkerGlobalScope {
-    void postMessage(in any message, in optional sequence<MessagePort> ports);
+    void postMessage(in any message, in optional sequence<Transferable> transfer);
              attribute Function? onmessage;
   };
 
@@ -1705,7 +1708,7 @@ module webapps
   interface Worker : AbstractWorker {
     void terminate();
   
-    void postMessage(in any message, in optional sequence<MessagePort> ports);
+    void postMessage(in any message, in optional sequence<Transferable> transfer);
              attribute Function? onmessage;
   };
 
@@ -1809,7 +1812,7 @@ module webapps
   };
 
   interface MessagePort {
-    void postMessage(in any message, in optional sequence<MessagePort> ports);
+    void postMessage(in any message, in optional sequence<Transferable> transfer);
     void start();
     void close();
   
@@ -1817,6 +1820,7 @@ module webapps
              attribute Function? onmessage;
   };
   MessagePort implements EventTarget;
+  MessagePort implements Transferable;
 
   interface Storage {
     readonly attribute unsigned long length;
