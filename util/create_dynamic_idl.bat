@@ -7,9 +7,20 @@ wget http://unicode.org/Public/UNIDATA/PropList.txt -O ../data/Unicode/PropList.
 
 wget http://matroska.svn.sourceforge.net/viewvc/matroska/trunk/foundation_src/spectool/specdata.xml?revision=HEAD -O ../data/matroska/specdata.xml
 
+
 wget http://www.whatwg.org/specs/web-apps/current-work/complete.html -O complete.html
 java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_whatwg_webapps_idl.xslt --input-html=complete.html --output-xml=../data/idl/temp_.idl
 sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/generated/whatwg_webapps.idl
+
+
+wget http://www.whatwg.org/specs/web-apps/current-work/ -O whatwg_html.html
+java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_whatwg_html_idl.xslt --input-html=whatwg_html.html --output-xml=../data/idl/temp_.idl
+sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/generated/whatwg_html.idl
+
+
+wget http://dev.w3.org/html5/spec/Overview.html -O w3c_html5.html
+java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_w3c_html5_idl.xslt --input-html=w3c_html5.html --output-xml=../data/idl/temp_.idl
+sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/generated/w3c_html5.idl
 
 
 wget http://dev.w3.org/geo/api/spec-source.html -O geolocation.html
@@ -30,6 +41,8 @@ sed -e '1d' -e "s/&lt;/</" -e "s/&lt;/</" -e "s/&gt;/>/" -e "s/&gt;/>/" ../data/
 
 rm ../data/idl/temp_.idl
 rm complete.html
+rm whatwg_html.html
+rm w3c_html5.html
 rm geolocation.html
 rm xproc.html
 
