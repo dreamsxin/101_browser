@@ -8,42 +8,44 @@ wget http://unicode.org/Public/UNIDATA/PropList.txt -O ../data/Unicode/PropList.
 wget http://matroska.svn.sourceforge.net/viewvc/matroska/trunk/foundation_src/spectool/specdata.xml?revision=HEAD -O ../data/matroska/specdata.xml
 
 
-wget http://www.whatwg.org/specs/web-apps/current-work/complete.html -O complete.html
-java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_whatwg_webapps_idl.xslt --input-html=complete.html --output-xml=../data/idl/temp_.idl
-sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/generated/whatwg_webapps.idl
+wget http://www.whatwg.org/specs/web-apps/current-work/complete.html -O temp.html
+java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.HTML2XML temp.html temp.xml
+java -cp out XsltTransform temp.xml create_idl.xslt namespace webapps ../data/idl/generated/whatwg_webapps.idl
+dos2unix ../data/idl/generated/whatwg_webapps.idl
 
 
-wget http://www.whatwg.org/specs/web-apps/current-work/ -O whatwg_html.html
-java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_whatwg_html_idl.xslt --input-html=whatwg_html.html --output-xml=../data/idl/temp_.idl
-sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/generated/whatwg_html.idl
+wget http://www.whatwg.org/specs/web-apps/current-work/ -O temp.html
+java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.HTML2XML temp.html temp.xml
+java -cp out XsltTransform temp.xml create_idl.xslt namespace html ../data/idl/generated/whatwg_html.idl
+dos2unix ../data/idl/generated/whatwg_html.idl
 
 
-wget http://dev.w3.org/html5/spec/Overview.html -O w3c_html5.html
-java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_w3c_html5_idl.xslt --input-html=w3c_html5.html --output-xml=../data/idl/temp_.idl
-sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/generated/w3c_html5.idl
+wget  http://dev.w3.org/html5/spec/Overview.html -O temp.html
+java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.HTML2XML temp.html temp.xml
+java -cp out XsltTransform temp.xml create_idl.xslt namespace html5 ../data/idl/generated/w3c_html5.idl
+dos2unix ../data/idl/generated/w3c_html5.idl
 
 
-wget http://dev.w3.org/geo/api/spec-source.html -O geolocation.html
-java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_geolocation_idl.xslt --input-html=geolocation.html --output-xml=../data/idl/temp_.idl
-sed -e '1d' -e "s/&lt;/</" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/generated/geolocation.idl
+wget http://dev.w3.org/geo/api/spec-source.html -O temp.html
+java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.HTML2XML temp.html temp.xml
+java -cp out XsltTransform temp.xml create_idl.xslt namespace geo ../data/idl/generated/geolocation.idl
+dos2unix ../data/idl/generated/geolocation.idl
 
 
-REM wget http://dvcs.w3.org/hg/IndexedDB/raw-file/tip/Overview.html -O IndexedDB.html
-REM java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_indexeddb_idl.xslt --input-html=IndexedDB.html --output-xml=../data/idl/temp_.idl
-REM sed -e '1d' -e "s/&lt;/</" -e "s/&lt;/</" -e "s/&gt;/>/" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/idl/generated/indexeddb.idl
+REM wget http://dvcs.w3.org/hg/IndexedDB/raw-file/tip/Overview.html -O temp.html
+REM java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.HTML2XML temp.html temp.xml
+REM java -cp out XsltTransform temp.xml create_idl.xslt namespace indexeddb ../data/idl/generated/indexeddb.idl
+REM dos2unix ../data/idl/generated/indexeddb.idl
 
 
-wget http://www.w3.org/TR/xproc/ -O xproc.html
-java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.XSLT4HTML5 --template=create_xproc_grammar.xslt --input-html=xproc.html --output-xml=../data/idl/temp_.idl
-sed -e '1d' -e "s/&lt;/</" -e "s/&lt;/</" -e "s/&gt;/>/" -e "s/&gt;/>/" ../data/idl/temp_.idl > ../data/web_grammar/generated/xproc.txt
+wget http://www.w3.org/TR/xproc/ -O temp.html
+java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.HTML2XML temp.html temp.xml
+java -cp out XsltTransform temp.xml create_xproc_grammar.xslt ../data/web_grammar/generated/xproc.txt
+dos2unix ../data/web_grammar/generated/xproc.txt
 
 
 
-rm ../data/idl/temp_.idl
-rm complete.html
-rm whatwg_html.html
-rm w3c_html5.html
-rm geolocation.html
-rm xproc.html
+rm temp.html
+rm temp.xml
 
 set PATH=%OLDPATH%

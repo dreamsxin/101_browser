@@ -35,7 +35,7 @@ subpipeline = p:variable*, (p:for-each|p:viewport|p:choose|p:group|p:try|p:st
 
 <p:for-each
   name? = NCName>
-    ((p:iteration-source? &amp;
+    ((p:iteration-source? &
       (p:output |
        p:log)*),
      subpipeline)
@@ -46,8 +46,8 @@ subpipeline = p:variable*, (p:for-each|p:viewport|p:choose|p:group|p:try|p:st
   name? = NCName
   match =
 XSLTMatchPattern>
-    ((p:viewport-source? &amp;
-      p:output? &amp;
+    ((p:viewport-source? &
+      p:output? &
       p:log?),
      subpipeline)
 </p:viewport>
@@ -271,7 +271,7 @@ XPathExpression>
       p:document |
       p:inline |
       p:data)?
-&amp;
+&
      p:namespaces*)
 </p:variable>
 
@@ -298,7 +298,7 @@ XPathExpression>
       p:document |
       p:inline |
       p:data)?
-&amp;
+&
      p:namespaces*)
 </p:with-option>
 
@@ -314,7 +314,7 @@ XPathExpression
       p:document |
       p:inline |
       p:data)?
-&amp;
+&
      p:namespaces*)
 </p:with-param>
 
@@ -1246,7 +1246,7 @@ select="'false'"/>        <!-- boolean -->
 
 <p:for-each
   name? = NCName>
-    ((p:iteration-source? &amp;
+    ((p:iteration-source? &
       (p:output |
        p:log)*),
      subpipeline)
@@ -1257,8 +1257,8 @@ select="'false'"/>        <!-- boolean -->
   name? = NCName
   match =
 XSLTMatchPattern>
-    ((p:viewport-source? &amp;
-      p:output? &amp;
+    ((p:viewport-source? &
+      p:output? &
       p:log?),
      subpipeline)
 </p:viewport>
@@ -1452,7 +1452,7 @@ XPathExpression>
       p:document |
       p:inline |
       p:data)?
-&amp;
+&
      p:namespaces*)
 </p:variable>
 
@@ -1479,7 +1479,7 @@ XPathExpression>
       p:document |
       p:inline |
       p:data)?
-&amp;
+&
      p:namespaces*)
 </p:with-option>
 
@@ -1495,7 +1495,7 @@ XPathExpression
       p:document |
       p:inline |
       p:data)?
-&amp;
+&
      p:namespaces*)
 </p:with-param>
 
