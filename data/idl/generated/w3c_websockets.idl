@@ -1,0 +1,41 @@
+module websockets
+{
+  [Constructor(in DOMString url, in optional DOMString protocols),
+   Constructor(in DOMString url, in optional DOMString[] protocols)]
+  interface WebSocket {
+    readonly attribute DOMString url;
+  
+    // ready state
+    const unsigned short CONNECTING = 0;
+    const unsigned short OPEN = 1;
+    const unsigned short CLOSING = 2;
+    const unsigned short CLOSED = 3;
+    readonly attribute unsigned short readyState;
+    readonly attribute unsigned long bufferedAmount;
+  
+    // networking
+             attribute Function? onopen;
+             attribute Function? onerror;
+             attribute Function? onclose;
+    readonly attribute DOMString extensions;
+    readonly attribute DOMString protocol;
+    void close([Clamp] in optional unsigned short code, in optional DOMString reason);
+  
+    // messaging
+             attribute Function? onmessage;
+             attribute DOMString binaryType;
+    void send(in DOMString data);
+    void send(in ArrayBuffer data);
+    void send(in Blob data);
+  };
+  WebSocket implements EventTarget;
+
+  interface CloseEvent : Event {
+    readonly attribute boolean wasClean;
+    readonly attribute unsigned short code;
+    readonly attribute DOMString reason;
+    void initCloseEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in boolean wasCleanArg, in unsigned short codeArg, in DOMString reasonArg);
+  };
+
+
+};

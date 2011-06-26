@@ -1,0 +1,77 @@
+module webworkers
+{
+  interface WorkerGlobalScope {
+    readonly attribute WorkerGlobalScope self;
+    readonly attribute WorkerLocation location;
+  
+    void close();
+             attribute Function? onerror;
+             attribute Function? onoffline;
+             attribute Function? ononline;
+  };
+  WorkerGlobalScope implements WorkerUtils;
+  WorkerGlobalScope implements EventTarget;
+
+  [Supplemental, NoInterfaceObject]
+  interface DedicatedWorkerGlobalScope : WorkerGlobalScope {
+    void postMessage(in any message, in optional sequence<Transferable> transfer);           attribute Function? onmessage;
+  };
+
+  [Supplemental, NoInterfaceObject]
+  interface SharedWorkerGlobalScope : WorkerGlobalScope {
+    readonly attribute DOMString name;
+    readonly attribute ApplicationCache applicationCache;
+             attribute Function? onconnect;
+  };
+
+  interface ErrorEvent : Event {
+    readonly attribute DOMString message;
+    readonly attribute DOMString filename;
+    readonly attribute unsigned long lineno;
+    void initErrorEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in DOMString messageArg, in DOMString filenameArg, in unsigned long linenoArg);
+  };
+
+  [Supplemental, NoInterfaceObject]
+  interface AbstractWorker {
+             attribute Function? onerror;
+  };
+  AbstractWorker implements EventTarget;
+
+  [Constructor(in DOMString scriptURL)]
+  interface Worker : AbstractWorker {
+    void terminate();
+  
+    void postMessage(in any message, in optional sequence<Transferable> transfer);           attribute Function? onmessage;
+  };
+
+  [Constructor(in DOMString scriptURL, in optional DOMString name)]
+  interface SharedWorker : AbstractWorker {
+    readonly attribute MessagePort port;
+  };
+
+  [Supplemental, NoInterfaceObject]
+  interface WorkerUtils {
+    void importScripts(in DOMString... urls);
+    readonly attribute WorkerNavigator navigator;
+  };
+  WorkerUtils implements WindowTimers;
+  WorkerUtils implements WindowBase64;
+
+  interface WorkerNavigator {};
+  WorkerNavigator implements NavigatorID;
+  WorkerNavigator implements NavigatorOnLine;
+
+  interface WorkerLocation {
+    // URL decomposition IDL attributes
+    stringifier readonly attribute DOMString href;
+    readonly attribute DOMString protocol;
+    readonly attribute DOMString host;
+    readonly attribute DOMString hostname;
+    readonly attribute DOMString port;
+    readonly attribute DOMString pathname;
+    readonly attribute DOMString search;
+    readonly attribute DOMString hash;
+  };
+
+
+};

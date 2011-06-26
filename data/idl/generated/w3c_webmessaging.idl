@@ -1,0 +1,29 @@
+module webmessaging
+{
+  interface MessageEvent : Event {
+    readonly attribute any data;
+    readonly attribute DOMString origin;
+    readonly attribute DOMString lastEventId;
+    readonly attribute WindowProxy? source;
+    readonly attribute MessagePort[] ports;
+    void initMessageEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in any dataArg, in DOMString originArg, in DOMString lastEventIdArg, in WindowProxy? sourceArg, in sequence<MessagePort> portsArg);
+  };
+
+  [Constructor]
+  interface MessageChannel {
+    readonly attribute MessagePort port1;
+    readonly attribute MessagePort port2;
+  };
+
+  interface MessagePort {
+    void postMessage(in any message, in optional sequence<Transferable> transfer);  void start();
+    void close();
+  
+    // event handlers
+             attribute Function? onmessage;
+  };
+  MessagePort implements EventTarget;
+  MessagePort implements Transferable;
+
+
+};
