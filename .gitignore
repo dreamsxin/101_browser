@@ -97,8 +97,3 @@ testfiles/T083v1_0/*
 *.mp4
 *.ogv
 
-*.tmp
-
-html/*
-latex/*
-
