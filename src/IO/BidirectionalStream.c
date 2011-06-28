@@ -225,7 +225,7 @@ size_t bidirectionalStreamWrite(void *in_out_pBidirectionalStreamState, const vo
 	/*
 	* Q: Why do we set the last parameter to true to reset the buffer to NULL?
 	* A: If we would call read(in_count) with in_count > 0 afterwards 
-	*    (in the same [!] coroutine), we would try to access a buffer
+	*    (in the same (!) coroutine), we would try to access a buffer
 	*    that already could have become invalid.
 	*/
 	out_bytesWritten = coroutineStreamWrite(pStreamState, in_pBuffer, in_count, 
