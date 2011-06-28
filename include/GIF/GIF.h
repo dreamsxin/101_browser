@@ -41,8 +41,8 @@ typedef struct
 	uint8_t Sort_Flag : 1;
 	uint8_t Color_Resolution : 3;
 	uint8_t Global_Color_Table_Flag : 1;
-    uint8_t Background_Color_Index;
-    uint8_t Pixel_Aspect_Ratio;
+	uint8_t Background_Color_Index;
+	uint8_t Pixel_Aspect_Ratio;
 } Logical_Screen_Descriptor;
 
 typedef struct
