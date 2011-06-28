@@ -595,9 +595,9 @@ module webapps
              attribute boolean defaultMuted;
   
     // tracks
-    readonly attribute MultipleTrackList audioTracks;
-    readonly attribute ExclusiveTrackList videoTracks;
-    readonly attribute TextTrack[] textTracks;
+    readonly attribute AudioTrackList audioTracks;
+    readonly attribute VideoTrackList videoTracks;
+    readonly attribute TextTrackList textTracks;
     MutableTextTrack addTextTrack(in DOMString kind, in optional DOMString label, in optional DOMString language);
   };
 
@@ -609,25 +609,35 @@ module webapps
     readonly attribute unsigned short code;
   };
 
-  interface TrackList {
+  interface AudioTrackList {
     readonly attribute unsigned long length;
-    DOMString getID(in unsigned long index);
-    DOMString getKind(in unsigned long index);
-    DOMString getLabel(in unsigned long index);
-    DOMString getLanguage(in unsigned long index);
-  
+    getter AudioTrack (in unsigned long index);
+    AudioTrack? getTrackById(in DOMString id);
              attribute Function? onchange;
   };
   
-  interface MultipleTrackList : TrackList {
-    boolean isEnabled(in unsigned long index);
-    void enable(in unsigned long index);
-    void disable(in unsigned long index);
+  interface AudioTrack {
+    readonly attribute DOMString id;
+    readonly attribute DOMString kind;
+    readonly attribute DOMString label;
+    readonly attribute DOMString language;
+             attribute boolean enabled;
   };
   
-  interface ExclusiveTrackList : TrackList {
+  interface VideoTrackList {
+    readonly attribute unsigned long length;
+    getter VideoTrack (in unsigned long index);
+    VideoTrack? getTrackById(in DOMString id);
     readonly attribute long selectedIndex;
-    void select(in unsigned long index);
+             attribute Function? onchange;
+  };
+  
+  interface VideoTrack {
+    readonly attribute DOMString id;
+    readonly attribute DOMString kind;
+    readonly attribute DOMString label;
+    readonly attribute DOMString language;
+             attribute boolean selected;
   };
 
   [Constructor]
@@ -689,6 +699,8 @@ module webapps
              attribute Function? oncuechange;
   };
   TextTrack implements EventTarget;
+  
+  typedef TextTrack[] TextTrackList;
 
   interface MutableTextTrack : TextTrack {
    void addCue(in TextTrackCue cue);
