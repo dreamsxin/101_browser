@@ -22,7 +22,9 @@ bool isStandaloneMarker(unsigned char in_marker)
 {
 	switch (in_marker)
 	{
+		// TEM
 	case 0x01:
+		// RST_0 to RST_7
 	case 0xD0:
 	case 0xD1:
 	case 0xD2:
@@ -31,8 +33,8 @@ bool isStandaloneMarker(unsigned char in_marker)
 	case 0xD5:
 	case 0xD6:
 	case 0xD7:
-	case SOI_MARKER:
-	case 0xD9:
+	case SOI_MARKER: // 0xD8
+	case EOI_MARKER: // 0xD9
 		return true;
 	default:
 		return false;
