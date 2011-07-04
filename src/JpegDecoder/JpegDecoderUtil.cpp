@@ -76,6 +76,9 @@ void printSegmentName(unsigned char in_marker)
 	case SOF_11_MARKER: // 0xCB
 		printf("SOF_11");
 		break;
+	case SOF_55_MARKER: // 0xF7
+		printf("SOF_55");
+		break;
 	case DAC_MARKER:    // 0xCC
 		printf("DAC");
 		break;
