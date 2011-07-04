@@ -21,7 +21,99 @@
 
 int main()
 {
-	char filename[] = "testfiles/T083v1_0/T83_process1/A1.jpg";
+	char filename[] = 
+		"testfiles/T083v1_0/T83_process1/A1.jpg";
+		//"testfiles/T083v1_0/T83_process1/B1.jpg";
+		//"testfiles/T083v1_0/T83_process1/B2.jpg";
+
+		//"testfiles/T083v1_0/T83_process2/A1.jpg";
+		//"testfiles/T083v1_0/T83_process2/B1.jpg";
+		//"testfiles/T083v1_0/T83_process2/B2.jpg";
+		//"testfiles/T083v1_0/T83_process2/C1.jpg";
+		//"testfiles/T083v1_0/T83_process2/C2.jpg";
+
+		//"testfiles/T083v1_0/T83_process3/A1.jpg";
+		//"testfiles/T083v1_0/T83_process3/B1.jpg";
+		//"testfiles/T083v1_0/T83_process3/B2.jpg";
+		//"testfiles/T083v1_0/T83_process3/D1.jpg";
+		//"testfiles/T083v1_0/T83_process3/D2.jpg";
+
+		//"testfiles/T083v1_0/T83_process4/A1.jpg";
+		//"testfiles/T083v1_0/T83_process4/B1.jpg";
+		//"testfiles/T083v1_0/T83_process4/B2.jpg";
+		//"testfiles/T083v1_0/T83_process4/C1.jpg";
+		//"testfiles/T083v1_0/T83_process4/C2.jpg";
+		//"testfiles/T083v1_0/T83_process4/E1.jpg";
+		//"testfiles/T083v1_0/T83_process4/E2.jpg";
+
+		//"testfiles/T083v1_0/T83_process5/A1.jpg";
+		//"testfiles/T083v1_0/T83_process5/B1.jpg";
+		//"testfiles/T083v1_0/T83_process5/B2.jpg";
+		//"testfiles/T083v1_0/T83_process5/D1.jpg";
+		//"testfiles/T083v1_0/T83_process5/D2.jpg";
+		//"testfiles/T083v1_0/T83_process5/F1.jpg";
+		//"testfiles/T083v1_0/T83_process5/F2.jpg";
+
+		//"testfiles/T083v1_0/T83_process6/A1.jpg";
+		//"testfiles/T083v1_0/T83_process6/B1.jpg";
+		//"testfiles/T083v1_0/T83_process6/B2.jpg";
+		//"testfiles/T083v1_0/T83_process6/C1.jpg";
+		//"testfiles/T083v1_0/T83_process6/C2.jpg";
+		//"testfiles/T083v1_0/T83_process6/G1.jpg";
+
+		//"testfiles/T083v1_0/T83_process7/A1.jpg";
+		//"testfiles/T083v1_0/T83_process7/B1.jpg";
+		//"testfiles/T083v1_0/T83_process7/B2.jpg";
+		//"testfiles/T083v1_0/T83_process7/D1.jpg";
+		//"testfiles/T083v1_0/T83_process7/D2.jpg";
+		//"testfiles/T083v1_0/T83_process7/H1.jpg";
+
+		//"testfiles/T083v1_0/T83_process9/A1.jpg";
+		//"testfiles/T083v1_0/T83_process9/B1.jpg";
+		//"testfiles/T083v1_0/T83_process9/B2.jpg";
+		//"testfiles/T083v1_0/T83_process9/D1.jpg";
+		//"testfiles/T083v1_0/T83_process9/D2.jpg";
+		//"testfiles/T083v1_0/T83_process9/F1.jpg";
+		//"testfiles/T083v1_0/T83_process9/F2.jpg";
+		//"testfiles/T083v1_0/T83_process9/H1.jpg";
+		//"testfiles/T083v1_0/T83_process9/J1.jpg";
+
+		//"testfiles/T083v1_0/T83_process10/A1.jpg";
+		//"testfiles/T083v1_0/T83_process10/B1.jpg";
+		//"testfiles/T083v1_0/T83_process10/B2.jpg";
+		//"testfiles/T083v1_0/T83_process10/C1.jpg";
+		//"testfiles/T083v1_0/T83_process10/C2.jpg";
+		//"testfiles/T083v1_0/T83_process10/G1.jpg";
+		//"testfiles/T083v1_0/T83_process10/K1.jpg";
+
+		//"testfiles/T083v1_0/T83_process11/A1.jpg";
+		//"testfiles/T083v1_0/T83_process11/B1.jpg";
+		//"testfiles/T083v1_0/T83_process11/B2.jpg";
+		//"testfiles/T083v1_0/T83_process11/D1.jpg";
+		//"testfiles/T083v1_0/T83_process11/D2.jpg";
+		//"testfiles/T083v1_0/T83_process11/H1.jpg";
+		//"testfiles/T083v1_0/T83_process11/L1.jpg";
+
+		//"testfiles/T083v1_0/T83_process13/A1.jpg";
+		//"testfiles/T083v1_0/T83_process13/B1.jpg";
+		//"testfiles/T083v1_0/T83_process13/B2.jpg";
+		//"testfiles/T083v1_0/T83_process13/D1.jpg";
+		//"testfiles/T083v1_0/T83_process13/D2.jpg";
+		//"testfiles/T083v1_0/T83_process13/F1.jpg";
+		//"testfiles/T083v1_0/T83_process13/F2.jpg";
+		//"testfiles/T083v1_0/T83_process13/H1.jpg";
+		//"testfiles/T083v1_0/T83_process13/J1.jpg";
+		//"testfiles/T083v1_0/T83_process13/L1.jpg";
+		//"testfiles/T083v1_0/T83_process13/N1.jpg";
+
+		//"testfiles/T083v1_0/T83_process14/O1.jpg";
+		//"testfiles/T083v1_0/T83_process14/O2.jpg";
+
+		//"testfiles/T083v1_0/T83_process15/P1.jpg";
+		//"testfiles/T083v1_0/T83_process15/P2.jpg";
+
+
+		// "testfiles/T087v1_0/T87_test-1-2-3-4-5-6/T8C0E0.JLS";
 
 	FILE* jpegFile = MTAx_fopen(filename, "rb");
 

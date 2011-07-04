@@ -17,8 +17,30 @@
 #ifndef _JpegDecoderMarkers
 #define _JpegDecoderMarkers
 
-#define SOF_0_MARKER  0xC0
+// See  T.081 Table B.1 – Marker code assignments
+
+// Start Of Frame markers, non-differential, Huffman coding
+#define SOF_0_MARKER  0xC0 // Baseline DCT
+#define SOF_1_MARKER  0xC1 // Extended sequential DCT
+#define SOF_2_MARKER  0xC2 // Progressive DCT
+#define SOF_3_MARKER  0xC3 // Lossless (sequential)
+
+
+
+#define DHT_MARKER    0xC4
+// #define JPG_MARKER 0xC8 // Reserved for JPEG extensions
+#define SOF_9_MARKER  0xC9 // Extended sequential DCT
+#define SOF_10_MARKER 0xCA // Progressive DCT
+#define SOF_11_MARKER 0xCB // Lossless (sequential)
+
+
+#define DAC_MARKER    0xCC
 #define SOF_15_MARKER 0xCF
+
+// defined in T.087 section "C.1.1 Marker assignments"
+#define SOF_55_MARKER 0xF7
+#define LSE_MARKER    0xF8
+
 
 #define SOI_MARKER    0xD8
 #define EOI_MARKER    0xD9

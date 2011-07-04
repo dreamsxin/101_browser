@@ -50,7 +50,16 @@ void Decode_image(FILE* jpegFile)
 	RestartInterval restartInterval;
 
 	// BUG: Not all of the values between define a SOF_n marker
-	while (!(currentMarker >= SOF_0_MARKER && currentMarker <= SOF_15_MARKER))
+	while (
+		currentMarker != SOF_0_MARKER  && 
+		currentMarker != SOF_1_MARKER  && 
+		currentMarker != SOF_2_MARKER  && 
+		currentMarker != SOF_3_MARKER  && 
+		currentMarker != SOF_9_MARKER  && 
+		currentMarker != SOF_10_MARKER && 
+		currentMarker != SOF_11_MARKER &&
+		currentMarker != SOF_15_MARKER &&
+		currentMarker != SOF_55_MARKER)
 	{
 		switch (currentMarker)
 		{
