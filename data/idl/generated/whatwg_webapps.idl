@@ -1607,8 +1607,11 @@ module webapps
     void handleEvent(in NavigatorUserMediaError error);
   };
 
+  [Constructor(in MediaStream parentStream)]
   interface MediaStream {
     readonly attribute DOMString label;
+    readonly attribute StreamTrackList tracks;
+  
     MediaStreamRecorder record();
   
     const unsigned short LIVE = 1;
@@ -1620,10 +1623,14 @@ module webapps
   
   interface LocalMediaStream : MediaStream {
     void stop();
+  };
   
-    // track control
-    readonly attribute MultipleTrackList audioTracks;
-    readonly attribute ExclusiveTrackList videoTracks;
+  typedef StreamTrack[] StreamTrackList;
+  
+  interface StreamTrack {
+    readonly attribute DOMString kind;
+    readonly attribute DOMString label;
+             attribute boolean enabled;
   };
 
   interface MediaStreamRecorder {
