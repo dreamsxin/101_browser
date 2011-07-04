@@ -52,19 +52,19 @@ void printSegmentName(unsigned char in_marker)
 {
 	switch (in_marker)
 	{
-	case 0xC0:
+	case SOF_0_MARKER: // 0xC0
 		printf("SOF_0");
 		break;
 	case 0xC4:
 		printf("DHT");
 		break;
-	case 0xD8:
+	case SOI_MARKER:   // 0xD8
 		printf("SOI");
 		break;
-	case 0xD9:
+	case EOI_MARKER:   // 0xD9
 		printf("EOI");
 		break;
-	case 0xDA:
+	case SOS_MARKER:   // 0xDA
 		printf("SOS");
 		break;
 	case 0xDB:
