@@ -67,9 +67,31 @@ void Decode_image(FILE* jpegFile)
 			readRestartInterval(jpegFile, &restartInterval);
 			restartIntervalFound = true;
 			break;
-		default:
+		case DHT_MARKER:    // 0xC4
+		case DAC_MARKER:    // 0xCC
+		case DQT_MARKER:    // 0xDB
+		case APP_0_MARKER:  // 0xE0
+		case APP_1_MARKER:  // 0xE1
+		case APP_2_MARKER:  // 0xE2
+		case APP_3_MARKER:  // 0xE3
+		case APP_4_MARKER:  // 0xE4
+		case APP_5_MARKER:  // 0xE5
+		case APP_6_MARKER:  // 0xE6
+		case APP_7_MARKER:  // 0xE7
+		case APP_8_MARKER:  // 0xE8
+		case APP_9_MARKER:  // 0xE9
+		case APP_10_MARKER: // 0xEA
+		case APP_11_MARKER: // 0xEB
+		case APP_12_MARKER: // 0xEC
+		case APP_13_MARKER: // 0xED
+		case APP_14_MARKER: // 0xEE
+		case APP_15_MARKER: // 0xEF
+		case COM_MARKER:    // 0xFE
 			defaultMarkerInterpreter(jpegFile, currentMarker);
 			break;
+		default:
+			fprintf(stderr, "Invalid marker in Decode_image. Exiting.\n");
+			exit(1);
 		}
 		
 		currentMarker = readMarker(jpegFile);
