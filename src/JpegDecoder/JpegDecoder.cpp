@@ -49,7 +49,6 @@ void Decode_image(FILE* jpegFile)
 	bool restartIntervalFound = false;
 	RestartInterval restartInterval;
 
-	// BUG: Not all of the values between define a SOF_n marker
 	while (
 		currentMarker != SOF_0_MARKER  && 
 		currentMarker != SOF_1_MARKER  && 
@@ -63,7 +62,7 @@ void Decode_image(FILE* jpegFile)
 	{
 		switch (currentMarker)
 		{
-		case DRI_MARKER:
+		case DRI_MARKER:    // 0xDD
 			readRestartInterval(jpegFile, &restartInterval);
 			restartIntervalFound = true;
 			break;
