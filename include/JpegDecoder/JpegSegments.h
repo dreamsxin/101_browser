@@ -22,6 +22,7 @@
 #include <vector>
 #include "JpegDecoder/JpegDecoderUtil.h"
 
+#pragma pack(push, 1)
 // B.2.4.4 Restart interval definition syntax
 struct RestartInterval
 {
@@ -31,7 +32,6 @@ struct RestartInterval
 
 void readRestartInterval(FILE* jpegFile, RestartInterval* in_pRestartInterval);
 
-#pragma pack(push, 1)
 // B.2.3 Scan header syntax
 struct ScanHeader
 {
