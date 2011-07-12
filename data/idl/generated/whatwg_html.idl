@@ -248,10 +248,11 @@ module html
   
     // command API
     readonly attribute DOMString? commandType;
-    readonly attribute DOMString? label;
-    readonly attribute DOMString? icon;
-    readonly attribute boolean disabled;
-    readonly attribute boolean checked;
+    readonly attribute DOMString? commandLabel;
+    readonly attribute DOMString? commandIcon;
+    readonly attribute boolean? commandHidden;
+    readonly attribute boolean? commandDisabled;
+    readonly attribute boolean? commandChecked;
   
     // styling
     readonly attribute CSSStyleDeclaration style;
@@ -1610,7 +1611,7 @@ module html
   [Constructor(in MediaStream parentStream)]
   interface MediaStream {
     readonly attribute DOMString label;
-    readonly attribute StreamTrackList tracks;
+    readonly attribute MediaStreamTrackList tracks;
   
     MediaStreamRecorder record();
   
@@ -1625,9 +1626,9 @@ module html
     void stop();
   };
   
-  typedef StreamTrack[] StreamTrackList;
+  typedef MediaStreamTrack[] MediaStreamTrackList;
   
-  interface StreamTrack {
+  interface MediaStreamTrack {
     readonly attribute DOMString kind;
     readonly attribute DOMString label;
              attribute boolean enabled;
