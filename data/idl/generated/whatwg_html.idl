@@ -1650,7 +1650,7 @@ module html
 
   [Constructor(in DOMString configuration, in SignalingCallback signalingCallback)]
   interface PeerConnection {
-    void signalingMessage(in DOMString message);
+    void processSignalingMessage(in DOMString message);
   
     const unsigned short NEW = 0;
     const unsigned short NEGOTIATING = 1;
