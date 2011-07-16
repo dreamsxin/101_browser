@@ -23,6 +23,65 @@
 #include "JpegDecoder/JpegDecoderUtil.h"
 
 #pragma pack(push, 1)
+
+
+// B.2.3 Scan header syntax
+struct ScanHeader
+{
+	uint16_t Ls; // Scan header length – Specifies the length of the 
+	             // scan header shown in Figure B.4 (see B.1.1.4).
+	uint8_t Ns;  // Number of image components in scan – Specifies 
+	             // the number of source image components in the scan. 
+	             // The value of Ns shall be equal to the number of sets
+	             // of scan component specification parameters 
+	             // (Csj, Tdj, and Taj) present in the scan header.
+
+	struct ScanComponentSpecificationParameter
+	{
+		uint8_t Cs;
+		/*
+		* Note that the order is changed from the specification since
+		* the specification uses big-endian bit ordering while X86 compilers
+		* use little-endian
+		*/
+		uint8_t Ta : 4;
+		uint8_t Td : 4;
+	};
+
+	std::vector<ScanComponentSpecificationParameter> componentSpecificationParameters;
+
+	uint8_t Ss;
+	uint8_t Se;
+	/*
+	* Note that the order is changed from the specification since
+	* the specification uses big-endian bit ordering while X86 compilers
+	* use little-endian
+	*/
+	uint8_t Al : 4;
+	uint8_t Ah : 4;
+};
+
+void readScanHeader(FILE* jpegFile, ScanHeader* in_pScanHeader);
+
+
+// B.2.4.1 Quantization table-specification syntax
+typedef struct
+{
+	/*
+	* Note that the order is changed from the specification since
+	* the specification uses big-endian bit ordering while X86 compilers
+	* use little-endian
+	*/
+	uint8_t Tq : 4;
+	uint8_t Pq : 4;
+	union
+	{
+		uint8_t Q8[64];
+		uint16_t Q16[64];
+	} Q;
+} QuantizationTable;
+
+
 // B.2.4.4 Restart interval definition syntax
 struct RestartInterval
 {
@@ -32,37 +91,7 @@ struct RestartInterval
 
 void readRestartInterval(FILE* jpegFile, RestartInterval* in_pRestartInterval);
 
-// B.2.3 Scan header syntax
-struct ScanHeader
-{
-	uint16_t Ls; // Scan header length – Specifies the length of the 
-	                    // scan header shown in Figure B.4 (see B.1.1.4).
-	uint8_t Ns;  // Number of image components in scan – Specifies 
-	                    // the number of source image components in the scan. 
-	                    // The value of Ns shall be equal to the number of sets
-	                    // of scan component specification parameters 
-	                    // (Csj, Tdj, and Taj) present in the scan header.
 
-	struct ScanComponentSpecificationParameter
-	{
-		uint8_t Cs;
-		// Note that the order is changed from the specification since
-		// X86 seems to use little-endian bit ordering
-		uint8_t Ta : 4;
-		uint8_t Td : 4;
-	};
-
-	std::vector<ScanComponentSpecificationParameter> componentSpecificationParameters;
-
-	uint8_t Ss;
-	uint8_t Se;
-	// Note that the order is changed from the specification since
-	// X86 seems to use little-endian bit ordering
-	uint8_t Al : 4;
-	uint8_t Ah : 4;
-};
 #pragma pack(pop)
-
-void readScanHeader(FILE* jpegFile, ScanHeader* in_pScanHeader);
 
 #endif

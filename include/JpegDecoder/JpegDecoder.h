@@ -18,7 +18,7 @@
 #define _JpegDecoder
 
 #include <cstdio>
-#include "JpegDecoder/JpegSegments.h"
+#include "JpegDecoder/JpegContext.h"
 
 // E.2.1 Control procedure for decoding compressed image data
 void Decode_image(FILE* jpegFile);
