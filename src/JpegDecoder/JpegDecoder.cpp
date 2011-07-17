@@ -16,10 +16,12 @@
 
 #include <cstdlib>
 #include <cassert>
+#include <cstring> // for memset
 #include "JpegDecoder/JpegDecoderMarkers.h"
 #include "JpegDecoder/JpegDecoder.h"
 #include "JpegDecoder/JpegDecoderUtil.h"
 #include "JpegDecoder/JpegSegments.h"
+#include "JpegDecoder/JpegContext.h"
 
 void Decoder_setup()
 {
@@ -30,6 +32,9 @@ void Decoder_setup()
 void Decode_image(FILE* jpegFile)
 {
 	unsigned char currentMarker;
+	JpegContext context;
+	memset(context.quantizationTablesState.isQuantizationTableInitialized, 0, 
+		sizeof(context.quantizationTablesState.isQuantizationTableInitialized));
 
 	currentMarker = readMarker(jpegFile);
 
