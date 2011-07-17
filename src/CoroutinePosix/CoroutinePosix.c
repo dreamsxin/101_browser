@@ -18,7 +18,7 @@
 #include "MiniStdlib/safe_free.h"
 #include <stdlib.h>
 
-#define DEFAULT_COROUTINE_STACK_SIZE 0x10000
+#define DEFAULT_COROUTINE_STACK_SIZE 0x10000 // 16 KiB
 
 bool createCoroutine(size_t in_stackSize, 
 	void (*in_pFiberFunc)(void*), 
