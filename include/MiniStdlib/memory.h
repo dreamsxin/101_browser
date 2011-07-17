@@ -23,20 +23,36 @@
 extern "C" {
 #endif
 
-/*
+/*!
 * Sets 16 bits a time instead of 8, so the memory block has to have a size of
 * 2*in_n bytes
+*
+* Return value: in_out_pBuffer
 */
-void* memset2(void * in_out_ptr, int in_value, size_t in_num);
+void* memset2(void *in_out_pBuffer, int in_value, size_t in_num);
 
 
-/*
+/*!
 * Exchanges the memory blocks pointed to in_p0 and in_p1 having
 * size of in_num bytes.
 *
 * Assumption: these memory block do not alias.
 */
 void memxchg(void *in_p0, void *in_p1, size_t in_num);
+
+
+/*!
+* "Reverses" the memory block pointed to by in_out_pBuffer
+* with size in_num.
+*
+* Return value: in_out_pBuffer
+*/
+void* endianness_convert(void *in_out_pBuffer, size_t in_num);
+
+/*!
+* A shortcut for the (probably) most often used version of endianness_convert.
+*/
+#define ENDIANNESS_CONVERT_SIMPLE(x) endianness_convert(&x, sizeof(x));
 
 #ifdef __cplusplus
 }

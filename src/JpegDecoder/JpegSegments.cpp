@@ -15,6 +15,7 @@
  */
 
 #include "JpegDecoder/JpegSegments.h"
+#include "MiniStdlib/memory.h"  // for ENDIANNESS_CONVERT_SIMPLE
 #include <cstdlib>
 
 void readRestartInterval(FILE* jpegFile, RestartInterval* in_pRestartInterval)
@@ -25,8 +26,8 @@ void readRestartInterval(FILE* jpegFile, RestartInterval* in_pRestartInterval)
 		exit(1);
 	}
 
-	in_pRestartInterval->Lr = flipBytes(in_pRestartInterval->Lr);
-	in_pRestartInterval->Ri = flipBytes(in_pRestartInterval->Ri);
+	ENDIANNESS_CONVERT_SIMPLE(in_pRestartInterval->Lr);
+	ENDIANNESS_CONVERT_SIMPLE(in_pRestartInterval->Ri);
 
 	printf("Lr = %u\tRi = %u\n", in_pRestartInterval->Lr, in_pRestartInterval->Ri);
 
@@ -46,7 +47,7 @@ void readScanHeader(FILE* jpegFile, ScanHeader* in_pScanHeader)
 		exit(1);
 	}
 
-	in_pScanHeader->Ls = flipBytes(in_pScanHeader->Ls);
+	ENDIANNESS_CONVERT_SIMPLE(in_pScanHeader->Ls);
 
 	if (in_pScanHeader->Ns == 0 || in_pScanHeader->Ns>4)
 	{

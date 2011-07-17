@@ -17,6 +17,8 @@
 #include <cstdlib>
 #include "JpegDecoder/JpegDecoderMarkers.h"
 #include "JpegDecoder/JpegDecoderUtil.h"
+#include "MiniStdlib/memory.h"  // for ENDIANNESS_CONVERT_SIMPLE
+#include "MiniStdlib/cstdint.h" // for uint16_t
 
 bool isStandaloneMarker(unsigned char in_marker)
 {
@@ -39,13 +41,6 @@ bool isStandaloneMarker(unsigned char in_marker)
 	default:
 		return false;
 	}
-}
-
-unsigned short flipBytes(unsigned short in_value)
-{
-	unsigned char lo = in_value & 0xFF;
-	unsigned char hi = in_value >> 8;
-	return (lo<<8)+hi;
 }
 
 void printSegmentName(unsigned char in_marker)
@@ -151,7 +146,7 @@ void defaultMarkerInterpreter(FILE* jpegFile, unsigned char currentMarker)
 {
 	if (!isStandaloneMarker(currentMarker))
 	{
-		unsigned short length;
+		uint16_t length;
 
 		if (fread(&length, 2, 1, jpegFile)!=1)
 		{
@@ -159,7 +154,7 @@ void defaultMarkerInterpreter(FILE* jpegFile, unsigned char currentMarker)
 			exit(1);
 		}
 
-		length = flipBytes(length);
+		ENDIANNESS_CONVERT_SIMPLE(length);
 
 		printf("Length=%u", length);
 

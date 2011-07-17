@@ -15,11 +15,11 @@
 */
 
 #include "MiniStdlib/memory.h"
-#include "MiniStdlib/cstdint.h"
+#include "MiniStdlib/cstdint.h" // for uint8_t and uint16_t
 
-void* memset2(void * in_out_ptr, int in_value, size_t in_num)
+void* memset2(void * in_out_pBuffer, int in_value, size_t in_num)
 {
-	uint16_t *ptr = (uint16_t *) in_out_ptr;
+	uint16_t *ptr = (uint16_t *) in_out_pBuffer;
 
 	while (in_num--)
 	{
@@ -30,7 +30,7 @@ void* memset2(void * in_out_ptr, int in_value, size_t in_num)
 		*ptr++ = in_value;
 	}
 
-	return in_out_ptr;
+	return in_out_pBuffer;
 }
 
 void memxchg(void *in_p0, void *in_p1, size_t in_num)
@@ -48,4 +48,17 @@ void memxchg(void *in_p0, void *in_p1, size_t in_num)
 		*ptr0++ = *ptr1;
 		*ptr1++ = temp;
 	}
+}
+
+void* endianness_convert(void *in_out_pBuffer, size_t in_num)
+{
+	uint8_t *ptr = (uint8_t *) in_out_pBuffer;
+	size_t idx;
+	
+	for (idx = 0; idx < in_num/2; idx++)
+	{
+		memxchg(ptr+idx, ptr+in_num-1-idx, 1);
+	}
+
+	return in_out_pBuffer;
 }
