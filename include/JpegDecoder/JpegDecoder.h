@@ -18,16 +18,25 @@
 #define _JpegDecoder
 
 #include "MiniStdlib/MTAx_cstdio.h"
+#include "IO/ByteStream.h"
+#include "IO/SetjmpStream.h"
 #include "JpegDecoder/JpegContext.h"
 
 // E.2.1 Control procedure for decoding compressed image data
-void Decode_image(FILE* jpegFile);
+ReadResult Decode_image(void *in_pStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface);
 // E.2.2 Control procedure for decoding a frame
-void Decode_frame(FILE* jpegFile, unsigned char currentMarker, RestartInterval* in_pri);
+void Decode_frame(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_setjmpStreamReadInterface, 
+	unsigned char currentMarker, RestartInterval* in_pri);
 // E.2.3 Control procedure for decoding a scan
-void Decode_scan(FILE* jpegFile, RestartInterval in_ri);
+void Decode_scan(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_setjmpStreamReadInterface, 
+	RestartInterval in_ri);
 // E.2.4 Control procedure for decoding a restart interval
-void Decode_restart_interval(FILE* jpegFile, RestartInterval in_ri);
+void Decode_restart_interval(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_setjmpStreamReadInterface, 
+	RestartInterval in_ri);
 void Reset_decoder();
 // E.2.5 Control procedure for decoding a minimum coded unit (MCU)
 void Decode_MCU();

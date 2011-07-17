@@ -18,13 +18,11 @@
 #include "MiniStdlib/memory.h"  // for ENDIANNESS_CONVERT_SIMPLE
 #include <cstdlib>
 
-void readRestartInterval(FILE* jpegFile, RestartInterval* in_pRestartInterval)
+void readRestartInterval(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_setjmpStreamReadInterface, 
+	RestartInterval* in_pRestartInterval)
 {
-	if (fread(in_pRestartInterval, sizeof(RestartInterval), 1, jpegFile) != 1)
-	{
-		fprintf(stderr, "In readRestartInterval: preliminary end of file\n");
-		exit(1);
-	}
+	(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, in_pRestartInterval, sizeof(*in_pRestartInterval));
 
 	ENDIANNESS_CONVERT_SIMPLE(in_pRestartInterval->Lr);
 	ENDIANNESS_CONVERT_SIMPLE(in_pRestartInterval->Ri);
@@ -38,27 +36,25 @@ void readRestartInterval(FILE* jpegFile, RestartInterval* in_pRestartInterval)
 	}
 }
 
-ReadResult readScanHeader(FILE* jpegFile, ScanHeader* in_pScanHeader)
+void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_setjmpStreamReadInterface, 
+	ScanHeader* in_pScanHeader)
 {
-	if (fread(&in_pScanHeader->Ls, 
-		sizeof(in_pScanHeader->Ls)+sizeof(in_pScanHeader->Ns), 1, jpegFile) != 1)
-	{
-		fprintf(stderr, "In readRestartInterval: preliminary end of file\n");
-		exit(1);
-	}
+	(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+		&in_pScanHeader->Ls, sizeof(in_pScanHeader->Ls)+sizeof(in_pScanHeader->Ns));
 
 	ENDIANNESS_CONVERT_SIMPLE(in_pScanHeader->Ls);
 
 	if (in_pScanHeader->Ns == 0 || in_pScanHeader->Ns>4)
 	{
-		fprintf(stderr, "Invalid value of Ns\n");
-		exit(1);
+		fprintf(stderr, "readScanHeader: invalid value of Ns\n");
+		longjmp(*in_out_pSetjmpStreamState->mpJmpBuffer, ReadResultInvalidData);
 	}
 
 	if (in_pScanHeader->Ls != 6+2*in_pScanHeader->Ns)
 	{
-		fprintf(stderr, "Ls must be 6+2*Ns\n");
-		exit(1);
+		fprintf(stderr, "readScanHeader: Ls must be 6+2*Ns\n");
+		longjmp(*in_out_pSetjmpStreamState->mpJmpBuffer, ReadResultInvalidData);
 	}
 
 	printf("Ls = %u\tNs = %u\n", in_pScanHeader->Ls, in_pScanHeader->Ns);
@@ -67,28 +63,25 @@ ReadResult readScanHeader(FILE* jpegFile, ScanHeader* in_pScanHeader)
 		malloc(sizeof(ScanComponentSpecificationParameter) * in_pScanHeader->Ns);
 
 	if (!in_pScanHeader->componentSpecificationParameters)
-		return ReadResultAllocationFailure;
+	{
+		longjmp(*in_out_pSetjmpStreamState->mpJmpBuffer, ReadResultAllocationFailure);
+	}
 
 	for (size_t i=0; i<in_pScanHeader->Ns; i++)
 	{
 		ScanComponentSpecificationParameter scsp;
-		if (fread(in_pScanHeader->componentSpecificationParameters+i, sizeof(ScanComponentSpecificationParameter), 
-			1, jpegFile) != 1)
-		{
-			fprintf(stderr, "In readRestartInterval: preliminary end of file\n");
-			exit(1);
-		}
+
+		(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+			in_pScanHeader->componentSpecificationParameters+i, 
+			sizeof(ScanComponentSpecificationParameter));
 		
 		printf("Cs%u = %2X\t", i+1, in_pScanHeader->componentSpecificationParameters[i].Cs);
 		printf("Td%u = %1X\t", i+1, in_pScanHeader->componentSpecificationParameters[i].Td);
 		printf("Ta%u = %1X\n", i+1, in_pScanHeader->componentSpecificationParameters[i].Ta);
 	}
 
-	if (fread(&in_pScanHeader->Ss, 3, 1, jpegFile) != 1)
-	{
-		fprintf(stderr, "In readRestartInterval: preliminary end of file\n");
-		exit(1);
-	}
+	(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+		&in_pScanHeader->Ss, sizeof(in_pScanHeader->Ss));
 
 	printf("Ss = %2X\tSe = %2X\tAh = %1X\tAl = %1X\n", 
 		in_pScanHeader->Ss, in_pScanHeader->Se, in_pScanHeader->Ah, in_pScanHeader->Al);

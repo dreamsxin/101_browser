@@ -15,7 +15,7 @@
  */
 
 #include "JpegDecoder/JpegDecoder.h"
-#include "MiniStdlib/MTAx_cstdio.h"
+#include "IO/FileByteStream.h"
 #include <stdlib.h>
 #include <assert.h>
 
@@ -116,15 +116,15 @@ int main()
 		//"testfiles/T087v1_0/T87_test-1-2-3-4-5-6/T8C0E0.JLS";
 		//"testfiles/T087v1_0/T87_test-1-2-3-4-5-6/T8C0E3.JLS";
 
-	FILE* jpegFile = MTAx_fopen(filename, "rb");
+	FileByteStreamState fileByteStreamState;
 
-	if (jpegFile == NULL)
+	if (!fileByteReadStreamStateInit(filename, &fileByteStreamState))
 	{
 		fprintf(stderr, "Could not open file %s\n", filename);
 		exit(1);
 	}
 
-	Decode_image(jpegFile);
+	Decode_image(&fileByteStreamState, getFileByteStreamInterface());
 
-	fclose(jpegFile);
+	fileByteReadStreamStateDestroy(&fileByteStreamState);
 }

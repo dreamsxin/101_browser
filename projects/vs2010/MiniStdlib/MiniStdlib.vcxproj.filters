@@ -54,6 +54,12 @@
     <ClInclude Include="..\..\..\include\MiniStdlib\memory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\MiniStdlib\cstring.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\MiniStdlib\cassert.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\MiniStdlib\MTAx_cstdio.c">

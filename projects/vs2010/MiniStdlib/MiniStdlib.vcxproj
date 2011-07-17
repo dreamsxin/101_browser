@@ -11,11 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\MiniStdlib\cassert.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\climits.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\csetjmp.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\cstdbool.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\cstddef.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\cstdint.h" />
+    <ClInclude Include="..\..\..\include\MiniStdlib\cstring.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\declspec.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\HexDigit.h" />
     <ClInclude Include="..\..\..\include\MiniStdlib\memory.h" />

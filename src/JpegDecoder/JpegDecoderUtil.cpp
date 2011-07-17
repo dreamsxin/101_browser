@@ -19,6 +19,8 @@
 #include "JpegDecoder/JpegDecoderUtil.h"
 #include "MiniStdlib/memory.h"  // for ENDIANNESS_CONVERT_SIMPLE
 #include "MiniStdlib/cstdint.h" // for uint16_t
+#include "MiniStdlib/safe_free.h"
+#include "Util/ReadResult.h"
 
 bool isStandaloneMarker(unsigned char in_marker)
 {
@@ -112,29 +114,23 @@ void printMarkerInformation(unsigned char currentMarker)
 	printf(")\n");
 }
 
-unsigned char readMarker(FILE* jpegFile)
+unsigned char readMarker(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_setjmpStreamReadInterface)
 {
 	unsigned char currentMarker;
 
-	if (fread(&currentMarker, 1, 1, jpegFile)!=1)
-	{
-		exit(1);
-	}
+	(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, &currentMarker, 1);
 
 	if (currentMarker != 0xFF)
 	{
-		fprintf(stderr, "Expected token FF but received %2X\n", (unsigned int) currentMarker);
-		exit(1);
+		fprintf(stderr, "readMarker: expected token FF but received %2X\n", (unsigned int) currentMarker);
+		longjmp(*in_out_pSetjmpStreamState->mpJmpBuffer, ReadResultInvalidData);
 	}
 
 	// Skip all 0xFF
 	while (currentMarker == 0xFF)
 	{
-		if (fread(&currentMarker, 1, 1, jpegFile)!=1)
-		{
-			fprintf(stderr, "Expected token but received EOF\n");
-			exit(1);
-		}
+		(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, &currentMarker, 1);
 	}
 
 	printMarkerInformation(currentMarker);
@@ -142,17 +138,15 @@ unsigned char readMarker(FILE* jpegFile)
 	return currentMarker;
 }
 
-void defaultMarkerInterpreter(FILE* jpegFile, unsigned char currentMarker)
+void defaultMarkerInterpreter(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_setjmpStreamReadInterface, 
+	unsigned char currentMarker)
 {
 	if (!isStandaloneMarker(currentMarker))
 	{
 		uint16_t length;
 
-		if (fread(&length, 2, 1, jpegFile)!=1)
-		{
-			fprintf(stderr, "Expected length parameter but received EOF\n");
-			exit(1);
-		}
+		(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, &length, sizeof(length));
 
 		ENDIANNESS_CONVERT_SIMPLE(length);
 
@@ -160,26 +154,18 @@ void defaultMarkerInterpreter(FILE* jpegFile, unsigned char currentMarker)
 
 		if (length<2)
 		{
-			fprintf(stderr, "Expected a length of at least 2\n");
-			exit(1);
+			fprintf(stderr, "defaultMarkerInterpreter: expected a length of at least 2\n");
+			longjmp(*in_out_pSetjmpStreamState->mpJmpBuffer, ReadResultInvalidData);
 		}
 
-		unsigned char* data = (unsigned char*) malloc(length-2);
+		uint8_t* data = (uint8_t*) malloc(length-2);
 
 		if (!data)
-		{
-			fprintf(stderr, "Error allocating data\n");
-			exit(1);
-		}
+			longjmp(*in_out_pSetjmpStreamState->mpJmpBuffer, ReadResultAllocationFailure);
 
-		if (fread(data, length-2, 1, jpegFile)!=1)
-		{
-			fprintf(stderr, "Expected data of length %u but received EOF\n", length-2);
-			exit(1);
-		}
+		(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, data, length-2);
 
-		free(data);
-		data = NULL;
+		safe_free(&data);
 	}
 
 	printf("\n");

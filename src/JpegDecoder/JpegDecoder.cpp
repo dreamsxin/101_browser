@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-#include <cstdlib>
-#include <cassert>
-#include <cstring> // for memset
+#include "MiniStdlib/MTAx_cstdlib.h"
+#include "MiniStdlib/cassert.h"
+#include "MiniStdlib/cstring.h" // for memset
 #include "JpegDecoder/JpegDecoderMarkers.h"
 #include "JpegDecoder/JpegDecoder.h"
 #include "JpegDecoder/JpegDecoderUtil.h"
@@ -30,12 +30,26 @@ void Decoder_setup(JpegContext *in_pContext)
 }
 
 // E.2.1 Control procedure for decoding compressed image data
-void Decode_image(FILE* jpegFile)
+ReadResult Decode_image(void *in_pStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface)
 {
 	unsigned char currentMarker;
 	JpegContext context;
 
-	currentMarker = readMarker(jpegFile);
+	SetjmpStreamState setjmpReadStreamState;
+	ByteStreamInterface setjmpReadStreamInterface;
+	jmp_buf jmpBuf;
+	int result;
+
+	setjmpStreamInit(&setjmpReadStreamState, &jmpBuf, ReadResultPrematureEndOfStream, 
+		in_pStreamState, in_byteStreamReadInterface);
+	setjmpReadStreamInterface = getSetjmpStreamByteStreamInterface(&setjmpReadStreamState);
+
+	// the = is correct
+	if (result = setjmp(jmpBuf))
+		return (ReadResult) result;
+
+	currentMarker = readMarker(&setjmpReadStreamState, setjmpReadStreamInterface);
 
 	if (currentMarker != SOI_MARKER)
 	{
@@ -48,7 +62,7 @@ void Decode_image(FILE* jpegFile)
 
 	Decoder_setup(&context);
 
-	currentMarker = readMarker(jpegFile);
+	currentMarker = readMarker(&setjmpReadStreamState, setjmpReadStreamInterface);
 
 	bool restartIntervalFound = false;
 	RestartInterval restartInterval;
@@ -67,7 +81,7 @@ void Decode_image(FILE* jpegFile)
 		switch (currentMarker)
 		{
 		case DRI_MARKER:    // 0xDD
-			readRestartInterval(jpegFile, &restartInterval);
+			readRestartInterval(&setjmpReadStreamState, setjmpReadStreamInterface, &restartInterval);
 			restartIntervalFound = true;
 			break;
 		case DHT_MARKER:    // 0xC4
@@ -90,25 +104,30 @@ void Decode_image(FILE* jpegFile)
 		case APP_14_MARKER: // 0xEE
 		case APP_15_MARKER: // 0xEF
 		case COM_MARKER:    // 0xFE
-			defaultMarkerInterpreter(jpegFile, currentMarker);
+			defaultMarkerInterpreter(&setjmpReadStreamState, setjmpReadStreamInterface, currentMarker);
 			break;
 		default:
 			fprintf(stderr, "Invalid marker in Decode_image. Exiting.\n");
 			exit(1);
 		}
 		
-		currentMarker = readMarker(jpegFile);
+		currentMarker = readMarker(&setjmpReadStreamState, setjmpReadStreamInterface);
 	}
 
-	return Decode_frame(jpegFile, currentMarker, restartIntervalFound ? &restartInterval : NULL);
+	Decode_frame(&setjmpReadStreamState, setjmpReadStreamInterface, 
+		currentMarker, restartIntervalFound ? &restartInterval : NULL);
+
+	return ReadResultOK;
 }
 
 // E.2.2 Control procedure for decoding a frame
-void Decode_frame(FILE* jpegFile, unsigned char currentMarker, RestartInterval* in_pri)
+void Decode_frame(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_setjmpStreamReadInterface, 
+	unsigned char currentMarker, RestartInterval* in_pri)
 {
 	// TODO: Replace by "Interpret frame header"
-	defaultMarkerInterpreter(jpegFile, currentMarker);
-	currentMarker = readMarker(jpegFile);
+	defaultMarkerInterpreter(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, currentMarker);
+	currentMarker = readMarker(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface);
 
 	bool restartIntervalFound = false;
 	RestartInterval restartInterval;
@@ -124,21 +143,22 @@ void Decode_frame(FILE* jpegFile, unsigned char currentMarker, RestartInterval* 
 		switch (currentMarker)
 		{
 		case DRI_MARKER:
-			readRestartInterval(jpegFile, &restartInterval);
+			readRestartInterval(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, 
+				&restartInterval);
 			restartIntervalFound = true;
 			break;
 		// TODO: Proper choice of markers 
 		default:
-			defaultMarkerInterpreter(jpegFile, currentMarker);
+			defaultMarkerInterpreter(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, currentMarker);
 			break;
 		}
 
-		currentMarker = readMarker(jpegFile);
+		currentMarker = readMarker(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface);
 	}
 
 	if (restartIntervalFound)
 	{
-		Decode_scan(jpegFile, restartInterval);
+		Decode_scan(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, restartInterval);
 	}
 	else
 	{
@@ -150,19 +170,23 @@ void Decode_frame(FILE* jpegFile, unsigned char currentMarker, RestartInterval* 
 }
 
 // E.2.3 Control procedure for decoding a scan
-void Decode_scan(FILE* jpegFile, RestartInterval in_ri)
+void Decode_scan(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_setjmpStreamReadInterface, 
+	RestartInterval in_ri)
 {
 	ScanHeader sh;
-	readScanHeader(jpegFile, &sh);
+	readScanHeader(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, &sh);
 
 	size_t m = 0;
 
 	// TODO: There is a loop for this. Implement it
-	Decode_restart_interval(jpegFile, in_ri);
+	Decode_restart_interval(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, in_ri);
 }
 
 // E.2.4 Control procedure for decoding a restart interval
-void Decode_restart_interval(FILE* jpegFile, RestartInterval in_ri)
+void Decode_restart_interval(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_setjmpStreamReadInterface, 
+	RestartInterval in_ri)
 {
 	Reset_decoder();
 

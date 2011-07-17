@@ -67,7 +67,9 @@ struct ScanHeader
 	uint8_t Ah : 4;
 };
 
-ReadResult readScanHeader(FILE* jpegFile, ScanHeader* in_pScanHeader);
+void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_setjmpStreamReadInterface, 
+	ScanHeader* in_pScanHeader);
 
 
 // B.2.4.1 Quantization table-specification syntax
@@ -95,7 +97,9 @@ struct RestartInterval
 	uint16_t Ri; // Specifies the number of MCU in the restart interval.
 };
 
-void readRestartInterval(FILE* jpegFile, RestartInterval* in_pRestartInterval);
+void readRestartInterval(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_setjmpStreamReadInterface, 
+	RestartInterval* in_pRestartInterval);
 
 
 #pragma pack(pop)
