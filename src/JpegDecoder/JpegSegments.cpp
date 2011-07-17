@@ -69,8 +69,6 @@ void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 	for (size_t i=0; i<in_pScanHeader->Ns; i++)
 	{
-		ScanComponentSpecificationParameter scsp;
-
 		(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 			in_pScanHeader->componentSpecificationParameters+i, 
 			sizeof(ScanComponentSpecificationParameter));
