@@ -17,15 +17,27 @@
 #ifndef _JpegSegments
 #define _JpegSegments
 
-#include "BasicDataStructures/Types.h"
-#include <cstdio>
-#include <vector>
+#include "MiniStdlib/MTAx_cstdio.h"
+#include "MiniStdlib/cstdint.h"
 #include "JpegDecoder/JpegDecoderUtil.h"
+#include "Util/ReadResult.h"
 
 #pragma pack(push, 1)
 
 
 // B.2.3 Scan header syntax
+struct ScanComponentSpecificationParameter
+{
+	uint8_t Cs;
+	/*
+	* Note that the order is changed from the specification since
+	* the specification uses big-endian bit ordering while X86 compilers
+	* use little-endian
+	*/
+	uint8_t Ta : 4;
+	uint8_t Td : 4;
+};
+
 struct ScanHeader
 {
 	uint16_t Ls; // Scan header length – Specifies the length of the 
@@ -36,19 +48,13 @@ struct ScanHeader
 	             // of scan component specification parameters 
 	             // (Csj, Tdj, and Taj) present in the scan header.
 
-	struct ScanComponentSpecificationParameter
-	{
-		uint8_t Cs;
-		/*
-		* Note that the order is changed from the specification since
-		* the specification uses big-endian bit ordering while X86 compilers
-		* use little-endian
-		*/
-		uint8_t Ta : 4;
-		uint8_t Td : 4;
-	};
+	
 
-	std::vector<ScanComponentSpecificationParameter> componentSpecificationParameters;
+	/*
+	* Ns tells us how large the array is that componentSpecificationParameters
+	* is pointing to.
+	*/
+	ScanComponentSpecificationParameter *componentSpecificationParameters;
 
 	uint8_t Ss;
 	uint8_t Se;
@@ -61,7 +67,7 @@ struct ScanHeader
 	uint8_t Ah : 4;
 };
 
-void readScanHeader(FILE* jpegFile, ScanHeader* in_pScanHeader);
+ReadResult readScanHeader(FILE* jpegFile, ScanHeader* in_pScanHeader);
 
 
 // B.2.4.1 Quantization table-specification syntax

@@ -17,7 +17,7 @@
 #ifndef _JpegDecoder
 #define _JpegDecoder
 
-#include <cstdio>
+#include "MiniStdlib/MTAx_cstdio.h"
 #include "JpegDecoder/JpegContext.h"
 
 // E.2.1 Control procedure for decoding compressed image data

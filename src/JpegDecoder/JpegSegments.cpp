@@ -38,7 +38,7 @@ void readRestartInterval(FILE* jpegFile, RestartInterval* in_pRestartInterval)
 	}
 }
 
-void readScanHeader(FILE* jpegFile, ScanHeader* in_pScanHeader)
+ReadResult readScanHeader(FILE* jpegFile, ScanHeader* in_pScanHeader)
 {
 	if (fread(&in_pScanHeader->Ls, 
 		sizeof(in_pScanHeader->Ls)+sizeof(in_pScanHeader->Ns), 1, jpegFile) != 1)
@@ -63,21 +63,25 @@ void readScanHeader(FILE* jpegFile, ScanHeader* in_pScanHeader)
 
 	printf("Ls = %u\tNs = %u\n", in_pScanHeader->Ls, in_pScanHeader->Ns);
 
+	in_pScanHeader->componentSpecificationParameters = (ScanComponentSpecificationParameter *) 
+		malloc(sizeof(ScanComponentSpecificationParameter) * in_pScanHeader->Ns);
+
+	if (!in_pScanHeader->componentSpecificationParameters)
+		return ReadResultAllocationFailure;
+
 	for (size_t i=0; i<in_pScanHeader->Ns; i++)
 	{
-		ScanHeader::ScanComponentSpecificationParameter scsp;
-		if (fread(&scsp, sizeof(ScanHeader::ScanComponentSpecificationParameter), 
+		ScanComponentSpecificationParameter scsp;
+		if (fread(in_pScanHeader->componentSpecificationParameters+i, sizeof(ScanComponentSpecificationParameter), 
 			1, jpegFile) != 1)
 		{
 			fprintf(stderr, "In readRestartInterval: preliminary end of file\n");
 			exit(1);
 		}
 		
-		printf("Cs%u = %2X\t", i+1, scsp.Cs);
-		printf("Td%u = %1X\t", i+1, scsp.Td);
-		printf("Ta%u = %1X\n", i+1, scsp.Ta);
-
-		in_pScanHeader->componentSpecificationParameters.push_back(scsp);
+		printf("Cs%u = %2X\t", i+1, in_pScanHeader->componentSpecificationParameters[i].Cs);
+		printf("Td%u = %1X\t", i+1, in_pScanHeader->componentSpecificationParameters[i].Td);
+		printf("Ta%u = %1X\n", i+1, in_pScanHeader->componentSpecificationParameters[i].Ta);
 	}
 
 	if (fread(&in_pScanHeader->Ss, 3, 1, jpegFile) != 1)

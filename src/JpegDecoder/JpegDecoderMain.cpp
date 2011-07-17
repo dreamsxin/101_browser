@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#include "MiniStdlib/MTAx_cstdio.h"
-#include <cstdlib>
-#include <cassert>
 #include "JpegDecoder/JpegDecoder.h"
+#include "MiniStdlib/MTAx_cstdio.h"
+#include <stdlib.h>
+#include <assert.h>
 
 int main()
 {

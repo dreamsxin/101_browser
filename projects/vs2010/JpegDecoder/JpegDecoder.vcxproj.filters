@@ -35,13 +35,13 @@
     <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoderMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\JpegDecoder\JpegSegments.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoderUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoderMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
