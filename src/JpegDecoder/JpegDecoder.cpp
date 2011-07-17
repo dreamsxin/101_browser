@@ -127,6 +127,7 @@ void Decode_frame(FILE* jpegFile, unsigned char currentMarker, RestartInterval* 
 			readRestartInterval(jpegFile, &restartInterval);
 			restartIntervalFound = true;
 			break;
+		// TODO: Proper choice of markers 
 		default:
 			defaultMarkerInterpreter(jpegFile, currentMarker);
 			break;
