@@ -23,9 +23,10 @@
 #include "JpegDecoder/JpegSegments.h"
 #include "JpegDecoder/JpegContext.h"
 
-void Decoder_setup()
+void Decoder_setup(JpegContext *in_pContext)
 {
-
+	memset(in_pContext->quantizationTablesState.isQuantizationTableInitialized, 0, 
+		sizeof(in_pContext->quantizationTablesState.isQuantizationTableInitialized));
 }
 
 // E.2.1 Control procedure for decoding compressed image data
@@ -33,8 +34,6 @@ void Decode_image(FILE* jpegFile)
 {
 	unsigned char currentMarker;
 	JpegContext context;
-	memset(context.quantizationTablesState.isQuantizationTableInitialized, 0, 
-		sizeof(context.quantizationTablesState.isQuantizationTableInitialized));
 
 	currentMarker = readMarker(jpegFile);
 
@@ -47,7 +46,7 @@ void Decode_image(FILE* jpegFile)
 	// SOI is a standalone marker
 	assert(isStandaloneMarker(currentMarker));
 
-	Decoder_setup();
+	Decoder_setup(&context);
 
 	currentMarker = readMarker(jpegFile);
 
