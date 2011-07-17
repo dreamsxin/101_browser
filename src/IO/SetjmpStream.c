@@ -72,14 +72,14 @@ size_t setjmpStreamWrite(void *in_out_pSetjmpStreamState, const void *out_pBuffe
 int setjmpStreamXchgAndSetjmp(SetjmpStreamState *in_out_pSetjmpStreamState,
 	jmp_buf *in_pJmpBuffer)
 {
-	memxchg(*in_out_pSetjmpStreamState->mpJmpBuffer, in_pJmpBuffer, sizeof(jmp_buf*));
+	memxchg(&in_out_pSetjmpStreamState->mpJmpBuffer, &in_pJmpBuffer, sizeof(jmp_buf*));
 	return setjmp(*in_out_pSetjmpStreamState->mpJmpBuffer);
 }
 
 void setjmpStreamXchgAndLongjmp(SetjmpStreamState *in_out_pSetjmpStreamState,
 	jmp_buf *in_pJmpBuffer)
 {
-	memxchg(in_out_pSetjmpStreamState->mpJmpBuffer, in_pJmpBuffer, sizeof(jmp_buf*));
+	memxchg(&in_out_pSetjmpStreamState->mpJmpBuffer, &in_pJmpBuffer, sizeof(jmp_buf*));
 	longjmp(*in_out_pSetjmpStreamState->mpJmpBuffer, in_out_pSetjmpStreamState->mLongjmpValue);
 }
 
