@@ -103,6 +103,7 @@
     <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\BinaryTreeClasses.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\BinaryTreeHelper.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\Tree\BinaryTreeImpl.h" />
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Types.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\Util\SingleChain.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\VirtualMachine\InstructionContext.h" />
     <ClInclude Include="..\..\..\include\BasicDataStructures\VirtualMachine\VirtualMachineContext.h" />

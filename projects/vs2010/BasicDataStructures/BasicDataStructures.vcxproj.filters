@@ -120,6 +120,9 @@
     <ClInclude Include="..\..\..\include\BasicDataStructures\VirtualMachine\VirtualMachineContext.h">
       <Filter>Header Files\VirtualMachine</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\BasicDataStructures\Types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\BasicDataStructures\Parser\UnionParser.cpp">
