@@ -22,6 +22,10 @@
 #include "IO/SetjmpStream.h"
 #include "JpegDecoder/JpegContext.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // E.2.1 Control procedure for decoding compressed image data
 ReadResult Decode_image(void *in_pStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface);
@@ -41,5 +45,9 @@ void Reset_decoder();
 // E.2.5 Control procedure for decoding a minimum coded unit (MCU)
 void Decode_MCU();
 void Decode_data_unit();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

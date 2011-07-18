@@ -22,11 +22,16 @@
 #include "JpegDecoder/JpegDecoderUtil.h"
 #include "Util/ReadResult.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #pragma pack(push, 1)
 
-
 // B.2.3 Scan header syntax
-struct ScanComponentSpecificationParameter
+typedef struct
 {
 	uint8_t Cs;
 	/*
@@ -36,9 +41,9 @@ struct ScanComponentSpecificationParameter
 	*/
 	uint8_t Ta : 4;
 	uint8_t Td : 4;
-};
+} ScanComponentSpecificationParameter;
 
-struct ScanHeader
+typedef struct
 {
 	uint16_t Ls; // Scan header length – Specifies the length of the 
 	             // scan header shown in Figure B.4 (see B.1.1.4).
@@ -65,7 +70,7 @@ struct ScanHeader
 	*/
 	uint8_t Al : 4;
 	uint8_t Ah : 4;
-};
+} ScanHeader;
 
 void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_setjmpStreamReadInterface, 
@@ -91,11 +96,11 @@ typedef struct
 
 
 // B.2.4.4 Restart interval definition syntax
-struct RestartInterval
+typedef struct
 {
 	uint16_t Lr; // Define restart interval segment length
 	uint16_t Ri; // Specifies the number of MCU in the restart interval.
-};
+} RestartInterval;
 
 void readRestartInterval(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_setjmpStreamReadInterface, 
@@ -103,5 +108,9 @@ void readRestartInterval(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 
 #pragma pack(pop)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

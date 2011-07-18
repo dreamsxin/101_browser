@@ -94,10 +94,10 @@
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegSegments.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoder.cpp" />
-    <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoderMain.cpp" />
-    <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoderUtil.cpp" />
-    <ClCompile Include="..\..\..\src\JpegDecoder\JpegSegments.cpp" />
+    <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoder.c" />
+    <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoderMain.c" />
+    <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoderUtil.c" />
+    <ClCompile Include="..\..\..\src\JpegDecoder\JpegSegments.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IO\IO.vcxproj">

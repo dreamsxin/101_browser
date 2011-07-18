@@ -41,6 +41,9 @@ ReadResult Decode_image(void *in_pStreamState,
 	jmp_buf jmpBuf;
 	int result;
 
+	bool restartIntervalFound = false;
+	RestartInterval restartInterval;
+
 	setjmpStreamInit(&setjmpReadStreamState, &jmpBuf, ReadResultPrematureEndOfStream, 
 		in_pStreamState, in_byteStreamReadInterface);
 	setjmpReadStreamInterface = getSetjmpStreamByteStreamInterface(&setjmpReadStreamState);
@@ -63,9 +66,6 @@ ReadResult Decode_image(void *in_pStreamState,
 	Decoder_setup(&context);
 
 	currentMarker = readMarker(&setjmpReadStreamState, setjmpReadStreamInterface);
-
-	bool restartIntervalFound = false;
-	RestartInterval restartInterval;
 
 	while (
 		currentMarker != SOF_0_MARKER  && 
@@ -125,12 +125,12 @@ void Decode_frame(SetjmpStreamState *in_out_pSetjmpStreamState,
 	ByteStreamInterface in_setjmpStreamReadInterface, 
 	unsigned char currentMarker, RestartInterval* in_pri)
 {
+	bool restartIntervalFound = false;
+	RestartInterval restartInterval;
+	
 	// TODO: Replace by "Interpret frame header"
 	defaultMarkerInterpreter(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, currentMarker);
 	currentMarker = readMarker(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface);
-
-	bool restartIntervalFound = false;
-	RestartInterval restartInterval;
 
 	if (in_pri != NULL)
 	{
@@ -174,10 +174,10 @@ void Decode_scan(SetjmpStreamState *in_out_pSetjmpStreamState,
 	ByteStreamInterface in_setjmpStreamReadInterface, 
 	RestartInterval in_ri)
 {
+	size_t m = 0;
+	
 	ScanHeader sh;
 	readScanHeader(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, &sh);
-
-	size_t m = 0;
 
 	// TODO: There is a loop for this. Implement it
 	Decode_restart_interval(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, in_ri);
@@ -188,9 +188,9 @@ void Decode_restart_interval(SetjmpStreamState *in_out_pSetjmpStreamState,
 	ByteStreamInterface in_setjmpStreamReadInterface, 
 	RestartInterval in_ri)
 {
-	Reset_decoder();
-
 	uint16_t currentMCUIndex = 0;
+	
+	Reset_decoder();
 
 	do
 	{

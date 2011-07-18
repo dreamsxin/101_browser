@@ -18,7 +18,6 @@
 #include "MiniStdlib/memory.h"  // for ENDIANNESS_CONVERT_SIMPLE
 #include "MiniStdlib/safe_free.h"
 #include "SetjmpUtil/ConditionalLongjmp.h"
-#include <cstdlib>
 
 void readRestartInterval(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_setjmpStreamReadInterface, 
@@ -51,6 +50,8 @@ void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 	int result;
 	jmp_buf freeMemoryJmpBuf;
+
+	size_t i;
 
 	(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 		&in_pScanHeader->Ls, sizeof(in_pScanHeader->Ls)+sizeof(in_pScanHeader->Ns));
@@ -89,7 +90,7 @@ void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState,
 			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
 	}
 
-	for (size_t i=0; i<in_pScanHeader->Ns; i++)
+	for (i=0; i<in_pScanHeader->Ns; i++)
 	{
 		(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 			in_pScanHeader->componentSpecificationParameters+i, 

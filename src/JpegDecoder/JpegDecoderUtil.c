@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-#include <cstdlib>
 #include "JpegDecoder/JpegDecoderMarkers.h"
 #include "JpegDecoder/JpegDecoderUtil.h"
 #include "MiniStdlib/memory.h"  // for ENDIANNESS_CONVERT_SIMPLE
@@ -155,6 +154,8 @@ void defaultMarkerInterpreter(SetjmpStreamState *in_out_pSetjmpStreamState,
 		int result;
 		jmp_buf freeMemoryJmpBuf;
 
+		uint8_t* pData;
+
 		(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, &length, sizeof(length));
 
 		ENDIANNESS_CONVERT_SIMPLE(length);
@@ -172,20 +173,20 @@ void defaultMarkerInterpreter(SetjmpStreamState *in_out_pSetjmpStreamState,
 			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
 			ReadResultAllocationFailure, NULL);
 
-		uint8_t* data = (uint8_t*) setjmpStateLongjmpMalloc(
+		pData = (uint8_t*) setjmpStateLongjmpMalloc(
 			&allocationFailureSetjmpState, length-2);
 
 		if (result = xchgAndSetjmp(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
 		&freeMemoryJmpBuf))
 		{
-			safe_free(&data);
+			safe_free(&pData);
 			xchgAndLongjmp(&freeMemoryJmpBuf, 
 				in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
 		}
 
-		(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, data, length-2);
+		(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, pData, length-2);
 
-		safe_free(&data);
+		safe_free(&pData);
 		xchgJmpBuf(&freeMemoryJmpBuf, in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
 	}
 

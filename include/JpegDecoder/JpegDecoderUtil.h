@@ -20,6 +20,10 @@
 #include "MiniStdlib/MTAx_cstdio.h"
 #include "IO/SetjmpStream.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 bool isStandaloneMarker(unsigned char in_marker);
 void printSegmentName(unsigned char in_marker);
 void printMarkerInformation(unsigned char currentMarker);
@@ -28,5 +32,9 @@ unsigned char readMarker(SetjmpStreamState *in_out_pSetjmpStreamState,
 void defaultMarkerInterpreter(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_setjmpStreamReadInterface, 
 	unsigned char currentMarker);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
