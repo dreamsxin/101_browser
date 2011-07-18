@@ -18,7 +18,7 @@
 #define _IO_SetjmpStream_h
 
 #include "MiniStdlib/declspec.h"
-#include "MiniStdlib/csetjmp.h"
+#include "SetjmpUtil/SetjmpUtil.h"
 #include "IO/ByteStream.h"
 
 #ifdef __cplusplus
@@ -27,8 +27,7 @@ extern "C" {
 
 typedef struct
 {
-	jmp_buf *mpJmpBuffer;
-	int mLongjmpValue;
+	SetjmpState setjmpState;
 	void *mpSuperByteStreamState;
 	ByteStreamInterface mSuperByteStreamInterface;
 } SetjmpStreamState;
@@ -51,16 +50,6 @@ DLLEXPORT size_t setjmpStreamRead(void *in_out_pSetjmpStreamState,
 
 DLLEXPORT size_t setjmpStreamWrite(void *in_out_pSetjmpStreamState, 
 	const void *out_pBuffer, size_t in_count);
-
-/*!
-* These two functions are intended for "catching the exception" for freeing 
-* allocated ressources before rethrowing it.
-*/
-DLLEXPORT int setjmpStreamXchgAndSetjmp(SetjmpStreamState *in_out_pSetjmpStreamState,
-	jmp_buf *in_pJmpBuffer);
-
-DLLEXPORT void setjmpStreamXchgAndLongjmp(SetjmpStreamState *in_out_pSetjmpStreamState,
-	jmp_buf *in_pJmpBuffer);
 
 DLLEXPORT ByteStreamInterface getSetjmpStreamByteStreamInterface(const SetjmpStreamState * in_pcSetjmpStreamState);
 

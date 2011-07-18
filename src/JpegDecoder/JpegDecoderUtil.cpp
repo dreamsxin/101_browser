@@ -124,7 +124,7 @@ unsigned char readMarker(SetjmpStreamState *in_out_pSetjmpStreamState,
 	if (currentMarker != 0xFF)
 	{
 		fprintf(stderr, "readMarker: expected token FF but received %2X\n", (unsigned int) currentMarker);
-		longjmp(*in_out_pSetjmpStreamState->mpJmpBuffer, ReadResultInvalidData);
+		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
 	}
 
 	// Skip all 0xFF
@@ -155,13 +155,13 @@ void defaultMarkerInterpreter(SetjmpStreamState *in_out_pSetjmpStreamState,
 		if (length<2)
 		{
 			fprintf(stderr, "defaultMarkerInterpreter: expected a length of at least 2\n");
-			longjmp(*in_out_pSetjmpStreamState->mpJmpBuffer, ReadResultInvalidData);
+			longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
 		}
 
 		uint8_t* data = (uint8_t*) malloc(length-2);
 
 		if (!data)
-			longjmp(*in_out_pSetjmpStreamState->mpJmpBuffer, ReadResultAllocationFailure);
+			longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultAllocationFailure);
 
 		(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, data, length-2);
 

@@ -52,7 +52,7 @@ static void invalidData(BitReadState *in_pBitReadState,
 	SetjmpStreamState *in_out_pWriteStreamState, 
 	ByteStreamInterface in_writeInterface)
 {
-	longjmp(*in_out_pWriteStreamState->mpJmpBuffer, ReadResultInvalidData);
+	longjmp(*in_out_pWriteStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
 }
 
 void readDataNoCompression(BitReadState *in_pBitReadState, 
@@ -90,7 +90,7 @@ void readDataNoCompression(BitReadState *in_pBitReadState,
 	(*in_pBitReadState->readInterface.mpfRead)(in_pBitReadState->pByteStreamState, &nlen, sizeof(nlen));
 
 	if (len != (uint16_t) ~nlen)
-		longjmp(*in_out_pWriteStreamState->mpJmpBuffer, ReadResultInvalidData);
+		longjmp(*in_out_pWriteStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
 
 	for (currentByteIndex = 0; currentByteIndex < len; currentByteIndex++)
 	{
@@ -158,7 +158,7 @@ void readDataCompressedWithDynamicHuffmanCodes(BitReadState *in_pBitReadState,
 	* 5 Bits: HLIT, # of Literal/Length codes - 257 (257 - 286)
 	*/
 	if (literalCodesCount > 286)
-		longjmp(*in_out_pWriteStreamState->mpJmpBuffer, ReadResultInvalidData);
+		longjmp(*in_out_pWriteStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
 
 	readBitsLittleEndian(in_pBitReadState, &distanceCodesCount, 5);
 	distanceCodesCount += 1;

@@ -17,6 +17,8 @@
 #ifndef _MiniStdlib_csetjmp_h
 #define _MiniStdlib_csetjmp_h
 
+#include "MiniStdlib/csetjmp.h"
+
 #ifdef __cplusplus
 #include <csetjmp>
 #else

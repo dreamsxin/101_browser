@@ -55,6 +55,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RFC1951", "projects\vs2010\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ISO_base_media_file_format", "projects\vs2010\ISO_base_media_file_format\ISO_base_media_file_format.vcxproj", "{4BCFBE44-32BA-441F-A99B-AE8BC688A839}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SetjmpUtil", "projects\vs2010\SetjmpUtil\SetjmpUtil.vcxproj", "{DC55D83D-E17A-4960-B26F-8DB3C539A1CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -389,6 +391,18 @@ Global
 		{4BCFBE44-32BA-441F-A99B-AE8BC688A839}.LIB Release|Win32.Build.0 = Release|Win32
 		{4BCFBE44-32BA-441F-A99B-AE8BC688A839}.Release|Win32.ActiveCfg = Release|Win32
 		{4BCFBE44-32BA-441F-A99B-AE8BC688A839}.Release|Win32.Build.0 = Release|Win32
+		{DC55D83D-E17A-4960-B26F-8DB3C539A1CF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DC55D83D-E17A-4960-B26F-8DB3C539A1CF}.Debug|Win32.Build.0 = Debug|Win32
+		{DC55D83D-E17A-4960-B26F-8DB3C539A1CF}.LIB ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{DC55D83D-E17A-4960-B26F-8DB3C539A1CF}.LIB ASM Debug|Win32.Build.0 = Debug|Win32
+		{DC55D83D-E17A-4960-B26F-8DB3C539A1CF}.LIB ASM Release|Win32.ActiveCfg = Release|Win32
+		{DC55D83D-E17A-4960-B26F-8DB3C539A1CF}.LIB ASM Release|Win32.Build.0 = Release|Win32
+		{DC55D83D-E17A-4960-B26F-8DB3C539A1CF}.LIB Debug|Win32.ActiveCfg = Debug|Win32
+		{DC55D83D-E17A-4960-B26F-8DB3C539A1CF}.LIB Debug|Win32.Build.0 = Debug|Win32
+		{DC55D83D-E17A-4960-B26F-8DB3C539A1CF}.LIB Release|Win32.ActiveCfg = Release|Win32
+		{DC55D83D-E17A-4960-B26F-8DB3C539A1CF}.LIB Release|Win32.Build.0 = Release|Win32
+		{DC55D83D-E17A-4960-B26F-8DB3C539A1CF}.Release|Win32.ActiveCfg = Release|Win32
+		{DC55D83D-E17A-4960-B26F-8DB3C539A1CF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

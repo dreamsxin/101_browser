@@ -48,23 +48,25 @@ void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState,
 	if (in_pScanHeader->Ns == 0 || in_pScanHeader->Ns>4)
 	{
 		fprintf(stderr, "readScanHeader: invalid value of Ns\n");
-		longjmp(*in_out_pSetjmpStreamState->mpJmpBuffer, ReadResultInvalidData);
+		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
 	}
 
 	if (in_pScanHeader->Ls != 6+2*in_pScanHeader->Ns)
 	{
 		fprintf(stderr, "readScanHeader: Ls must be 6+2*Ns\n");
-		longjmp(*in_out_pSetjmpStreamState->mpJmpBuffer, ReadResultInvalidData);
+		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
 	}
 
 	printf("Ls = %u\tNs = %u\n", in_pScanHeader->Ls, in_pScanHeader->Ns);
+
+	in_pScanHeader->componentSpecificationParameters = NULL;
 
 	in_pScanHeader->componentSpecificationParameters = (ScanComponentSpecificationParameter *) 
 		malloc(sizeof(ScanComponentSpecificationParameter) * in_pScanHeader->Ns);
 
 	if (!in_pScanHeader->componentSpecificationParameters)
 	{
-		longjmp(*in_out_pSetjmpStreamState->mpJmpBuffer, ReadResultAllocationFailure);
+		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultAllocationFailure);
 	}
 
 	for (size_t i=0; i<in_pScanHeader->Ns; i++)

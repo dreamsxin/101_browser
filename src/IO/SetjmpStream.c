@@ -26,10 +26,10 @@ void setjmpStreamInit(SetjmpStreamState *out_pSetjmpStreamState,
 	// Because of PRE:SetjmpStream_h:36
 	assert(in_longjmpValue != 0);
 
-	out_pSetjmpStreamState->mpJmpBuffer = in_pJmpBuffer;
-	out_pSetjmpStreamState->mLongjmpValue = in_longjmpValue;
+	setjmpStateInit(&out_pSetjmpStreamState->setjmpState, 
+		in_pJmpBuffer, in_longjmpValue);
+
 	out_pSetjmpStreamState->mpSuperByteStreamState = in_pSuperByteStreamState;
-	
 	out_pSetjmpStreamState->mSuperByteStreamInterface = in_superByteStreamInterface;
 }
 
@@ -41,7 +41,8 @@ size_t setjmpStreamRead(void *in_out_pSetjmpStreamState, void *out_pBuffer, size
 	{
 		if (pSetjmpStreamState->mSuperByteStreamInterface.mpfRead(pSetjmpStreamState->mpSuperByteStreamState, 
 			out_pBuffer, in_count) != in_count)
-			longjmp(*pSetjmpStreamState->mpJmpBuffer, pSetjmpStreamState->mLongjmpValue);
+			longjmp(*pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			pSetjmpStreamState->setjmpState.mLongjmpValue);
 
 		return in_count;
 	}
@@ -59,7 +60,8 @@ size_t setjmpStreamWrite(void *in_out_pSetjmpStreamState, const void *out_pBuffe
 	{
 		if (pSetjmpStreamState->mSuperByteStreamInterface.mpfWrite(pSetjmpStreamState->mpSuperByteStreamState, 
 			out_pBuffer, in_count) != in_count)
-			longjmp(*pSetjmpStreamState->mpJmpBuffer, pSetjmpStreamState->mLongjmpValue);
+			longjmp(*pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			pSetjmpStreamState->setjmpState.mLongjmpValue);
 
 		return in_count;
 	}
@@ -67,20 +69,6 @@ size_t setjmpStreamWrite(void *in_out_pSetjmpStreamState, const void *out_pBuffe
 	{
 		return 0;
 	}
-}
-
-int setjmpStreamXchgAndSetjmp(SetjmpStreamState *in_out_pSetjmpStreamState,
-	jmp_buf *in_pJmpBuffer)
-{
-	memxchg(&in_out_pSetjmpStreamState->mpJmpBuffer, &in_pJmpBuffer, sizeof(jmp_buf*));
-	return setjmp(*in_out_pSetjmpStreamState->mpJmpBuffer);
-}
-
-void setjmpStreamXchgAndLongjmp(SetjmpStreamState *in_out_pSetjmpStreamState,
-	jmp_buf *in_pJmpBuffer)
-{
-	memxchg(&in_out_pSetjmpStreamState->mpJmpBuffer, &in_pJmpBuffer, sizeof(jmp_buf*));
-	longjmp(*in_out_pSetjmpStreamState->mpJmpBuffer, in_out_pSetjmpStreamState->mLongjmpValue);
 }
 
 ByteStreamInterface getSetjmpStreamByteStreamInterface(const SetjmpStreamState * in_pcSetjmpStreamState)
