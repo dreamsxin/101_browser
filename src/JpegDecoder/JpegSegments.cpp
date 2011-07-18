@@ -16,6 +16,7 @@
 
 #include "JpegDecoder/JpegSegments.h"
 #include "MiniStdlib/memory.h"  // for ENDIANNESS_CONVERT_SIMPLE
+#include "MiniStdlib/safe_free.h"
 #include "SetjmpUtil/ConditionalLongjmp.h"
 #include <cstdlib>
 
@@ -36,8 +37,9 @@ void readRestartInterval(SetjmpStreamState *in_out_pSetjmpStreamState,
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
 		ReadResultInvalidData, printHandler);
 
-	setjmpStateXchgAndLongjmpIf(in_pRestartInterval->Lr != 4, 
-		&invalidDataSetjmpState, "Expected size 4 of DRI segment");
+	setjmpStateLongjmpIf(&invalidDataSetjmpState, 
+		in_pRestartInterval->Lr != 4, 
+		"Expected size 4 of DRI segment");
 }
 
 void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState, 
@@ -45,6 +47,10 @@ void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState,
 	ScanHeader* in_pScanHeader)
 {
 	SetjmpState invalidDataSetjmpState;
+	SetjmpState allocationFailureSetjmpState;
+
+	int result;
+	jmp_buf freeMemoryJmpBuf;
 
 	(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 		&in_pScanHeader->Ls, sizeof(in_pScanHeader->Ls)+sizeof(in_pScanHeader->Ns));
@@ -55,21 +61,32 @@ void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState,
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
 		ReadResultInvalidData, printHandler);
 
-	setjmpStateXchgAndLongjmpIf(in_pScanHeader->Ns == 0 || in_pScanHeader->Ns>4, 
-		&invalidDataSetjmpState, "readScanHeader: invalid value of Ns");
-	setjmpStateXchgAndLongjmpIf(in_pScanHeader->Ls != 6+2*in_pScanHeader->Ns, 
-		&invalidDataSetjmpState, "readScanHeader: Ls must be 6+2*Ns");
+	setjmpStateLongjmpIf(&invalidDataSetjmpState, 
+		in_pScanHeader->Ns == 0 || in_pScanHeader->Ns>4, 
+		"readScanHeader: invalid value of Ns");
+	setjmpStateLongjmpIf(&invalidDataSetjmpState, 
+		in_pScanHeader->Ls != 6+2*in_pScanHeader->Ns, 
+		"readScanHeader: Ls must be 6+2*Ns");
 
 	printf("Ls = %u\tNs = %u\n", in_pScanHeader->Ls, in_pScanHeader->Ns);
 
 	in_pScanHeader->componentSpecificationParameters = NULL;
 
-	in_pScanHeader->componentSpecificationParameters = (ScanComponentSpecificationParameter *) 
-		malloc(sizeof(ScanComponentSpecificationParameter) * in_pScanHeader->Ns);
+	setjmpStateInit(&allocationFailureSetjmpState, 
+		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		ReadResultAllocationFailure, NULL);
 
-	if (!in_pScanHeader->componentSpecificationParameters)
+	in_pScanHeader->componentSpecificationParameters = 
+		(ScanComponentSpecificationParameter *) 
+		setjmpStateLongjmpMalloc(&allocationFailureSetjmpState, 
+		sizeof(ScanComponentSpecificationParameter) * in_pScanHeader->Ns);
+
+	if (result = xchgAndSetjmp(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		&freeMemoryJmpBuf))
 	{
-		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultAllocationFailure);
+		safe_free(&in_pScanHeader->componentSpecificationParameters);
+		xchgAndLongjmp(&freeMemoryJmpBuf, 
+			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
 	}
 
 	for (size_t i=0; i<in_pScanHeader->Ns; i++)
@@ -88,4 +105,7 @@ void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 	printf("Ss = %2X\tSe = %2X\tAh = %1X\tAl = %1X\n", 
 		in_pScanHeader->Ss, in_pScanHeader->Se, in_pScanHeader->Ah, in_pScanHeader->Al);
+
+	safe_free(&in_pScanHeader->componentSpecificationParameters);
+	xchgJmpBuf(&freeMemoryJmpBuf, in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
 }

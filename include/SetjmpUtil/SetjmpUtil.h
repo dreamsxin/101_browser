@@ -35,6 +35,31 @@ DLLEXPORT void setjmpStateInit(SetjmpState *out_pSetjmpState,
 	jmp_buf *in_pJmpBuffer, int in_longjmpValue, 
 	void (*in_pfLongjmpHandlerFunction)(void *));
 
+
+/*!
+* If there is a handler function defined it will
+* be called after with parameter in_pLongjmpHandlerParam.
+* Then the function does a longjmp.
+* 
+* Parameters:
+* in_out_pSetjmpState:     pointer to the SetjmpState that will be used 
+*                          from now on (NULL != in_out_pSetjmpState)
+* in_pLongjmpHandlerParam: the parameter to pass to the handler function
+*/
+DLLEXPORT void setjmpStateLongjmp(SetjmpState *in_out_pSetjmpState,
+	void *in_pLongjmpHandlerParam);
+
+
+/*!
+* Exchanges the jmp_buf-s.
+* Must be called at the end of a block that calls xchgAndSetjmp.
+* 
+* Preconditions: 
+* NULL != in_pJmpBuf0
+* NULL != in_pJmpBuf1
+*/
+DLLEXPORT void xchgJmpBuf(jmp_buf *in_pJmpBuf0, jmp_buf *in_pJmpBuf1);
+
 /*!
 * These following two functions are intended for "catching the exception" 
 * for freeing allocated ressources before rethrowing it.
@@ -45,28 +70,25 @@ DLLEXPORT void setjmpStateInit(SetjmpState *out_pSetjmpState,
 * exchange). Then the function does a setjmp.
 * 
 * Parameters:
-* in_out_pSetjmpState: pointer to the "old" SetjmpState 
-*                      (NULL != in_out_pSetjmpState)
-* in_pJmpBuffer:       pointer to the "new" jmp_buf that will be used from now 
-*                      on (may also be NULL)
+* in_pPrevJmpBuf: the jmp_buf that was previously used (!= NULL)
+* in_pNextJmpBuf: the jmp_buf that shall be used next (!= NULL)
 */
-DLLEXPORT int setjmpStateXchgAndSetjmp(SetjmpState *in_out_pSetjmpState,
-	jmp_buf *in_pJmpBuffer);
+DLLEXPORT int xchgAndSetjmp(jmp_buf *in_pPrevJmpBuf,
+	jmp_buf *in_pNextJmpBuf);
+
 
 /*!
-* Does an exchange of jmp_buf-s (if NULL == in_pJmpBuffer there will be no 
-* exchange). If there is a handler function defined it will
-* be called after with parameter in_pLongjmpHandlerParam.
+* Does an exchange of the jmp_buf-s.
 * Then the function does a longjmp.
 * 
 * Parameters:
-* in_out_pSetjmpState:     pointer to the "new" SetjmpState that will be used 
-*                          from now on (NULL != in_out_pSetjmpState)
-* in_pJmpBuffer:           pointer to the "old" jmp_buf (may also be NULL)
-* in_pLongjmpHandlerParam: the parameter to pass to the handler function
+* in_pCurrJmpBuf: pointer to the jmp_buf that we came from in xchgAndSetjmp
+*                 (!= NULL)
+* in_pPrevJmpBuf: the jmp_buf that was previously used (!= NULL)
+* in_value:       the parameter to pass to longjmp (0 != in_value)
 */
-DLLEXPORT void setjmpStateXchgAndLongjmp(SetjmpState *in_out_pSetjmpState,
-	jmp_buf *in_pJmpBuffer, void *in_pLongjmpHandlerParam);
+DLLEXPORT void xchgAndLongjmp(jmp_buf *in_pCurrJmpBuf,
+	jmp_buf *in_pPrevJmpBuf, int in_value);
 
 #ifdef __cplusplus
 }

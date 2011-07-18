@@ -19,6 +19,7 @@
 
 #include "SetjmpUtil/SetjmpUtil.h"
 #include "MiniStdlib/cstdbool.h" // for bool
+#include "MiniStdlib/cstddef.h"  // for size_t
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,8 +27,11 @@ extern "C" {
 
 DLLEXPORT void printHandler(void *in_pString);
 
-DLLEXPORT void setjmpStateXchgAndLongjmpIf(bool condition,
-	SetjmpState *in_out_pSetjmpState, void *in_pLongjmpHandlerParam);
+DLLEXPORT void setjmpStateLongjmpIf(SetjmpState *in_out_pSetjmpState, 
+	bool condition, void *in_pLongjmpHandlerParam);
+
+DLLEXPORT void* setjmpStateLongjmpMalloc(SetjmpState *in_out_pSetjmpState, 
+	size_t in_size);
 
 #ifdef __cplusplus
 }

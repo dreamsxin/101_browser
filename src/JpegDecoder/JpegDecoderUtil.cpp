@@ -20,6 +20,7 @@
 #include "MiniStdlib/memory.h"  // for ENDIANNESS_CONVERT_SIMPLE
 #include "MiniStdlib/cstdint.h" // for uint16_t
 #include "MiniStdlib/safe_free.h"
+#include "SetjmpUtil/ConditionalLongjmp.h"
 #include "Util/ReadResult.h"
 
 bool isStandaloneMarker(unsigned char in_marker)
@@ -118,14 +119,16 @@ unsigned char readMarker(SetjmpStreamState *in_out_pSetjmpStreamState,
 	ByteStreamInterface in_setjmpStreamReadInterface)
 {
 	unsigned char currentMarker;
+	SetjmpState invalidDataSetjmpState;
 
 	(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, &currentMarker, 1);
 
-	if (currentMarker != 0xFF)
-	{
-		fprintf(stderr, "readMarker: expected token FF but received %2X\n", (unsigned int) currentMarker);
-		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
-	}
+	setjmpStateInit(&invalidDataSetjmpState, 
+		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
+		printHandler);
+
+	setjmpStateLongjmpIf(&invalidDataSetjmpState, currentMarker != 0xFF, 
+		"readMarker: expected token FF");
 
 	// Skip all 0xFF
 	while (currentMarker == 0xFF)
@@ -146,26 +149,44 @@ void defaultMarkerInterpreter(SetjmpStreamState *in_out_pSetjmpStreamState,
 	{
 		uint16_t length;
 
+		SetjmpState invalidDataSetjmpState;
+		SetjmpState allocationFailureSetjmpState;
+
+		int result;
+		jmp_buf freeMemoryJmpBuf;
+
 		(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, &length, sizeof(length));
 
 		ENDIANNESS_CONVERT_SIMPLE(length);
 
 		printf("Length=%u", length);
 
-		if (length<2)
+		setjmpStateInit(&invalidDataSetjmpState, 
+			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
+			printHandler);
+
+		setjmpStateLongjmpIf(&invalidDataSetjmpState, length < 2, 
+			"defaultMarkerInterpreter: expected a length of at least 2");
+
+		setjmpStateInit(&allocationFailureSetjmpState, 
+			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			ReadResultAllocationFailure, NULL);
+
+		uint8_t* data = (uint8_t*) setjmpStateLongjmpMalloc(
+			&allocationFailureSetjmpState, length-2);
+
+		if (result = xchgAndSetjmp(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		&freeMemoryJmpBuf))
 		{
-			fprintf(stderr, "defaultMarkerInterpreter: expected a length of at least 2\n");
-			longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
+			safe_free(&data);
+			xchgAndLongjmp(&freeMemoryJmpBuf, 
+				in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
 		}
-
-		uint8_t* data = (uint8_t*) malloc(length-2);
-
-		if (!data)
-			longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultAllocationFailure);
 
 		(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, data, length-2);
 
 		safe_free(&data);
+		xchgJmpBuf(&freeMemoryJmpBuf, in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
 	}
 
 	printf("\n");

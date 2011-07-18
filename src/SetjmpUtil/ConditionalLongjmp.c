@@ -16,16 +16,27 @@
 
 #include "SetjmpUtil/ConditionalLongjmp.h"
 #include "MiniStdlib/MTAx_cstdio.h"
+#include "MiniStdlib/MTAx_cstdlib.h" // for malloc
 
 void printHandler(void *in_pString)
 {
 	fprintf(stderr, "%s\n", (const char *) in_pString);
 }
 
-DLLEXPORT void setjmpStateXchgAndLongjmpIf(bool condition,
-	SetjmpState *in_out_pSetjmpState, void *in_pLongjmpHandlerParam)
+void setjmpStateLongjmpIf(SetjmpState *in_out_pSetjmpState, 
+	bool condition, void *in_pLongjmpHandlerParam)
 {
 	if (condition)
-		setjmpStateXchgAndLongjmp(in_out_pSetjmpState, NULL, 
-		in_pLongjmpHandlerParam);
+		setjmpStateLongjmp(in_out_pSetjmpState, in_pLongjmpHandlerParam);
+}
+
+void* setjmpStateLongjmpMalloc(SetjmpState *in_out_pSetjmpState, 
+	size_t in_size)
+{
+	void *out_p = malloc(in_size);
+
+	if (!out_p)
+		setjmpStateLongjmp(in_out_pSetjmpState, NULL);
+
+	return out_p;
 }

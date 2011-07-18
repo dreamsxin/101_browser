@@ -27,27 +27,44 @@ void setjmpStateInit(SetjmpState *out_pSetjmpState,
 	out_pSetjmpState->mpfLongjmpHandlerFunction = in_pfLongjmpHandlerFunction;
 }
 
-int setjmpStateXchgAndSetjmp(SetjmpState *in_out_pSetjmpState,
-	jmp_buf *in_pJmpBuffer)
+void setjmpStateLongjmp(SetjmpState *in_out_pSetjmpState,
+	void *in_pLongjmpHandlerParam)
 {
 	assert(NULL != in_out_pSetjmpState);
 	
-	if (NULL != in_pJmpBuffer)
-		memxchg(in_out_pSetjmpState->mpJmpBuffer, in_pJmpBuffer, sizeof(jmp_buf));
-
-	return setjmp(*in_out_pSetjmpState->mpJmpBuffer);
-}
-
-void setjmpStateXchgAndLongjmp(SetjmpState *in_out_pSetjmpState,
-	jmp_buf *in_pJmpBuffer, void *in_pLongjmpHandlerParam)
-{
-	assert(NULL != in_out_pSetjmpState);
-	
-	if (NULL != in_pJmpBuffer)
-		memxchg(in_out_pSetjmpState->mpJmpBuffer, in_pJmpBuffer, sizeof(jmp_buf));
-
 	if (in_out_pSetjmpState->mpfLongjmpHandlerFunction)
 		(*in_out_pSetjmpState->mpfLongjmpHandlerFunction)(in_pLongjmpHandlerParam);
 
 	longjmp(*in_out_pSetjmpState->mpJmpBuffer, in_out_pSetjmpState->mLongjmpValue);
+}
+
+void xchgJmpBuf(jmp_buf *in_pJmpBuf0, jmp_buf *in_pJmpBuf1)
+{
+	assert(NULL != in_pJmpBuf0);
+	assert(NULL != in_pJmpBuf1);
+	
+	memxchg(in_pJmpBuf0, in_pJmpBuf1, sizeof(jmp_buf));
+}
+
+int xchgAndSetjmp(jmp_buf *in_pPrevJmpBuf, jmp_buf *in_pNextJmpBuf)
+{
+	xchgJmpBuf(in_pPrevJmpBuf, in_pNextJmpBuf);
+
+	/*
+	* *in_pPrevJmpBuffer now contains the memory that was in 
+	* in_pNextJmpBuffer before while *in_pNextJmpBuffer has . So we can (and have to) use it.
+	*/
+	return setjmp(*in_pPrevJmpBuf);
+}
+
+void xchgAndLongjmp(jmp_buf *in_pCurrJmpBuf, jmp_buf *in_pPrevJmpBuf, 
+	int in_value)
+{
+	xchgJmpBuf(in_pCurrJmpBuf, in_pPrevJmpBuf);
+
+	/*
+	* *in_pPrevJmpBuf contains the "old" value again, so we may longjmp
+	* on it.
+	*/
+	longjmp(*in_pPrevJmpBuf , in_value);
 }
