@@ -106,6 +106,9 @@
     <ProjectReference Include="..\MiniStdlib\MiniStdlib.vcxproj">
       <Project>{6c7c9fbb-39b4-42cc-a000-c0ff2f61388e}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\SetjmpUtil\SetjmpUtil.vcxproj">
+      <Project>{dc55d83d-e17a-4960-b26f-8db3c539a1cf}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

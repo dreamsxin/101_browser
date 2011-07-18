@@ -46,7 +46,7 @@ ReadResult Decode_image(void *in_pStreamState,
 	setjmpReadStreamInterface = getSetjmpStreamByteStreamInterface(&setjmpReadStreamState);
 
 	// the = is correct
-	if (result = setjmp(jmpBuf))
+	if (result = setjmpStateXchgAndSetjmp(&setjmpReadStreamState.setjmpState, NULL))
 		return (ReadResult) result;
 
 	currentMarker = readMarker(&setjmpReadStreamState, setjmpReadStreamInterface);

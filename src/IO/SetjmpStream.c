@@ -27,7 +27,7 @@ void setjmpStreamInit(SetjmpStreamState *out_pSetjmpStreamState,
 	assert(in_longjmpValue != 0);
 
 	setjmpStateInit(&out_pSetjmpStreamState->setjmpState, 
-		in_pJmpBuffer, in_longjmpValue);
+		in_pJmpBuffer, in_longjmpValue, NULL);
 
 	out_pSetjmpStreamState->mpSuperByteStreamState = in_pSuperByteStreamState;
 	out_pSetjmpStreamState->mSuperByteStreamInterface = in_superByteStreamInterface;

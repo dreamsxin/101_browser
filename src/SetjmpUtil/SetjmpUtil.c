@@ -15,25 +15,39 @@
 */
 
 #include "SetjmpUtil/SetjmpUtil.h"
-#include "MiniStdlib/memory.h" // for memxchg
+#include "MiniStdlib/memory.h"  // for memxchg
+#include "MiniStdlib/cassert.h" // guess for what ;-)
 
-void setjmpStateInit(SetjmpState *in_pSetjmpState,
-	jmp_buf *in_pJmpBuffer, int in_longjmpValue)
+void setjmpStateInit(SetjmpState *out_pSetjmpState,
+	jmp_buf *in_pJmpBuffer, int in_longjmpValue, 
+	void (*in_pfLongjmpHandlerFunction)(void *))
 {
-	in_pSetjmpState->mpJmpBuffer = in_pJmpBuffer;
-	in_pSetjmpState->mLongjmpValue = in_longjmpValue;
+	out_pSetjmpState->mpJmpBuffer = in_pJmpBuffer;
+	out_pSetjmpState->mLongjmpValue = in_longjmpValue;
+	out_pSetjmpState->mpfLongjmpHandlerFunction = in_pfLongjmpHandlerFunction;
 }
 
 int setjmpStateXchgAndSetjmp(SetjmpState *in_out_pSetjmpState,
 	jmp_buf *in_pJmpBuffer)
 {
-	memxchg(in_out_pSetjmpState->mpJmpBuffer, in_pJmpBuffer, sizeof(jmp_buf));
+	assert(NULL != in_out_pSetjmpState);
+	
+	if (NULL != in_pJmpBuffer)
+		memxchg(in_out_pSetjmpState->mpJmpBuffer, in_pJmpBuffer, sizeof(jmp_buf));
+
 	return setjmp(*in_out_pSetjmpState->mpJmpBuffer);
 }
 
 void setjmpStateXchgAndLongjmp(SetjmpState *in_out_pSetjmpState,
-	jmp_buf *in_pJmpBuffer)
+	jmp_buf *in_pJmpBuffer, void *in_pLongjmpHandlerParam)
 {
-	memxchg(in_out_pSetjmpState->mpJmpBuffer, in_pJmpBuffer, sizeof(jmp_buf));
+	assert(NULL != in_out_pSetjmpState);
+	
+	if (NULL != in_pJmpBuffer)
+		memxchg(in_out_pSetjmpState->mpJmpBuffer, in_pJmpBuffer, sizeof(jmp_buf));
+
+	if (in_out_pSetjmpState->mpfLongjmpHandlerFunction)
+		(*in_out_pSetjmpState->mpfLongjmpHandlerFunction)(in_pLongjmpHandlerParam);
+
 	longjmp(*in_out_pSetjmpState->mpJmpBuffer, in_out_pSetjmpState->mLongjmpValue);
 }
