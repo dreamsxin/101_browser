@@ -18,9 +18,15 @@
     <ClInclude Include="..\..\..\include\SetjmpUtil\SetjmpUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\SetjmpUtil\ConditionalLongjmp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\SetjmpUtil\SetjmpUtil.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\SetjmpUtil\ConditionalLongjmp.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

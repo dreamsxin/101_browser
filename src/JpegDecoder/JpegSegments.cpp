@@ -16,12 +16,15 @@
 
 #include "JpegDecoder/JpegSegments.h"
 #include "MiniStdlib/memory.h"  // for ENDIANNESS_CONVERT_SIMPLE
+#include "SetjmpUtil/ConditionalLongjmp.h"
 #include <cstdlib>
 
 void readRestartInterval(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_setjmpStreamReadInterface, 
 	RestartInterval* in_pRestartInterval)
 {
+	SetjmpState invalidDataSetjmpState;
+	
 	(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, in_pRestartInterval, sizeof(*in_pRestartInterval));
 
 	ENDIANNESS_CONVERT_SIMPLE(in_pRestartInterval->Lr);
@@ -29,33 +32,33 @@ void readRestartInterval(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 	printf("Lr = %u\tRi = %u\n", in_pRestartInterval->Lr, in_pRestartInterval->Ri);
 
-	if (in_pRestartInterval->Lr != 4)
-	{
-		fprintf(stderr, "Expected size 4 of DRI segment.\n");
-		exit(1);
-	}
+	setjmpStateInit(&invalidDataSetjmpState, 
+		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		ReadResultInvalidData, printHandler);
+
+	setjmpStateXchgAndLongjmpIf(in_pRestartInterval->Lr != 4, 
+		&invalidDataSetjmpState, "Expected size 4 of DRI segment");
 }
 
 void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_setjmpStreamReadInterface, 
 	ScanHeader* in_pScanHeader)
 {
+	SetjmpState invalidDataSetjmpState;
+
 	(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 		&in_pScanHeader->Ls, sizeof(in_pScanHeader->Ls)+sizeof(in_pScanHeader->Ns));
 
 	ENDIANNESS_CONVERT_SIMPLE(in_pScanHeader->Ls);
 
-	if (in_pScanHeader->Ns == 0 || in_pScanHeader->Ns>4)
-	{
-		fprintf(stderr, "readScanHeader: invalid value of Ns\n");
-		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
-	}
+	setjmpStateInit(&invalidDataSetjmpState, 
+		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		ReadResultInvalidData, printHandler);
 
-	if (in_pScanHeader->Ls != 6+2*in_pScanHeader->Ns)
-	{
-		fprintf(stderr, "readScanHeader: Ls must be 6+2*Ns\n");
-		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
-	}
+	setjmpStateXchgAndLongjmpIf(in_pScanHeader->Ns == 0 || in_pScanHeader->Ns>4, 
+		&invalidDataSetjmpState, "readScanHeader: invalid value of Ns");
+	setjmpStateXchgAndLongjmpIf(in_pScanHeader->Ls != 6+2*in_pScanHeader->Ns, 
+		&invalidDataSetjmpState, "readScanHeader: Ls must be 6+2*Ns");
 
 	printf("Ls = %u\tNs = %u\n", in_pScanHeader->Ls, in_pScanHeader->Ns);
 

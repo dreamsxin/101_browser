@@ -80,9 +80,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\SetjmpUtil\ConditionalLongjmp.h" />
     <ClInclude Include="..\..\..\include\SetjmpUtil\SetjmpUtil.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\SetjmpUtil\ConditionalLongjmp.c" />
     <ClCompile Include="..\..\..\src\SetjmpUtil\SetjmpUtil.c" />
   </ItemGroup>
   <ItemGroup>
