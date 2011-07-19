@@ -22,6 +22,7 @@
 #include "JpegDecoder/JpegDecoderUtil.h"
 #include "JpegDecoder/JpegSegments.h"
 #include "JpegDecoder/JpegContext.h"
+#include "SetjmpUtil/ConditionalLongjmp.h"
 
 void Decoder_setup(JpegContext *in_pContext)
 {
@@ -162,8 +163,11 @@ void Decode_frame(SetjmpStreamState *in_out_pSetjmpStreamState,
 	}
 	else
 	{
-		fprintf(stderr, "Trying to call Decode_scan but no restart interval was defined.\n");
-		exit(1);
+		SetjmpState invalidDataSetjmpState;
+		setjmpStateInit(&invalidDataSetjmpState, in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			ReadResultInvalidData, printHandler);
+		setjmpStateLongjmp(&invalidDataSetjmpState, 
+			"Decode_frame: trying to call Decode_scan but no restart interval was defined.");
 	}
 
 	// TODO: further markers can occur before EOI
