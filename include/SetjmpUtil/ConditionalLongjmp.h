@@ -27,6 +27,10 @@ extern "C" {
 
 DLLEXPORT void printHandler(void *in_pString);
 
+DLLEXPORT void longjmpIf(bool condition, jmp_buf *in_pJmpBuffer, 
+	int in_longjmpValue, void (*in_pfLongjmpHandlerFunction)(void *), 
+	void *in_pLongjmpHandlerParam);
+
 DLLEXPORT void setjmpStateLongjmpIf(SetjmpState *in_out_pSetjmpState, 
 	bool condition, void *in_pLongjmpHandlerParam);
 

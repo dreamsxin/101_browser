@@ -118,16 +118,11 @@ unsigned char readMarker(SetjmpStreamState *in_out_pSetjmpStreamState,
 	ByteStreamInterface in_setjmpStreamReadInterface)
 {
 	unsigned char currentMarker;
-	SetjmpState invalidDataSetjmpState;
 
 	(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, &currentMarker, 1);
 
-	setjmpStateInit(&invalidDataSetjmpState, 
-		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
-		printHandler);
-
-	setjmpStateLongjmpIf(&invalidDataSetjmpState, currentMarker != 0xFF, 
-		"readMarker: expected token FF");
+	longjmpIf(currentMarker != 0xFF, in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		ReadResultInvalidData, printHandler, "readMarker: expected token FF");
 
 	// Skip all 0xFF
 	while (currentMarker == 0xFF)
@@ -148,7 +143,6 @@ void defaultMarkerInterpreter(SetjmpStreamState *in_out_pSetjmpStreamState,
 	{
 		uint16_t length;
 
-		SetjmpState invalidDataSetjmpState;
 		SetjmpState allocationFailureSetjmpState;
 
 		int result;
@@ -162,12 +156,8 @@ void defaultMarkerInterpreter(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 		printf("Length=%u", length);
 
-		setjmpStateInit(&invalidDataSetjmpState, 
-			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
-			printHandler);
-
-		setjmpStateLongjmpIf(&invalidDataSetjmpState, length < 2, 
-			"defaultMarkerInterpreter: expected a length of at least 2");
+		longjmpIf(length < 2, in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			ReadResultInvalidData, printHandler, "defaultMarkerInterpreter: expected a length of at least 2");
 
 		setjmpStateInit(&allocationFailureSetjmpState, 
 			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 

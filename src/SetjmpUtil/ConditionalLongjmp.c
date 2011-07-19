@@ -23,6 +23,15 @@ void printHandler(void *in_pString)
 	fprintf(stderr, "%s\n", (const char *) in_pString);
 }
 
+void longjmpIf(bool condition, jmp_buf *in_pJmpBuffer, 
+	int in_longjmpValue, void (*in_pfLongjmpHandlerFunction)(void *), 
+	void *in_pLongjmpHandlerParam)
+{
+	SetjmpState setjmpState;
+	setjmpStateInit(&setjmpState, in_pJmpBuffer, in_longjmpValue, in_pfLongjmpHandlerFunction);
+	setjmpStateLongjmpIf(&setjmpState, condition, in_pLongjmpHandlerParam);
+}
+
 void setjmpStateLongjmpIf(SetjmpState *in_out_pSetjmpState, 
 	bool condition, void *in_pLongjmpHandlerParam)
 {
