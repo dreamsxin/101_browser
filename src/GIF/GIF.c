@@ -139,6 +139,8 @@ ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a)
 		{
 			return read_Graphic_Block(in_gifFile, in_introducer, lLabel, in_is89a);
 		}
+
+		// TODO: Skip over block
 	}
 	else if (0x2C == in_introducer)
 	{
