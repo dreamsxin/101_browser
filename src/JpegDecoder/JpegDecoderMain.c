@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
+
 int main()
 {
 	char filename[] = 
@@ -117,6 +118,7 @@ int main()
 		//"testfiles/T087v1_0/T87_test-1-2-3-4-5-6/T8C0E3.JLS";
 
 	FileByteStreamState fileByteStreamState;
+	ReadResult readResult;
 
 	if (!fileByteReadStreamStateInit(filename, &fileByteStreamState))
 	{
@@ -124,7 +126,11 @@ int main()
 		exit(1);
 	}
 
-	Decode_image(&fileByteStreamState, getFileByteStreamInterface());
+	// the = is correct
+	if (readResult = Decode_image(&fileByteStreamState, getFileByteStreamInterface()))
+	{
+		fprintf(stderr, "Error when reading file: %s; error code: %u\n", filename, readResult);
+	}
 
 	fileByteReadStreamStateDestroy(&fileByteStreamState);
 }
