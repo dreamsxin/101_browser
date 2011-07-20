@@ -141,13 +141,14 @@ ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a)
 		}
 
 		// TODO: Skip over block
+		return ReadResultNotImplemented;
 	}
 	else if (0x2C == in_introducer)
 	{
 		return read_Graphic_Block(in_gifFile, in_introducer, 0, in_is89a);
 	}
-
-	return ReadResultInvalidData;
+	else
+		return ReadResultInvalidData;
 }
 
 ReadResult read_Graphic_Block(FILE* in_gifFile, uint8_t in_separator, uint8_t in_label, bool in_is89a)
@@ -161,10 +162,26 @@ ReadResult read_Graphic_Block(FILE* in_gifFile, uint8_t in_separator, uint8_t in
 
 		if (fread(&in_separator, sizeof(in_separator), 1, in_gifFile) != 1)
 			return ReadResultPrematureEndOfStream;
-	}
 
-	if (0x2C == in_separator)
+		if (0x2C == in_separator)
+			goto return_read_GraphicRendering_Block;
+		else if (0x21 == in_separator)
+		{
+			if (fread(&in_label, sizeof(in_label), 1, in_gifFile) != 1)
+				return ReadResultPrematureEndOfStream;
+
+			/*
+			* TODO skip block (except Plain Text Extension) - it 
+			* does not belong here
+			*/
+			return ReadResultNotImplemented;
+		}
+		else
+			return ReadResultInvalidData;
+	}
+	else if (0x2C == in_separator)
 	{
+return_read_GraphicRendering_Block:
 		return read_GraphicRendering_Block(in_gifFile, in_separator);
 	}
 	

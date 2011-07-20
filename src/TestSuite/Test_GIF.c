@@ -60,18 +60,46 @@ void testGIF()
 		};
 
 		char* filenames2[] = {
+			/*
+			* Some block beginning with 0x00.
+			*/
 			//"testfiles/imagetestsuite/gif/0646caeb9b9161c777f117007921a687.gif", // -> ReadResultInvalidData
+			/*
+			* Invalid since the block size of the Graphic Control Extension
+			* block is 0xEE instead of 0x04.
+			*/
 			//"testfiles/imagetestsuite/gif/243d9798466d64aba0acaa41f980bea6.gif", // -> ReadResultInvalidData
+			/*
+			* Invalid since minimum code size = 0x48 (instead of between 2 and 8)
+			*/
 			//"testfiles/imagetestsuite/gif/2b5bc31d84703bfb9f371925f0e3e57d.gif", // -> ReadResultInvalidData
 			//"testfiles/imagetestsuite/gif/55abb3cc464305dd554171c3d44cb61f.gif", // -> ReadResultPrematureEndOfStream
+			/*
+			* Invalid since minimum code size = 0x48 (instead of between 2 and 8)
+			*/
 			//"testfiles/imagetestsuite/gif/5f09a896c191db3fa7ea6bdd5ebe9485.gif", // -> ReadResultInvalidData
 			//"testfiles/imagetestsuite/gif/6d939393058de0579fca1bbf10ecff25.gif", // -> ReadResultPrematureEndOfStream
+			/*
+			* Invalid since the block size of the Graphic Control Extension
+			* block is 0xEE instead of 0x04.
+			*/
 			//"testfiles/imagetestsuite/gif/7092f253998c1b6b869707ad7ae92854.gif", // -> ReadResultInvalidData
 			//"testfiles/imagetestsuite/gif/9f8f6046eaf9ffa2d9c5d6db05c5f881.gif", // -> ReadResultPrematureEndOfStream
 			//"testfiles/imagetestsuite/gif/adaf0da1764aafb7039440dbe098569b.gif", // -> ReadResultPrematureEndOfStream
+			/*
+			* Invalid since there is a code word currentCodeWord where (currentCodeWord >= currentTableIndex)
+			*/
 			//"testfiles/imagetestsuite/gif/adf6f850b13dff73ebb22862c6ab028b.gif", // -> ReadResultInvalidData
 			//"testfiles/imagetestsuite/gif/bc7af0616c4ae99144c8600e7b39beea.gif", // -> ReadResultNotImplemented (!!!)
+			/*
+			* Invalid since minimum code size = 0x0 (instead of between 2 and 8)
+			*/
 			//"testfiles/imagetestsuite/gif/ce774930ac70449f38a18789c70095b8.gif", // -> ReadResultInvalidData
+			/*
+			* Signature 0x00 0x49 0x46 instead of 0x47 0x49 0x46 (if we correct 
+			* it, we still have an invalid file since
+			* minimum code size = 0x48 (instead of between 2 and 8))
+			*/
 			//"testfiles/imagetestsuite/gif/d5a0175c07418852152ef33a886a5029.gif", // -> ReadResultInvalidData
 			//"testfiles/imagetestsuite/gif/e34116d68f49c7852b362ec72a636df5.gif", // -> ReadResultPrematureEndOfStream
 			"testfiles/imagetestsuite/gif/e6aa0c45a13dd7fc94f7b5451bd89bf4.gif", // -> ReadResultOK
