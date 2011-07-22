@@ -12,11 +12,11 @@ module microdata
     PropertyValueArray getValues();
   };
 
-  [Supplemental] interface HTMLDocument { 
+  partial interface HTMLDocument { 
     NodeList getItems(in optional DOMString typeNames); // microdata
   };
   
-  [Supplemental] interface HTMLElement {
+  partial interface HTMLElement {
     // microdata 
              attribute boolean itemScope;
              attribute DOMString itemType;

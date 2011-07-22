@@ -57,9 +57,6 @@ module webapps
               attribute DOMString value;
   };
 
-  [NoInterfaceObject]
-  interface Transferable { };
-
   interface DOMStringMap {
     getter DOMString (in DOMString name);
     setter void (in DOMString name, in DOMString value);
@@ -74,11 +71,8 @@ module webapps
     deleter void (in DOMString name);
   };
 
-  [Supplemental] exception DOMException {
-    const unsigned short URL_MISMATCH_ERR = 21;
-    const unsigned short QUOTA_EXCEEDED_ERR = 22;
-    const unsigned short DATA_CLONE_ERR = 25;
-  };
+  [NoInterfaceObject]
+  interface Transferable { };
 
   [OverrideBuiltins]
   interface HTMLDocument {
@@ -193,13 +187,13 @@ module webapps
   };
   Document implements HTMLDocument;
 
-  [Supplemental, NoInterfaceObject]
+  [NoInterfaceObject]
   interface DOMHTMLImplementation {
     Document createHTMLDocument(in DOMString title);
   };
   DOMImplementation implements DOMHTMLImplementation;
 
-  [Supplemental, NoInterfaceObject]
+  [NoInterfaceObject]
   interface XMLDocumentLoader {
     boolean load(in DOMString url);
   };
@@ -419,6 +413,7 @@ module webapps
     stringifier attribute DOMString href;
              attribute DOMString target;
   
+             attribute DOMString download;
              attribute DOMString ping;
   
              attribute DOMString rel;
@@ -887,6 +882,7 @@ module webapps
     stringifier attribute DOMString href;
              attribute DOMString target;
   
+             attribute DOMString download;
              attribute DOMString ping;
   
              attribute DOMString rel;
@@ -1270,6 +1266,7 @@ module webapps
     readonly attribute History history;
   
     readonly attribute UndoManager undoManager;
+    boolean find(in optional DOMString aString, in optional boolean aCaseSensitive, in optional boolean aBackwards, in optional boolean aWrapAround, in optional boolean aWholeWord, in optional boolean aSearchInFrames, in optional boolean aShowDialog);
   
     [Replaceable] readonly attribute BarProp locationbar;
     [Replaceable] readonly attribute BarProp menubar;
@@ -1462,7 +1459,7 @@ module webapps
   };
   ApplicationCache implements EventTarget;
 
-  [Supplemental, NoInterfaceObject]
+  [NoInterfaceObject]
   interface NavigatorOnLine {
     readonly attribute boolean onLine;
   };
@@ -1472,14 +1469,14 @@ module webapps
     any call(in any... arguments);
   };
 
-  [Supplemental, NoInterfaceObject]
+  [NoInterfaceObject]
   interface WindowBase64 {
     DOMString btoa(in DOMString btoa);
     DOMString atob(in DOMString atob);
   };
   Window implements WindowBase64;
 
-  [Supplemental, NoInterfaceObject]
+  [NoInterfaceObject]
   interface WindowTimers {
     long setTimeout(in any handler, in optional any timeout, in any... args);
     void clearTimeout(in long handle);
@@ -1501,7 +1498,7 @@ module webapps
   Navigator implements NavigatorContentUtils;
   Navigator implements NavigatorStorageUtils;
 
-  [Supplemental, NoInterfaceObject]
+  [NoInterfaceObject]
   interface NavigatorID {
     readonly attribute DOMString appName;
     readonly attribute DOMString appVersion;
@@ -1509,14 +1506,14 @@ module webapps
     readonly attribute DOMString userAgent;
   };
 
-  [Supplemental, NoInterfaceObject]
+  [NoInterfaceObject]
   interface NavigatorContentUtils {
     // content handler registration
     void registerProtocolHandler(in DOMString scheme, in DOMString url, in DOMString title);
     void registerContentHandler(in DOMString mimeType, in DOMString url, in DOMString title);
   };
 
-  [Supplemental, NoInterfaceObject]
+  [NoInterfaceObject]
   interface NavigatorStorageUtils {
     void yieldForStorageUpdates();
   };
@@ -1586,7 +1583,7 @@ module webapps
     void initUndoManagerEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in any dataArg);
   };
 
-  [Supplemental, NoInterfaceObject]
+  [NoInterfaceObject]
   interface NavigatorUserMedia {
     void getUserMedia(in DOMString options, in NavigatorUserMediaSuccessCallback? successCallback, in optional NavigatorUserMediaErrorCallback? errorCallback);
   };
@@ -1643,8 +1640,7 @@ module webapps
     void handleEvent(in Blob blob);
   };
 
-  [Supplemental]
-  interface URL {
+  partial interface URL {
     static DOMString createObjectURL(in MediaStream stream);
   };
 
@@ -1737,7 +1733,7 @@ module webapps
     readonly attribute MessagePort port;
   };
 
-  [Supplemental, NoInterfaceObject]
+  [NoInterfaceObject]
   interface WorkerUtils {
     void importScripts(in DOMString... urls);
     readonly attribute WorkerNavigator navigator;
@@ -1851,13 +1847,13 @@ module webapps
     void clear();
   };
 
-  [Supplemental, NoInterfaceObject]
+  [NoInterfaceObject]
   interface WindowSessionStorage {
     readonly attribute Storage sessionStorage;
   };
   Window implements WindowSessionStorage;
 
-  [Supplemental, NoInterfaceObject]
+  [NoInterfaceObject]
   interface WindowLocalStorage {
     readonly attribute Storage localStorage;
   };
@@ -1945,8 +1941,7 @@ module webapps
     readonly attribute WindowProxy? contentWindow;
   };
 
-  [Supplemental]
-  interface HTMLAnchorElement {
+  partial interface HTMLAnchorElement {
              attribute DOMString coords;
              attribute DOMString charset;
              attribute DOMString name;
@@ -1954,8 +1949,7 @@ module webapps
              attribute DOMString shape;
   };
 
-  [Supplemental]
-  interface HTMLAreaElement {
+  partial interface HTMLAreaElement {
              attribute boolean noHref;
   };
 
@@ -1965,8 +1959,7 @@ module webapps
              attribute long size; 
   };
 
-  [Supplemental]
-  interface HTMLBodyElement {
+  partial interface HTMLBodyElement {
              attribute DOMString text;
              attribute DOMString bgColor;
              attribute DOMString background;
@@ -1975,18 +1968,15 @@ module webapps
              attribute DOMString aLink;
   };
 
-  [Supplemental]
-  interface HTMLBRElement {
+  partial interface HTMLBRElement {
              attribute DOMString clear;
   };
 
-  [Supplemental]
-  interface HTMLTableCaptionElement {
+  partial interface HTMLTableCaptionElement {
              attribute DOMString align;
   };
 
-  [Supplemental]
-  interface HTMLTableColElement {
+  partial interface HTMLTableColElement {
              attribute DOMString align;
              attribute DOMString ch;
              attribute DOMString chOff;
@@ -1998,18 +1988,15 @@ module webapps
              attribute boolean compact;
   };
 
-  [Supplemental]
-  interface HTMLDivElement {
+  partial interface HTMLDivElement {
              attribute DOMString align;
   };
 
-  [Supplemental]
-  interface HTMLDListElement {
+  partial interface HTMLDListElement {
              attribute boolean compact;
   };
 
-  [Supplemental]
-  interface HTMLEmbedElement {
+  partial interface HTMLEmbedElement {
              attribute DOMString align;
              attribute DOMString name;
   };
@@ -2020,13 +2007,11 @@ module webapps
              attribute DOMString size; 
   };
 
-  [Supplemental]
-  interface HTMLHeadingElement {
+  partial interface HTMLHeadingElement {
              attribute DOMString align;
   };
 
-  [Supplemental]
-  interface HTMLHRElement {
+  partial interface HTMLHRElement {
              attribute DOMString align;
              attribute DOMString color;
              attribute boolean noShade;
@@ -2034,13 +2019,11 @@ module webapps
              attribute DOMString width;
   };
 
-  [Supplemental]
-  interface HTMLHtmlElement {
+  partial interface HTMLHtmlElement {
              attribute DOMString version;
   };
 
-  [Supplemental]
-  interface HTMLIFrameElement {
+  partial interface HTMLIFrameElement {
              attribute DOMString align;
              attribute DOMString frameBorder;
              attribute DOMString longDesc;
@@ -2049,8 +2032,7 @@ module webapps
              attribute DOMString scrolling;
   };
 
-  [Supplemental]
-  interface HTMLImageElement {
+  partial interface HTMLImageElement {
              attribute DOMString name;
              attribute DOMString align;
              attribute DOMString border;
@@ -2059,41 +2041,34 @@ module webapps
              attribute unsigned long vspace;
   };
 
-  [Supplemental]
-  interface HTMLInputElement {
+  partial interface HTMLInputElement {
              attribute DOMString align;
              attribute DOMString useMap;
   };
 
-  [Supplemental]
-  interface HTMLLegendElement {
+  partial interface HTMLLegendElement {
              attribute DOMString align;
   };
 
-  [Supplemental]
-  interface HTMLLIElement {
+  partial interface HTMLLIElement {
              attribute DOMString type;
   };
 
-  [Supplemental]
-  interface HTMLLinkElement {
+  partial interface HTMLLinkElement {
              attribute DOMString charset;
              attribute DOMString rev;
              attribute DOMString target;
   };
 
-  [Supplemental]
-  interface HTMLMenuElement {
+  partial interface HTMLMenuElement {
              attribute boolean compact;
   };
 
-  [Supplemental]
-  interface HTMLMetaElement {
+  partial interface HTMLMetaElement {
              attribute DOMString scheme;
   };
 
-  [Supplemental]
-  interface HTMLObjectElement {
+  partial interface HTMLObjectElement {
              attribute DOMString align;
              attribute DOMString archive;
              attribute DOMString border;
@@ -2106,35 +2081,29 @@ module webapps
              attribute unsigned long vspace;
   };
 
-  [Supplemental]
-  interface HTMLOListElement {
+  partial interface HTMLOListElement {
              attribute boolean compact;
   };
 
-  [Supplemental]
-  interface HTMLParagraphElement {
+  partial interface HTMLParagraphElement {
              attribute DOMString align;
   };
 
-  [Supplemental]
-  interface HTMLParamElement {
+  partial interface HTMLParamElement {
              attribute DOMString type;
              attribute DOMString valueType;
   };
 
-  [Supplemental]
-  interface HTMLPreElement {
+  partial interface HTMLPreElement {
              attribute unsigned long width;
   };
 
-  [Supplemental]
-  interface HTMLScriptElement {
+  partial interface HTMLScriptElement {
              attribute DOMString event;
              attribute DOMString htmlFor;
   };
 
-  [Supplemental]
-  interface HTMLTableElement {
+  partial interface HTMLTableElement {
              attribute DOMString align;
              attribute DOMString bgColor;
              attribute DOMString cellPadding;
@@ -2145,16 +2114,14 @@ module webapps
              attribute DOMString width;
   };
 
-  [Supplemental]
-  interface HTMLTableSectionElement {
+  partial interface HTMLTableSectionElement {
              attribute DOMString align;
              attribute DOMString ch;
              attribute DOMString chOff;
              attribute DOMString vAlign;
   };
 
-  [Supplemental]
-  interface HTMLTableCellElement {
+  partial interface HTMLTableCellElement {
              attribute DOMString abbr;
              attribute DOMString align;
              attribute DOMString axis;
@@ -2167,8 +2134,7 @@ module webapps
              attribute DOMString width;
   };
 
-  [Supplemental]
-  interface HTMLTableRowElement {
+  partial interface HTMLTableRowElement {
              attribute DOMString align;
              attribute DOMString bgColor;
              attribute DOMString ch;
@@ -2176,14 +2142,12 @@ module webapps
              attribute DOMString vAlign;
   };
 
-  [Supplemental]
-  interface HTMLUListElement {
+  partial interface HTMLUListElement {
              attribute boolean compact;
              attribute DOMString type;
   };
 
-  [Supplemental]
-  interface HTMLDocument {
+  partial interface HTMLDocument {
              attribute DOMString fgColor;
              attribute DOMString bgColor;
              attribute DOMString linkColor;

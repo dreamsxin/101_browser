@@ -9,13 +9,13 @@ module webstorage
     void clear();
   };
 
-  [Supplemental, NoInterfaceObject]
+  [NoInterfaceObject]
   interface WindowSessionStorage {
     readonly attribute Storage sessionStorage;
   };
   Window implements WindowSessionStorage;
 
-  [Supplemental, NoInterfaceObject]
+  [NoInterfaceObject]
   interface WindowLocalStorage {
     readonly attribute Storage localStorage;
   };
