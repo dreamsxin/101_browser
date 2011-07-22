@@ -104,6 +104,13 @@ void testGIF()
 			//"testfiles/imagetestsuite/gif/e34116d68f49c7852b362ec72a636df5.gif", // -> ReadResultPrematureEndOfStream
 			"testfiles/imagetestsuite/gif/e6aa0c45a13dd7fc94f7b5451bd89bf4.gif", // -> ReadResultOK
 			//"testfiles/imagetestsuite/gif/ea754e040929b7f9c157efc88c4d0eaf.gif", // -> ReadResultPrematureEndOfStream
+			/*
+			* GIF 87a image contains a Graphics Control Extension although this
+			* extension does only exist from version 89a on. So it has to be 
+			* skipped.
+			* Additionally there is one more byte in the Image Data block (0x2B)
+			* than necessary (only reading 0x2A bytes).
+			*/
 			//"testfiles/imagetestsuite/gif/ee6d1133f9264dc6467990e53d0bf104.gif", // -> ReadResultInvalidVersion (!!!) -> this is a bug
 			//"testfiles/imagetestsuite/gif/f617c7af7f36296a37ddb419b828099c.gif", // -> ReadResultNotImplemented (!!!)
 			"testfiles/imagetestsuite/gif/f88b6907ee086c4c8ac4b8c395748c49.gif", // -> ReadResultOK

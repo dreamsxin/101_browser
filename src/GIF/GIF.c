@@ -239,7 +239,7 @@ ReadResult read_Graphic_Control_Extension(FILE* in_gifFile, bool in_is89a)
 	
 	if (!in_is89a)
 	{
-		return ReadResultInvalidVersion;
+		return skipBlock(in_gifFile);
 	}
 
 	if (fread(&graphicControlExtension, sizeof(graphicControlExtension), 1, in_gifFile) != 1)
@@ -648,5 +648,32 @@ ReadResult read_Comment_Extension(FILE* in_gifFile, bool in_is89a)
 			return ReadResultPrematureEndOfStream;
 	}
 
+	return ReadResultOK;
+}
+
+ReadResult skipBlock(FILE* in_gifFile)
+{
+	uint8_t Block_Size;
+	
+	if (fread(&Block_Size, sizeof(Block_Size), 1, in_gifFile) != 1)
+		return ReadResultPrematureEndOfStream;
+
+	while (Block_Size != 0)
+	{
+		size_t idx;
+		uint8_t buffer;
+
+		for (idx = 0; idx < Block_Size; idx++)
+		{
+			if (fread(&buffer, 1, 1, in_gifFile) != 1)
+			{
+				return ReadResultPrematureEndOfStream;
+			}
+		}
+
+		if (fread(&Block_Size, sizeof(Block_Size), 1, in_gifFile) != 1)
+			return ReadResultPrematureEndOfStream;
+	}
+	
 	return ReadResultOK;
 }
