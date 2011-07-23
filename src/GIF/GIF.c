@@ -131,17 +131,40 @@ ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a)
 		if (fread(&lLabel, sizeof(lLabel), 1, in_gifFile) != 1)
 			return ReadResultPrematureEndOfStream;
 
-		if (0xFF == lLabel || 0xFE == lLabel)
+		/*
+		* We have the following situation:
+		*
+		* ┌─────────────────────┬─────────┬───────────────────────┐
+		* │Extension Introducer │ GIF 87a │ GIF 89a               │
+		* ├─────────────────────┼─────────┼───────────────────────┤
+		* │0xFE or 0xFF         │         │ Special Purpose Block │
+		* │0xF9 or 0xF1         │  skip   │     Graphic Block     │
+		* │other                │         │         skip          │
+		* └─────────────────────┴─────────┴───────────────────────┘
+		*/
+		if (in_is89a)
 		{
-			return read_SpecialPurpose_Block(in_gifFile, lLabel, in_is89a);
+			/*
+			* 0xFF: Application Extension
+			* 0xFE: Comment Extension
+			*/
+			if (0xFF == lLabel || 0xFE == lLabel)
+			{
+				return read_SpecialPurpose_Block(in_gifFile, lLabel, in_is89a);
+			}
+			
+			/*
+			* 0xF9: Graphic Control Extension
+			* 0x01: Plain Text Extension
+			*/
+			else if (0xF9 == lLabel || 0x01 == lLabel)
+			{
+				return read_Graphic_Block(in_gifFile, in_introducer, lLabel, in_is89a);
+			}
+			else
+				return skipBlock(in_gifFile);
 		}
-		else if (0xF9 == lLabel)
-		{
-			return read_Graphic_Block(in_gifFile, in_introducer, lLabel, in_is89a);
-		}
-
-		// TODO: Skip over block
-		return ReadResultNotImplemented;
+		
 	}
 	else if (0x2C == in_introducer)
 	{
