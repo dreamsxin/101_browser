@@ -164,7 +164,8 @@ ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a)
 			else
 				return skipBlock(in_gifFile);
 		}
-		
+		else
+			return skipBlock(in_gifFile);
 	}
 	else if (0x2C == in_introducer)
 	{
@@ -371,13 +372,14 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 
 	uint16_t currentCodeWord;
 
+#if 1
+	size_t pixelsWritten = 0;
+#endif
+
 	// Initialize bitReadInterface
 	memset(&bitReadInterface, 0, sizeof(bitReadInterface));
 	bitReadInterface.mpfRead = read_Image_Data_byteStreamInterface;
 
-#if 0
-	size_t pixelsWritten = 0;
-#endif
 
 	if (fread(&LZW_Minimum_Code_Size, sizeof(LZW_Minimum_Code_Size), 1, in_gifFile) != 1)
 		return ReadResultPrematureEndOfStream;
@@ -541,7 +543,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 				printf("%u ", pCurrentNode->lastCode);
 #endif
 
-#if 0
+#if 1
 				pixelsWritten++;
 #endif
 			}
@@ -581,7 +583,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		return ReadResultInvalidData;
 	}
 
-#if 0
+#if 1
 	printf("Pixels written: %u\n", pixelsWritten);
 #endif
 
@@ -619,6 +621,8 @@ ReadResult read_Application_Extension(FILE* in_gifFile, bool in_is89a)
 
 		if (blockSize != 3)
 			return ReadResultInvalidData;
+
+		// TODO: Skip block data otherwise
 
 		if (fread(blockData, sizeof(blockData), 1, in_gifFile) != 1)
 			return ReadResultPrematureEndOfStream;

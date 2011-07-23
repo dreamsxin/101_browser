@@ -111,7 +111,7 @@ void testGIF()
 			* Additionally there is one more byte in the Image Data block (0x2B)
 			* than necessary (only reading 0x2A bytes).
 			*/
-			//"testfiles/imagetestsuite/gif/ee6d1133f9264dc6467990e53d0bf104.gif", // -> ReadResultInvalidVersion (!!!) -> this is a bug
+			"testfiles/imagetestsuite/gif/ee6d1133f9264dc6467990e53d0bf104.gif", // -> ReadResultInvalidVersion (!!!) -> this is a bug
 			//"testfiles/imagetestsuite/gif/f617c7af7f36296a37ddb419b828099c.gif", // -> ReadResultNotImplemented (!!!)
 			"testfiles/imagetestsuite/gif/f88b6907ee086c4c8ac4b8c395748c49.gif", // -> ReadResultOK
 			"testfiles/imagetestsuite/gif/fc3e2b992c559055267e26dc23e484c0.gif"  // -> ReadResultOK
