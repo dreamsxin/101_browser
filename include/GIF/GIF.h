@@ -121,10 +121,20 @@ size_t bytesOfColorTable(unsigned char in_sizeOfColorTable);
 DLLEXPORT ReadResult read_GIF_Data_Stream(FILE* in_gifFile, GIF_Data_Stream *in_pDataStream);
 ReadResult read_Logical_Screen(FILE* in_gifFile, Logical_Screen *in_pLogicalScreen);
 ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a);
-ReadResult read_Graphic_Block(FILE* in_gifFile, uint8_t in_separator, uint8_t lLabel, bool in_is89a);
+/*
+* Preconditions:
+* PRE:GIF_h_126: (0x21 == in_separator) || (0x2C == in_separator)
+* PRE:GIF_h_127: (0x21 == in_separator) => ((in_label == 0xF9) || (in_label == 0x01))
+* PRE:GIF_h_128: (0x21 == in_separator) => we have a GIF 89a file
+*/
+ReadResult read_Graphic_Block(FILE* in_gifFile, uint8_t in_separator, uint8_t in_label);
 ReadResult read_GraphicRendering_Block(FILE* in_gifFile, uint8_t in_separator);
 ReadResult read_TableBased_Image(FILE* in_gifFile, TableBased_Image *in_pTableBasedImage);
-ReadResult read_SpecialPurpose_Block(FILE* in_gifFile, uint8_t in_label, bool in_is89a);
+/*
+* Precondition:
+* PRE:GIF_h_129: we have a GIF 89a file
+*/
+ReadResult read_SpecialPurpose_Block(FILE* in_gifFile, uint8_t in_label);
 
 // Terminal symbols
 ReadResult read_Header(FILE* in_gifFile, Header *in_pHeader, bool *out_pIs89a);
@@ -133,7 +143,7 @@ ReadResult read_Logical_Screen_Descriptor(FILE* in_gifFile);
 #if 0
 ReadResult read_Global_Color_Table(FILE* in_gifFile);
 #endif
-ReadResult read_Graphic_Control_Extension(FILE* in_gifFile, bool in_is89a);
+ReadResult read_Graphic_Control_Extension(FILE* in_gifFile);
 #if 0
 ReadResult read_Plain_Text_Extension(FILE* in_gifFile);
 #endif
@@ -142,8 +152,16 @@ ReadResult read_Image_Descriptor(FILE* in_gifFile, Image_Descriptor* in_pImageDe
 ReadResult read_Local_Color_Table(FILE* in_gifFile);
 #endif
 ReadResult read_Image_Data(FILE* in_gifFile);
-ReadResult read_Application_Extension(FILE* in_gifFile, bool in_is89a);
-ReadResult read_Comment_Extension(FILE* in_gifFile, bool in_is89a);
+/*
+* Precondition:
+* PRE:GIF_h_148: we have a GIF 89a file
+*/
+ReadResult read_Application_Extension(FILE* in_gifFile);
+/*
+* Precondition:
+* PRE:GIF_h_158: we have a GIF 89a file
+*/
+ReadResult read_Comment_Extension(FILE* in_gifFile);
 
 ReadResult skipBlock(FILE* in_gifFile);
 

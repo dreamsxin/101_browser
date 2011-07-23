@@ -84,14 +84,22 @@ ReadResult read_Header(FILE* in_gifFile, Header *in_pHeader, bool *out_pIs89a)
 	return ReadResultInvalidData;
 }
 
-ReadResult read_SpecialPurpose_Block(FILE* in_gifFile, uint8_t in_label, bool in_is89a)
+ReadResult read_SpecialPurpose_Block(FILE* in_gifFile, uint8_t in_label)
 {
 	switch (in_label)
 	{
 	case 0xFF:
-		return read_Application_Extension(in_gifFile, in_is89a);
+		/*
+		* Because of PRE:GIF_h_129 the precondition PRE:GIF_h_148
+		* is satisfied.
+		*/
+		return read_Application_Extension(in_gifFile);
 	case 0xFE:
-		return read_Comment_Extension(in_gifFile, in_is89a);
+		/*
+		* Because of PRE:GIF_h_129 the precondition PRE:GIF_h_158
+		* is satisfied.
+		*/
+		return read_Comment_Extension(in_gifFile);
 	default:
 		return ReadResultInvalidData;
 	}
@@ -142,6 +150,7 @@ ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a)
 		* │other                │         │         skip          │
 		* └─────────────────────┴─────────┴───────────────────────┘
 		*/
+		// CND:GIF_c_153
 		if (in_is89a)
 		{
 			/*
@@ -150,7 +159,11 @@ ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a)
 			*/
 			if (0xFF == lLabel || 0xFE == lLabel)
 			{
-				return read_SpecialPurpose_Block(in_gifFile, lLabel, in_is89a);
+				/*
+				* Because of CND:GIF_c_153 the precondition
+				* PRE:GIF_h_129 is satisfied.
+				*/
+				return read_SpecialPurpose_Block(in_gifFile, lLabel);
 			}
 			
 			/*
@@ -159,7 +172,7 @@ ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a)
 			*/
 			else if (0xF9 == lLabel || 0x01 == lLabel)
 			{
-				return read_Graphic_Block(in_gifFile, in_introducer, lLabel, in_is89a);
+				return read_Graphic_Block(in_gifFile, in_introducer, lLabel);
 			}
 			else
 				return skipBlock(in_gifFile);
@@ -169,39 +182,46 @@ ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a)
 	}
 	else if (0x2C == in_introducer)
 	{
-		return read_Graphic_Block(in_gifFile, in_introducer, 0, in_is89a);
+		return read_Graphic_Block(in_gifFile, in_introducer, 0);
 	}
 	else
 		return ReadResultInvalidData;
 }
 
-ReadResult read_Graphic_Block(FILE* in_gifFile, uint8_t in_separator, uint8_t in_label, bool in_is89a)
+ReadResult read_Graphic_Block(FILE* in_gifFile, uint8_t in_separator, uint8_t in_label)
 {
-	if (0x21 == in_separator && 0xF9 == in_label)
+	if (0x21 == in_separator) 
 	{
-		ReadResult lReadResult = read_Graphic_Control_Extension(in_gifFile, in_is89a);
-
-		if (lReadResult != ReadResultOK)
-			return lReadResult;
-
-		if (fread(&in_separator, sizeof(in_separator), 1, in_gifFile) != 1)
-			return ReadResultPrematureEndOfStream;
-
-		if (0x2C == in_separator)
-			goto return_read_GraphicRendering_Block;
-		else if (0x21 == in_separator)
+		if (0xF9 == in_label)
 		{
-			if (fread(&in_label, sizeof(in_label), 1, in_gifFile) != 1)
+			// Precondition: we have a GIF 89a file
+			ReadResult lReadResult = read_Graphic_Control_Extension(in_gifFile);
+
+			if (lReadResult != ReadResultOK)
+				return lReadResult;
+
+			if (fread(&in_separator, sizeof(in_separator), 1, in_gifFile) != 1)
 				return ReadResultPrematureEndOfStream;
 
-			/*
-			* TODO skip block (except Plain Text Extension) - it 
-			* does not belong here
-			*/
-			return ReadResultNotImplemented;
+			if (0x2C == in_separator)
+				goto return_read_GraphicRendering_Block;
+			else if (0x21 == in_separator)
+			{
+				if (fread(&in_label, sizeof(in_label), 1, in_gifFile) != 1)
+					return ReadResultPrematureEndOfStream;
+
+				/*
+				* TODO skip block (except Plain Text Extension) - it 
+				* does not belong here
+				*/
+				return ReadResultNotImplemented;
+			}
 		}
 		else
-			return ReadResultInvalidData;
+		{
+			assert(0x01 == in_label);
+			return ReadResultNotImplemented;
+		}
 	}
 	else if (0x2C == in_separator)
 	{
@@ -256,15 +276,12 @@ ReadResult read_TableBased_Image(FILE* in_gifFile, TableBased_Image *in_pTableBa
 	return read_Image_Data(in_gifFile);
 }
 
-ReadResult read_Graphic_Control_Extension(FILE* in_gifFile, bool in_is89a)
+ReadResult read_Graphic_Control_Extension(FILE* in_gifFile)
 {
+	// Precondition: we have a GIF 89a file
+
 	Graphic_Control_Extension graphicControlExtension;
 	uint8_t terminator;
-	
-	if (!in_is89a)
-	{
-		return skipBlock(in_gifFile);
-	}
 
 	if (fread(&graphicControlExtension, sizeof(graphicControlExtension), 1, in_gifFile) != 1)
 		return ReadResultPrematureEndOfStream;
@@ -592,12 +609,10 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 	return ReadResultOK;
 }
 
-ReadResult read_Application_Extension(FILE* in_gifFile, bool in_is89a)
+ReadResult read_Application_Extension(FILE* in_gifFile)
 {
+	// Precondition: we have a GIF 89a file
 	Application_Extension applExt;
-	
-	if (!in_is89a)
-		return ReadResultInvalidVersion;
 
 	if (fread(&applExt, sizeof(applExt), 1, in_gifFile) != 1)
 	{
@@ -642,12 +657,9 @@ ReadResult read_Application_Extension(FILE* in_gifFile, bool in_is89a)
 	return ReadResultOK;
 }
 
-ReadResult read_Comment_Extension(FILE* in_gifFile, bool in_is89a)
+ReadResult read_Comment_Extension(FILE* in_gifFile)
 {
 	Data_SubBlock subBlock;
-
-	if (!in_is89a)
-		return ReadResultInvalidVersion;
 
 	if (fread(&subBlock.Block_Size, sizeof(subBlock.Block_Size), 1, in_gifFile) != 1)
 		return ReadResultPrematureEndOfStream;
