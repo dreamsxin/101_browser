@@ -442,20 +442,6 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 			return ReadResultInvalidData;
 		}
 
-		/*! 
-		 * Q: Why do we first check whether
-		 * startCode == currentCodeWord or
-		 * stopCode == currentCodeWord
-		 * and then check if
-		 * currentTableIndex > 4096 ?
-		 * 
-		 * A: Because 
-		 * startCode == currentCodeWord or
-		 * stopCode == currentCodeWord
-		 * can also occur at table index 4097. For example the file
-		 * "testfiles/gif/wikipedia/Rotating_earth_(small).gif"
-		 * provides such a test case.
-		 */
 		// CND:GIF_375
 		if (startCode == currentCodeWord)
 		{
@@ -474,22 +460,11 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		{
 			break;
 		}
-		/*
-		 * Table indices > 4096 are not allowed. So if this occures,
-		 * we have an invalid stream.
-		 */
-		// CND:GIF_395
-		else if (currentTableIndex > 4096)
-		{
-			free(pTree);
-			free(pStack);
-			return ReadResultInvalidData;
-		}
 		else
 		{
 			LZW_Tree_Node *pCurrentNode;
 
-			// Follows from CND:GIF_395
+			// Follows from CND:GIF_567
 			assert(currentTableIndex <= 4096);
 
 #if 0
@@ -564,9 +539,33 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 			break;
 		}
 
-		currentTableIndex++;
+		// CND:GIF_567
+		/*
+		* To quote from GIF 89a specification:
+		* "There has been confusion about where clear codes can be found in the
+		* data stream.  As the specification says, they may appear at anytime.  There
+		* is not a requirement to send a clear code when the string table is full.
+		* 
+		* It is the encoder's decision as to when the table should be cleared.  When
+		* the table is full, the encoder can chose to use the table as is, making no
+		* changes to it until the encoder chooses to clear it.  The encoder during
+		* this time sends out codes that are of the maximum Code Size.
+		* 
+		* As we can see from the above, when the decoder's table is full, it must
+		* not change the table until a clear code is received.  The Code Size is that
+		* of the maximum Code Size.  Processing other than this is done normally."
+		*/
+		if (currentTableIndex < 4096)
+			currentTableIndex++;
 	}
 
+	/*
+	* To quote from GIF 89a specification:
+	* "An End of Information code is defined that explicitly indicates the end of
+	" the image data stream. LZW processing terminates when this code is encountered.
+	* It must be the last code output by the encoder for an image [!]. The value of this
+	* code is <Clear code>+1."
+	*/
 	if (streamState.Read_Bytes != streamState.Block_Size_Bytes)
 	{
 		return ReadResultInvalidData;
