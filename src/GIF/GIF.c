@@ -389,7 +389,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 
 	uint16_t currentCodeWord;
 
-#if 1
+#if 0
 	size_t pixelsWritten = 0;
 #endif
 
@@ -535,7 +535,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 				printf("%u ", pCurrentNode->lastCode);
 #endif
 
-#if 1
+#if 0
 				pixelsWritten++;
 #endif
 			}
@@ -599,7 +599,7 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		return ReadResultInvalidData;
 	}
 
-#if 1
+#if 0
 	printf("Pixels written: %u\n", pixelsWritten);
 #endif
 
