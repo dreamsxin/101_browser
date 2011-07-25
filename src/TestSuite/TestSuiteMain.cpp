@@ -49,6 +49,8 @@ int main()
 	test_IO();
 	printf("Testing HTML5\n");
 	testHTML5();
+	printf("Testing SetjmpUtil\n");
+	testSetjmpUtil();
 	printf("Testing GIF\n");
 	testGIF();
 	printf("Testing Coroutine\n");

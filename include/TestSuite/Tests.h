@@ -22,6 +22,7 @@ extern "C" {
 #endif
 void testAlgorithm();
 void testGIF();
+void testSetjmpUtil();
 #ifdef __cplusplus
 }
 #endif
