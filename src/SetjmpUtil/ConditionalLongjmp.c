@@ -32,11 +32,28 @@ void longjmpIf(bool condition, jmp_buf *in_pJmpBuffer,
 	setjmpStateLongjmpIf(&setjmpState, condition, in_pLongjmpHandlerParam);
 }
 
+void longjmpWithHandler(jmp_buf *in_pJmpBuffer, 
+	int in_longjmpValue, void (*in_pfLongjmpHandlerFunction)(void *), 
+	void *in_pLongjmpHandlerParam)
+{
+	SetjmpState setjmpState;
+	setjmpStateInit(&setjmpState, in_pJmpBuffer, in_longjmpValue, in_pfLongjmpHandlerFunction);
+	setjmpStateLongjmp(&setjmpState, in_pLongjmpHandlerParam);
+}
+
 void setjmpStateLongjmpIf(SetjmpState *in_out_pSetjmpState, 
 	bool condition, void *in_pLongjmpHandlerParam)
 {
 	if (condition)
 		setjmpStateLongjmp(in_out_pSetjmpState, in_pLongjmpHandlerParam);
+}
+
+void* longjmpMalloc(jmp_buf *in_pJmpBuffer, 
+	int in_longjmpValue, size_t in_size)
+{
+	SetjmpState setjmpState;
+	setjmpStateInit(&setjmpState, in_pJmpBuffer, in_longjmpValue, NULL);
+	return setjmpStateLongjmpMalloc(&setjmpState, in_size);
 }
 
 void* setjmpStateLongjmpMalloc(SetjmpState *in_out_pSetjmpState, 

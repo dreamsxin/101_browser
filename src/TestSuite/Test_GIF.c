@@ -17,6 +17,8 @@
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
 #include "GIF/GIF.h"
+#include "IO/FileByteStream.h"
+#include "MiniStdlib/MTAx_cstdlib.h" // for exit
 
 void testGIF()
 {
@@ -117,43 +119,42 @@ void testGIF()
 			"testfiles/imagetestsuite/gif/fc3e2b992c559055267e26dc23e484c0.gif"  // -> ReadResultOK
 		};
 
-		FILE* imgFile;
 		size_t filenameIdx;
 
 		for (filenameIdx = 0; filenameIdx < sizeof(filenames)/sizeof(char*); filenameIdx++)
 		{
 			GIF_Data_Stream dataStream;
 			ReadResult readResult;
+			FileByteStreamState fileByteStreamState;
 
-			imgFile = MTAx_fopen(filenames[filenameIdx], "rb");
-
-			test(imgFile != NULL);
-
-			if (imgFile != NULL)
+			if (!fileByteReadStreamStateInit(filenames[filenameIdx], &fileByteStreamState))
 			{
-				readResult = read_GIF_Data_Stream(imgFile, &dataStream);
-				test(ReadResultOK == readResult);
-
-				fclose(imgFile);
+				fprintf(stderr, "Could not open file %s\n", filenames[filenameIdx]);
+				exit(1);
 			}
+
+			readResult = read_GIF_Data_Stream(&fileByteStreamState, getFileByteStreamInterface(), &dataStream);
+			test(ReadResultOK == readResult);
+
+			fileByteReadStreamStateDestroy(&fileByteStreamState);
 		}
 
 		for (filenameIdx = 0; filenameIdx < sizeof(filenames2)/sizeof(char*); filenameIdx++)
 		{
 			GIF_Data_Stream dataStream;
 			ReadResult readResult;
+			FileByteStreamState fileByteStreamState;
 
-			imgFile = MTAx_fopen(filenames2[filenameIdx], "rb");
-
-			test(imgFile != NULL);
-
-			if (imgFile != NULL)
+			if (!fileByteReadStreamStateInit(filenames2[filenameIdx], &fileByteStreamState))
 			{
-				readResult = read_GIF_Data_Stream(imgFile, &dataStream);
-				test(ReadResultOK == readResult);
-
-				fclose(imgFile);
+				fprintf(stderr, "Could not open file %s\n", filenames[filenameIdx]);
+				exit(1);
 			}
+
+			readResult = read_GIF_Data_Stream(&fileByteStreamState, getFileByteStreamInterface(), &dataStream);
+			test(ReadResultOK == readResult);
+
+			fileByteReadStreamStateDestroy(&fileByteStreamState);
 		}
 	}
 }

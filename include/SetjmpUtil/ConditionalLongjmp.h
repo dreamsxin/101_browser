@@ -31,8 +31,15 @@ DLLEXPORT void longjmpIf(bool condition, jmp_buf *in_pJmpBuffer,
 	int in_longjmpValue, void (*in_pfLongjmpHandlerFunction)(void *), 
 	void *in_pLongjmpHandlerParam);
 
+DLLEXPORT void longjmpWithHandler(jmp_buf *in_pJmpBuffer, 
+	int in_longjmpValue, void (*in_pfLongjmpHandlerFunction)(void *), 
+	void *in_pLongjmpHandlerParam);
+
 DLLEXPORT void setjmpStateLongjmpIf(SetjmpState *in_out_pSetjmpState, 
 	bool condition, void *in_pLongjmpHandlerParam);
+
+DLLEXPORT void* longjmpMalloc(jmp_buf *in_pJmpBuffer, 
+	int in_longjmpValue, size_t in_size);
 
 DLLEXPORT void* setjmpStateLongjmpMalloc(SetjmpState *in_out_pSetjmpState, 
 	size_t in_size);

@@ -18,10 +18,10 @@
 #define _GIF_h
 
 #include "Util/ReadResult.h"
-#include "MiniStdlib/MTAx_cstdio.h"
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstdbool.h"
 #include "MiniStdlib/declspec.h"
+#include "IO/SetjmpStream.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -118,52 +118,80 @@ typedef struct
 size_t bytesOfColorTable(unsigned char in_sizeOfColorTable);
 
 // Grammar words
-DLLEXPORT ReadResult read_GIF_Data_Stream(FILE* in_gifFile, GIF_Data_Stream *in_pDataStream);
-ReadResult read_Logical_Screen(FILE* in_gifFile, Logical_Screen *in_pLogicalScreen);
-ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a);
+DLLEXPORT ReadResult read_GIF_Data_Stream(void *in_pStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	GIF_Data_Stream *in_pDataStream);
+void read_Logical_Screen(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	Logical_Screen *in_pLogicalScreen);
+void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	uint8_t in_introducer, bool in_is89a);
 /*
 * Preconditions:
 * PRE:GIF_h_126: (0x21 == in_separator) || (0x2C == in_separator)
 * PRE:GIF_h_127: (0x21 == in_separator) => ((in_label == 0xF9) || (in_label == 0x01))
 * PRE:GIF_h_128: (0x21 == in_separator) => we have a GIF 89a file
 */
-ReadResult read_Graphic_Block(FILE* in_gifFile, uint8_t in_separator, uint8_t in_label);
-ReadResult read_GraphicRendering_Block(FILE* in_gifFile, uint8_t in_separator);
-ReadResult read_TableBased_Image(FILE* in_gifFile, TableBased_Image *in_pTableBasedImage);
+void read_Graphic_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	uint8_t in_separator, uint8_t in_label);
+void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	uint8_t in_separator);
+void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	TableBased_Image *in_pTableBasedImage);
 /*
 * Precondition:
 * PRE:GIF_h_129: we have a GIF 89a file
 */
-ReadResult read_SpecialPurpose_Block(FILE* in_gifFile, uint8_t in_label);
+void read_SpecialPurpose_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	uint8_t in_label);
 
 // Terminal symbols
-ReadResult read_Header(FILE* in_gifFile, Header *in_pHeader, bool *out_pIs89a);
-ReadResult read_Trailer(FILE* in_gifFile);
-ReadResult read_Logical_Screen_Descriptor(FILE* in_gifFile);
+void read_Header(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	Header *in_pHeader, bool *out_pIs89a);
+void read_Trailer(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface);
+void read_Logical_Screen_Descriptor(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface);
 #if 0
-ReadResult read_Global_Color_Table(FILE* in_gifFile);
+void read_Global_Color_Table(void *in_pStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface);
 #endif
-ReadResult read_Graphic_Control_Extension(FILE* in_gifFile);
+void read_Graphic_Control_Extension(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface);
 #if 0
-ReadResult read_Plain_Text_Extension(FILE* in_gifFile);
+void read_Plain_Text_Extension(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface);
 #endif
-ReadResult read_Image_Descriptor(FILE* in_gifFile, Image_Descriptor* in_pImageDescriptor);
+void read_Image_Descriptor(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	Image_Descriptor* in_pImageDescriptor);
 #if 0
-ReadResult read_Local_Color_Table(FILE* in_gifFile);
+void read_Local_Color_Table(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface);
 #endif
-ReadResult read_Image_Data(FILE* in_gifFile);
+void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface);
 /*
 * Precondition:
 * PRE:GIF_h_148: we have a GIF 89a file
 */
-ReadResult read_Application_Extension(FILE* in_gifFile);
+void read_Application_Extension(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface);
 /*
 * Precondition:
 * PRE:GIF_h_158: we have a GIF 89a file
 */
-ReadResult read_Comment_Extension(FILE* in_gifFile);
+void read_Comment_Extension(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface);
 
-ReadResult skipBlock(FILE* in_gifFile);
+void skipBlock(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface);
 
 #ifdef __cplusplus
 }

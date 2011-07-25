@@ -17,6 +17,8 @@
 #include "GIF/GIF.h"
 #include "GIF/LZW.h"
 #include "IO/BitRead.h"
+#include "SetjmpUtil/ConditionalLongjmp.h"
+#include "MiniStdlib/safe_free.h"
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
@@ -26,25 +28,36 @@ size_t bytesOfColorTable(unsigned char in_sizeOfColorTable)
 	return 3*(1<<(in_sizeOfColorTable+1));
 }
 
-ReadResult read_GIF_Data_Stream(FILE* in_gifFile, GIF_Data_Stream *in_pDataStream)
+ReadResult read_GIF_Data_Stream(void *in_pStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	GIF_Data_Stream *in_pDataStream)
 {
 	bool is89a;
-	ReadResult readResult = read_Header(in_gifFile, &in_pDataStream->header, &is89a);
+
+	SetjmpStreamState setjmpReadStreamState;
+	jmp_buf jmpBuf;
+	ByteStreamInterface setjmpReadStreamInterface;
+	int result;
+
+	setjmpStreamInit(&setjmpReadStreamState, &jmpBuf, ReadResultPrematureEndOfStream, 
+		in_pStreamState, in_byteStreamReadInterface);
+	setjmpReadStreamInterface = getSetjmpStreamByteStreamInterface(&setjmpReadStreamState);
 	
-	if (readResult != ReadResultOK)
-		return readResult;
+	// the = is correct
+	if (result = setjmp(jmpBuf))
+		return (ReadResult) result;
 
-	readResult = read_Logical_Screen(in_gifFile, &in_pDataStream->logicalScreen);
+	read_Header(&setjmpReadStreamState, setjmpReadStreamInterface, 
+		&in_pDataStream->header, &is89a);
 
-	if (readResult != ReadResultOK)
-		return readResult;
+	read_Logical_Screen(&setjmpReadStreamState, setjmpReadStreamInterface, 
+		&in_pDataStream->logicalScreen);
 
 	while (1)
 	{
 		uint8_t lIntroducer;
 
-		if (fread(&lIntroducer, sizeof(lIntroducer), 1, in_gifFile) != 1)
-			return ReadResultPrematureEndOfStream;
+		(*setjmpReadStreamInterface.mpfRead)(&setjmpReadStreamState, &lIntroducer, sizeof(lIntroducer));
 
 		// Trailer
 		if (0x3B == lIntroducer)
@@ -52,39 +65,42 @@ ReadResult read_GIF_Data_Stream(FILE* in_gifFile, GIF_Data_Stream *in_pDataStrea
 			break;
 		}
 
-		readResult = read_Data(in_gifFile, lIntroducer, is89a);
-
-		if (readResult != ReadResultOK)
-			return readResult;
+		read_Data(&setjmpReadStreamState, setjmpReadStreamInterface, 
+			lIntroducer, is89a);
 	}
 
 	return ReadResultOK;
 }
 
-ReadResult read_Header(FILE* in_gifFile, Header *in_pHeader, bool *out_pIs89a)
+void read_Header(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	Header *in_pHeader, bool *out_pIs89a)
 {
-	if (fread(in_pHeader, sizeof(*in_pHeader), 1, in_gifFile) != 1)
-		return ReadResultPrematureEndOfStream;
+	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, in_pHeader, sizeof(*in_pHeader));
 
-	if (strncmp(in_pHeader->Signature, "GIF", sizeof(in_pHeader->Signature)) != 0)
-		return ReadResultInvalidData;
+	longjmpIf(strncmp(in_pHeader->Signature, "GIF", sizeof(in_pHeader->Signature)) != 0, 
+		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
+		printHandler, "read_Header: invalid signature");
 
 	if (strncmp(in_pHeader->Version, "87a", sizeof(in_pHeader->Version)) == 0)
 	{
 		*out_pIs89a = false;
-		return ReadResultOK;
+		return;
 	}
-
-	if (strncmp(in_pHeader->Version, "89a", sizeof(in_pHeader->Version)) == 0)
+	else if (strncmp(in_pHeader->Version, "89a", sizeof(in_pHeader->Version)) == 0)
 	{
 		*out_pIs89a = true;
-		return ReadResultOK;
+		return;
 	}
-	
-	return ReadResultInvalidData;
+	else
+	{
+		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
+	}
 }
 
-ReadResult read_SpecialPurpose_Block(FILE* in_gifFile, uint8_t in_label)
+void read_SpecialPurpose_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	uint8_t in_label)
 {
 	switch (in_label)
 	{
@@ -93,51 +109,69 @@ ReadResult read_SpecialPurpose_Block(FILE* in_gifFile, uint8_t in_label)
 		* Because of PRE:GIF_h_129 the precondition PRE:GIF_h_148
 		* is satisfied.
 		*/
-		return read_Application_Extension(in_gifFile);
+		read_Application_Extension(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
+		return;
 	case 0xFE:
 		/*
 		* Because of PRE:GIF_h_129 the precondition PRE:GIF_h_158
 		* is satisfied.
 		*/
-		return read_Comment_Extension(in_gifFile);
+		read_Comment_Extension(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
+		return;
 	default:
-		return ReadResultInvalidData;
+		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
 	}
 }
 
-ReadResult read_Logical_Screen(FILE* in_gifFile, Logical_Screen *in_pLogicalScreen)
+void read_Logical_Screen(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	Logical_Screen *in_pLogicalScreen)
 {
-	if (fread(&in_pLogicalScreen->logicalScreenDescriptor, sizeof(Logical_Screen_Descriptor), 1, in_gifFile) != 1)
-		return ReadResultPrematureEndOfStream;
+	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+		&in_pLogicalScreen->logicalScreenDescriptor, sizeof(Logical_Screen_Descriptor));
 
 	if (in_pLogicalScreen->logicalScreenDescriptor.Global_Color_Table_Flag)
 	{
 		size_t bytesOfGlobalColorTable = bytesOfColorTable(in_pLogicalScreen->logicalScreenDescriptor.Size_Of_Global_Color_Table);
+		jmp_buf freeMemoryJmpBuf;
+		int result;
 
-		in_pLogicalScreen->globalColorTable = (uint8_t*) malloc(bytesOfGlobalColorTable);
+		in_pLogicalScreen->globalColorTable = (uint8_t*) longjmpMalloc(
+			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			ReadResultAllocationFailure, bytesOfGlobalColorTable);
 
-		if (in_pLogicalScreen->globalColorTable == NULL)
-			return ReadResultAllocationFailure;
+		// the = is correct
+		if (result = xchgAndSetjmp(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			&freeMemoryJmpBuf))
+		{
+			safe_free(&in_pLogicalScreen->globalColorTable);
+			xchgAndLongjmp(&freeMemoryJmpBuf, 
+				in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
+		}
 
-		if (fread(in_pLogicalScreen->globalColorTable, bytesOfGlobalColorTable, 1, in_gifFile) != 1)
-			return ReadResultPrematureEndOfStream;
+		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+			in_pLogicalScreen->globalColorTable, bytesOfGlobalColorTable);
+
+		safe_free(&in_pLogicalScreen->globalColorTable);
+		xchgJmpBuf(&freeMemoryJmpBuf, 
+			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
 	}
 	else
 	{
 		in_pLogicalScreen->globalColorTable = NULL;
 	}
-
-	return ReadResultOK;
 }
 
-ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a)
+void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	uint8_t in_introducer, bool in_is89a)
 {
 	uint8_t lLabel;
 
 	if (0x21 == in_introducer)
 	{
-		if (fread(&lLabel, sizeof(lLabel), 1, in_gifFile) != 1)
-			return ReadResultPrematureEndOfStream;
+		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+			&lLabel, sizeof(lLabel));
 
 		/*
 		* We have the following situation:
@@ -163,7 +197,9 @@ ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a)
 				* Because of CND:GIF_c_153 the precondition
 				* PRE:GIF_h_129 is satisfied.
 				*/
-				return read_SpecialPurpose_Block(in_gifFile, lLabel);
+				read_SpecialPurpose_Block(in_out_pSetjmpStreamState, 
+					in_byteStreamReadInterface, lLabel);
+				return;
 			}
 			
 			/*
@@ -172,166 +208,206 @@ ReadResult read_Data(FILE* in_gifFile, uint8_t in_introducer, bool in_is89a)
 			*/
 			else if (0xF9 == lLabel || 0x01 == lLabel)
 			{
-				return read_Graphic_Block(in_gifFile, in_introducer, lLabel);
+				read_Graphic_Block(in_out_pSetjmpStreamState, 
+					in_byteStreamReadInterface, in_introducer, lLabel);
+				return;
 			}
 			else
-				return skipBlock(in_gifFile);
+			{
+				skipBlock(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
+				return;
+			}
 		}
 		else
-			return skipBlock(in_gifFile);
+		{
+			skipBlock(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
+			return;
+		}
 	}
 	else if (0x2C == in_introducer)
 	{
-		return read_Graphic_Block(in_gifFile, in_introducer, 0);
+		read_Graphic_Block(in_out_pSetjmpStreamState, 
+			in_byteStreamReadInterface, in_introducer, 0);
+		return;
 	}
 	else
-		return ReadResultInvalidData;
+	{
+		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			ReadResultInvalidData);
+	}
 }
 
-ReadResult read_Graphic_Block(FILE* in_gifFile, uint8_t in_separator, uint8_t in_label)
+void read_Graphic_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	uint8_t in_separator, uint8_t in_label)
 {
 	if (0x21 == in_separator) 
 	{
 		if (0xF9 == in_label)
 		{
 			// Precondition: we have a GIF 89a file
-			ReadResult lReadResult = read_Graphic_Control_Extension(in_gifFile);
+			read_Graphic_Control_Extension(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
 
-			if (lReadResult != ReadResultOK)
-				return lReadResult;
-
-			if (fread(&in_separator, sizeof(in_separator), 1, in_gifFile) != 1)
-				return ReadResultPrematureEndOfStream;
+			(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+				&in_separator, sizeof(in_separator));
 
 			if (0x2C == in_separator)
 				goto return_read_GraphicRendering_Block;
 			else if (0x21 == in_separator)
 			{
-				if (fread(&in_label, sizeof(in_label), 1, in_gifFile) != 1)
-					return ReadResultPrematureEndOfStream;
+				(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+					&in_label, sizeof(in_label));
 
 				/*
 				* TODO skip block (except Plain Text Extension) - it 
 				* does not belong here
 				*/
-				return ReadResultNotImplemented;
+				longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+					ReadResultNotImplemented);
 			}
 		}
 		else
 		{
 			assert(0x01 == in_label);
-			return ReadResultNotImplemented;
+			longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+				ReadResultNotImplemented);
 		}
 	}
 	else if (0x2C == in_separator)
 	{
 return_read_GraphicRendering_Block:
-		return read_GraphicRendering_Block(in_gifFile, in_separator);
+		read_GraphicRendering_Block(in_out_pSetjmpStreamState, 
+			in_byteStreamReadInterface, in_separator);
+		return;
 	}
-	
-	// TODO
-	return ReadResultNotImplemented;
+	else
+	{
+		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			ReadResultNotImplemented);
+	}
 }
 
-ReadResult read_GraphicRendering_Block(FILE* in_gifFile, uint8_t in_separator)
+void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	uint8_t in_separator)
 {
 	TableBased_Image tableBasedImage;
 
 	if (in_separator == 0x2C)
 	{
-		return read_TableBased_Image(in_gifFile, &tableBasedImage);
+		read_TableBased_Image(in_out_pSetjmpStreamState, 
+			in_byteStreamReadInterface, &tableBasedImage);
 	}
-
-	// TODO
-	return ReadResultNotImplemented;
+	else
+	{
+		// TODO
+		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultNotImplemented);
+	}
 }
 
-ReadResult read_TableBased_Image(FILE* in_gifFile, TableBased_Image *in_pTableBasedImage)
+void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	TableBased_Image *in_pTableBasedImage)
 {
-	ReadResult readResult;
 	in_pTableBasedImage->imageDescriptor.Image_Separator = 0x2C;
 
-	readResult = read_Image_Descriptor(in_gifFile, &in_pTableBasedImage->imageDescriptor);
-
-	if (readResult != ReadResultOK)
-		return readResult;
+	read_Image_Descriptor(in_out_pSetjmpStreamState, in_byteStreamReadInterface, 
+		&in_pTableBasedImage->imageDescriptor);
 
 	if (in_pTableBasedImage->imageDescriptor.Local_Color_Table_Flag)
 	{
 		size_t bytesOfGlobalColorTable = bytesOfColorTable(in_pTableBasedImage->imageDescriptor.Size_of_Local_Color_Table);
 
-		in_pTableBasedImage->localColorTable = (uint8_t*) malloc(bytesOfGlobalColorTable);
+		int result;
+		jmp_buf freeMemoryJmpBuf;
 
-		if (in_pTableBasedImage->localColorTable == NULL)
-			return ReadResultAllocationFailure;
+		in_pTableBasedImage->localColorTable = (uint8_t*) longjmpMalloc(
+			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			ReadResultAllocationFailure, bytesOfGlobalColorTable);
 
-		if (fread(in_pTableBasedImage->localColorTable, bytesOfGlobalColorTable, 1, in_gifFile) != 1)
-			return ReadResultPrematureEndOfStream;
+		if (result = xchgAndSetjmp(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		&freeMemoryJmpBuf))
+		{
+			safe_free(&in_pTableBasedImage->localColorTable);
+			xchgAndLongjmp(&freeMemoryJmpBuf, 
+				in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
+		}
+
+		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+			in_pTableBasedImage->localColorTable, bytesOfGlobalColorTable);
+
+		safe_free(&in_pTableBasedImage->localColorTable);
+		xchgJmpBuf(&freeMemoryJmpBuf, 
+			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
 	}
 	else
 	{
 		in_pTableBasedImage->localColorTable = NULL;
 	}
 
-	return read_Image_Data(in_gifFile);
+	read_Image_Data(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
+	return;
 }
 
-ReadResult read_Graphic_Control_Extension(FILE* in_gifFile)
+void read_Graphic_Control_Extension(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface)
 {
 	// Precondition: we have a GIF 89a file
 
 	Graphic_Control_Extension graphicControlExtension;
 	uint8_t terminator;
 
-	if (fread(&graphicControlExtension, sizeof(graphicControlExtension), 1, in_gifFile) != 1)
-		return ReadResultPrematureEndOfStream;
+	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState,
+		&graphicControlExtension, sizeof(graphicControlExtension));
 
-	if (graphicControlExtension.Block_Size != 4)
-		return ReadResultInvalidData;
+	longjmpIf(graphicControlExtension.Block_Size != 4, 
+		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		ReadResultInvalidData, printHandler, "read_Graphic_Control_Extension: invalid Block Size");
 
-	if (graphicControlExtension.Reserved != 0)
-		return ReadResultInvalidData;
+	longjmpIf(graphicControlExtension.Reserved != 0, 
+		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		ReadResultInvalidData, printHandler, "read_Graphic_Control_Extension: reserved bits not zero");
 
-	if (fread(&terminator, sizeof(terminator), 1, in_gifFile) != 1)
-		return ReadResultPrematureEndOfStream;
+	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState,
+		&terminator, sizeof(terminator));
 
-	if (terminator != 0x00)
-	{
-		return ReadResultInvalidData;
-	}
-
-	return ReadResultOK;
+	longjmpIf(terminator != 0x00, 
+		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		ReadResultInvalidData, printHandler, "read_Graphic_Control_Extension: no terminator");
 }
 
-ReadResult read_Image_Descriptor(FILE* in_gifFile, Image_Descriptor* in_pImageDescriptor)
+void read_Image_Descriptor(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface, 
+	Image_Descriptor* in_pImageDescriptor)
 {
 	// sizeof(*in_pImageDescriptor)-1 since we have already read the first byte
-	if (fread(&in_pImageDescriptor->Image_Left_Position, sizeof(*in_pImageDescriptor)-1, 1, in_gifFile) != 1)
-		return ReadResultPrematureEndOfStream;
+	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+		&in_pImageDescriptor->Image_Left_Position, sizeof(*in_pImageDescriptor)-1);
 
-	if (in_pImageDescriptor->Reserved != 0)
-		return ReadResultInvalidData;
-
-	return ReadResultOK;
+	longjmpIf(in_pImageDescriptor->Reserved != 0, 
+		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
+		printHandler, "read_Image_Descriptor: reserved bits not null");
 }
 
 typedef struct
 {
-	FILE* file;
+	SetjmpStreamState *pSetjmpStreamState;
+	ByteStreamInterface setjmpStreamInterface;
 	uint8_t Block_Size_Bytes;
 	uint8_t Read_Bytes;
 	bool endOfStream;
 } Image_Data_StreamState;
 
-void init_Image_Data_StreamState(Image_Data_StreamState *in_pStreamState, FILE* in_file)
+void init_Image_Data_StreamState(Image_Data_StreamState *in_pStreamState, 
+	SetjmpStreamState *in_pSetjmpStreamState, ByteStreamInterface in_setjmpStreamInterface)
 {
-	in_pStreamState->file = in_file;
+	in_pStreamState->pSetjmpStreamState = in_pSetjmpStreamState;
+	in_pStreamState->setjmpStreamInterface = in_setjmpStreamInterface;
 	in_pStreamState->Block_Size_Bytes = 0;
 	in_pStreamState->Read_Bytes = 0;
 	in_pStreamState->endOfStream = false;
 }
 
-//bool read_Image_Data_Byte(void *in_pStreamState, uint8_t* in_pBuffer)
 size_t read_Image_Data_byteStreamInterface(void *in_out_pByteStreamState, void *out_pBuffer, size_t in_count)
 {
 	Image_Data_StreamState *pStreamState = (Image_Data_StreamState*) in_out_pByteStreamState;
@@ -346,13 +422,15 @@ size_t read_Image_Data_byteStreamInterface(void *in_out_pByteStreamState, void *
 		return 0;
 
 	/*
-	* If we read the current block completely, we read the size of the next block
+	* If we read the current block completely, we read the size of the next block.
+	* Note that after initializing this condition satisfied.
 	*/
 	if (pStreamState->Read_Bytes == pStreamState->Block_Size_Bytes)
 	{
-		if (fread(&pStreamState->Block_Size_Bytes, sizeof(pStreamState->Block_Size_Bytes), 1, pStreamState->file) != 1)
-			return 0;
+		(*pStreamState->setjmpStreamInterface.mpfRead)(pStreamState->pSetjmpStreamState, 
+			&pStreamState->Block_Size_Bytes, sizeof(pStreamState->Block_Size_Bytes));
 
+		// If the next block has a size of 0, the end is reached
 		if (pStreamState->Block_Size_Bytes == 0)
 		{
 			pStreamState->endOfStream = true;
@@ -362,25 +440,27 @@ size_t read_Image_Data_byteStreamInterface(void *in_out_pByteStreamState, void *
 		pStreamState->Read_Bytes = 0;
 	}
 
-	if (fread(out_pBuffer, 1, 1, pStreamState->file) != 1)
-	{
-		pStreamState->endOfStream = true;
-		return 0;
-	}
+	(*pStreamState->setjmpStreamInterface.mpfRead)(pStreamState->pSetjmpStreamState, 
+		out_pBuffer, 1);
 
 	pStreamState->Read_Bytes++;
 
 	return 1;
 }
 
-ReadResult read_Image_Data(FILE* in_gifFile)
+void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface)
 {
 	uint8_t LZW_Minimum_Code_Size;
 	BitReadState bitReadState;
 	ByteStreamInterface bitReadInterface;
+	size_t readCount;
+
 	Image_Data_StreamState streamState;
-	LZW_Tree *pTree;
-	LZW_Stack *pStack;
+	LZW_Tree *pTree = NULL;
+	LZW_Stack *pStack = NULL;
+	jmp_buf freeMemoryJmpBuf;
+	int result;
 
 	uint16_t startCode;
 	uint16_t stopCode;
@@ -393,38 +473,44 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 	size_t pixelsWritten = 0;
 #endif
 
-	// Initialize bitReadInterface
-	memset(&bitReadInterface, 0, sizeof(bitReadInterface));
-	bitReadInterface.mpfRead = read_Image_Data_byteStreamInterface;
+	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+		&LZW_Minimum_Code_Size, sizeof(LZW_Minimum_Code_Size));
 
-
-	if (fread(&LZW_Minimum_Code_Size, sizeof(LZW_Minimum_Code_Size), 1, in_gifFile) != 1)
-		return ReadResultPrematureEndOfStream;
-
-	if (LZW_Minimum_Code_Size < 2 || LZW_Minimum_Code_Size > 8)
-		return ReadResultInvalidData;
+	longjmpIf(LZW_Minimum_Code_Size < 2 || LZW_Minimum_Code_Size > 8, 
+		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		ReadResultInvalidData, printHandler, "read_Image_Data: invalid LZW minimum code size");
 	
 	startCode = 1<<LZW_Minimum_Code_Size;
 	// ASGN:GIF_314
 	stopCode = startCode+1;
 
+	// Initialize bitReadInterface
+	memset(&bitReadInterface, 0, sizeof(bitReadInterface));
+	bitReadInterface.mpfRead = read_Image_Data_byteStreamInterface;
+
 	initBitReadState(&bitReadState, &streamState, bitReadInterface);
-	init_Image_Data_StreamState(&streamState, in_gifFile);
+	init_Image_Data_StreamState(&streamState, in_out_pSetjmpStreamState, in_byteStreamReadInterface);
 
-	pTree = (LZW_Tree *) malloc(sizeof(LZW_Tree));
-
-	if (pTree == NULL)
+	// the = is correct
+	if (result = xchgAndSetjmp(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		&freeMemoryJmpBuf))
 	{
-		return ReadResultAllocationFailure;
+		if (pStack)
+		{
+			assert(pTree != NULL);
+			safe_free(pStack);
+		}
+		if (pTree)
+			safe_free(&pTree);
+		
+		xchgAndLongjmp(&freeMemoryJmpBuf, in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
 	}
 
-	pStack = (LZW_Stack *) malloc(sizeof(LZW_Stack));
+	pTree = (LZW_Tree *) longjmpMalloc(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		ReadResultAllocationFailure, sizeof(LZW_Tree));
 
-	if (pStack == NULL)
-	{
-		free(pTree);
-		return ReadResultAllocationFailure;
-	}
+	pStack = (LZW_Stack *) longjmpMalloc(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		ReadResultAllocationFailure, sizeof(LZW_Stack));
 
 	initLZW_Tree(pTree, 1<<LZW_Minimum_Code_Size);
 	currentTableIndex = stopCode + 1;
@@ -445,19 +531,18 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 		 */
 		currentCodeWord = 0;
 
-		if (readBitsLittleEndian(&bitReadState, &currentCodeWord, currentCodeWordBitCount) != currentCodeWordBitCount)
-		{
-			free(pTree);
-			free(pStack);
-			return ReadResultPrematureEndOfStream;
-		}
+		readCount = readBitsLittleEndian(&bitReadState, &currentCodeWord, currentCodeWordBitCount);
 
-		if (currentCodeWord >= currentTableIndex)
-		{
-			free(pTree);
-			free(pStack);
-			return ReadResultInvalidData;
-		}
+		/*
+		* Since bitReadState is based on SetjmpStream we'll do a longjmp if 
+		* this is not the case.
+		*/
+		assert(readCount == currentCodeWordBitCount);
+
+		longjmpIf(currentCodeWord >= currentTableIndex, 
+			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			ReadResultInvalidData, printHandler, 
+			"read_Image_Data: currentCodeWord >= currentTableIndex");
 
 		// CND:GIF_375
 		if (startCode == currentCodeWord)
@@ -583,46 +668,38 @@ ReadResult read_Image_Data(FILE* in_gifFile)
 	* It must be the last code output by the encoder for an image [!]. The value of this
 	* code is <Clear code>+1."
 	*/
-	if (streamState.Read_Bytes != streamState.Block_Size_Bytes)
-	{
-		return ReadResultInvalidData;
-	}
+	longjmpIf(streamState.Read_Bytes != streamState.Block_Size_Bytes, 
+		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
+		printHandler, "read_Image_Data: data after End of Information code");
 
-	if (fread(&streamState.Block_Size_Bytes, sizeof(streamState.Block_Size_Bytes), 1, in_gifFile) != 1)
-	{
-		return ReadResultPrematureEndOfStream;
-	}
+	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+		&streamState.Block_Size_Bytes, sizeof(streamState.Block_Size_Bytes));
 
 	// If there is no terminator block return failure
-	if (0 != streamState.Block_Size_Bytes)
-	{
-		return ReadResultInvalidData;
-	}
+	longjmpIf(0 != streamState.Block_Size_Bytes, 
+		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
+		printHandler, "read_Image_Data: no terminator block");
 
 #if 0
 	printf("Pixels written: %u\n", pixelsWritten);
 #endif
 
-	free(pStack);
-	free(pTree);
-
-	return ReadResultOK;
+	safe_free(&pStack);
+	safe_free(&pTree);
+	xchgJmpBuf(&freeMemoryJmpBuf, in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
 }
 
-ReadResult read_Application_Extension(FILE* in_gifFile)
+void read_Application_Extension(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface)
 {
 	// Precondition: we have a GIF 89a file
 	Application_Extension applExt;
 
-	if (fread(&applExt, sizeof(applExt), 1, in_gifFile) != 1)
-	{
-		return ReadResultPrematureEndOfStream;
-	}
+	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+		&applExt, sizeof(applExt));
 
-	if (applExt.Block_Size != 11)
-	{
-		return ReadResultInvalidData;
-	}
+	longjmpIf(applExt.Block_Size != 11, in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		ReadResultInvalidData, printHandler, "read_Application_Extension: Block Size has to be 11");
 
 	if (strncmp(applExt.Application_Identifier, "NETSCAPE", 8) == 0 && 
 		strncmp(applExt.Application_Authentication_Code, "2.0", 3) == 0)
@@ -630,71 +707,78 @@ ReadResult read_Application_Extension(FILE* in_gifFile)
 		uint8_t blockSize;
 		uint8_t blockData[3];
 
-		if (fread(&blockSize, sizeof(blockSize), 1, in_gifFile) != 1)
-			return ReadResultPrematureEndOfStream;
+		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+			&blockSize, sizeof(blockSize));
 
-		if (blockSize != 3)
-			return ReadResultInvalidData;
+		longjmpIf(blockSize != 3, in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			ReadResultInvalidData, printHandler, 
+			"read_Application_Extension: Block Size of NETSCAPE 2.0 Application Extension has to be 3");
 
-		// TODO: Skip block data otherwise
-
-		if (fread(blockData, sizeof(blockData), 1, in_gifFile) != 1)
-			return ReadResultPrematureEndOfStream;
+		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+			blockData, sizeof(blockData));
 
 		// TODO: Interprete read data
 
-		if (fread(&blockSize, sizeof(blockSize), 1, in_gifFile) != 1)
-			return ReadResultPrematureEndOfStream;
+		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+			&blockSize, sizeof(blockSize));
 
-		if (blockSize != 0)
-			return ReadResultInvalidData;
+		longjmpIf(blockSize != 0, in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			ReadResultInvalidData, printHandler, 
+			"read_Application_Extension: expecting terminator block after NETSCAPE 2.0 Application Extension");
 	}
 	else
 	{
-		return ReadResultNotImplemented;
+		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultNotImplemented);
 	}
-
-	return ReadResultOK;
 }
 
-ReadResult read_Comment_Extension(FILE* in_gifFile)
+void read_Comment_Extension(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface)
 {
 	Data_SubBlock subBlock;
 
-	if (fread(&subBlock.Block_Size, sizeof(subBlock.Block_Size), 1, in_gifFile) != 1)
-		return ReadResultPrematureEndOfStream;
+	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+		&subBlock.Block_Size, sizeof(subBlock.Block_Size));
 
 	while (subBlock.Block_Size != 0)
 	{
-		subBlock.Data_Values = (uint8_t*) malloc(subBlock.Block_Size);
+		int result;
+		jmp_buf freeMemoryJmpBuf;
 
-		if (NULL == subBlock.Data_Values)
+		subBlock.Data_Values = (uint8_t*) longjmpMalloc(
+			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			ReadResultAllocationFailure, subBlock.Block_Size);
+
+		// the = is correct
+		if (result = xchgAndSetjmp(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			&freeMemoryJmpBuf))
 		{
-			return ReadResultAllocationFailure;
+			safe_free(&subBlock.Data_Values);
+			xchgAndLongjmp(&freeMemoryJmpBuf, 
+				in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
 		}
 
-		if (fread(subBlock.Data_Values, subBlock.Block_Size, 1, in_gifFile) != 1)
-		{
-			return ReadResultPrematureEndOfStream;
-		}
+		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+			subBlock.Data_Values, subBlock.Block_Size);
 
 		// TODO: Interprete read block
 
-		free(subBlock.Data_Values);
+		safe_free(&subBlock.Data_Values);
+		xchgJmpBuf(&freeMemoryJmpBuf, 
+			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
 
-		if (fread(&subBlock.Block_Size, sizeof(subBlock.Block_Size), 1, in_gifFile) != 1)
-			return ReadResultPrematureEndOfStream;
+		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+			&subBlock.Block_Size, sizeof(subBlock.Block_Size));
 	}
-
-	return ReadResultOK;
 }
 
-ReadResult skipBlock(FILE* in_gifFile)
+void skipBlock(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface)
 {
 	uint8_t Block_Size;
-	
-	if (fread(&Block_Size, sizeof(Block_Size), 1, in_gifFile) != 1)
-		return ReadResultPrematureEndOfStream;
+
+	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+		&Block_Size, sizeof(Block_Size));
 
 	while (Block_Size != 0)
 	{
@@ -703,15 +787,11 @@ ReadResult skipBlock(FILE* in_gifFile)
 
 		for (idx = 0; idx < Block_Size; idx++)
 		{
-			if (fread(&buffer, 1, 1, in_gifFile) != 1)
-			{
-				return ReadResultPrematureEndOfStream;
-			}
+			(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+				&buffer, sizeof(buffer));
 		}
 
-		if (fread(&Block_Size, sizeof(Block_Size), 1, in_gifFile) != 1)
-			return ReadResultPrematureEndOfStream;
+		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+			&Block_Size, sizeof(Block_Size));
 	}
-	
-	return ReadResultOK;
 }
