@@ -314,6 +314,13 @@ void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState,
 	read_Image_Descriptor(in_out_pSetjmpStreamState, in_byteStreamReadInterface, 
 		&in_pTableBasedImage->imageDescriptor);
 
+	// Set localColorTable into a defined state (even if we do a longjmp)
+	in_pTableBasedImage->localColorTable = NULL;
+
+	/*
+	* If the Local Color Table Flag is set, read local color table before
+	* reading Image Data.
+	*/
 	if (in_pTableBasedImage->imageDescriptor.Local_Color_Table_Flag)
 	{
 		size_t bytesOfGlobalColorTable = bytesOfColorTable(in_pTableBasedImage->imageDescriptor.Size_of_Local_Color_Table);
@@ -329,20 +336,14 @@ void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState,
 		freeMemoryJmpBuf))
 		{
 			safe_free(&in_pTableBasedImage->localColorTable);
-			xchgAndLongjmp(freeMemoryJmpBuf, 
-				*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
+			xchgAndLongjmp(freeMemoryJmpBuf, *in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
 		}
 
 		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 			in_pTableBasedImage->localColorTable, bytesOfGlobalColorTable);
 
 		safe_free(&in_pTableBasedImage->localColorTable);
-		xchgJmpBuf(freeMemoryJmpBuf, 
-			*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
-	}
-	else
-	{
-		in_pTableBasedImage->localColorTable = NULL;
+		xchgJmpBuf(freeMemoryJmpBuf, *in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
 	}
 
 	read_Image_Data(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
