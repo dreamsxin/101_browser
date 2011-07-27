@@ -141,20 +141,20 @@ void read_Logical_Screen(SetjmpStreamState *in_out_pSetjmpStreamState,
 			ReadResultAllocationFailure, bytesOfGlobalColorTable);
 
 		// the = is correct
-		if (result = xchgAndSetjmp(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-			&freeMemoryJmpBuf))
+		if (result = XCHG_AND_SETJMP(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			freeMemoryJmpBuf))
 		{
 			safe_free(&in_pLogicalScreen->globalColorTable);
-			xchgAndLongjmp(&freeMemoryJmpBuf, 
-				in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
+			xchgAndLongjmp(freeMemoryJmpBuf, 
+				*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
 		}
 
 		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 			in_pLogicalScreen->globalColorTable, bytesOfGlobalColorTable);
 
 		safe_free(&in_pLogicalScreen->globalColorTable);
-		xchgJmpBuf(&freeMemoryJmpBuf, 
-			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
+		xchgJmpBuf(freeMemoryJmpBuf, 
+			*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
 	}
 	else
 	{
@@ -325,20 +325,20 @@ void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState,
 			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
 			ReadResultAllocationFailure, bytesOfGlobalColorTable);
 
-		if (result = xchgAndSetjmp(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-		&freeMemoryJmpBuf))
+		if (result = XCHG_AND_SETJMP(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		freeMemoryJmpBuf))
 		{
 			safe_free(&in_pTableBasedImage->localColorTable);
-			xchgAndLongjmp(&freeMemoryJmpBuf, 
-				in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
+			xchgAndLongjmp(freeMemoryJmpBuf, 
+				*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
 		}
 
 		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 			in_pTableBasedImage->localColorTable, bytesOfGlobalColorTable);
 
 		safe_free(&in_pTableBasedImage->localColorTable);
-		xchgJmpBuf(&freeMemoryJmpBuf, 
-			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
+		xchgJmpBuf(freeMemoryJmpBuf, 
+			*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
 	}
 	else
 	{
@@ -492,8 +492,8 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	init_Image_Data_StreamState(&streamState, in_out_pSetjmpStreamState, in_byteStreamReadInterface);
 
 	// the = is correct
-	if (result = xchgAndSetjmp(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-		&freeMemoryJmpBuf))
+	if (result = XCHG_AND_SETJMP(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		freeMemoryJmpBuf))
 	{
 		if (pStack)
 		{
@@ -503,7 +503,7 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 		if (pTree)
 			safe_free(&pTree);
 		
-		xchgAndLongjmp(&freeMemoryJmpBuf, in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
+		xchgAndLongjmp(freeMemoryJmpBuf, *in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
 	}
 
 	pTree = (LZW_Tree *) longjmpMalloc(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
@@ -750,12 +750,12 @@ void read_Comment_Extension(SetjmpStreamState *in_out_pSetjmpStreamState,
 			ReadResultAllocationFailure, subBlock.Block_Size);
 
 		// the = is correct
-		if (result = xchgAndSetjmp(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-			&freeMemoryJmpBuf))
+		if (result = XCHG_AND_SETJMP(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			freeMemoryJmpBuf))
 		{
 			safe_free(&subBlock.Data_Values);
-			xchgAndLongjmp(&freeMemoryJmpBuf, 
-				in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
+			xchgAndLongjmp(freeMemoryJmpBuf, 
+				*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
 		}
 
 		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
@@ -764,8 +764,8 @@ void read_Comment_Extension(SetjmpStreamState *in_out_pSetjmpStreamState,
 		// TODO: Interprete read block
 
 		safe_free(&subBlock.Data_Values);
-		xchgJmpBuf(&freeMemoryJmpBuf, 
-			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
+		xchgJmpBuf(freeMemoryJmpBuf, 
+			*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
 
 		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 			&subBlock.Block_Size, sizeof(subBlock.Block_Size));

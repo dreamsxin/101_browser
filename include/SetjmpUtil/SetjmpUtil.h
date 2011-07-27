@@ -51,14 +51,13 @@ DLLEXPORT void setjmpStateLongjmp(SetjmpState *in_out_pSetjmpState,
 
 
 /*!
-* Exchanges the jmp_buf-s.
-* Must be called at the end of a block that calls xchgAndSetjmp.
+* Exchanges the jmp_buf-s (note that jmp_buf is an array type).
 * 
 * Preconditions: 
 * NULL != in_pJmpBuf0
 * NULL != in_pJmpBuf1
 */
-DLLEXPORT void xchgJmpBuf(jmp_buf *in_pJmpBuf0, jmp_buf *in_pJmpBuf1);
+DLLEXPORT void xchgJmpBuf(jmp_buf in_jmpBuf0, jmp_buf in_jmpBuf1);
 
 /*!
 * These following two functions are intended for "catching the exception" 
@@ -66,15 +65,16 @@ DLLEXPORT void xchgJmpBuf(jmp_buf *in_pJmpBuf0, jmp_buf *in_pJmpBuf1);
 */
 
 /*!
-* Does an exchange of jmp_buf-s (if NULL == in_pJmpBuffer there will be no 
-* exchange). Then the function does a setjmp.
+* Does an exchange of jmp_buf-s. Then the macro does a setjmp.
 * 
 * Parameters:
-* in_pPrevJmpBuf: the jmp_buf that was previously used (!= NULL)
-* in_pNextJmpBuf: the jmp_buf that shall be used next (!= NULL)
+* in_pPrevJmpBuf: the jmp_buf that was previously used
+* in_pNextJmpBuf: the jmp_buf that shall be used next
 */
-DLLEXPORT int xchgAndSetjmp(jmp_buf *in_pPrevJmpBuf,
-	jmp_buf *in_pNextJmpBuf);
+
+#define XCHG_AND_SETJMP(in_prevJmpBuf, in_nextJmpBuf) ( \
+	xchgJmpBuf(in_prevJmpBuf, in_nextJmpBuf), \
+	setjmp(in_prevJmpBuf))
 
 
 /*!
@@ -87,8 +87,9 @@ DLLEXPORT int xchgAndSetjmp(jmp_buf *in_pPrevJmpBuf,
 * in_pPrevJmpBuf: the jmp_buf that was previously used (!= NULL)
 * in_value:       the parameter to pass to longjmp (0 != in_value)
 */
-DLLEXPORT void xchgAndLongjmp(jmp_buf *in_pCurrJmpBuf,
-	jmp_buf *in_pPrevJmpBuf, int in_value);
+
+DLLEXPORT void xchgAndLongjmp(jmp_buf in_pCurrJmpBuf,
+	jmp_buf in_pPrevJmpBuf, int in_value);
 
 #ifdef __cplusplus
 }

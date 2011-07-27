@@ -166,18 +166,18 @@ void defaultMarkerInterpreter(SetjmpStreamState *in_out_pSetjmpStreamState,
 		pData = (uint8_t*) setjmpStateLongjmpMalloc(
 			&allocationFailureSetjmpState, length-2);
 
-		if (result = xchgAndSetjmp(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-		&freeMemoryJmpBuf))
+		if (result = XCHG_AND_SETJMP(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		freeMemoryJmpBuf))
 		{
 			safe_free(&pData);
-			xchgAndLongjmp(&freeMemoryJmpBuf, 
-				in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
+			xchgAndLongjmp(freeMemoryJmpBuf, 
+				*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
 		}
 
 		(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, pData, length-2);
 
 		safe_free(&pData);
-		xchgJmpBuf(&freeMemoryJmpBuf, in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
+		xchgJmpBuf(freeMemoryJmpBuf, *in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
 	}
 
 	printf("\n");

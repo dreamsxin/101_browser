@@ -16,7 +16,30 @@
 
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
+#include "MiniStdlib/memory.h"
 
 void test_MiniStdlib()
 {
+	// Raw numbers from http://www.random.org/cgi-bin/randbyte?nbytes=24&format=h
+	
+	int arr0[] = {
+		0xd4b3dde1, 
+		0xca027453, 
+		0x3f5685b3
+	};
+	int arr1[] = {
+		0x08b6878d, 
+		0xba63f3e9, 
+		0x968fb1e5 
+	};
+
+	memxchg(arr0, arr1, sizeof(arr0));
+
+	test(0x08b6878d == arr0[0]);
+	test(0xba63f3e9 == arr0[1]);
+	test(0x968fb1e5 == arr0[2]);
+
+	test(0xd4b3dde1 == arr1[0]);
+	test(0xca027453 == arr1[1]);
+	test(0x3f5685b3 == arr1[2]);
 }

@@ -148,6 +148,9 @@
     <ProjectReference Include="..\RFC1951\RFC1951.vcxproj">
       <Project>{d75e6c70-3d71-44e6-be11-6d714ef2906f}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\SetjmpUtil\SetjmpUtil.vcxproj">
+      <Project>{dc55d83d-e17a-4960-b26f-8db3c539a1cf}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Unicode\Unicode.vcxproj">
       <Project>{dcc383e7-20ee-4cf5-8491-22f24c5772db}</Project>
     </ProjectReference>

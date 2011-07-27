@@ -38,33 +38,22 @@ void setjmpStateLongjmp(SetjmpState *in_out_pSetjmpState,
 	longjmp(*in_out_pSetjmpState->mpJmpBuffer, in_out_pSetjmpState->mLongjmpValue);
 }
 
-void xchgJmpBuf(jmp_buf *in_pJmpBuf0, jmp_buf *in_pJmpBuf1)
+void xchgJmpBuf(jmp_buf in_jmpBuf0, jmp_buf in_jmpBuf1)
 {
-	assert(NULL != in_pJmpBuf0);
-	assert(NULL != in_pJmpBuf1);
-	
-	memxchg(in_pJmpBuf0, in_pJmpBuf1, sizeof(jmp_buf));
+	assert(NULL != in_jmpBuf0);
+	assert(NULL != in_jmpBuf1);
+
+	memxchg(in_jmpBuf0, in_jmpBuf1, sizeof(jmp_buf));
 }
 
-int xchgAndSetjmp(jmp_buf *in_pPrevJmpBuf, jmp_buf *in_pNextJmpBuf)
-{
-	xchgJmpBuf(in_pPrevJmpBuf, in_pNextJmpBuf);
-
-	/*
-	* *in_pPrevJmpBuffer now contains the memory that was in 
-	* in_pNextJmpBuffer before while *in_pNextJmpBuffer has . So we can (and have to) use it.
-	*/
-	return setjmp(*in_pPrevJmpBuf);
-}
-
-void xchgAndLongjmp(jmp_buf *in_pCurrJmpBuf, jmp_buf *in_pPrevJmpBuf, 
+void xchgAndLongjmp(jmp_buf in_currJmpBuf, jmp_buf in_prevJmpBuf, 
 	int in_value)
 {
-	xchgJmpBuf(in_pCurrJmpBuf, in_pPrevJmpBuf);
+	xchgJmpBuf(in_currJmpBuf, in_prevJmpBuf);
 
 	/*
-	* *in_pPrevJmpBuf contains the "old" value again, so we may longjmp
+	* in_prevJmpBuf contains the "old" value again, so we may longjmp
 	* on it.
 	*/
-	longjmp(*in_pPrevJmpBuf , in_value);
+	longjmp(in_prevJmpBuf , in_value);
 }
