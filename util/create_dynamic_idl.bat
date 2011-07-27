@@ -23,7 +23,7 @@ CALL create_single_dynamic_idl.bat http://dev.w3.org/html5/eventsource/ serverse
 
 CALL create_single_dynamic_idl.bat http://dev.w3.org/geo/api/spec-source.html geo ../data/idl/generated/geolocation.idl
 
-
+CALL create_single_dynamic_idl.bat http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html domcore ../data/idl/generated/domcore.idl
 
 REM wget http://dvcs.w3.org/hg/IndexedDB/raw-file/tip/Overview.html -O temp.html
 REM java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.HTML2XML temp.html temp.xml

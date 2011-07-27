@@ -15,7 +15,7 @@
 </xsl:text>
   </xsl:template>
 
-  <!-- For geolocation, web-apps 1.0 -->
+  <!-- For geolocation, web-apps 1.0, DOM Core -->
   <xsl:template match="h:pre[@class='idl']">
     <xsl:variable name="text">
       <xsl:value-of select="."/>
