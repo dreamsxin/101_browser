@@ -8,12 +8,6 @@ h2. hidusage.h
 |Project|ReactOS|
 |Homepage| http://www.reactos.org|
 
-h2. pstdint.h
-
-|File|include/contrib/pstdint.h|
-|Origin|http://www.azillionmonkeys.com/qed/pstdint.h|
-|Homepage: http://www.azillionmonkeys.com/qed/ninja.html|
-
 h2. zlib 1.2.3 (soon to be removed)
 
 |Files|include/zlib/*; src/zlib/*|
