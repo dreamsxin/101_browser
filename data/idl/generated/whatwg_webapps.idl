@@ -1,11 +1,5 @@
 module webapps
 {
-  interface HTMLCollection {
-    readonly attribute unsigned long length;
-    caller getter Element? item(in unsigned long index);
-    caller getter object? namedItem(in DOMString name); // only returns Element
-  };
-
   interface HTMLAllCollection : HTMLCollection {
     // inherits length and item()
     caller getter object? namedItem(in DOMString name); // overrides inherited namedItem()
@@ -43,20 +37,6 @@ module webapps
     PropertyValueArray getValues();
   };
 
-  interface DOMTokenList {
-    readonly attribute unsigned long length;
-    getter DOMString? item(in unsigned long index);
-    boolean contains(in DOMString token);
-    void add(in DOMString token);
-    void remove(in DOMString token);
-    boolean toggle(in DOMString token);
-    stringifier DOMString ();
-  };
-
-  interface DOMSettableTokenList : DOMTokenList {
-              attribute DOMString value;
-  };
-
   interface DOMStringMap {
     getter DOMString (in DOMString name);
     setter void (in DOMString name, in DOMString value);
@@ -83,10 +63,6 @@ module webapps
     readonly attribute DOMString referrer;
              attribute DOMString cookie;
     readonly attribute DOMString lastModified;
-    readonly attribute DOMString compatMode;
-             attribute DOMString charset;
-    readonly attribute DOMString characterSet;
-    readonly attribute DOMString defaultCharset;
     readonly attribute DOMString readyState;
   
     // DOM tree accessors
@@ -1676,9 +1652,9 @@ module webapps
     void handleEvent(in DOMString message, in PeerConnection source);
   };
 
-  interface StreamEvent : Event {
+  interface MediaStreamEvent : Event {
     readonly attribute MediaStream? stream;
-    void initStreamEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in MediaStream? streamArg);
+    void initMediaStreamEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in MediaStream? streamArg);
   };
 
   interface WorkerGlobalScope {
