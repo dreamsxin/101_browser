@@ -37,7 +37,7 @@ extern "C" {
  * out_ppIntervals has to be a pointer to a pointer to Interval<UnicodeCodePoint>;
  * the intervals will be allocated
  */
-DLLEXPORT bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals, size_t* out_intervalsCount);
+DLLEXPORT bool readPropList(FILE* in_file, const char* in_property, void* out_ppIntervals, size_t* out_intervalsCount);
 
 /*!
  * in_ppIntervals has to be a pointer to a pointer to Interval<UnicodeCodePoint>;

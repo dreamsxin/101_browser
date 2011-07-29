@@ -20,7 +20,7 @@ using namespace std;</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="parameters">
         <parameter>
-          <xsl:text>char* in_property</xsl:text>
+          <xsl:text>const char* in_property</xsl:text>
         </parameter>
         <parameter>
           <xsl:text>void* out_ppIntervals</xsl:text>
