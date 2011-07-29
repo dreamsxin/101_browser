@@ -78,7 +78,6 @@ module html
     readonly attribute HTMLCollection forms;
     readonly attribute HTMLCollection scripts;
     NodeList getElementsByName(in DOMString elementName);
-    NodeList getElementsByClassName(in DOMString classNames);
     NodeList getItems(in optional DOMString typeNames); // microdata 
     readonly attribute DOMElementMap cssElementMap;
   
@@ -164,20 +163,11 @@ module html
   Document implements HTMLDocument;
 
   [NoInterfaceObject]
-  interface DOMHTMLImplementation {
-    Document createHTMLDocument(in DOMString title);
-  };
-  DOMImplementation implements DOMHTMLImplementation;
-
-  [NoInterfaceObject]
   interface XMLDocumentLoader {
     boolean load(in DOMString url);
   };
 
   interface HTMLElement : Element {
-    // DOM tree accessors
-    NodeList getElementsByClassName(in DOMString classNames);
-  
     // dynamic markup insertion
              attribute DOMString innerHTML;
              attribute DOMString outerHTML;

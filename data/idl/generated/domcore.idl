@@ -118,10 +118,10 @@ module domcore
   
              attribute DOMString? nodeValue;
              attribute DOMString? textContent;
-    Node insertBefore(Node newChild, Node? refChild);
-    Node replaceChild(Node newChild, Node oldChild);
-    Node removeChild(Node oldChild);
-    Node appendChild(Node newChild);
+    Node insertBefore(Node node, Node? child);
+    Node replaceChild(Node node, Node child);
+    Node removeChild(Node child);
+    Node appendChild(Node node);
   
     Node cloneNode(optional boolean deep);
     boolean isSameNode(Node? node);
