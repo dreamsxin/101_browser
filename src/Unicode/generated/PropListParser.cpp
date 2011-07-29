@@ -42,7 +42,7 @@ bool readPropList(FILE* in_file, const char* in_property, void* out_ppIntervals,
 	std::list<Interval<UnicodeCodePoint> > listIntervals;
 	UnicodeCodePoint firstNumber;
 	UnicodeCodePoint secondNumber;
-	char* propertyPos;
+	const char* propertyPos;
 	bool propertyEquals;
 
 	// Initialize initial state
