@@ -43,8 +43,7 @@ ReadResult read_GIF_Data_Stream(void *in_pStreamState,
 		in_pStreamState, in_byteStreamReadInterface);
 	setjmpReadStreamInterface = getSetjmpStreamByteStreamInterface(&setjmpReadStreamState);
 	
-	// the = is correct
-	if (result = setjmp(jmpBuf))
+	if ((result = setjmp(jmpBuf)) != 0)
 		return (ReadResult) result;
 
 	read_Header(&setjmpReadStreamState, setjmpReadStreamInterface, 
@@ -141,8 +140,8 @@ void read_Logical_Screen(SetjmpStreamState *in_out_pSetjmpStreamState,
 			ReadResultAllocationFailure, bytesOfGlobalColorTable);
 
 		// the = is correct
-		if (result = XCHG_AND_SETJMP(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-			freeMemoryJmpBuf))
+		if ((result = XCHG_AND_SETJMP(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			freeMemoryJmpBuf)) != 0)
 		{
 			safe_free(&in_pLogicalScreen->globalColorTable);
 			xchgAndLongjmp(freeMemoryJmpBuf, 
@@ -332,8 +331,8 @@ void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState,
 			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
 			ReadResultAllocationFailure, bytesOfGlobalColorTable);
 
-		if (result = XCHG_AND_SETJMP(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-		freeMemoryJmpBuf))
+		if ((result = XCHG_AND_SETJMP(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		freeMemoryJmpBuf)) != 0)
 		{
 			safe_free(&in_pTableBasedImage->localColorTable);
 			xchgAndLongjmp(freeMemoryJmpBuf, *in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
@@ -492,9 +491,8 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	initBitReadState(&bitReadState, &streamState, bitReadInterface);
 	init_Image_Data_StreamState(&streamState, in_out_pSetjmpStreamState, in_byteStreamReadInterface);
 
-	// the = is correct
-	if (result = XCHG_AND_SETJMP(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-		freeMemoryJmpBuf))
+	if ((result = XCHG_AND_SETJMP(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		freeMemoryJmpBuf)) != 0)
 	{
 		if (pStack)
 		{
@@ -750,9 +748,8 @@ void read_Comment_Extension(SetjmpStreamState *in_out_pSetjmpStreamState,
 			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
 			ReadResultAllocationFailure, subBlock.Block_Size);
 
-		// the = is correct
-		if (result = XCHG_AND_SETJMP(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-			freeMemoryJmpBuf))
+		if ((result = XCHG_AND_SETJMP(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			freeMemoryJmpBuf)) != 0)
 		{
 			safe_free(&subBlock.Data_Values);
 			xchgAndLongjmp(freeMemoryJmpBuf, 

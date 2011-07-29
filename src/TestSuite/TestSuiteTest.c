@@ -19,7 +19,7 @@
 #include "MiniStdlib/cstdint.h"
 #include "TestSuite/TestSuite.h"
 
-unsigned long testNr = 0;
+unsigned int testNr = 0;
 uint8_t verbose = 0;
 uint8_t exitOnFailure = 1;
 

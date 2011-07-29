@@ -312,7 +312,7 @@ void mainLoop(OZO_Display* pDisplay, const OZO_Window* pWindow, OZO_Atoms* pAtom
 int main(int argc, char** argv)
 {
 	OZO_Display ozodisplay;
-	memset(&ozodisplay, sizeof(ozodisplay), NULL);
+	memset(&ozodisplay, sizeof(ozodisplay), 0);
 
 	initDisplay(&ozodisplay, NULL);
 
