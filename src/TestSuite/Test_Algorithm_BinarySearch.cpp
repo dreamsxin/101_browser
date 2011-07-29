@@ -24,7 +24,7 @@ void testAlgorithm_BinarySearch()
 		unsigned int number = 42;
 
 		test(binarySearch(&number, NULL, 0, sizeof(Interval<unsigned int>), 
-			&compareElementIntervalVoid<unsigned int>) == -1);
+			&compareElementIntervalVoid<unsigned int>) == (size_t) -1);
 	}
 
 	{

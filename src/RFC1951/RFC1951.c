@@ -216,8 +216,7 @@ ReadResult parseRFC1951(void *in_out_pReadStreamState, ByteStreamInterface in_re
 	setjmpStreamInit(&setjmpWriteStreamState, &jmpBuf, ReadResultWriteError, 
 		in_out_pWriteStreamState, in_writeInterface);
 
-	// The = is correct here
-	if (result = setjmp(jmpBuf))
+	if ((result = setjmp(jmpBuf)) != 0)
 		return (ReadResult) result;
 
 	initBitReadState(&bitReadState, &setjmpReadStreamState, getSetjmpStreamByteStreamInterface(&setjmpReadStreamState));
