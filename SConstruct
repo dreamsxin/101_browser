@@ -37,6 +37,9 @@ Unicode.SharedLibrary('bin/Unicode', Glob('src/Unicode/*.c')+Glob('src/Unicode/*
 HTML5 = env.Clone()
 HTML5.SharedLibrary('bin/HTML5', Glob('src/HTML5/*.c')+Glob('src/HTML5/*.cpp'))
 
+SetjmpUtil = env.Clone()
+SetjmpUtil.SharedLibrary('bin/SetjmpUtil', Glob('src/SetjmpUtil/*.c'))
+
 CoroutinePosix = env.Clone()
 CoroutinePosix.SharedLibrary('bin/CoroutinePosix', Glob('src/CoroutinePosix/*.c'))
 
@@ -52,6 +55,6 @@ GIF.SharedLibrary('bin/GIF', Glob('src/GIF/*.c'))
 
 testsuite = env.Clone()
 # testsuite.Append(CCFLAGS = '-fprofile-arcs -ftest-coverage', LIBS = ['gcov'])
-testsuite.Append(LIBS = ['MiniStdlib', 'BigNumber', 'RFC1950', 'RFC1951', 'Unicode', 'HTML5', 'Algorithm', 'CoroutinePosix', 'GIF', 'IO', 'PNG'])
+testsuite.Append(LIBS = ['MiniStdlib', 'BigNumber', 'RFC1950', 'RFC1951', 'Unicode', 'HTML5', 'Algorithm', 'SetjmpUtil', 'CoroutinePosix', 'GIF', 'IO', 'PNG'])
 testsuite.Program('bin/TestSuite', Glob('src/TestSuite/*.cpp')+Glob('src/TestSuite/*.c'), LIBPATH = ['#/bin','#/lib'])
 

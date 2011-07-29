@@ -16,6 +16,7 @@
 
 #include "IO/PipeStream.h"
 #include "MiniStdlib/memory.h" // for memxchg
+#include <string.h>            // for memset
 #include <assert.h>
 
 void xchgAndSwitchCoroutine(void *in_out_pPipeStreamState)
