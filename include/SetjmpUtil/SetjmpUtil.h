@@ -70,8 +70,11 @@ DLLEXPORT void xchgJmpBuf(jmp_buf in_jmpBuf0, jmp_buf in_jmpBuf1);
 * Parameters:
 * in_pPrevJmpBuf: the jmp_buf that was previously used
 * in_pNextJmpBuf: the jmp_buf that shall be used next
+*
+* Q: Why is this a macro and not a function?
+* A: If it was a function, we would store a value that is invalid
+*    after leaving the function.
 */
-
 #define XCHG_AND_SETJMP(in_prevJmpBuf, in_nextJmpBuf) ( \
 	xchgJmpBuf(in_prevJmpBuf, in_nextJmpBuf), \
 	setjmp(in_prevJmpBuf))
