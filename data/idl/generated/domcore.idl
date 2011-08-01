@@ -134,7 +134,8 @@ module domcore
 
   interface Document : Node {
     readonly attribute DOMImplementation implementation;
-             attribute DOMString documentURI;
+    readonly attribute DOMString URL;
+    readonly attribute DOMString documentURI;
     readonly attribute DOMString compatMode;
   
              attribute DOMString charset;
@@ -192,6 +193,10 @@ module domcore
     readonly attribute DOMString? prefix;
     readonly attribute DOMString localName;
     readonly attribute DOMString tagName;
+  
+             attribute DOMString id;
+             attribute DOMString className;
+    readonly attribute DOMTokenList classList;
   
     readonly attribute Attr[] attributes;
     DOMString? getAttribute(DOMString qualifiedName);
