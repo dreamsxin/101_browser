@@ -19,6 +19,7 @@ module html
     // inherits item()
              attribute unsigned long length; // overrides inherited length
     caller getter object? namedItem(in DOMString name); // overrides inherited namedItem()
+    setter creator void (in unsigned long index, in HTMLOptionElement option);
     void add(in HTMLElement element, in optional HTMLElement? before);
     void add(in HTMLElement element, in long before);
     void remove(in long index);
@@ -1063,6 +1064,7 @@ module html
     void add(in HTMLElement element, in optional HTMLElement? before);
     void add(in HTMLElement element, in long before);
     void remove(in long index);
+    setter creator void (in unsigned long index, in HTMLOptionElement option);
   
     readonly attribute HTMLCollection selectedOptions;
              attribute long selectedIndex;
@@ -1411,6 +1413,7 @@ module html
   
     // updates
     void update();
+    void abort();
     void swapCache();
   
     // events

@@ -19,6 +19,7 @@ module html5
     // inherits item()
              attribute unsigned long length; // overrides inherited length
     caller getter object? namedItem(in DOMString name); // overrides inherited namedItem()
+    setter creator void (in unsigned long index, in HTMLOptionElement option);
     void add(in HTMLElement element, in optional HTMLElement? before);
     void add(in HTMLElement element, in long before);
     void remove(in long index);
@@ -897,6 +898,7 @@ module html5
     void add(in HTMLElement element, in optional HTMLElement? before);
     void add(in HTMLElement element, in long before);
     void remove(in long index);
+    setter creator void (in unsigned long index, in HTMLOptionElement option);
   
     readonly attribute HTMLCollection selectedOptions;
              attribute long selectedIndex;
@@ -1236,6 +1238,7 @@ module html5
   
     // updates
     void update();
+    void abort();
     void swapCache();
   
     // events

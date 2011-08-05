@@ -3,8 +3,8 @@ module webstorage
   interface Storage {
     readonly attribute unsigned long length;
     DOMString? key(in unsigned long index);
-    getter any getItem(in DOMString key);
-    setter creator void setItem(in DOMString key, in any value);
+    getter DOMString getItem(in DOMString key);
+    setter creator void setItem(in DOMString key, in DOMString value);
     deleter void removeItem(in DOMString key);
     void clear();
   };
@@ -23,11 +23,11 @@ module webstorage
 
   interface StorageEvent : Event {
     readonly attribute DOMString key;
-    readonly attribute any oldValue;
-    readonly attribute any newValue;
+    readonly attribute DOMString? oldValue;
+    readonly attribute DOMString? newValue;
     readonly attribute DOMString url;
     readonly attribute Storage? storageArea;
-    void initStorageEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in DOMString keyArg, in any oldValueArg, in any newValueArg, in DOMString urlArg, in Storage? storageAreaArg);
+    void initStorageEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in DOMString keyArg, in DOMString? oldValueArg, in DOMString? newValueArg, in DOMString urlArg, in Storage? storageAreaArg);
   };
 
 
