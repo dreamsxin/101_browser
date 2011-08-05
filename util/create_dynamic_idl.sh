@@ -22,13 +22,14 @@ wget http://matroska.svn.sourceforge.net/viewvc/matroska/trunk/foundation_src/sp
 
 ./create_single_dynamic_idl.sh http://dev.w3.org/geo/api/spec-source.html geo ../data/idl/generated/geolocation.idl
 
-
 ./create_single_dynamic_idl.sh http://www.whatwg.org/specs/web-apps/current-work/complete.html webapps ../data/idl/generated/whatwg_webapps.idl
 ./create_single_dynamic_idl.sh http://www.whatwg.org/specs/web-apps/current-work/ html ../data/idl/generated/whatwg_html.idl
 ./create_single_dynamic_idl.sh http://dev.w3.org/html5/spec/Overview.html html5 ../data/idl/generated/w3c_html5.idl
 ./create_single_dynamic_idl.sh http://dev.w3.org/geo/api/spec-source.html geo ../data/idl/generated/geolocation.idl
 
+./create_single_dynamic_idl.sh http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html domcore ../data/idl/generated/domcore.idl
 
+./create_single_dynamic_idl.sh http://dev.w3.org/csswg/cssom-view/ cssom ../data/idl/generated/cssom-view-module.idl
 
 wget http://www.w3.org/TR/xproc/ -O temp.html
 java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.HTML2XML temp.html temp.xml

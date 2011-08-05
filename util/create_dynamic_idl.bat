@@ -25,6 +25,8 @@ CALL create_single_dynamic_idl.bat http://dev.w3.org/geo/api/spec-source.html ge
 
 CALL create_single_dynamic_idl.bat http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html domcore ../data/idl/generated/domcore.idl
 
+CALL create_single_dynamic_idl.bat http://dev.w3.org/csswg/cssom-view/ cssom ../data/idl/generated/cssom-view-module.idl
+
 REM wget http://dvcs.w3.org/hg/IndexedDB/raw-file/tip/Overview.html -O temp.html
 REM java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.HTML2XML temp.html temp.xml
 REM java -cp out XsltTransform temp.xml create_idl.xslt namespace indexeddb ../data/idl/generated/indexeddb.idl
