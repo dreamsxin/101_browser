@@ -24,7 +24,9 @@ CALL create_single_dynamic_idl.bat http://dev.w3.org/html5/eventsource/ serverse
 CALL create_single_dynamic_idl.bat http://dev.w3.org/geo/api/spec-source.html geo ../data/idl/generated/geolocation.idl
 
 CALL create_single_dynamic_idl.bat http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html domcore ../data/idl/generated/domcore.idl
+CALL create_single_dynamic_idl.bat http://html5.org/specs/dom-range.html domrange ../data/idl/generated/domrange.idl
 
+CALL create_single_dynamic_idl.bat http://dev.w3.org/csswg/cssom/ cssom ../data/idl/generated/cssom.idl
 CALL create_single_dynamic_idl.bat http://dev.w3.org/csswg/cssom-view/ cssom ../data/idl/generated/cssom-view-module.idl
 
 REM wget http://dvcs.w3.org/hg/IndexedDB/raw-file/tip/Overview.html -O temp.html

@@ -28,8 +28,10 @@ wget http://matroska.svn.sourceforge.net/viewvc/matroska/trunk/foundation_src/sp
 ./create_single_dynamic_idl.sh http://dev.w3.org/geo/api/spec-source.html geo ../data/idl/generated/geolocation.idl
 
 ./create_single_dynamic_idl.sh http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html domcore ../data/idl/generated/domcore.idl
+./create_single_dynamic_idl.sh http://html5.org/specs/dom-range.html domrange ../data/idl/generated/domrange.idl
 
-./create_single_dynamic_idl.sh http://dev.w3.org/csswg/cssom-view/ cssom ../data/idl/generated/cssom-view-module.idl
+./create_single_dynamic_idl.sh http://dev.w3.org/csswg/cssom/ cssom ../data/idl/generated/cssom.idl
+./create_single_dynamic_idl.sh http://dev.w3.org/csswg/cssom-view/ cssom_view ../data/idl/generated/cssom-view-module.idl
 
 wget http://www.w3.org/TR/xproc/ -O temp.html
 java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.HTML2XML temp.html temp.xml
