@@ -2,7 +2,7 @@ module websockets
 {
   [Constructor(in DOMString url, in optional DOMString protocols),
    Constructor(in DOMString url, in optional DOMString[] protocols)]
-  interface WebSocket {
+  interface WebSocket : EventTarget {
     readonly attribute DOMString url;
   
     // ready state
@@ -28,7 +28,6 @@ module websockets
     void send(in ArrayBuffer data);
     void send(in Blob data);
   };
-  WebSocket implements EventTarget;
 
   interface CloseEvent : Event {
     readonly attribute boolean wasClean;

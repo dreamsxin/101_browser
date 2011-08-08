@@ -603,7 +603,7 @@ module html5
              attribute Function? onvolumechange;
   };
 
-  interface TextTrack {
+  interface TextTrack : EventTarget {
     readonly attribute DOMString kind;
     readonly attribute DOMString label;
     readonly attribute DOMString language;
@@ -626,7 +626,6 @@ module html5
   
              attribute Function? oncuechange;
   };
-  TextTrack implements EventTarget;
   
   typedef TextTrack[] TextTrackList;
 
@@ -641,7 +640,7 @@ module html5
     TextTrackCue? getCueById(in DOMString id);
   };
 
-  interface TextTrackCue {
+  interface TextTrackCue : EventTarget {
     readonly attribute TextTrack? track;
     readonly attribute DOMString id;
   
@@ -656,7 +655,6 @@ module html5
              attribute Function? onenter;
              attribute Function? onexit;
   };
-  TextTrackCue implements EventTarget;
 
   interface TimeRanges {
     readonly attribute unsigned long length;
@@ -1057,7 +1055,7 @@ module html5
   };
 
   [ReplaceableNamedProperties] 
-  interface Window {
+  interface Window : EventTarget {
     // the current browsing context
     readonly attribute WindowProxy window;
     readonly attribute WindowProxy self;
@@ -1170,7 +1168,6 @@ module html5
              attribute Function? onvolumechange;
              attribute Function? onwaiting;
   };
-  Window implements EventTarget;
 
   interface BarProp {
              attribute boolean visible;
@@ -1225,7 +1222,7 @@ module html5
              attribute DOMString returnValue;
   };
 
-  interface ApplicationCache {
+  interface ApplicationCache : EventTarget {
   
     // update status
     const unsigned short UNCACHED = 0;
@@ -1251,7 +1248,6 @@ module html5
              attribute Function? oncached;
              attribute Function? onobsolete;
   };
-  ApplicationCache implements EventTarget;
 
   [NoInterfaceObject]
   interface NavigatorOnLine {

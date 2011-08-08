@@ -638,7 +638,7 @@ module html
              attribute Function? onvolumechange;
   };
 
-  interface TextTrack {
+  interface TextTrack : EventTarget {
     readonly attribute DOMString kind;
     readonly attribute DOMString label;
     readonly attribute DOMString language;
@@ -661,7 +661,6 @@ module html
   
              attribute Function? oncuechange;
   };
-  TextTrack implements EventTarget;
   
   typedef TextTrack[] TextTrackList;
 
@@ -679,7 +678,7 @@ module html
   
   [Constructor(in DOMString id, in double startTime, in double endTime, in DOMString text, in optional DOMString settings, in optional boolean pauseOnExit)]
   
-  interface TextTrackCue {
+  interface TextTrackCue : EventTarget {
     readonly attribute TextTrack? track;
     readonly attribute DOMString id;
   
@@ -702,7 +701,6 @@ module html
              attribute Function? onenter;
              attribute Function? onexit;
   };
-  TextTrackCue implements EventTarget;
 
   interface TimeRanges {
     readonly attribute unsigned long length;
@@ -833,7 +831,7 @@ module html
   interface CanvasPixelArray {
     readonly attribute unsigned long length;
     getter octet (in unsigned long index);
-    setter void (in unsigned long index, in octet value);
+    setter void (in unsigned long index, [Clamp] in octet value);
   };
 
   interface HTMLMapElement : HTMLElement {
@@ -1224,7 +1222,7 @@ module html
   };
 
   [ReplaceableNamedProperties] 
-  interface Window {
+  interface Window : EventTarget {
     // the current browsing context
     readonly attribute WindowProxy window;
     readonly attribute WindowProxy self;
@@ -1345,7 +1343,6 @@ module html
              attribute Function? onvolumechange;
              attribute Function? onwaiting;
   };
-  Window implements EventTarget;
 
   interface BarProp {
              attribute boolean visible;
@@ -1400,7 +1397,7 @@ module html
              attribute DOMString returnValue;
   };
 
-  interface ApplicationCache {
+  interface ApplicationCache : EventTarget {
   
     // update status
     const unsigned short UNCACHED = 0;
@@ -1426,7 +1423,6 @@ module html
              attribute Function? oncached;
              attribute Function? onobsolete;
   };
-  ApplicationCache implements EventTarget;
 
   [NoInterfaceObject]
   interface NavigatorOnLine {
@@ -1575,7 +1571,7 @@ module html
   };
 
   [Constructor(in MediaStream parentStream)]
-  interface MediaStream {
+  interface MediaStream : EventTarget {
     readonly attribute DOMString label;
     readonly attribute MediaStreamTrackList tracks;
   
@@ -1586,7 +1582,6 @@ module html
     readonly attribute unsigned short readyState;
              attribute Function? onended;
   };
-  MediaStream implements EventTarget;
   
   interface LocalMediaStream : MediaStream {
     void stop();
@@ -1614,7 +1609,7 @@ module html
   };
 
   [Constructor(in DOMString configuration, in SignalingCallback signalingCallback)]
-  interface PeerConnection {
+  interface PeerConnection : EventTarget {
     void processSignalingMessage(in DOMString message);
   
     const unsigned short NEW = 0;
@@ -1638,7 +1633,6 @@ module html
              attribute Function? onaddstream;
              attribute Function? onremovestream;
   };
-  PeerConnection implements EventTarget;
   
   [Callback=FunctionOnly, NoInterfaceObject]
   interface SignalingCallback {
@@ -1665,7 +1659,7 @@ module html
     readonly attribute MessagePort port2;
   };
 
-  interface MessagePort {
+  interface MessagePort : EventTarget {
     void postMessage(in any message, in optional sequence<Transferable> transfer);
     void start();
     void close();
@@ -1673,7 +1667,6 @@ module html
     // event handlers
              attribute Function? onmessage;
   };
-  MessagePort implements EventTarget;
   MessagePort implements Transferable;
 
   interface HTMLAppletElement : HTMLElement {

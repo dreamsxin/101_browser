@@ -1,6 +1,6 @@
 module webworkers
 {
-  interface WorkerGlobalScope {
+  interface WorkerGlobalScope : EventTarget {
     readonly attribute WorkerGlobalScope self;
     readonly attribute WorkerLocation location;
   
@@ -10,7 +10,6 @@ module webworkers
              attribute Function? ononline;
   };
   WorkerGlobalScope implements WorkerUtils;
-  WorkerGlobalScope implements EventTarget;
 
   [Supplemental, NoInterfaceObject]
   interface DedicatedWorkerGlobalScope : WorkerGlobalScope {
@@ -32,10 +31,9 @@ module webworkers
   };
 
   [Supplemental, NoInterfaceObject]
-  interface AbstractWorker {
+  interface AbstractWorker : EventTarget {
              attribute Function? onerror;
   };
-  AbstractWorker implements EventTarget;
 
   [Constructor(in DOMString scriptURL)]
   interface Worker : AbstractWorker {

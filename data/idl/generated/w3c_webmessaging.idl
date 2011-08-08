@@ -15,14 +15,13 @@ module webmessaging
     readonly attribute MessagePort port2;
   };
 
-  interface MessagePort {
+  interface MessagePort : EventTarget {
     void postMessage(in any message, in optional sequence<Transferable> transfer);  void start();
     void close();
   
     // event handlers
              attribute Function? onmessage;
   };
-  MessagePort implements EventTarget;
   MessagePort implements Transferable;
 
 

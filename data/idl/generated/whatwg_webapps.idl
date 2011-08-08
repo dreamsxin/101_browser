@@ -638,7 +638,7 @@ module webapps
              attribute Function? onvolumechange;
   };
 
-  interface TextTrack {
+  interface TextTrack : EventTarget {
     readonly attribute DOMString kind;
     readonly attribute DOMString label;
     readonly attribute DOMString language;
@@ -661,7 +661,6 @@ module webapps
   
              attribute Function? oncuechange;
   };
-  TextTrack implements EventTarget;
   
   typedef TextTrack[] TextTrackList;
 
@@ -679,7 +678,7 @@ module webapps
   
   [Constructor(in DOMString id, in double startTime, in double endTime, in DOMString text, in optional DOMString settings, in optional boolean pauseOnExit)]
   
-  interface TextTrackCue {
+  interface TextTrackCue : EventTarget {
     readonly attribute TextTrack? track;
     readonly attribute DOMString id;
   
@@ -702,7 +701,6 @@ module webapps
              attribute Function? onenter;
              attribute Function? onexit;
   };
-  TextTrackCue implements EventTarget;
 
   interface TimeRanges {
     readonly attribute unsigned long length;
@@ -833,7 +831,7 @@ module webapps
   interface CanvasPixelArray {
     readonly attribute unsigned long length;
     getter octet (in unsigned long index);
-    setter void (in unsigned long index, in octet value);
+    setter void (in unsigned long index, [Clamp] in octet value);
   };
 
   interface HTMLMapElement : HTMLElement {
@@ -1224,7 +1222,7 @@ module webapps
   };
 
   [ReplaceableNamedProperties] 
-  interface Window {
+  interface Window : EventTarget {
     // the current browsing context
     readonly attribute WindowProxy window;
     readonly attribute WindowProxy self;
@@ -1345,7 +1343,6 @@ module webapps
              attribute Function? onvolumechange;
              attribute Function? onwaiting;
   };
-  Window implements EventTarget;
 
   interface BarProp {
              attribute boolean visible;
@@ -1400,7 +1397,7 @@ module webapps
              attribute DOMString returnValue;
   };
 
-  interface ApplicationCache {
+  interface ApplicationCache : EventTarget {
   
     // update status
     const unsigned short UNCACHED = 0;
@@ -1426,7 +1423,6 @@ module webapps
              attribute Function? oncached;
              attribute Function? onobsolete;
   };
-  ApplicationCache implements EventTarget;
 
   [NoInterfaceObject]
   interface NavigatorOnLine {
@@ -1575,7 +1571,7 @@ module webapps
   };
 
   [Constructor(in MediaStream parentStream)]
-  interface MediaStream {
+  interface MediaStream : EventTarget {
     readonly attribute DOMString label;
     readonly attribute MediaStreamTrackList tracks;
   
@@ -1586,7 +1582,6 @@ module webapps
     readonly attribute unsigned short readyState;
              attribute Function? onended;
   };
-  MediaStream implements EventTarget;
   
   interface LocalMediaStream : MediaStream {
     void stop();
@@ -1614,7 +1609,7 @@ module webapps
   };
 
   [Constructor(in DOMString configuration, in SignalingCallback signalingCallback)]
-  interface PeerConnection {
+  interface PeerConnection : EventTarget {
     void processSignalingMessage(in DOMString message);
   
     const unsigned short NEW = 0;
@@ -1638,7 +1633,6 @@ module webapps
              attribute Function? onaddstream;
              attribute Function? onremovestream;
   };
-  PeerConnection implements EventTarget;
   
   [Callback=FunctionOnly, NoInterfaceObject]
   interface SignalingCallback {
@@ -1650,7 +1644,7 @@ module webapps
     void initMediaStreamEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in MediaStream? streamArg);
   };
 
-  interface WorkerGlobalScope {
+  interface WorkerGlobalScope : EventTarget {
     readonly attribute WorkerGlobalScope self;
     readonly attribute WorkerLocation location;
   
@@ -1660,7 +1654,6 @@ module webapps
              attribute Function? ononline;
   };
   WorkerGlobalScope implements WorkerUtils;
-  WorkerGlobalScope implements EventTarget;
 
   [Supplemental, NoInterfaceObject]
   interface DedicatedWorkerGlobalScope : WorkerGlobalScope {
@@ -1683,11 +1676,10 @@ module webapps
   };
 
   [Supplemental, NoInterfaceObject]
-  interface AbstractWorker {
+  interface AbstractWorker : EventTarget {
              attribute Function? onerror;
   
   };
-  AbstractWorker implements EventTarget;
 
   [Constructor(in DOMString scriptURL)]
   interface Worker : AbstractWorker {
@@ -1736,7 +1728,7 @@ module webapps
   };
 
   [Constructor(in DOMString url)]
-  interface EventSource {
+  interface EventSource : EventTarget {
     readonly attribute DOMString url;
   
     // ready state
@@ -1751,11 +1743,10 @@ module webapps
              attribute Function? onerror;
     void close();
   };
-  EventSource implements EventTarget;
 
   [Constructor(in DOMString url, in optional DOMString protocols),
    Constructor(in DOMString url, in optional DOMString[] protocols)]
-  interface WebSocket {
+  interface WebSocket : EventTarget {
     readonly attribute DOMString url;
   
     // ready state
@@ -1781,7 +1772,6 @@ module webapps
     void send(in ArrayBuffer data);
     void send(in Blob data);
   };
-  WebSocket implements EventTarget;
 
   interface CloseEvent : Event {
     readonly attribute boolean wasClean;
@@ -1796,7 +1786,7 @@ module webapps
     readonly attribute MessagePort port2;
   };
 
-  interface MessagePort {
+  interface MessagePort : EventTarget {
     void postMessage(in any message, in optional sequence<Transferable> transfer);
     void start();
     void close();
@@ -1804,7 +1794,6 @@ module webapps
     // event handlers
              attribute Function? onmessage;
   };
-  MessagePort implements EventTarget;
   MessagePort implements Transferable;
 
   interface Storage {

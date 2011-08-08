@@ -1,7 +1,7 @@
 module serversent
 {
   [Constructor(in DOMString url)]
-  interface EventSource {
+  interface EventSource : EventTarget {
     readonly attribute DOMString url;
   
     // ready state
@@ -16,7 +16,6 @@ module serversent
              attribute Function? onerror;
     void close();
   };
-  EventSource implements EventTarget;
 
 
 };
