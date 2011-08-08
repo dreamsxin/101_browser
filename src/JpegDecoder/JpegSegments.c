@@ -108,5 +108,5 @@ void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState,
 		in_pScanHeader->Ss, in_pScanHeader->Se, in_pScanHeader->Ah, in_pScanHeader->Al);
 
 	safe_free(&in_pScanHeader->componentSpecificationParameters);
-	xchgJmpBuf(&freeMemoryJmpBuf, in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
+	xchgJmpBuf(freeMemoryJmpBuf, *in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
 }
