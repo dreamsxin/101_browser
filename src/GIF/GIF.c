@@ -687,7 +687,7 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 	safe_free(&pStack);
 	safe_free(&pTree);
-	xchgJmpBuf(&freeMemoryJmpBuf, in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
+	xchgJmpBuf(freeMemoryJmpBuf, *in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
 }
 
 void read_Application_Extension(SetjmpStreamState *in_out_pSetjmpStreamState, 
