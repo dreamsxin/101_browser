@@ -166,8 +166,8 @@ void defaultMarkerInterpreter(SetjmpStreamState *in_out_pSetjmpStreamState,
 		pData = (uint8_t*) setjmpStateLongjmpMalloc(
 			&allocationFailureSetjmpState, length-2);
 
-		if (result = XCHG_AND_SETJMP(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-		freeMemoryJmpBuf))
+		if ((result = XCHG_AND_SETJMP(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		freeMemoryJmpBuf)) != 0)
 		{
 			safe_free(&pData);
 			xchgAndLongjmp(freeMemoryJmpBuf, 

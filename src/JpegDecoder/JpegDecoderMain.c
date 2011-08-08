@@ -126,8 +126,7 @@ int main()
 		exit(1);
 	}
 
-	// the = is correct
-	if (readResult = Decode_image(&fileByteStreamState, getFileByteStreamInterface()))
+	if ((readResult = Decode_image(&fileByteStreamState, getFileByteStreamInterface())) != ReadResultOK)
 	{
 		fprintf(stderr, "Error when reading file: %s; error code: %u\n", filename, readResult);
 	}

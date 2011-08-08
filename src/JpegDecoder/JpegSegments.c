@@ -82,8 +82,8 @@ void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState,
 		setjmpStateLongjmpMalloc(&allocationFailureSetjmpState, 
 		sizeof(ScanComponentSpecificationParameter) * in_pScanHeader->Ns);
 
-	if (result = XCHG_AND_SETJMP(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-		freeMemoryJmpBuf))
+	if ((result = XCHG_AND_SETJMP(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		freeMemoryJmpBuf)) != 0)
 	{
 		safe_free(&in_pScanHeader->componentSpecificationParameters);
 		xchgAndLongjmp(freeMemoryJmpBuf, 
