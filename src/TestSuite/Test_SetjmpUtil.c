@@ -56,7 +56,6 @@ void testSetjmpUtil1()
 	test(0 == counter);
 	counter = 1;
 
-	// the = is correct
 	if ((result = XCHG_AND_SETJMP(jmpBuf0, jmpBuf1)) != 0)
 	{
 		test(21 == result);
@@ -77,7 +76,6 @@ void testSetjmpUtil2()
 	int result;
 	unsigned counter = 0;
 
-	// the = is correct
 	if ((result = setjmp(jmpBuf0)) != 0)
 	{
 		test(63 == result);
