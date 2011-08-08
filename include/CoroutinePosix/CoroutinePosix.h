@@ -18,7 +18,6 @@
 #define _MTAx_Coroutine_CoroutineWin_h
 
 #include <ucontext.h>
-#include "MiniStdlib/cstdbool.h"
 
 #define COROUTINE_KICKOFF_CALL
 typedef ucontext_t CoroutineDescriptor;

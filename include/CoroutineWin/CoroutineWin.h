@@ -18,7 +18,6 @@
 #define _MTAx_Coroutine_CoroutineWin_h
 
 #include <windows.h>
-#include "MiniStdlib/cstdbool.h"
 
 typedef LPVOID CoroutineDescriptor;
 #define COROUTINE_KICKOFF_CALL __stdcall

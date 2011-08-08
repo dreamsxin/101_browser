@@ -18,6 +18,7 @@
 #define _MTAx_Coroutine_Coroutine_h
 
 #include "MiniStdlib/declspec.h"
+#include "MiniStdlib/cstdbool.h"
 
 #if defined(_WIN32)
 # include "CoroutineWin/CoroutineWin.h"
