@@ -25,8 +25,7 @@ void testSetjmpUtil0()
 	int result;
 	unsigned counter = 0;
 
-	// the = is correct
-	if (result = setjmp(jmpBuf0))
+	if ((result = setjmp(jmpBuf0)) != 0)
 	{
 		test(21 == result);
 		test(counter == 1);
@@ -46,8 +45,7 @@ void testSetjmpUtil1()
 	int result;
 	unsigned counter = 0;
 
-	// the = is correct
-	if (result = setjmp(jmpBuf0))
+	if ((result = setjmp(jmpBuf0)) != 0)
 	{
 		test(42 == result);
 		test(counter == 3);
@@ -59,7 +57,7 @@ void testSetjmpUtil1()
 	counter = 1;
 
 	// the = is correct
-	if (result = XCHG_AND_SETJMP(jmpBuf0, jmpBuf1))
+	if ((result = XCHG_AND_SETJMP(jmpBuf0, jmpBuf1)) != 0)
 	{
 		test(21 == result);
 		test(counter == 2);
@@ -80,7 +78,7 @@ void testSetjmpUtil2()
 	unsigned counter = 0;
 
 	// the = is correct
-	if (result = setjmp(jmpBuf0))
+	if ((result = setjmp(jmpBuf0)) != 0)
 	{
 		test(63 == result);
 		test(counter == 5);
@@ -91,8 +89,7 @@ void testSetjmpUtil2()
 	test(0 == counter);
 	counter = 1;
 
-	// the = is correct
-	if (result = XCHG_AND_SETJMP(jmpBuf0, jmpBuf1))
+	if ((result = XCHG_AND_SETJMP(jmpBuf0, jmpBuf1)) != 0)
 	{
 		test(42 == result);
 		test(counter == 4);
@@ -103,8 +100,7 @@ void testSetjmpUtil2()
 	test(1 == counter);
 	counter = 2;
 
-	// the = is correct
-	if (result = XCHG_AND_SETJMP(jmpBuf0, jmpBuf2))
+	if ((result = XCHG_AND_SETJMP(jmpBuf0, jmpBuf2)) != 0)
 	{
 		test(21 == result);
 		test(counter == 3);
