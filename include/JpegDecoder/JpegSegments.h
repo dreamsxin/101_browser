@@ -30,6 +30,13 @@ extern "C" {
 
 #pragma pack(push, 1)
 
+
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4214) // nonstandard extension used : bit field types other than int
+#endif
+
+
 // B.2.3 Scan header syntax
 typedef struct
 {
@@ -93,6 +100,10 @@ typedef struct
 		uint16_t Q16[64];
 	} Q;
 } QuantizationTable;
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 
 // B.2.4.4 Restart interval definition syntax
