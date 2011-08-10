@@ -863,7 +863,7 @@ module html5
              attribute DOMString formAction;
              attribute DOMString formEnctype;
              attribute DOMString formMethod;
-             attribute DOMString formNoValidate;
+             attribute boolean formNoValidate;
              attribute DOMString formTarget;
              attribute DOMString name;
              attribute DOMString type;
@@ -1268,9 +1268,11 @@ module html5
 
   [NoInterfaceObject]
   interface WindowTimers {
-    long setTimeout(in any handler, in optional any timeout, in any... args);
+    long setTimeout(in Function handler, in optional float timeout, in any... args);
+    long setTimeout([AllowAny] in DOMString handler, in optional float timeout, in any... args);
     void clearTimeout(in long handle);
-    long setInterval(in any handler, in optional any timeout, in any... args);
+    long setInterval(in Function handler, in optional float timeout, in any... args);
+    long setInterval([AllowAny] in DOMString handler, in optional float timeout, in any... args);
     void clearInterval(in long handle);
   };
   Window implements WindowTimers;

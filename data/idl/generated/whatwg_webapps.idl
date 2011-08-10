@@ -46,7 +46,7 @@ module webapps
   };
 
   interface DOMElementMap {
-    getter DOMString (in DOMString name);
+    getter Element (in DOMString name);
     setter void (in DOMString name, in Element value);
     creator void (in DOMString name, in Element value);
     deleter void (in DOMString name);
@@ -1029,7 +1029,7 @@ module webapps
              attribute DOMString formAction;
              attribute DOMString formEnctype;
              attribute DOMString formMethod;
-             attribute DOMString formNoValidate;
+             attribute boolean formNoValidate;
              attribute DOMString formTarget;
              attribute DOMString name;
              attribute DOMString type;
@@ -1443,9 +1443,11 @@ module webapps
 
   [NoInterfaceObject]
   interface WindowTimers {
-    long setTimeout(in any handler, in optional any timeout, in any... args);
+    long setTimeout(in Function handler, in optional float timeout, in any... args);
+    long setTimeout([AllowAny] in DOMString handler, in optional float timeout, in any... args);
     void clearTimeout(in long handle);
-    long setInterval(in any handler, in optional any timeout, in any... args);
+    long setInterval(in Function handler, in optional float timeout, in any... args);
+    long setInterval([AllowAny] in DOMString handler, in optional float timeout, in any... args);
     void clearInterval(in long handle);
   };
   Window implements WindowTimers;
