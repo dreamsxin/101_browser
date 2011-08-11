@@ -1083,7 +1083,7 @@ module html5
     readonly attribute Element? frameElement;
     WindowProxy open(in optional DOMString url, in optional DOMString target, in optional DOMString features, in optional DOMString replace);
     getter WindowProxy (in unsigned long index);
-    getter any (in DOMString name);
+    getter object (in DOMString name);
   
     // the user agent
     readonly attribute Navigator navigator; 
