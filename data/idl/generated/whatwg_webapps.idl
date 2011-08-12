@@ -1518,10 +1518,10 @@ module webapps
   };
 
   interface DataTransferItem {
-      readonly attribute DOMString kind;
-      readonly attribute DOMString type;
-      void getAsString(in FunctionStringCallback? callback);
-      File? getAsFile();
+    readonly attribute DOMString kind;
+    readonly attribute DOMString type;
+    void getAsString(in FunctionStringCallback? callback);
+    File? getAsFile();
   };
   
   [Callback=FunctionOnly, NoInterfaceObject]

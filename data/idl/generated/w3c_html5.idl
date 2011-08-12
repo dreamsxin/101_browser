@@ -1340,9 +1340,9 @@ module html5
     DataTransferItem? add(in DOMString data, in DOMString type);  DataTransferItem? add(in File data);};
 
   interface DataTransferItem {
-      readonly attribute DOMString kind;
-      readonly attribute DOMString type;
-      void getAsString(in FunctionStringCallback? callback);    File? getAsFile();};
+    readonly attribute DOMString kind;
+    readonly attribute DOMString type;
+    void getAsString(in FunctionStringCallback? callback);  File? getAsFile();};
   
   [Callback=FunctionOnly, NoInterfaceObject]
   interface FunctionStringCallback {
