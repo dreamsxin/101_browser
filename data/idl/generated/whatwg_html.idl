@@ -931,8 +931,8 @@ module html
   
     readonly attribute HTMLFormControlsCollection elements;
     readonly attribute long length;
-    caller getter any (in unsigned long index);
-    caller getter any (in DOMString name);
+    caller getter Element (in unsigned long index);
+    caller getter object (in DOMString name);
   
     void submit();
     void reset();
