@@ -23,7 +23,7 @@ enum PropListParserState
 	PropListParserStateTerminate
 };
 
-bool readPropList(FILE* in_file, char* in_property, void* out_ppIntervals, size_t* out_intervalsCount)
+bool readPropList(FILE* in_file, const char* in_property, void* out_ppIntervals, size_t* out_intervalsCount)
 {
 	// Declarations of variables
 	PropListParserState lCurrentState;
