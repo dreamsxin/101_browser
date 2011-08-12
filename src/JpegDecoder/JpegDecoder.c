@@ -108,7 +108,7 @@ ReadResult Decode_image(void *in_pStreamState,
 			break;
 		default:
 			fprintf(stderr, "Invalid marker in Decode_image. Exiting.\n");
-			exit(1);
+			return ReadResultInvalidData;
 		}
 		
 		currentMarker = readMarker(&setjmpReadStreamState, setjmpReadStreamInterface);
