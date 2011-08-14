@@ -20,8 +20,10 @@ module html5
              attribute unsigned long length; // overrides inherited length
     caller getter object? namedItem(in DOMString name); // overrides inherited namedItem()
     setter creator void (in unsigned long index, in HTMLOptionElement option);
-    void add(in HTMLElement element, in optional HTMLElement? before);
-    void add(in HTMLElement element, in long before);
+    void add(in HTMLOptionElement element, in optional HTMLElement? before);
+    void add(in HTMLOptGroupElement element, in optional HTMLElement? before);
+    void add(in HTMLOptionElement element, in long before);
+    void add(in HTMLOptGroupElement element, in long before);
     void remove(in long index);
              attribute long selectedIndex;
   };
@@ -48,7 +50,7 @@ module html5
     readonly attribute DOMString readyState;
   
     // DOM tree accessors
-    getter any (in DOMString name);
+    getter object (in DOMString name);
              attribute DOMString title;
              attribute DOMString dir;
              attribute HTMLElement? body;
@@ -893,8 +895,10 @@ module html5
              attribute unsigned long length;
     getter any item(in unsigned long index);
     any namedItem(in DOMString name);
-    void add(in HTMLElement element, in optional HTMLElement? before);
-    void add(in HTMLElement element, in long before);
+    void add(in HTMLOptionElement element, in optional HTMLElement? before);
+    void add(in HTMLOptGroupElement element, in optional HTMLElement? before);
+    void add(in HTMLOptionElement element, in long before);
+    void add(in HTMLOptGroupElement element, in long before);
     void remove(in long index);
     setter creator void (in unsigned long index, in HTMLOptionElement option);
   
