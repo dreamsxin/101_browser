@@ -1059,8 +1059,8 @@ module webapps
   
     readonly attribute HTMLOptionsCollection options;
              attribute unsigned long length;
-    getter any item(in unsigned long index);
-    any namedItem(in DOMString name);
+    getter Element item(in unsigned long index);
+    object namedItem(in DOMString name);
     void add(in HTMLOptionElement element, in optional HTMLElement? before);
     void add(in HTMLOptGroupElement element, in optional HTMLElement? before);
     void add(in HTMLOptionElement element, in long before);
