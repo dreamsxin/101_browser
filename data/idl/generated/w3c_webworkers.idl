@@ -13,7 +13,7 @@ module webworkers
 
   [Supplemental, NoInterfaceObject]
   interface DedicatedWorkerGlobalScope : WorkerGlobalScope {
-    void postMessage(in any message, in optional sequence<Transferable> transfer);           attribute Function? onmessage;
+    void postMessage(any message, optional sequence<Transferable> transfer);           attribute Function? onmessage;
   };
 
   [Supplemental, NoInterfaceObject]
@@ -27,7 +27,7 @@ module webworkers
     readonly attribute DOMString message;
     readonly attribute DOMString filename;
     readonly attribute unsigned long lineno;
-    void initErrorEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in DOMString messageArg, in DOMString filenameArg, in unsigned long linenoArg);
+    void initErrorEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, DOMString messageArg, DOMString filenameArg, unsigned long linenoArg);
   };
 
   [Supplemental, NoInterfaceObject]
@@ -35,21 +35,21 @@ module webworkers
              attribute Function? onerror;
   };
 
-  [Constructor(in DOMString scriptURL)]
+  [Constructor(DOMString scriptURL)]
   interface Worker : AbstractWorker {
     void terminate();
   
-    void postMessage(in any message, in optional sequence<Transferable> transfer);           attribute Function? onmessage;
+    void postMessage(any message, optional sequence<Transferable> transfer);           attribute Function? onmessage;
   };
 
-  [Constructor(in DOMString scriptURL, in optional DOMString name)]
+  [Constructor(DOMString scriptURL, optional DOMString name)]
   interface SharedWorker : AbstractWorker {
     readonly attribute MessagePort port;
   };
 
   [NoInterfaceObject]
   interface WorkerUtils {
-    void importScripts(in DOMString... urls);
+    void importScripts(DOMString... urls);
     readonly attribute WorkerNavigator navigator;
   };
   WorkerUtils implements WindowTimers;

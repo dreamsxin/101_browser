@@ -1,6 +1,6 @@
 module serversent
 {
-  [Constructor(in DOMString url)]
+  [Constructor(DOMString url)]
   interface EventSource : EventTarget {
     readonly attribute DOMString url;
   

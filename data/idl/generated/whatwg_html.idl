@@ -2,13 +2,13 @@ module html
 {
   interface HTMLAllCollection : HTMLCollection {
     // inherits length and item()
-    caller getter object? namedItem(in DOMString name); // overrides inherited namedItem()
-    HTMLAllCollection tags(in DOMString tagName);
+    caller getter object? namedItem(DOMString name); // overrides inherited namedItem()
+    HTMLAllCollection tags(DOMString tagName);
   };
 
   interface HTMLFormControlsCollection : HTMLCollection {
     // inherits length and item()
-    caller getter object? namedItem(in DOMString name); // overrides inherited namedItem()
+    caller getter object? namedItem(DOMString name); // overrides inherited namedItem()
   };
   
   interface RadioNodeList : NodeList {
@@ -18,19 +18,19 @@ module html
   interface HTMLOptionsCollection : HTMLCollection {
     // inherits item()
              attribute unsigned long length; // overrides inherited length
-    caller getter object? namedItem(in DOMString name); // overrides inherited namedItem()
-    setter creator void (in unsigned long index, in HTMLOptionElement option);
-    void add(in HTMLOptionElement element, in optional HTMLElement? before);
-    void add(in HTMLOptGroupElement element, in optional HTMLElement? before);
-    void add(in HTMLOptionElement element, in long before);
-    void add(in HTMLOptGroupElement element, in long before);
-    void remove(in long index);
+    caller getter object? namedItem(DOMString name); // overrides inherited namedItem()
+    setter creator void (unsigned long index, HTMLOptionElement option);
+    void add(HTMLOptionElement element, optional HTMLElement? before);
+    void add(HTMLOptGroupElement element, optional HTMLElement? before);
+    void add(HTMLOptionElement element, long before);
+    void add(HTMLOptGroupElement element, long before);
+    void remove(long index);
              attribute long selectedIndex;
   };
 
   interface HTMLPropertiesCollection : HTMLCollection {
     // inherits length and item()
-    caller getter PropertyNodeList? namedItem(in DOMString name); // overrides inherited namedItem()
+    caller getter PropertyNodeList? namedItem(DOMString name); // overrides inherited namedItem()
     readonly attribute DOMStringList names;
   };
   
@@ -41,17 +41,17 @@ module html
   };
 
   interface DOMStringMap {
-    getter DOMString (in DOMString name);
-    setter void (in DOMString name, in DOMString value);
-    creator void (in DOMString name, in DOMString value);
-    deleter void (in DOMString name);
+    getter DOMString (DOMString name);
+    setter void (DOMString name, DOMString value);
+    creator void (DOMString name, DOMString value);
+    deleter void (DOMString name);
   };
 
   interface DOMElementMap {
-    getter Element (in DOMString name);
-    setter void (in DOMString name, in Element value);
-    creator void (in DOMString name, in Element value);
-    deleter void (in DOMString name);
+    getter Element (DOMString name);
+    setter void (DOMString name, Element value);
+    creator void (DOMString name, Element value);
+    deleter void (DOMString name);
   };
 
   [NoInterfaceObject]
@@ -69,7 +69,7 @@ module html
     readonly attribute DOMString readyState;
   
     // DOM tree accessors
-    getter object (in DOMString name);
+    getter object (DOMString name);
              attribute DOMString title;
              attribute DOMString dir;
              attribute HTMLElement? body;
@@ -80,31 +80,31 @@ module html
     readonly attribute HTMLCollection links;
     readonly attribute HTMLCollection forms;
     readonly attribute HTMLCollection scripts;
-    NodeList getElementsByName(in DOMString elementName);
-    NodeList getItems(in optional DOMString typeNames); // microdata 
+    NodeList getElementsByName(DOMString elementName);
+    NodeList getItems(optional DOMString typeNames); // microdata 
     readonly attribute DOMElementMap cssElementMap;
   
     // dynamic markup insertion
              attribute DOMString innerHTML;
-    HTMLDocument open(in optional DOMString type, in optional DOMString replace);
-    WindowProxy open(in DOMString url, in DOMString name, in DOMString features, in optional boolean replace);
+    HTMLDocument open(optional DOMString type, optional DOMString replace);
+    WindowProxy open(DOMString url, DOMString name, DOMString features, optional boolean replace);
     void close();
-    void write(in DOMString... text);
-    void writeln(in DOMString... text);
+    void write(DOMString... text);
+    void writeln(DOMString... text);
   
     // user interaction
     readonly attribute WindowProxy? defaultView;
     readonly attribute Element? activeElement;
     boolean hasFocus();
              attribute DOMString designMode;
-    boolean execCommand(in DOMString commandId);
-    boolean execCommand(in DOMString commandId, in boolean showUI);
-    boolean execCommand(in DOMString commandId, in boolean showUI, in DOMString value);
-    boolean queryCommandEnabled(in DOMString commandId);
-    boolean queryCommandIndeterm(in DOMString commandId);
-    boolean queryCommandState(in DOMString commandId);
-    boolean queryCommandSupported(in DOMString commandId);
-    DOMString queryCommandValue(in DOMString commandId);
+    boolean execCommand(DOMString commandId);
+    boolean execCommand(DOMString commandId, boolean showUI);
+    boolean execCommand(DOMString commandId, boolean showUI, DOMString value);
+    boolean queryCommandEnabled(DOMString commandId);
+    boolean queryCommandIndeterm(DOMString commandId);
+    boolean queryCommandState(DOMString commandId);
+    boolean queryCommandSupported(DOMString commandId);
+    DOMString queryCommandValue(DOMString commandId);
     readonly attribute HTMLCollection commands;
   
     // event handler IDL attributes
@@ -167,14 +167,14 @@ module html
 
   [NoInterfaceObject]
   interface XMLDocumentLoader {
-    boolean load(in DOMString url);
+    boolean load(DOMString url);
   };
 
   interface HTMLElement : Element {
     // dynamic markup insertion
              attribute DOMString innerHTML;
              attribute DOMString outerHTML;
-    void insertAdjacentHTML(in DOMString position, in DOMString text);
+    void insertAdjacentHTML(DOMString position, DOMString text);
   
     // metadata attributes
              attribute DOMString id;
@@ -419,8 +419,8 @@ module html
   };
 
   [NamedConstructor=Image(),
-   NamedConstructor=Image(in unsigned long width),
-   NamedConstructor=Image(in unsigned long width, in unsigned long height)]
+   NamedConstructor=Image(unsigned long width),
+   NamedConstructor=Image(unsigned long width, unsigned long height)]
   interface HTMLImageElement : HTMLElement {
              attribute DOMString alt;
              attribute DOMString src;
@@ -469,7 +469,7 @@ module html
     readonly attribute ValidityState validity;
     readonly attribute DOMString validationMessage;
     boolean checkValidity();
-    void setCustomValidity(in DOMString error);
+    void setCustomValidity(DOMString error);
   };
 
   interface HTMLParamElement : HTMLElement {
@@ -486,7 +486,7 @@ module html
   };
 
   [NamedConstructor=Audio(),
-   NamedConstructor=Audio(in DOMString src)]
+   NamedConstructor=Audio(DOMString src)]
   interface HTMLAudioElement : HTMLMediaElement {};
 
   interface HTMLSourceElement : HTMLElement {
@@ -522,7 +522,7 @@ module html
              attribute DOMString preload;
     readonly attribute TimeRanges buffered;
     void load();
-    DOMString canPlayType(in DOMString type);
+    DOMString canPlayType(DOMString type);
   
     // ready state
     const unsigned short HAVE_NOTHING = 0;
@@ -563,7 +563,7 @@ module html
     readonly attribute AudioTrackList audioTracks;
     readonly attribute VideoTrackList videoTracks;
     readonly attribute TextTrackList textTracks;
-    MutableTextTrack addTextTrack(in DOMString kind, in optional DOMString label, in optional DOMString language);
+    MutableTextTrack addTextTrack(DOMString kind, optional DOMString label, optional DOMString language);
   };
 
   interface MediaError {
@@ -576,8 +576,8 @@ module html
 
   interface AudioTrackList {
     readonly attribute unsigned long length;
-    getter AudioTrack (in unsigned long index);
-    AudioTrack? getTrackById(in DOMString id);
+    getter AudioTrack (unsigned long index);
+    AudioTrack? getTrackById(DOMString id);
              attribute Function? onchange;
   };
   
@@ -591,8 +591,8 @@ module html
   
   interface VideoTrackList {
     readonly attribute unsigned long length;
-    getter VideoTrack (in unsigned long index);
-    VideoTrack? getTrackById(in DOMString id);
+    getter VideoTrack (unsigned long index);
+    VideoTrack? getTrackById(DOMString id);
     readonly attribute long selectedIndex;
              attribute Function? onchange;
   };
@@ -667,18 +667,18 @@ module html
   typedef TextTrack[] TextTrackList;
 
   interface MutableTextTrack : TextTrack {
-   void addCue(in TextTrackCue cue);
-   void removeCue(in TextTrackCue cue);
+   void addCue(TextTrackCue cue);
+   void removeCue(TextTrackCue cue);
   };
 
   interface TextTrackCueList {
     readonly attribute unsigned long length;
-    getter TextTrackCue (in unsigned long index);
-    TextTrackCue? getCueById(in DOMString id);
+    getter TextTrackCue (unsigned long index);
+    TextTrackCue? getCueById(DOMString id);
   };
 
   
-  [Constructor(in DOMString id, in double startTime, in double endTime, in DOMString text, in optional DOMString settings, in optional boolean pauseOnExit)]
+  [Constructor(DOMString id, double startTime, double endTime, DOMString text, optional DOMString settings, optional boolean pauseOnExit)]
   
   interface TextTrackCue : EventTarget {
     readonly attribute TextTrack? track;
@@ -706,18 +706,18 @@ module html
 
   interface TimeRanges {
     readonly attribute unsigned long length;
-    double start(in unsigned long index);
-    double end(in unsigned long index);
+    double start(unsigned long index);
+    double end(unsigned long index);
   };
 
   interface HTMLCanvasElement : HTMLElement {
              attribute unsigned long width;
              attribute unsigned long height;
   
-    DOMString toDataURL(in optional DOMString type, in any... args);
-    void toBlob(in FileCallback? callback, in optional DOMString type, in any... args);
+    DOMString toDataURL(optional DOMString type, any... args);
+    void toBlob(FileCallback? callback, optional DOMString type, any... args);
   
-    object? getContext(in DOMString contextId, in any... args);
+    object? getContext(DOMString contextId, any... args);
   };
 
   interface CanvasRenderingContext2D {
@@ -730,11 +730,11 @@ module html
     void restore(); // pop state stack and restore state
   
     // transformations (default transform is the identity matrix)
-    void scale(in double x, in double y);
-    void rotate(in double angle);
-    void translate(in double x, in double y);
-    void transform(in double a, in double b, in double c, in double d, in double e, in double f);
-    void setTransform(in double a, in double b, in double c, in double d, in double e, in double f);
+    void scale(double x, double y);
+    void rotate(double angle);
+    void translate(double x, double y);
+    void transform(double a, double b, double c, double d, double e, double f);
+    void setTransform(double a, double b, double c, double d, double e, double f);
   
     // compositing
              attribute double globalAlpha; // (default 1.0)
@@ -743,11 +743,11 @@ module html
     // colors and styles
              attribute any strokeStyle; // (default black)
              attribute any fillStyle; // (default black)
-    CanvasGradient createLinearGradient(in double x0, in double y0, in double x1, in double y1);
-    CanvasGradient createRadialGradient(in double x0, in double y0, in double r0, in double x1, in double y1, in double r1);
-    CanvasPattern createPattern(in HTMLImageElement image, in DOMString repetition);
-    CanvasPattern createPattern(in HTMLCanvasElement image, in DOMString repetition);
-    CanvasPattern createPattern(in HTMLVideoElement image, in DOMString repetition);
+    CanvasGradient createLinearGradient(double x0, double y0, double x1, double y1);
+    CanvasGradient createRadialGradient(double x0, double y0, double r0, double x1, double y1, double r1);
+    CanvasPattern createPattern(HTMLImageElement image, DOMString repetition);
+    CanvasPattern createPattern(HTMLCanvasElement image, DOMString repetition);
+    CanvasPattern createPattern(HTMLVideoElement image, DOMString repetition);
   
     // line caps/joins
              attribute double lineWidth; // (default 1)
@@ -762,58 +762,58 @@ module html
              attribute DOMString shadowColor; // (default transparent black)
   
     // rects
-    void clearRect(in double x, in double y, in double w, in double h);
-    void fillRect(in double x, in double y, in double w, in double h);
-    void strokeRect(in double x, in double y, in double w, in double h);
+    void clearRect(double x, double y, double w, double h);
+    void fillRect(double x, double y, double w, double h);
+    void strokeRect(double x, double y, double w, double h);
   
     // path API
     void beginPath();
     void closePath();
-    void moveTo(in double x, in double y);
-    void lineTo(in double x, in double y);
-    void quadraticCurveTo(in double cpx, in double cpy, in double x, in double y);
-    void bezierCurveTo(in double cp1x, in double cp1y, in double cp2x, in double cp2y, in double x, in double y);
-    void arcTo(in double x1, in double y1, in double x2, in double y2, in double radius);
-    void rect(in double x, in double y, in double w, in double h);
-    void arc(in double x, in double y, in double radius, in double startAngle, in double endAngle, in optional boolean anticlockwise);
+    void moveTo(double x, double y);
+    void lineTo(double x, double y);
+    void quadraticCurveTo(double cpx, double cpy, double x, double y);
+    void bezierCurveTo(double cp1x, double cp1y, double cp2x, double cp2y, double x, double y);
+    void arcTo(double x1, double y1, double x2, double y2, double radius);
+    void rect(double x, double y, double w, double h);
+    void arc(double x, double y, double radius, double startAngle, double endAngle, optional boolean anticlockwise);
     void fill();
     void stroke();
-    void drawSystemFocusRing(in Element element);
-    boolean drawCustomFocusRing(in Element element);
+    void drawSystemFocusRing(Element element);
+    boolean drawCustomFocusRing(Element element);
     void scrollPathIntoView();
     void clip();
-    boolean isPointInPath(in double x, in double y);
+    boolean isPointInPath(double x, double y);
   
     // text
              attribute DOMString font; // (default 10px sans-serif)
              attribute DOMString textAlign; // "start", "end", "left", "right", "center" (default: "start")
              attribute DOMString textBaseline; // "top", "hanging", "middle", "alphabetic", "ideographic", "bottom" (default: "alphabetic")
-    void fillText(in DOMString text, in double x, in double y, in optional double maxWidth);
-    void strokeText(in DOMString text, in double x, in double y, in optional double maxWidth);
-    TextMetrics measureText(in DOMString text);
+    void fillText(DOMString text, double x, double y, optional double maxWidth);
+    void strokeText(DOMString text, double x, double y, optional double maxWidth);
+    TextMetrics measureText(DOMString text);
   
     // drawing images
-    void drawImage(in HTMLImageElement image, in double dx, in double dy);
-    void drawImage(in HTMLImageElement image, in double dx, in double dy, in double dw, in double dh);
-    void drawImage(in HTMLImageElement image, in double sx, in double sy, in double sw, in double sh, in double dx, in double dy, in double dw, in double dh);
-    void drawImage(in HTMLCanvasElement image, in double dx, in double dy);
-    void drawImage(in HTMLCanvasElement image, in double dx, in double dy, in double dw, in double dh);
-    void drawImage(in HTMLCanvasElement image, in double sx, in double sy, in double sw, in double sh, in double dx, in double dy, in double dw, in double dh);
-    void drawImage(in HTMLVideoElement image, in double dx, in double dy);
-    void drawImage(in HTMLVideoElement image, in double dx, in double dy, in double dw, in double dh);
-    void drawImage(in HTMLVideoElement image, in double sx, in double sy, in double sw, in double sh, in double dx, in double dy, in double dw, in double dh);
+    void drawImage(HTMLImageElement image, double dx, double dy);
+    void drawImage(HTMLImageElement image, double dx, double dy, double dw, double dh);
+    void drawImage(HTMLImageElement image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh);
+    void drawImage(HTMLCanvasElement image, double dx, double dy);
+    void drawImage(HTMLCanvasElement image, double dx, double dy, double dw, double dh);
+    void drawImage(HTMLCanvasElement image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh);
+    void drawImage(HTMLVideoElement image, double dx, double dy);
+    void drawImage(HTMLVideoElement image, double dx, double dy, double dw, double dh);
+    void drawImage(HTMLVideoElement image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh);
   
     // pixel manipulation
-    ImageData createImageData(in double sw, in double sh);
-    ImageData createImageData(in ImageData imagedata);
-    ImageData getImageData(in double sx, in double sy, in double sw, in double sh);
-    void putImageData(in ImageData imagedata, in double dx, in double dy);
-    void putImageData(in ImageData imagedata, in double dx, in double dy, in double dirtyX, in double dirtyY, in double dirtyWidth, in double dirtyHeight);
+    ImageData createImageData(double sw, double sh);
+    ImageData createImageData(ImageData imagedata);
+    ImageData getImageData(double sx, double sy, double sw, double sh);
+    void putImageData(ImageData imagedata, double dx, double dy);
+    void putImageData(ImageData imagedata, double dx, double dy, double dirtyX, double dirtyY, double dirtyWidth, double dirtyHeight);
   };
   
   interface CanvasGradient {
     // opaque object
-    void addColorStop(in double offset, in DOMString color);
+    void addColorStop(double offset, DOMString color);
   };
   
   interface CanvasPattern {
@@ -832,8 +832,8 @@ module html
   
   interface CanvasPixelArray {
     readonly attribute unsigned long length;
-    getter octet (in unsigned long index);
-    setter void (in unsigned long index, [Clamp] in octet value);
+    getter octet (unsigned long index);
+    setter void (unsigned long index, [Clamp] octet value);
   };
 
   interface HTMLMapElement : HTMLElement {
@@ -881,8 +881,8 @@ module html
     readonly attribute HTMLCollection tBodies;
     HTMLElement createTBody();
     readonly attribute HTMLCollection rows;
-    HTMLElement insertRow(in optional long index);
-    void deleteRow(in long index);
+    HTMLElement insertRow(optional long index);
+    void deleteRow(long index);
              attribute DOMString border;
   };
 
@@ -894,16 +894,16 @@ module html
 
   interface HTMLTableSectionElement : HTMLElement {
     readonly attribute HTMLCollection rows;
-    HTMLElement insertRow(in optional long index);
-    void deleteRow(in long index);
+    HTMLElement insertRow(optional long index);
+    void deleteRow(long index);
   };
 
   interface HTMLTableRowElement : HTMLElement {
     readonly attribute long rowIndex;
     readonly attribute long sectionRowIndex;
     readonly attribute HTMLCollection cells;
-    HTMLElement insertCell(in optional long index);
-    void deleteCell(in long index);
+    HTMLElement insertCell(optional long index);
+    void deleteCell(long index);
   };
 
   interface HTMLTableDataCellElement : HTMLTableCellElement {};
@@ -933,8 +933,8 @@ module html
   
     readonly attribute HTMLFormControlsCollection elements;
     readonly attribute long length;
-    caller getter Element (in unsigned long index);
-    caller getter object (in DOMString name);
+    caller getter Element (unsigned long index);
+    caller getter object (DOMString name);
   
     void submit();
     void reset();
@@ -954,7 +954,7 @@ module html
     readonly attribute ValidityState validity;
     readonly attribute DOMString validationMessage;
     boolean checkValidity();
-    void setCustomValidity(in DOMString error);
+    void setCustomValidity(DOMString error);
   };
 
   interface HTMLLegendElement : HTMLElement {
@@ -1006,14 +1006,14 @@ module html
     readonly attribute HTMLOptionElement? selectedOption;
              attribute DOMString width;
   
-    void stepUp(in optional long n);
-    void stepDown(in optional long n);
+    void stepUp(optional long n);
+    void stepDown(optional long n);
   
     readonly attribute boolean willValidate;
     readonly attribute ValidityState validity;
     readonly attribute DOMString validationMessage;
     boolean checkValidity();
-    void setCustomValidity(in DOMString error);
+    void setCustomValidity(DOMString error);
   
     readonly attribute NodeList labels;
   
@@ -1021,7 +1021,7 @@ module html
              attribute unsigned long selectionStart;
              attribute unsigned long selectionEnd;
              attribute DOMString selectionDirection;
-    void setSelectionRange(in unsigned long start, in unsigned long end, in optional DOMString direction);
+    void setSelectionRange(unsigned long start, unsigned long end, optional DOMString direction);
   };
 
   interface HTMLButtonElement : HTMLElement {
@@ -1041,7 +1041,7 @@ module html
     readonly attribute ValidityState validity;
     readonly attribute DOMString validationMessage;
     boolean checkValidity();
-    void setCustomValidity(in DOMString error);
+    void setCustomValidity(DOMString error);
   
     readonly attribute NodeList labels;
   };
@@ -1059,14 +1059,14 @@ module html
   
     readonly attribute HTMLOptionsCollection options;
              attribute unsigned long length;
-    getter Element item(in unsigned long index);
-    object namedItem(in DOMString name);
-    void add(in HTMLOptionElement element, in optional HTMLElement? before);
-    void add(in HTMLOptGroupElement element, in optional HTMLElement? before);
-    void add(in HTMLOptionElement element, in long before);
-    void add(in HTMLOptGroupElement element, in long before);
-    void remove(in long index);
-    setter creator void (in unsigned long index, in HTMLOptionElement option);
+    getter Element item(unsigned long index);
+    object namedItem(DOMString name);
+    void add(HTMLOptionElement element, optional HTMLElement? before);
+    void add(HTMLOptGroupElement element, optional HTMLElement? before);
+    void add(HTMLOptionElement element, long before);
+    void add(HTMLOptGroupElement element, long before);
+    void remove(long index);
+    setter creator void (unsigned long index, HTMLOptionElement option);
   
     readonly attribute HTMLCollection selectedOptions;
              attribute long selectedIndex;
@@ -1076,7 +1076,7 @@ module html
     readonly attribute ValidityState validity;
     readonly attribute DOMString validationMessage;
     boolean checkValidity();
-    void setCustomValidity(in DOMString error);
+    void setCustomValidity(DOMString error);
   
     readonly attribute NodeList labels;
   };
@@ -1091,10 +1091,10 @@ module html
   };
 
   [NamedConstructor=Option(),
-   NamedConstructor=Option(in DOMString text),
-   NamedConstructor=Option(in DOMString text, in DOMString value),
-   NamedConstructor=Option(in DOMString text, in DOMString value, in boolean defaultSelected),
-   NamedConstructor=Option(in DOMString text, in DOMString value, in boolean defaultSelected, in boolean selected)]
+   NamedConstructor=Option(DOMString text),
+   NamedConstructor=Option(DOMString text, DOMString value),
+   NamedConstructor=Option(DOMString text, DOMString value, boolean defaultSelected),
+   NamedConstructor=Option(DOMString text, DOMString value, boolean defaultSelected, boolean selected)]
   interface HTMLOptionElement : HTMLElement {
              attribute boolean disabled;
     readonly attribute HTMLFormElement? form;
@@ -1130,7 +1130,7 @@ module html
     readonly attribute ValidityState validity;
     readonly attribute DOMString validationMessage;
     boolean checkValidity();
-    void setCustomValidity(in DOMString error);
+    void setCustomValidity(DOMString error);
   
     readonly attribute NodeList labels;
   
@@ -1138,7 +1138,7 @@ module html
              attribute unsigned long selectionStart;
              attribute unsigned long selectionEnd;
              attribute DOMString selectionDirection;
-    void setSelectionRange(in unsigned long start, in unsigned long end, in optional DOMString direction);
+    void setSelectionRange(unsigned long start, unsigned long end, optional DOMString direction);
   };
 
   interface HTMLKeygenElement : HTMLElement {
@@ -1155,7 +1155,7 @@ module html
     readonly attribute ValidityState validity;
     readonly attribute DOMString validationMessage;
     boolean checkValidity();
-    void setCustomValidity(in DOMString error);
+    void setCustomValidity(DOMString error);
   
     readonly attribute NodeList labels;
   };
@@ -1173,7 +1173,7 @@ module html
     readonly attribute ValidityState validity;
     readonly attribute DOMString validationMessage;
     boolean checkValidity();
-    void setCustomValidity(in DOMString error);
+    void setCustomValidity(DOMString error);
   
     readonly attribute NodeList labels;
   };
@@ -1236,7 +1236,7 @@ module html
     readonly attribute History history;
   
     readonly attribute UndoManager undoManager;
-    boolean find(in optional DOMString aString, in optional boolean aCaseSensitive, in optional boolean aBackwards, in optional boolean aWrapAround, in optional boolean aWholeWord, in optional boolean aSearchInFrames, in optional boolean aShowDialog);
+    boolean find(optional DOMString aString, optional boolean aCaseSensitive, optional boolean aBackwards, optional boolean aWrapAround, optional boolean aWholeWord, optional boolean aSearchInFrames, optional boolean aShowDialog);
   
     [Replaceable] readonly attribute BarProp locationbar;
     [Replaceable] readonly attribute BarProp menubar;
@@ -1257,9 +1257,9 @@ module html
              attribute WindowProxy opener;
     readonly attribute WindowProxy parent;
     readonly attribute Element? frameElement;
-    WindowProxy open(in optional DOMString url, in optional DOMString target, in optional DOMString features, in optional DOMString replace);
-    getter WindowProxy (in unsigned long index);
-    getter object (in DOMString name);
+    WindowProxy open(optional DOMString url, optional DOMString target, optional DOMString features, optional DOMString replace);
+    getter WindowProxy (unsigned long index);
+    getter object (DOMString name);
   
     // the user agent
     readonly attribute Navigator navigator; 
@@ -1267,14 +1267,14 @@ module html
     readonly attribute ApplicationCache applicationCache;
   
     // user prompts
-    void alert(in DOMString message);
-    boolean confirm(in DOMString message);
-    DOMString? prompt(in DOMString message, in optional DOMString default);
+    void alert(DOMString message);
+    boolean confirm(DOMString message);
+    DOMString? prompt(DOMString message, optional DOMString default);
     void print();
-    any showModalDialog(in DOMString url, in optional any argument);
+    any showModalDialog(DOMString url, optional any argument);
   
     // cross-document messaging
-    void postMessage(in any message, in DOMString targetOrigin, in optional sequence<Transferable> transfer);
+    void postMessage(any message, DOMString targetOrigin, optional sequence<Transferable> transfer);
   
     // event handler IDL attributes
              attribute Function? onabort;
@@ -1355,17 +1355,17 @@ module html
   interface History {
     readonly attribute long length;
     readonly attribute any state;
-    void go(in optional long delta);
+    void go(optional long delta);
     void back();
     void forward();
-    void pushState(in any data, in DOMString title, in optional DOMString url);
-    void replaceState(in any data, in DOMString title, in optional DOMString url);
+    void pushState(any data, DOMString title, optional DOMString url);
+    void replaceState(any data, DOMString title, optional DOMString url);
   };
 
   interface Location {
     stringifier attribute DOMString href;
-    void assign(in DOMString url);
-    void replace(in DOMString url);
+    void assign(DOMString url);
+    void replace(DOMString url);
     void reload();
   
     // URL decomposition IDL attributes 
@@ -1378,23 +1378,23 @@ module html
              attribute DOMString hash;
   
     // resolving relative URLs
-    DOMString resolveURL(in DOMString url);
+    DOMString resolveURL(DOMString url);
   };
 
   interface PopStateEvent : Event {
     readonly attribute any state;
-    void initPopStateEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in any stateArg);
+    void initPopStateEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, any stateArg);
   };
 
   interface HashChangeEvent : Event {
     readonly attribute DOMString oldURL;
     readonly attribute DOMString newURL;
-    void initHashChangeEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in DOMString oldURLArg, in DOMString newURLArg);
+    void initHashChangeEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, DOMString oldURLArg, DOMString newURLArg);
   };
 
   interface PageTransitionEvent : Event {
     readonly attribute boolean persisted;
-    void initPageTransitionEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in boolean persistedArg);
+    void initPageTransitionEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, boolean persistedArg);
   };
 
   interface BeforeUnloadEvent : Event {
@@ -1435,24 +1435,24 @@ module html
 
   [Callback=FunctionOnly, NoInterfaceObject]
   interface Function {
-    any call(in any... arguments);
+    any call(any... arguments);
   };
 
   [NoInterfaceObject]
   interface WindowBase64 {
-    DOMString btoa(in DOMString btoa);
-    DOMString atob(in DOMString atob);
+    DOMString btoa(DOMString btoa);
+    DOMString atob(DOMString atob);
   };
   Window implements WindowBase64;
 
   [NoInterfaceObject]
   interface WindowTimers {
-    long setTimeout(in Function handler, in optional float timeout, in any... args);
-    long setTimeout([AllowAny] in DOMString handler, in optional float timeout, in any... args);
-    void clearTimeout(in long handle);
-    long setInterval(in Function handler, in optional float timeout, in any... args);
-    long setInterval([AllowAny] in DOMString handler, in optional float timeout, in any... args);
-    void clearInterval(in long handle);
+    long setTimeout(Function handler, optional float timeout, any... args);
+    long setTimeout([AllowAny] DOMString handler, optional float timeout, any... args);
+    void clearTimeout(long handle);
+    long setInterval(Function handler, optional float timeout, any... args);
+    long setInterval([AllowAny] DOMString handler, optional float timeout, any... args);
+    void clearInterval(long handle);
   };
   Window implements WindowTimers;
 
@@ -1480,8 +1480,8 @@ module html
   [NoInterfaceObject]
   interface NavigatorContentUtils {
     // content handler registration
-    void registerProtocolHandler(in DOMString scheme, in DOMString url, in DOMString title);
-    void registerContentHandler(in DOMString mimeType, in DOMString url, in DOMString title);
+    void registerProtocolHandler(DOMString scheme, DOMString url, DOMString title);
+    void registerContentHandler(DOMString mimeType, DOMString url, DOMString title);
   };
 
   [NoInterfaceObject]
@@ -1490,8 +1490,8 @@ module html
   };
 
   interface External {
-    void AddSearchProvider(in DOMString engineURL);
-    unsigned long IsSearchProviderInstalled(in DOMString engineURL);
+    void AddSearchProvider(DOMString engineURL);
+    unsigned long IsSearchProviderInstalled(DOMString engineURL);
   };
 
   interface DataTransfer {
@@ -1500,69 +1500,69 @@ module html
   
     readonly attribute DataTransferItemList items;
   
-    void setDragImage(in Element image, in long x, in long y);
-    void addElement(in Element element);
+    void setDragImage(Element image, long x, long y);
+    void addElement(Element element);
   
     /* old interface */
     readonly attribute DOMStringList types;
-    DOMString getData(in DOMString format);
-    void setData(in DOMString format, in DOMString data);
-    void clearData(in optional DOMString format);
+    DOMString getData(DOMString format);
+    void setData(DOMString format, DOMString data);
+    void clearData(optional DOMString format);
     readonly attribute FileList files;
   };
 
   interface DataTransferItemList {
     readonly attribute unsigned long length;
-    getter DataTransferItem (in unsigned long index);
-    deleter void (in unsigned long index);
+    getter DataTransferItem (unsigned long index);
+    deleter void (unsigned long index);
     void clear();
   
-    DataTransferItem? add(in DOMString data, in DOMString type);
-    DataTransferItem? add(in File data);
+    DataTransferItem? add(DOMString data, DOMString type);
+    DataTransferItem? add(File data);
   };
 
   interface DataTransferItem {
     readonly attribute DOMString kind;
     readonly attribute DOMString type;
-    void getAsString(in FunctionStringCallback? callback);
+    void getAsString(FunctionStringCallback? callback);
     File? getAsFile();
   };
   
   [Callback=FunctionOnly, NoInterfaceObject]
   interface FunctionStringCallback {
-    void handleEvent(in DOMString data);
+    void handleEvent(DOMString data);
   };
 
   interface DragEvent : MouseEvent {
     readonly attribute DataTransfer? dataTransfer;
   
-    void initDragEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in any dummyArg, in long detailArg, in long screenXArg, in long screenYArg, in long clientXArg, in long clientYArg, in boolean ctrlKeyArg, in boolean altKeyArg, in boolean shiftKeyArg, in boolean metaKeyArg, in unsigned short buttonArg, in EventTarget relatedTargetArg, in DataTransfer? dataTransferArg);
+    void initDragEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, any dummyArg, long detailArg, long screenXArg, long screenYArg, long clientXArg, long clientYArg, boolean ctrlKeyArg, boolean altKeyArg, boolean shiftKeyArg, boolean metaKeyArg, unsigned short buttonArg, EventTarget relatedTargetArg, DataTransfer? dataTransferArg);
   };
 
   interface UndoManager {
     readonly attribute unsigned long length;
-    getter any item(in unsigned long index);
+    getter any item(unsigned long index);
     readonly attribute unsigned long position;
-    unsigned long add(in any data, in DOMString title);
-    void remove(in unsigned long index);
+    unsigned long add(any data, DOMString title);
+    void remove(unsigned long index);
     void clearUndo();
     void clearRedo();
   };
 
   interface UndoManagerEvent : Event {
     readonly attribute any data;
-    void initUndoManagerEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in any dataArg);
+    void initUndoManagerEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, any dataArg);
   };
 
   [NoInterfaceObject]
   interface NavigatorUserMedia {
-    void getUserMedia(in DOMString options, in NavigatorUserMediaSuccessCallback? successCallback, in optional NavigatorUserMediaErrorCallback? errorCallback);
+    void getUserMedia(DOMString options, NavigatorUserMediaSuccessCallback? successCallback, optional NavigatorUserMediaErrorCallback? errorCallback);
   };
   Navigator implements NavigatorUserMedia;
   
   [Callback=FunctionOnly, NoInterfaceObject]
   interface NavigatorUserMediaSuccessCallback {
-    void handleEvent(in LocalMediaStream stream);
+    void handleEvent(LocalMediaStream stream);
   };
   
   [NoInterfaceObject]
@@ -1573,10 +1573,10 @@ module html
   
   [Callback=FunctionOnly, NoInterfaceObject]
   interface NavigatorUserMediaErrorCallback {
-    void handleEvent(in NavigatorUserMediaError error);
+    void handleEvent(NavigatorUserMediaError error);
   };
 
-  [Constructor(in MediaStream parentStream)]
+  [Constructor(MediaStream parentStream)]
   interface MediaStream : EventTarget {
     readonly attribute DOMString label;
     readonly attribute MediaStreamTrackList tracks;
@@ -1602,21 +1602,21 @@ module html
   };
 
   interface MediaStreamRecorder {
-    void getRecordedData(in BlobCallback? callback);
+    void getRecordedData(BlobCallback? callback);
   };
   
   [Callback=FunctionOnly, NoInterfaceObject]
   interface BlobCallback {
-    void handleEvent(in Blob blob);
+    void handleEvent(Blob blob);
   };
 
   partial interface URL {
-    static DOMString createObjectURL(in MediaStream stream);
+    static DOMString createObjectURL(MediaStream stream);
   };
 
-  [Constructor(in DOMString configuration, in SignalingCallback signalingCallback)]
+  [Constructor(DOMString serverConfiguration, SignalingCallback signalingCallback)]
   interface PeerConnection : EventTarget {
-    void processSignalingMessage(in DOMString message);
+    void processSignalingMessage(DOMString message);
   
     const unsigned short NEW = 0;
     const unsigned short NEGOTIATING = 1;
@@ -1624,9 +1624,9 @@ module html
     const unsigned short CLOSED = 3;
     readonly attribute unsigned short readyState;
   
-    void send(in DOMString text); 
-    void addStream(in MediaStream stream);
-    void removeStream(in MediaStream stream);
+    void send(DOMString text); 
+    void addStream(MediaStream stream);
+    void removeStream(MediaStream stream);
     readonly attribute MediaStream[] localStreams;
     readonly attribute MediaStream[] remoteStreams;
   
@@ -1642,12 +1642,12 @@ module html
   
   [Callback=FunctionOnly, NoInterfaceObject]
   interface SignalingCallback {
-    void handleEvent(in DOMString message, in PeerConnection source);
+    void handleEvent(DOMString message, PeerConnection source);
   };
 
   interface MediaStreamEvent : Event {
     readonly attribute MediaStream? stream;
-    void initMediaStreamEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in MediaStream? streamArg);
+    void initMediaStreamEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, MediaStream? streamArg);
   };
 
   interface MessageEvent : Event {
@@ -1656,7 +1656,7 @@ module html
     readonly attribute DOMString lastEventId;
     readonly attribute WindowProxy? source;
     readonly attribute MessagePort[] ports;
-    void initMessageEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in any dataArg, in DOMString originArg, in DOMString lastEventIdArg, in WindowProxy? sourceArg, in sequence<MessagePort> portsArg);
+    void initMessageEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, any dataArg, DOMString originArg, DOMString lastEventIdArg, WindowProxy? sourceArg, sequence<MessagePort> portsArg);
   };
 
   [Constructor]
@@ -1666,7 +1666,7 @@ module html
   };
 
   interface MessagePort : EventTarget {
-    void postMessage(in any message, in optional sequence<Transferable> transfer);
+    void postMessage(any message, optional sequence<Transferable> transfer);
     void start();
     void close();
   

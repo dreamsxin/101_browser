@@ -1,7 +1,7 @@
 module websockets
 {
-  [Constructor(in DOMString url, in optional DOMString protocols),
-   Constructor(in DOMString url, in optional DOMString[] protocols)]
+  [Constructor(DOMString url, optional DOMString protocols),
+   Constructor(DOMString url, optional DOMString[] protocols)]
   interface WebSocket : EventTarget {
     readonly attribute DOMString url;
   
@@ -19,21 +19,21 @@ module websockets
              attribute Function? onclose;
     readonly attribute DOMString extensions;
     readonly attribute DOMString protocol;
-    void close([Clamp] in optional unsigned short code, in optional DOMString reason);
+    void close([Clamp] optional unsigned short code, optional DOMString reason);
   
     // messaging
              attribute Function? onmessage;
              attribute DOMString binaryType;
-    void send(in DOMString data);
-    void send(in ArrayBuffer data);
-    void send(in Blob data);
+    void send(DOMString data);
+    void send(ArrayBuffer data);
+    void send(Blob data);
   };
 
   interface CloseEvent : Event {
     readonly attribute boolean wasClean;
     readonly attribute unsigned short code;
     readonly attribute DOMString reason;
-    void initCloseEvent(in DOMString typeArg, in boolean canBubbleArg, in boolean cancelableArg, in boolean wasCleanArg, in unsigned short codeArg, in DOMString reasonArg);
+    void initCloseEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, boolean wasCleanArg, unsigned short codeArg, DOMString reasonArg);
   };
 
 
