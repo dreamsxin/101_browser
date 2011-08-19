@@ -142,7 +142,6 @@ void read_Logical_Screen(SetjmpStreamState *in_out_pSetjmpStreamState,
 			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
 			ReadResultAllocationFailure, bytesOfGlobalColorTable);
 
-		// the = is correct
 		if ((result = XCHG_AND_SETJMP(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
 			freeMemoryJmpBuf)) != 0)
 		{
