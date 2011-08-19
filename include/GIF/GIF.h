@@ -138,7 +138,7 @@ void read_Graphic_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 	uint8_t in_separator, uint8_t in_label);
 void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	uint8_t in_separator);
+	uint8_t in_separator, uint8_t in_label);
 void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
 	TableBased_Image *in_pTableBasedImage);

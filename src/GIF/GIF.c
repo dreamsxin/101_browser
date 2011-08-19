@@ -79,7 +79,7 @@ void read_Header(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 	longjmpIf(strncmp(in_pHeader->Signature, "GIF", sizeof(in_pHeader->Signature)) != 0, 
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
-		printHandler, "read_Header: invalid signature");
+		printHandler, "read_Header: invalid Signature");
 
 	if (strncmp(in_pHeader->Version, "87a", sizeof(in_pHeader->Version)) == 0)
 	{
@@ -93,7 +93,8 @@ void read_Header(SetjmpStreamState *in_out_pSetjmpStreamState,
 	}
 	else
 	{
-		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
+		longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			ReadResultInvalidData, printHandler, "read_Header: invalid Version");
 	}
 }
 
@@ -118,7 +119,9 @@ void read_SpecialPurpose_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 		read_Comment_Extension(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
 		return;
 	default:
-		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
+		longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			ReadResultInvalidData, printHandler, 
+			"read_SpecialPurpose_Block: expecting Application Extension or Comment Extension");
 	}
 }
 
@@ -213,8 +216,9 @@ void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 			}
 			else
 			{
-				skipBlock(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
-				return;
+				longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+					ReadResultInvalidData, printHandler, 
+					"read_Data: the only accepted Extension Blocks are Graphic Control Extension and Plain Text Extension");
 			}
 		}
 		else
@@ -231,8 +235,9 @@ void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	}
 	else
 	{
-		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-			ReadResultInvalidData);
+		longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			ReadResultInvalidData, printHandler, 
+			"read_Data: expecting Image Descriptor or Extension Introducer");
 	}
 }
 
@@ -240,67 +245,55 @@ void read_Graphic_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 	ByteStreamInterface in_byteStreamReadInterface, 
 	uint8_t in_separator, uint8_t in_label)
 {
-	if (0x21 == in_separator) 
+	if (0x21 == in_separator && 0xF9 == in_label) 
 	{
-		if (0xF9 == in_label)
-		{
-			// Precondition: we have a GIF 89a file
-			read_Graphic_Control_Extension(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
+		// Precondition: we have a GIF 89a file
+		read_Graphic_Control_Extension(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
 
+		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+			&in_separator, sizeof(in_separator));
+
+		if (0x21 == in_separator)
+		{
 			(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
-				&in_separator, sizeof(in_separator));
-
-			if (0x2C == in_separator)
-				goto return_read_GraphicRendering_Block;
-			else if (0x21 == in_separator)
-			{
-				(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
-					&in_label, sizeof(in_label));
-
-				/*
-				* TODO skip block (except Plain Text Extension) - it 
-				* does not belong here
-				*/
-				longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-					ReadResultNotImplemented);
-			}
-		}
-		else
-		{
-			assert(0x01 == in_label);
-			longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-				ReadResultNotImplemented);
+				&in_label, sizeof(in_label));
 		}
 	}
-	else if (0x2C == in_separator)
-	{
-return_read_GraphicRendering_Block:
-		read_GraphicRendering_Block(in_out_pSetjmpStreamState, 
-			in_byteStreamReadInterface, in_separator);
-		return;
-	}
-	else
-	{
-		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-			ReadResultNotImplemented);
-	}
+
+	read_GraphicRendering_Block(in_out_pSetjmpStreamState, 
+		in_byteStreamReadInterface, in_separator, in_label);
+	return;
 }
 
 void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	uint8_t in_separator)
+	uint8_t in_separator, uint8_t in_label)
 {
 	TableBased_Image tableBasedImage;
 
-	if (in_separator == 0x2C)
+	if (0x2C == in_separator)
 	{
 		read_TableBased_Image(in_out_pSetjmpStreamState, 
 			in_byteStreamReadInterface, &tableBasedImage);
 	}
+	// Plain Text Extension
+	else if (0x21 == in_separator)
+	{
+		if (0x01 != in_label)
+		{
+			longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+				ReadResultInvalidData, printHandler, 
+				"read_GraphicRendering_Block: the only allowed extension is Plain Text Extension");
+		}
+
+		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			ReadResultNotImplemented);
+	}
 	else
 	{
-		// TODO
-		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultNotImplemented);
+		longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			ReadResultInvalidData, printHandler, 
+			"read_GraphicRendering_Block: expecting Image Descriptor or Plain Text Extension");
 	}
 }
 
@@ -476,9 +469,12 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 		&LZW_Minimum_Code_Size, sizeof(LZW_Minimum_Code_Size));
 
-	longjmpIf(LZW_Minimum_Code_Size < 2 || LZW_Minimum_Code_Size > 8, 
-		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-		ReadResultInvalidData, printHandler, "read_Image_Data: invalid LZW minimum code size");
+	if (LZW_Minimum_Code_Size < 2 || LZW_Minimum_Code_Size > 8)
+	{
+		longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			ReadResultInvalidData, printHandler, 
+			"read_Image_Data: invalid LZW minimum code size");
+	}
 	
 	startCode = 1<<LZW_Minimum_Code_Size;
 	// ASGN:GIF_314
@@ -533,15 +529,25 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 		readCount = readBitsLittleEndian(&bitReadState, &currentCodeWord, currentCodeWordBitCount);
 
 		/*
-		* Since bitReadState is based on SetjmpStream we'll do a longjmp if 
-		* this is not the case.
+		* Q: Why can't we assert that readCount == currentCodeWordBitCount, 
+		*    because otherwise we'd do a longjmp?
+		*
+		* A: If the Image Data is terminated, but we read more bits than 
+		*    available, no longjmp is triggered.
 		*/
-		assert(readCount == currentCodeWordBitCount);
+		if (readCount != currentCodeWordBitCount)
+		{
+			longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer,
+				ReadResultPrematureEndOfStream, printHandler, 
+				"read_Image_Data: readCount != currentCodeWordBitCount");
+		}
 
-		longjmpIf(currentCodeWord >= currentTableIndex, 
-			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		if (currentCodeWord >= currentTableIndex)
+		{
+			longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
 			ReadResultInvalidData, printHandler, 
 			"read_Image_Data: currentCodeWord >= currentTableIndex");
+		}
 
 		// CND:GIF_375
 		if (startCode == currentCodeWord)
@@ -667,9 +673,11 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	* It must be the last code output by the encoder for an image [!]. The value of this
 	* code is <Clear code>+1."
 	*/
-	longjmpIf(streamState.Read_Bytes != streamState.Block_Size_Bytes, 
-		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
-		printHandler, "read_Image_Data: data after End of Information code");
+	if (streamState.Read_Bytes != streamState.Block_Size_Bytes)
+	{
+		longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
+			printHandler, "read_Image_Data: data after End of Information code");
+	}
 
 	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 		&streamState.Block_Size_Bytes, sizeof(streamState.Block_Size_Bytes));
