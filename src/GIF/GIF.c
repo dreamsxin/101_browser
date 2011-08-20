@@ -23,6 +23,16 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define EXTENSION_INTRODUCER  0x21
+#define IMAGE_SEPARATOR       0x2C
+#define GIF_TRAILER           0x3B
+
+// Extensions
+#define PLAIN_TEXT_LABEL      0x01
+#define GRAPHIC_CONTROL_LABEL 0xF9
+#define COMMENT_LABEL         0xFE
+#define APPLICATION_LABEL     0xFF
+
 size_t bytesOfColorTable(unsigned char in_sizeOfColorTable)
 {
 	return 3*(1<<(in_sizeOfColorTable+1));
@@ -38,6 +48,7 @@ ReadResult read_GIF_Data_Stream(void *in_pStreamState,
 	jmp_buf jmpBuf;
 	ByteStreamInterface setjmpReadStreamInterface;
 	int result;
+	uint8_t lIntroducer;
 
 	setjmpStreamInit(&setjmpReadStreamState, &jmpBuf, ReadResultPrematureEndOfStream, 
 		in_pStreamState, in_byteStreamReadInterface);
@@ -52,20 +63,12 @@ ReadResult read_GIF_Data_Stream(void *in_pStreamState,
 	read_Logical_Screen(&setjmpReadStreamState, setjmpReadStreamInterface, 
 		&in_pDataStream->logicalScreen);
 
-	while (1)
+	(*setjmpReadStreamInterface.mpfRead)(&setjmpReadStreamState, &lIntroducer, sizeof(lIntroducer));
+	while (GIF_TRAILER != lIntroducer)
 	{
-		uint8_t lIntroducer;
-
-		(*setjmpReadStreamInterface.mpfRead)(&setjmpReadStreamState, &lIntroducer, sizeof(lIntroducer));
-
-		// Trailer
-		if (0x3B == lIntroducer)
-		{
-			break;
-		}
-
 		read_Data(&setjmpReadStreamState, setjmpReadStreamInterface, 
 			lIntroducer, is89a);
+		(*setjmpReadStreamInterface.mpfRead)(&setjmpReadStreamState, &lIntroducer, sizeof(lIntroducer));
 	}
 
 	return ReadResultOK;
@@ -104,19 +107,19 @@ void read_SpecialPurpose_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 {
 	switch (in_label)
 	{
-	case 0xFF:
-		/*
-		* Because of PRE:GIF_h_129 the precondition PRE:GIF_h_148
-		* is satisfied.
-		*/
-		read_Application_Extension(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
-		return;
-	case 0xFE:
+	case COMMENT_LABEL:
 		/*
 		* Because of PRE:GIF_h_129 the precondition PRE:GIF_h_158
 		* is satisfied.
 		*/
 		read_Comment_Extension(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
+		return;
+	case APPLICATION_LABEL:
+		/*
+		* Because of PRE:GIF_h_129 the precondition PRE:GIF_h_148
+		* is satisfied.
+		*/
+		read_Application_Extension(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
 		return;
 	default:
 		longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
@@ -169,7 +172,7 @@ void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 {
 	uint8_t lLabel;
 
-	if (0x21 == in_introducer)
+	if (EXTENSION_INTRODUCER == in_introducer)
 	{
 		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 			&lLabel, sizeof(lLabel));
@@ -177,22 +180,18 @@ void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 		/*
 		* We have the following situation:
 		*
-		* ┌─────────────────────┬─────────┬───────────────────────┐
-		* │Extension Introducer │ GIF 87a │ GIF 89a               │
-		* ├─────────────────────┼─────────┼───────────────────────┤
-		* │0xFE or 0xFF         │         │ Special Purpose Block │
-		* │0xF9 or 0xF1         │  skip   │     Graphic Block     │
-		* │other                │         │         skip          │
-		* └─────────────────────┴─────────┴───────────────────────┘
+		* ┌───────────────────────────────────────────────────────┬─────────┬───────────────────────┐
+		* │Extension Introducer                                   │ GIF 87a │ GIF 89a               │
+		* ├───────────────────────────────────────────────────────┼─────────┼───────────────────────┤
+		* │0xFE (COMMENT_LABEL) or 0xFF (APPLICATION_LABEL)       │         │ Special Purpose Block │
+		* │0x01 (PLAIN_TEXT_LABEL) or 0xF9 (GRAPHIC_CONTROL_LABEL)│  skip   │     Graphic Block     │
+		* │other                                                  │         │         skip          │
+		* └───────────────────────────────────────────────────────┴─────────┴───────────────────────┘
 		*/
 		// CND:GIF_c_153
 		if (in_is89a)
 		{
-			/*
-			* 0xFF: Application Extension
-			* 0xFE: Comment Extension
-			*/
-			if (0xFF == lLabel || 0xFE == lLabel)
+			if (COMMENT_LABEL == lLabel || APPLICATION_LABEL == lLabel)
 			{
 				/*
 				* Because of CND:GIF_c_153 the precondition
@@ -202,12 +201,7 @@ void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 					in_byteStreamReadInterface, lLabel);
 				return;
 			}
-			
-			/*
-			* 0xF9: Graphic Control Extension
-			* 0x01: Plain Text Extension
-			*/
-			else if (0xF9 == lLabel || 0x01 == lLabel)
+			else if (PLAIN_TEXT_LABEL == lLabel || GRAPHIC_CONTROL_LABEL == lLabel)
 			{
 				read_Graphic_Block(in_out_pSetjmpStreamState, 
 					in_byteStreamReadInterface, in_introducer, lLabel);
@@ -226,7 +220,7 @@ void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 			return;
 		}
 	}
-	else if (0x2C == in_introducer)
+	else if (IMAGE_SEPARATOR == in_introducer)
 	{
 		read_Graphic_Block(in_out_pSetjmpStreamState, 
 			in_byteStreamReadInterface, in_introducer, 0);
@@ -244,7 +238,7 @@ void read_Graphic_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 	ByteStreamInterface in_byteStreamReadInterface, 
 	uint8_t in_separator, uint8_t in_label)
 {
-	if (0x21 == in_separator && 0xF9 == in_label) 
+	if (EXTENSION_INTRODUCER == in_separator && GRAPHIC_CONTROL_LABEL == in_label) 
 	{
 		// Precondition: we have a GIF 89a file
 		read_Graphic_Control_Extension(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
@@ -252,7 +246,7 @@ void read_Graphic_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 			&in_separator, sizeof(in_separator));
 
-		if (0x21 == in_separator)
+		if (EXTENSION_INTRODUCER == in_separator)
 		{
 			(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 				&in_label, sizeof(in_label));
@@ -270,15 +264,15 @@ void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 {
 	TableBased_Image tableBasedImage;
 
-	if (0x2C == in_separator)
+	if (IMAGE_SEPARATOR == in_separator)
 	{
 		read_TableBased_Image(in_out_pSetjmpStreamState, 
 			in_byteStreamReadInterface, &tableBasedImage);
 	}
 	// Plain Text Extension
-	else if (0x21 == in_separator)
+	else if (EXTENSION_INTRODUCER == in_separator)
 	{
-		if (0x01 != in_label)
+		if (PLAIN_TEXT_LABEL != in_label)
 		{
 			longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
 				ReadResultInvalidData, printHandler, 
@@ -300,7 +294,7 @@ void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState,
 	ByteStreamInterface in_byteStreamReadInterface, 
 	TableBased_Image *in_pTableBasedImage)
 {
-	in_pTableBasedImage->imageDescriptor.Image_Separator = 0x2C;
+	in_pTableBasedImage->imageDescriptor.Image_Separator = IMAGE_SEPARATOR;
 
 	read_Image_Descriptor(in_out_pSetjmpStreamState, in_byteStreamReadInterface, 
 		&in_pTableBasedImage->imageDescriptor);
