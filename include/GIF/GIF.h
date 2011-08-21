@@ -74,10 +74,16 @@ typedef struct
 #pragma warning(pop)
 #endif
 
+
+typedef struct
+{
+	uint8_t r, g, b;
+} Rgb8Color;
+
 typedef struct
 {
 	Logical_Screen_Descriptor logicalScreenDescriptor;
-	uint8_t *globalColorTable;
+	Rgb8Color *globalColorTable;
 } Logical_Screen;
 
 typedef struct
@@ -108,7 +114,7 @@ typedef struct
 typedef struct
 {
 	Image_Descriptor imageDescriptor;
-	uint8_t *localColorTable;
+	Rgb8Color *localColorTable;
 	uint8_t *imageData;
 } TableBased_Image;
 
@@ -127,7 +133,7 @@ void read_Logical_Screen(SetjmpStreamState *in_out_pSetjmpStreamState,
 void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
 	uint8_t in_introducer, bool in_is89a, 
-	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor);
+	const Logical_Screen *in_cpLogicalScreen);
 /*
 * Preconditions:
 * PRE:GIF_h_126: (0x21 == in_separator) || (0x2C == in_separator)
@@ -137,15 +143,15 @@ void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 void read_Graphic_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
 	uint8_t in_separator, uint8_t in_label, 
-	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor);
+	const Logical_Screen *in_cpLogicalScreen);
 void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
 	uint8_t in_separator, uint8_t in_label, 
-	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor);
+	const Logical_Screen *in_cpLogicalScreen);
 void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
 	TableBased_Image *in_pTableBasedImage, 
-	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor);
+	const Logical_Screen *in_cpLogicalScreen);
 /*
 * Precondition:
 * PRE:GIF_h_129: we have a GIF 89a file
@@ -182,7 +188,9 @@ void read_Local_Color_Table(SetjmpStreamState *in_out_pSetjmpStreamState,
 #endif
 void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	const Image_Descriptor *in_cpImageDescriptor);
+	const Image_Descriptor *in_cpImageDescriptor, 
+	const Rgb8Color *in_pColorTable, 
+	uint8_t in_colorTableSize);
 /*
 * Precondition:
 * PRE:GIF_h_148: we have a GIF 89a file
