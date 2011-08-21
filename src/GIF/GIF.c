@@ -33,9 +33,14 @@
 #define COMMENT_LABEL         0xFE
 #define APPLICATION_LABEL     0xFF
 
+size_t colorsOfColorTable(unsigned char in_sizeOfColorTable)
+{
+	return 1<<(in_sizeOfColorTable+1);
+}
+
 size_t bytesOfColorTable(unsigned char in_sizeOfColorTable)
 {
-	return 3*(1<<(in_sizeOfColorTable+1));
+	return 3*colorsOfColorTable(in_sizeOfColorTable);
 }
 
 ReadResult read_GIF_Data_Stream(void *in_pStreamState, 
@@ -67,7 +72,7 @@ ReadResult read_GIF_Data_Stream(void *in_pStreamState,
 	while (GIF_TRAILER != lIntroducer)
 	{
 		read_Data(&setjmpReadStreamState, setjmpReadStreamInterface, 
-			lIntroducer, is89a);
+			lIntroducer, is89a, &in_pDataStream->logicalScreen.logicalScreenDescriptor);
 		(*setjmpReadStreamInterface.mpfRead)(&setjmpReadStreamState, &lIntroducer, sizeof(lIntroducer));
 	}
 
@@ -141,6 +146,14 @@ void read_Logical_Screen(SetjmpStreamState *in_out_pSetjmpStreamState,
 		jmp_buf freeMemoryJmpBuf;
 		int result;
 
+		if (in_pLogicalScreen->logicalScreenDescriptor.Background_Color_Index 
+			>= colorsOfColorTable(in_pLogicalScreen->logicalScreenDescriptor.Size_Of_Global_Color_Table))
+		{
+			longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+				ReadResultInvalidData, printHandler, 
+				"read_Logical_Screen: Background Color Index is >= # colors in Global Color table");
+		}
+
 		in_pLogicalScreen->globalColorTable = (uint8_t*) longjmpMalloc(
 			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
 			ReadResultAllocationFailure, bytesOfGlobalColorTable);
@@ -168,7 +181,8 @@ void read_Logical_Screen(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	uint8_t in_introducer, bool in_is89a)
+	uint8_t in_introducer, bool in_is89a, 
+	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor)
 {
 	uint8_t lLabel;
 
@@ -204,7 +218,8 @@ void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 			else if (PLAIN_TEXT_LABEL == lLabel || GRAPHIC_CONTROL_LABEL == lLabel)
 			{
 				read_Graphic_Block(in_out_pSetjmpStreamState, 
-					in_byteStreamReadInterface, in_introducer, lLabel);
+					in_byteStreamReadInterface, in_introducer, lLabel, 
+					in_cpLogicalScreenDescriptor);
 				return;
 			}
 			else
@@ -223,7 +238,8 @@ void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	else if (IMAGE_SEPARATOR == in_introducer)
 	{
 		read_Graphic_Block(in_out_pSetjmpStreamState, 
-			in_byteStreamReadInterface, in_introducer, 0);
+			in_byteStreamReadInterface, in_introducer, 0, 
+			in_cpLogicalScreenDescriptor);
 		return;
 	}
 	else
@@ -236,7 +252,8 @@ void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 void read_Graphic_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	uint8_t in_separator, uint8_t in_label)
+	uint8_t in_separator, uint8_t in_label, 
+	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor)
 {
 	if (EXTENSION_INTRODUCER == in_separator && GRAPHIC_CONTROL_LABEL == in_label) 
 	{
@@ -254,20 +271,23 @@ void read_Graphic_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 	}
 
 	read_GraphicRendering_Block(in_out_pSetjmpStreamState, 
-		in_byteStreamReadInterface, in_separator, in_label);
+		in_byteStreamReadInterface, in_separator, in_label, 
+		in_cpLogicalScreenDescriptor);
 	return;
 }
 
 void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	uint8_t in_separator, uint8_t in_label)
+	uint8_t in_separator, uint8_t in_label, 
+	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor)
 {
 	TableBased_Image tableBasedImage;
 
 	if (IMAGE_SEPARATOR == in_separator)
 	{
 		read_TableBased_Image(in_out_pSetjmpStreamState, 
-			in_byteStreamReadInterface, &tableBasedImage);
+			in_byteStreamReadInterface, &tableBasedImage, 
+			in_cpLogicalScreenDescriptor);
 	}
 	// Plain Text Extension
 	else if (EXTENSION_INTRODUCER == in_separator)
@@ -292,12 +312,13 @@ void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	TableBased_Image *in_pTableBasedImage)
+	TableBased_Image *in_pTableBasedImage, 
+	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor)
 {
 	in_pTableBasedImage->imageDescriptor.Image_Separator = IMAGE_SEPARATOR;
 
 	read_Image_Descriptor(in_out_pSetjmpStreamState, in_byteStreamReadInterface, 
-		&in_pTableBasedImage->imageDescriptor);
+		&in_pTableBasedImage->imageDescriptor, in_cpLogicalScreenDescriptor);
 
 	// Set localColorTable into a defined state (even if we do a longjmp)
 	in_pTableBasedImage->localColorTable = NULL;
@@ -364,15 +385,44 @@ void read_Graphic_Control_Extension(SetjmpStreamState *in_out_pSetjmpStreamState
 
 void read_Image_Descriptor(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	Image_Descriptor* in_pImageDescriptor)
+	Image_Descriptor* out_pImageDescriptor, 
+	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor)
 {
 	// sizeof(*in_pImageDescriptor)-1 since we have already read the first byte
 	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
-		&in_pImageDescriptor->Image_Left_Position, sizeof(*in_pImageDescriptor)-1);
+		&out_pImageDescriptor->Image_Left_Position, sizeof(*out_pImageDescriptor)-1);
 
-	longjmpIf(in_pImageDescriptor->Reserved != 0, 
+	longjmpIf(out_pImageDescriptor->Reserved != 0, 
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
 		printHandler, "read_Image_Descriptor: reserved bits not null");
+
+	longjmpIf(
+		out_pImageDescriptor->Image_Left_Position >= in_cpLogicalScreenDescriptor->Logical_Screen_Width, 
+		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		ReadResultInvalidData, printHandler, 
+		"read_Image_Descriptor: Image Left Position >= Logical Screen Width");
+
+	assert(out_pImageDescriptor->Image_Left_Position < in_cpLogicalScreenDescriptor->Logical_Screen_Width);
+	longjmpIf(
+		out_pImageDescriptor->Image_Width > 
+		in_cpLogicalScreenDescriptor->Logical_Screen_Width - out_pImageDescriptor->Image_Left_Position, 
+		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		ReadResultInvalidData, printHandler, 
+		"read_Image_Descriptor: Image Left Position + Image Width > Logical Screen Width");
+
+	longjmpIf(
+		out_pImageDescriptor->Image_Top_Position >= in_cpLogicalScreenDescriptor->Logical_Screen_Height, 
+		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		ReadResultInvalidData, printHandler, 
+		"read_Image_Descriptor: Image Top Position >= Logical Screen Height");
+
+	assert(out_pImageDescriptor->Image_Top_Position < in_cpLogicalScreenDescriptor->Logical_Screen_Height);
+	longjmpIf(
+		out_pImageDescriptor->Image_Height > 
+		in_cpLogicalScreenDescriptor->Logical_Screen_Height - out_pImageDescriptor->Image_Top_Position, 
+		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		ReadResultInvalidData, printHandler, 
+		"read_Image_Descriptor: Image Top Position + Image Height > Logical Screen Height");
 }
 
 typedef struct

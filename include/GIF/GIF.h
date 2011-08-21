@@ -126,7 +126,8 @@ void read_Logical_Screen(SetjmpStreamState *in_out_pSetjmpStreamState,
 	Logical_Screen *in_pLogicalScreen);
 void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	uint8_t in_introducer, bool in_is89a);
+	uint8_t in_introducer, bool in_is89a, 
+	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor);
 /*
 * Preconditions:
 * PRE:GIF_h_126: (0x21 == in_separator) || (0x2C == in_separator)
@@ -135,13 +136,16 @@ void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 */
 void read_Graphic_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	uint8_t in_separator, uint8_t in_label);
+	uint8_t in_separator, uint8_t in_label, 
+	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor);
 void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	uint8_t in_separator, uint8_t in_label);
+	uint8_t in_separator, uint8_t in_label, 
+	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor);
 void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	TableBased_Image *in_pTableBasedImage);
+	TableBased_Image *in_pTableBasedImage, 
+	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor);
 /*
 * Precondition:
 * PRE:GIF_h_129: we have a GIF 89a file
@@ -170,7 +174,8 @@ void read_Plain_Text_Extension(SetjmpStreamState *in_out_pSetjmpStreamState,
 #endif
 void read_Image_Descriptor(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	Image_Descriptor* in_pImageDescriptor);
+	Image_Descriptor* out_pImageDescriptor, 
+	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor);
 #if 0
 void read_Local_Color_Table(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface);
