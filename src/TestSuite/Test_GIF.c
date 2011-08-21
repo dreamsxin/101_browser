@@ -74,7 +74,7 @@ Char96ReadResultPair filenameResults[] =
 	* Invalid since minimum code size = 0x48 (instead of between 2 and 8)
 	*/
 	{"testfiles/imagetestsuite/gif/2b5bc31d84703bfb9f371925f0e3e57d.gif", ReadResultInvalidData}, 
-	{"testfiles/imagetestsuite/gif/55abb3cc464305dd554171c3d44cb61f.gif", ReadResultPrematureEndOfStream}, 
+	{"testfiles/imagetestsuite/gif/55abb3cc464305dd554171c3d44cb61f.gif", ReadResultInvalidData}, 
 	/*
 	* Invalid since minimum code size = 0x48 (instead of between 2 and 8)
 	*/
@@ -85,7 +85,7 @@ Char96ReadResultPair filenameResults[] =
 	* block is 0xEE instead of 0x04.
 	*/
 	{"testfiles/imagetestsuite/gif/7092f253998c1b6b869707ad7ae92854.gif", ReadResultInvalidData}, 
-	{"testfiles/imagetestsuite/gif/9f8f6046eaf9ffa2d9c5d6db05c5f881.gif", ReadResultPrematureEndOfStream}, 
+	{"testfiles/imagetestsuite/gif/9f8f6046eaf9ffa2d9c5d6db05c5f881.gif", ReadResultInvalidData}, 
 	{"testfiles/imagetestsuite/gif/adaf0da1764aafb7039440dbe098569b.gif", ReadResultPrematureEndOfStream}, 
 	/*
 	* Invalid since there is a code word currentCodeWord where (currentCodeWord >= currentTableIndex)
@@ -121,8 +121,8 @@ Char96ReadResultPair filenameResults[] =
 	* Application Extension block directly after Graphics Control Extension
 	*/
 	{"testfiles/imagetestsuite/gif/f617c7af7f36296a37ddb419b828099c.gif", ReadResultInvalidData}, 
-	{"testfiles/imagetestsuite/gif/f88b6907ee086c4c8ac4b8c395748c49.gif", ReadResultOK},
-	{"testfiles/imagetestsuite/gif/fc3e2b992c559055267e26dc23e484c0.gif", ReadResultOK}
+	{"testfiles/imagetestsuite/gif/f88b6907ee086c4c8ac4b8c395748c49.gif", ReadResultInvalidData},
+	{"testfiles/imagetestsuite/gif/fc3e2b992c559055267e26dc23e484c0.gif", ReadResultInvalidData}
 };
 
 void testGIF()
@@ -157,6 +157,8 @@ void testGIF()
 		GIF_Data_Stream dataStream;
 		ReadResult readResult;
 		FileByteStreamState fileByteStreamState;
+
+		printf("Trying file %s\n", filenameResults[idx].char96);
 
 		if (!fileByteReadStreamStateInit(filenameResults[idx].char96, &fileByteStreamState))
 		{

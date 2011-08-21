@@ -281,10 +281,11 @@ void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 	uint8_t in_separator, uint8_t in_label, 
 	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor)
 {
-	TableBased_Image tableBasedImage;
-
+	
 	if (IMAGE_SEPARATOR == in_separator)
 	{
+		TableBased_Image tableBasedImage;
+
 		read_TableBased_Image(in_out_pSetjmpStreamState, 
 			in_byteStreamReadInterface, &tableBasedImage, 
 			in_cpLogicalScreenDescriptor);
@@ -322,6 +323,8 @@ void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 	// Set localColorTable into a defined state (even if we do a longjmp)
 	in_pTableBasedImage->localColorTable = NULL;
+	// Not really necessary at the moment...
+	in_pTableBasedImage->imageData = NULL;
 
 	/*
 	* If the Local Color Table Flag is set, read local color table before
@@ -352,7 +355,7 @@ void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState,
 		xchgJmpBuf(freeMemoryJmpBuf, *in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
 	}
 
-	read_Image_Data(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
+	read_Image_Data(in_out_pSetjmpStreamState, in_byteStreamReadInterface, &in_pTableBasedImage->imageDescriptor);
 	return;
 }
 
@@ -485,12 +488,12 @@ size_t read_Image_Data_byteStreamInterface(void *in_out_pByteStreamState, void *
 }
 
 void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState, 
-	ByteStreamInterface in_byteStreamReadInterface)
+	ByteStreamInterface in_byteStreamReadInterface, 
+	const Image_Descriptor *in_cpImageDescriptor)
 {
 	uint8_t LZW_Minimum_Code_Size;
 	BitReadState bitReadState;
 	ByteStreamInterface bitReadInterface;
-	size_t readCount;
 
 	Image_Data_StreamState streamState;
 	LZW_Tree *pTree = NULL;
@@ -505,9 +508,9 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 	uint16_t currentCodeWord;
 
-#if 0
-	size_t pixelsWritten = 0;
-#endif
+	uint32_t pixelsWritten = 0;
+	uint32_t pixelsOfImageCount = ((uint32_t) in_cpImageDescriptor->Image_Width) * 
+		((uint32_t) in_cpImageDescriptor->Image_Height);
 
 	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 		&LZW_Minimum_Code_Size, sizeof(LZW_Minimum_Code_Size));
@@ -556,6 +559,12 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	
 	while (1)
 	{
+		/*
+		* readCount is simply for storing how many elements (bits/bytes) we have
+		* read (to compare with the count that we want(ed) to read).
+		*/
+		size_t readCount;
+		
 		/*
 		 * Q: Why is it necessary to set currentCodeWord to 0?
 		 * A: Since the code word can have 8 or less bits, the higher byte would
@@ -664,13 +673,19 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 				pCurrentNode = pStack->pNodes[pStack->stackSize-1];
 				pStack->stackSize--;
 
+				// CND:GIF_500
+				if (pixelsWritten == pixelsOfImageCount)
+				{
+					longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+						ReadResultInvalidData, printHandler, 
+						"read_Image_Data: more pixels than defined in Image Descriptor");
+				}
+				// otherwise write pixel
 #if 0
 				printf("%u ", pCurrentNode->lastCode);
 #endif
 
-#if 0
 				pixelsWritten++;
-#endif
 			}
 		}
 
@@ -729,6 +744,19 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	longjmpIf(0 != streamState.Block_Size_Bytes, 
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
 		printHandler, "read_Image_Data: no terminator block");
+
+	/*
+	* Q: Why does this assertion hold?
+	* A: the case pixelsWritten > pixelsOfImageCount is caught at CND:GIF_500.
+	*/
+	assert(pixelsWritten <= pixelsOfImageCount);
+
+	if (pixelsWritten < pixelsOfImageCount)
+	{
+		longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+			ReadResultInvalidData, printHandler, 
+			"read_Image_Data: less pixels than defined in Image Descriptor");
+	}
 
 #if 0
 	printf("Pixels written: %u\n", pixelsWritten);

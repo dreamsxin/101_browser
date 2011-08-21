@@ -181,7 +181,8 @@ void read_Local_Color_Table(SetjmpStreamState *in_out_pSetjmpStreamState,
 	ByteStreamInterface in_byteStreamReadInterface);
 #endif
 void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState, 
-	ByteStreamInterface in_byteStreamReadInterface);
+	ByteStreamInterface in_byteStreamReadInterface, 
+	const Image_Descriptor *in_cpImageDescriptor);
 /*
 * Precondition:
 * PRE:GIF_h_148: we have a GIF 89a file
