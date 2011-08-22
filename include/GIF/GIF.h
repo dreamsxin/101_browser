@@ -143,15 +143,15 @@ void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 */
 void read_Graphic_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	uint8_t in_separator, uint8_t in_label, 
+	uint8_t in_separator, uint8_t in_label, bool in_is89a, 
 	const Logical_Screen *in_cpLogicalScreen);
 void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	uint8_t in_separator, uint8_t in_label, 
+	uint8_t in_separator, uint8_t in_label, bool in_is89a, 
 	const Logical_Screen *in_cpLogicalScreen);
 void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	TableBased_Image *in_pTableBasedImage, 
+	TableBased_Image *in_pTableBasedImage, bool in_is89a, 
 	const Logical_Screen *in_cpLogicalScreen);
 /*
 * Precondition:
@@ -181,7 +181,7 @@ void read_Plain_Text_Extension(SetjmpStreamState *in_out_pSetjmpStreamState,
 #endif
 void read_Image_Descriptor(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	Image_Descriptor* out_pImageDescriptor, 
+	Image_Descriptor* out_pImageDescriptor, bool in_is89a, 
 	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor);
 #if 0
 void read_Local_Color_Table(SetjmpStreamState *in_out_pSetjmpStreamState, 

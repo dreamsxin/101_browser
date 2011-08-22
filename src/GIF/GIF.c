@@ -236,7 +236,7 @@ void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 			{
 				read_Graphic_Block(in_out_pSetjmpStreamState, 
 					in_byteStreamReadInterface, in_introducer, lLabel, 
-					in_cpLogicalScreen);
+					in_is89a, in_cpLogicalScreen);
 				return;
 			}
 			else
@@ -256,7 +256,7 @@ void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	{
 		read_Graphic_Block(in_out_pSetjmpStreamState, 
 			in_byteStreamReadInterface, in_introducer, 0, 
-			in_cpLogicalScreen);
+			in_is89a, in_cpLogicalScreen);
 		return;
 	}
 	else
@@ -269,7 +269,7 @@ void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 void read_Graphic_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	uint8_t in_separator, uint8_t in_label, 
+	uint8_t in_separator, uint8_t in_label, bool in_is89a, 
 	const Logical_Screen *in_cpLogicalScreen)
 {
 	if (EXTENSION_INTRODUCER == in_separator && GRAPHIC_CONTROL_LABEL == in_label) 
@@ -289,23 +289,22 @@ void read_Graphic_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 	read_GraphicRendering_Block(in_out_pSetjmpStreamState, 
 		in_byteStreamReadInterface, in_separator, in_label, 
-		in_cpLogicalScreen);
+		in_is89a, in_cpLogicalScreen);
 	return;
 }
 
 void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	uint8_t in_separator, uint8_t in_label, 
+	uint8_t in_separator, uint8_t in_label, bool in_is89a, 
 	const Logical_Screen *in_cpLogicalScreen)
 {
-	
 	if (IMAGE_SEPARATOR == in_separator)
 	{
 		TableBased_Image tableBasedImage;
 
 		read_TableBased_Image(in_out_pSetjmpStreamState, 
 			in_byteStreamReadInterface, &tableBasedImage, 
-			in_cpLogicalScreen);
+			in_is89a, in_cpLogicalScreen);
 	}
 	// Plain Text Extension
 	else if (EXTENSION_INTRODUCER == in_separator)
@@ -330,7 +329,7 @@ void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	TableBased_Image *in_pTableBasedImage, 
+	TableBased_Image *in_pTableBasedImage, bool in_is89a, 
 	const Logical_Screen *in_cpLogicalScreen)
 {
 	// Initialising these 2 variables is not necessary, but does not hurt...
@@ -342,7 +341,8 @@ void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState,
 	in_pTableBasedImage->imageDescriptor.Image_Separator = IMAGE_SEPARATOR;
 
 	read_Image_Descriptor(in_out_pSetjmpStreamState, in_byteStreamReadInterface, 
-		&in_pTableBasedImage->imageDescriptor, &in_cpLogicalScreen->logicalScreenDescriptor);
+		&in_pTableBasedImage->imageDescriptor, in_is89a, 
+		&in_cpLogicalScreen->logicalScreenDescriptor);
 
 	// Set localColorTable into a defined state (even if we do a longjmp)
 	in_pTableBasedImage->localColorTable = NULL;
@@ -429,12 +429,19 @@ void read_Graphic_Control_Extension(SetjmpStreamState *in_out_pSetjmpStreamState
 
 void read_Image_Descriptor(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	Image_Descriptor* out_pImageDescriptor, 
+	Image_Descriptor* out_pImageDescriptor, bool in_is89a, 
 	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor)
 {
 	// sizeof(*in_pImageDescriptor)-1 since we have already read the first byte
 	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 		&out_pImageDescriptor->Image_Left_Position, sizeof(*out_pImageDescriptor)-1);
+
+	if (!in_is89a)
+	{
+		longjmpIf(out_pImageDescriptor->Sort_Flag, 
+			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
+			printHandler, "read_Image_Descriptor: in GIF 87a the (GIF 89a) Sort Flag must be set to 0");
+	}
 
 	longjmpIf(out_pImageDescriptor->Reserved != 0, 
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
