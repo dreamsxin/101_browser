@@ -121,7 +121,8 @@ typedef struct
 #pragma pack(pop)
 
 // Helper functions
-size_t bytesOfColorTable(unsigned char in_sizeOfColorTable);
+uint16_t colorsOfColorTable(uint8_t in_sizeOfColorTable);
+uint16_t bytesOfColorTable(uint8_t in_sizeOfColorTable);
 
 // Grammar words
 DLLEXPORT ReadResult read_GIF_Data_Stream(void *in_pStreamState, 
@@ -129,7 +130,7 @@ DLLEXPORT ReadResult read_GIF_Data_Stream(void *in_pStreamState,
 	GIF_Data_Stream *in_pDataStream);
 void read_Logical_Screen(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	Logical_Screen *in_pLogicalScreen);
+	Logical_Screen *in_pLogicalScreen, bool in_is89a);
 void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
 	uint8_t in_introducer, bool in_is89a, 
@@ -190,7 +191,7 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	ByteStreamInterface in_byteStreamReadInterface, 
 	const Image_Descriptor *in_cpImageDescriptor, 
 	const Rgb8Color *in_pColorTable, 
-	uint8_t in_colorTableSize);
+	uint16_t in_colorTableSize);
 /*
 * Precondition:
 * PRE:GIF_h_148: we have a GIF 89a file

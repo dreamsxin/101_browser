@@ -33,12 +33,12 @@
 #define COMMENT_LABEL         0xFE
 #define APPLICATION_LABEL     0xFF
 
-size_t colorsOfColorTable(unsigned char in_sizeOfColorTable)
+uint16_t colorsOfColorTable(uint8_t in_sizeOfColorTable)
 {
 	return 1<<(in_sizeOfColorTable+1);
 }
 
-size_t bytesOfColorTable(unsigned char in_sizeOfColorTable)
+uint16_t bytesOfColorTable(uint8_t in_sizeOfColorTable)
 {
 	return 3*colorsOfColorTable(in_sizeOfColorTable);
 }
@@ -66,7 +66,7 @@ ReadResult read_GIF_Data_Stream(void *in_pStreamState,
 		&in_pDataStream->header, &is89a);
 
 	read_Logical_Screen(&setjmpReadStreamState, setjmpReadStreamInterface, 
-		&in_pDataStream->logicalScreen);
+		&in_pDataStream->logicalScreen, is89a);
 
 	(*setjmpReadStreamInterface.mpfRead)(&setjmpReadStreamState, &lIntroducer, sizeof(lIntroducer));
 	while (GIF_TRAILER != lIntroducer)
@@ -135,10 +135,27 @@ void read_SpecialPurpose_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 void read_Logical_Screen(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	Logical_Screen *in_pLogicalScreen)
+	Logical_Screen *in_pLogicalScreen, bool in_is89a)
 {
 	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 		&in_pLogicalScreen->logicalScreenDescriptor, sizeof(Logical_Screen_Descriptor));
+
+	if (!in_is89a)
+	{
+		if (in_pLogicalScreen->logicalScreenDescriptor.Sort_Flag)
+		{
+			longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+				ReadResultInvalidData, printHandler, 
+				"read_Logical_Screen: in GIF 87a the (GIF 89a) Sort Flag must be set to 0");
+		}
+
+		if (in_pLogicalScreen->logicalScreenDescriptor.Pixel_Aspect_Ratio)
+		{
+			longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+				ReadResultInvalidData, printHandler, 
+				"read_Logical_Screen: in GIF 87a the (GIF 89a) Pixel Aspect Ratio must be set to 0");
+		}
+	}
 
 	if (in_pLogicalScreen->logicalScreenDescriptor.Global_Color_Table_Flag)
 	{
@@ -318,7 +335,7 @@ void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState,
 {
 	// Initialising these 2 variables is not necessary, but does not hurt...
 	Rgb8Color *lpColorTable = NULL;
-	uint8_t lColorTableSize = 0;
+	uint16_t lColorTableSize = 0;
 
 	jmp_buf freeMemoryJmpBuf;
 	
@@ -515,7 +532,7 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	ByteStreamInterface in_byteStreamReadInterface, 
 	const Image_Descriptor *in_cpImageDescriptor, 
 	const Rgb8Color *in_pColorTable, 
-	uint8_t in_colorTableSize)
+	uint16_t in_colorTableSize)
 {
 	uint8_t LZW_Minimum_Code_Size;
 	BitReadState bitReadState;
@@ -706,8 +723,20 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 						ReadResultInvalidData, printHandler, 
 						"read_Image_Data: more pixels than defined in Image Descriptor");
 				}
+				// 
 
-				// otherwise write pixel
+				/*
+				* Otherwise write pixel.
+				*
+				* pCurrentNode->lastCode contains the index in the active color table
+				* that is to write.
+				*/
+				if (pCurrentNode->lastCode >= in_colorTableSize)
+				{
+					longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+						ReadResultInvalidData, printHandler, 
+						"read_Image_Data: current pixel index is out of the bounds of the currently active color table");
+				}
 #if 0
 				printf("%u ", pCurrentNode->lastCode);
 #endif
