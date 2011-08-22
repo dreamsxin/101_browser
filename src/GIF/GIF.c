@@ -589,7 +589,7 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 		if (pStack)
 		{
 			assert(pTree != NULL);
-			safe_free(pStack);
+			safe_free(&pStack);
 		}
 		if (pTree)
 			safe_free(&pTree);
@@ -682,6 +682,14 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 			// CND:GIF_415
 			if (currentCodeWord < startCode)
 			{
+				// CND:GIF_417
+				if (currentCodeWord >= in_colorTableSize)
+				{
+					longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+						ReadResultInvalidData, printHandler, 
+						"read_Image_Data: current pixel index is out of the bounds of the currently active color table");
+				}
+				
 				pTree->nodes[currentTableIndex].pPrev = NULL;
 				pTree->nodes[currentTableIndex].firstCode = (uint8_t) currentCodeWord;
 				pTree->nodes[currentTableIndex].lastCode = (uint8_t) currentCodeWord;
@@ -730,20 +738,14 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 						ReadResultInvalidData, printHandler, 
 						"read_Image_Data: more pixels than defined in Image Descriptor");
 				}
-				// 
 
 				/*
-				* Otherwise write pixel.
-				*
-				* pCurrentNode->lastCode contains the index in the active color table
-				* that is to write.
+				* Otherwise write pixel. pCurrentNode->lastCode contains the
+				* color index to draw.
 				*/
-				if (pCurrentNode->lastCode >= in_colorTableSize)
-				{
-					longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-						ReadResultInvalidData, printHandler, 
-						"read_Image_Data: current pixel index is out of the bounds of the currently active color table");
-				}
+
+				// Follows from CND:GIF_417
+				assert(pCurrentNode->lastCode < in_colorTableSize);
 #if 0
 				printf("%u ", pCurrentNode->lastCode);
 #endif
