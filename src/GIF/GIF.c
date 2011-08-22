@@ -721,14 +721,14 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 			while (pCurrentNode != NULL)
 			{
-				pStack->pNodes[pStack->stackSize] = pCurrentNode;
+				pStack->lzwTreeIndices[pStack->stackSize] = currentTableIndex;
 				pStack->stackSize++;
 				pCurrentNode = pCurrentNode->pPrev;
 			}
 
 			while (pStack->stackSize != 0)
 			{
-				pCurrentNode = pStack->pNodes[pStack->stackSize-1];
+				pCurrentNode = pTree->nodes+pStack->lzwTreeIndices[pStack->stackSize-1];
 				pStack->stackSize--;
 
 				// CND:GIF_500

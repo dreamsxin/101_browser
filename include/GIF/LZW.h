@@ -57,7 +57,7 @@ void initLZW_Tree(LZW_Tree *out_pLZW_Tree, size_t in_tableSize);
 typedef struct
 {
 	size_t stackSize;
-	LZW_Tree_Node* pNodes[4097];
+	uint16_t lzwTreeIndices[4097];
 } LZW_Stack;
 
 void initLZW_Stack(LZW_Stack *out_pLZW_Stack);
