@@ -18,13 +18,13 @@
 #include <assert.h>
 #include <stdlib.h>
 
-void initLZW_Tree(LZW_Tree *out_pLZW_Tree, size_t in_tableSize)
+void initLZW_Tree(LZW_Tree *out_pLZW_Tree, uint16_t in_tableSize)
 {
-	size_t i;
+	uint16_t i;
 
 	for (i = 0; i < in_tableSize; i++)
 	{
-		out_pLZW_Tree->nodes[i].pPrev = NULL;
+		out_pLZW_Tree->nodes[i].previousLzwTreeNodeIndex = PREVIOUS_LZW_TREE_NODE_INDEX_SENTINEL;
 		out_pLZW_Tree->nodes[i].firstCode = (uint8_t) i;
 		out_pLZW_Tree->nodes[i].lastCode = (uint8_t) i;
 	}

@@ -690,7 +690,7 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 						"read_Image_Data: current pixel index is out of the bounds of the currently active color table");
 				}
 				
-				pTree->nodes[currentTableIndex].pPrev = NULL;
+				pTree->nodes[currentTableIndex].previousLzwTreeNodeIndex = PREVIOUS_LZW_TREE_NODE_INDEX_SENTINEL;
 				pTree->nodes[currentTableIndex].firstCode = (uint8_t) currentCodeWord;
 				pTree->nodes[currentTableIndex].lastCode = (uint8_t) currentCodeWord;
 			}
@@ -710,7 +710,7 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 				pCurrentNode = pTree->nodes+currentCodeWord;
 
-				pTree->nodes[currentTableIndex].pPrev = pCurrentNode;
+				pTree->nodes[currentTableIndex].previousLzwTreeNodeIndex = currentCodeWord;
 				pTree->nodes[currentTableIndex].firstCode = pCurrentNode->firstCode;
 				pTree->nodes[currentTableIndex].lastCode = (pCurrentNode+1)->firstCode;
 			}
@@ -719,11 +719,15 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 			pCurrentNode = pTree->nodes+currentTableIndex;
 
-			while (pCurrentNode != NULL)
+			assert(pCurrentNode != NULL);
+			pStack->lzwTreeIndices[pStack->stackSize] = currentTableIndex;
+			pStack->stackSize++;
+
+			while (pCurrentNode->previousLzwTreeNodeIndex != PREVIOUS_LZW_TREE_NODE_INDEX_SENTINEL)
 			{
+				pCurrentNode = pTree->nodes+pCurrentNode->previousLzwTreeNodeIndex;
 				pStack->lzwTreeIndices[pStack->stackSize] = currentTableIndex;
 				pStack->stackSize++;
-				pCurrentNode = pCurrentNode->pPrev;
 			}
 
 			while (pStack->stackSize != 0)
