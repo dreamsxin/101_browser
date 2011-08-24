@@ -175,10 +175,10 @@ void read_Global_Color_Table(void *in_pStreamState,
 #endif
 void read_Graphic_Control_Extension(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface);
-#if 0
+
 void read_Plain_Text_Extension(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface);
-#endif
+
 void read_Image_Descriptor(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
 	Image_Descriptor* out_pImageDescriptor, bool in_is89a, 

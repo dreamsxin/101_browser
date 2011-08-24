@@ -92,12 +92,10 @@ void read_Header(SetjmpStreamState *in_out_pSetjmpStreamState,
 	if (strncmp(in_pHeader->Version, "87a", sizeof(in_pHeader->Version)) == 0)
 	{
 		*out_pIs89a = false;
-		return;
 	}
 	else if (strncmp(in_pHeader->Version, "89a", sizeof(in_pHeader->Version)) == 0)
 	{
 		*out_pIs89a = true;
-		return;
 	}
 	else
 	{
@@ -290,7 +288,6 @@ void read_Graphic_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 	read_GraphicRendering_Block(in_out_pSetjmpStreamState, 
 		in_byteStreamReadInterface, in_separator, in_label, 
 		in_is89a, in_cpLogicalScreen);
-	return;
 }
 
 void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
@@ -316,8 +313,7 @@ void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 				"read_GraphicRendering_Block: the only allowed extension is Plain Text Extension");
 		}
 
-		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-			ReadResultNotImplemented);
+		read_Plain_Text_Extension(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
 	}
 	else
 	{
@@ -396,8 +392,6 @@ void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState,
 		safe_free(&in_pTableBasedImage->localColorTable);
 		xchgJmpBuf(freeMemoryJmpBuf, *in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
 	}
-	
-	return;
 }
 
 void read_Graphic_Control_Extension(SetjmpStreamState *in_out_pSetjmpStreamState, 
@@ -425,6 +419,13 @@ void read_Graphic_Control_Extension(SetjmpStreamState *in_out_pSetjmpStreamState
 	longjmpIf(terminator != 0x00, 
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
 		ReadResultInvalidData, printHandler, "read_Graphic_Control_Extension: no terminator");
+}
+
+void read_Plain_Text_Extension(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_byteStreamReadInterface)
+{
+	longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		ReadResultNotImplemented);
 }
 
 void read_Image_Descriptor(SetjmpStreamState *in_out_pSetjmpStreamState, 
