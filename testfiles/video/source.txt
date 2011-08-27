@@ -6,8 +6,11 @@ http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4
 http://clips.vorwaerts-gmbh.de/VfE.ogv
 http://clips.vorwaerts-gmbh.de/VfE_html5.mp4
 http://clips.vorwaerts-gmbh.de/VfE.webm
+)
 
 http://www.webmfiles.org/demo-files/
+(more exactly
 http://www.webmfiles.org/wp-content/uploads/video/big-buck-bunny_trailer.webm
 http://video.blendertestbuilds.de/download.blender.org/peach/trailer_480p.mov
 http://www.webmfiles.org/wp-content/uploads/video/elephants-dream.webm
+)
