@@ -18,12 +18,6 @@
 #define _LZW_h
 
 #include "MiniStdlib/cstdint.h"
- // for size_t
-#ifdef __cplusplus
-#include <climits>
-#else
-#include <limits.h>
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,7 +29,7 @@ extern "C" {
 *    instead of pointers, we need some value that fills the role of the NULL
 *    pointer. This is what this sentinel is for.
 */
-#define PREVIOUS_LZW_TREE_NODE_INDEX_SENTINEL _UI16_MAX
+#define PREVIOUS_LZW_TREE_NODE_INDEX_SENTINEL UINT16_MAX
 
 typedef struct
 {
