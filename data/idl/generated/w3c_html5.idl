@@ -311,11 +311,9 @@ module html5
              attribute Function? onpopstate;
              attribute Function? onpagehide;
              attribute Function? onpageshow;
-             attribute Function? onredo;
              attribute Function? onresize;
              attribute Function? onscroll;
              attribute Function? onstorage;
-             attribute Function? onundo;
              attribute Function? onunload;
   };
 
@@ -1154,7 +1152,6 @@ module html5
              attribute Function? onprogress;
              attribute Function? onratechange;
              attribute Function? onreadystatechange;
-             attribute Function? onredo;
              attribute Function? onreset;
              attribute Function? onresize;
              attribute Function? onscroll;
@@ -1167,7 +1164,6 @@ module html5
              attribute Function? onsubmit;
              attribute Function? onsuspend;
              attribute Function? ontimeupdate;
-             attribute Function? onundo;
              attribute Function? onunload;
              attribute Function? onvolumechange;
              attribute Function? onwaiting;
@@ -1306,6 +1302,10 @@ module html5
     // content handler registration
     void registerProtocolHandler(DOMString scheme, DOMString url, DOMString title);
     void registerContentHandler(DOMString mimeType, DOMString url, DOMString title);
+    DOMString isProtocolHandlerRegistered(DOMString scheme, DOMString url);
+    DOMString isContentHandlerRegistered(DOMString mimeType, DOMString url);
+    void unregisterProtocolHandler(DOMString scheme, DOMString url);
+    void unregisterContentHandler(DOMString mimeType, DOMString url);
   };
 
   [NoInterfaceObject]
@@ -1411,11 +1411,9 @@ module html5
              attribute Function? onpagehide;
              attribute Function? onpageshow;
              attribute Function? onpopstate;
-             attribute Function? onredo;
              attribute Function? onresize;
              attribute Function? onscroll;
              attribute Function? onstorage;
-             attribute Function? onundo;
              attribute Function? onunload;
   };
 

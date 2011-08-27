@@ -342,11 +342,9 @@ module html
              attribute Function? onpopstate;
              attribute Function? onpagehide;
              attribute Function? onpageshow;
-             attribute Function? onredo;
              attribute Function? onresize;
              attribute Function? onscroll;
              attribute Function? onstorage;
-             attribute Function? onundo;
              attribute Function? onunload;
   };
 
@@ -773,9 +771,9 @@ module html
     void lineTo(double x, double y);
     void quadraticCurveTo(double cpx, double cpy, double x, double y);
     void bezierCurveTo(double cp1x, double cp1y, double cp2x, double cp2y, double x, double y);
-    void arcTo(double x1, double y1, double x2, double y2, double radius);
+    void arcTo(double x1, double y1, double x2, double y2, double radius); 
     void rect(double x, double y, double w, double h);
-    void arc(double x, double y, double radius, double startAngle, double endAngle, optional boolean anticlockwise);
+    void arc(double x, double y, double radius, double startAngle, double endAngle, optional boolean anticlockwise); 
     void fill();
     void stroke();
     void drawSystemFocusRing(Element element);
@@ -1235,7 +1233,6 @@ module html
     [PutForwards=href] readonly attribute Location location;
     readonly attribute History history;
   
-    readonly attribute UndoManager undoManager;
     boolean find(optional DOMString aString, optional boolean aCaseSensitive, optional boolean aBackwards, optional boolean aWrapAround, optional boolean aWholeWord, optional boolean aSearchInFrames, optional boolean aShowDialog);
   
     [Replaceable] readonly attribute BarProp locationbar;
@@ -1329,7 +1326,6 @@ module html
              attribute Function? onprogress;
              attribute Function? onratechange;
              attribute Function? onreadystatechange;
-             attribute Function? onredo;
              attribute Function? onreset;
              attribute Function? onresize;
              attribute Function? onscroll;
@@ -1342,7 +1338,6 @@ module html
              attribute Function? onsubmit;
              attribute Function? onsuspend;
              attribute Function? ontimeupdate;
-             attribute Function? onundo;
              attribute Function? onunload;
              attribute Function? onvolumechange;
              attribute Function? onwaiting;
@@ -1482,6 +1477,10 @@ module html
     // content handler registration
     void registerProtocolHandler(DOMString scheme, DOMString url, DOMString title);
     void registerContentHandler(DOMString mimeType, DOMString url, DOMString title);
+    DOMString isProtocolHandlerRegistered(DOMString scheme, DOMString url);
+    DOMString isContentHandlerRegistered(DOMString mimeType, DOMString url);
+    void unregisterProtocolHandler(DOMString scheme, DOMString url);
+    void unregisterContentHandler(DOMString mimeType, DOMString url);
   };
 
   [NoInterfaceObject]
@@ -1537,21 +1536,6 @@ module html
     readonly attribute DataTransfer? dataTransfer;
   
     void initDragEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, any dummyArg, long detailArg, long screenXArg, long screenYArg, long clientXArg, long clientYArg, boolean ctrlKeyArg, boolean altKeyArg, boolean shiftKeyArg, boolean metaKeyArg, unsigned short buttonArg, EventTarget relatedTargetArg, DataTransfer? dataTransferArg);
-  };
-
-  interface UndoManager {
-    readonly attribute unsigned long length;
-    getter any item(unsigned long index);
-    readonly attribute unsigned long position;
-    unsigned long add(any data, DOMString title);
-    void remove(unsigned long index);
-    void clearUndo();
-    void clearRedo();
-  };
-
-  interface UndoManagerEvent : Event {
-    readonly attribute any data;
-    void initUndoManagerEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, any dataArg);
   };
 
   [NoInterfaceObject]
@@ -1727,11 +1711,9 @@ module html
              attribute Function? onpagehide;
              attribute Function? onpageshow;
              attribute Function? onpopstate;
-             attribute Function? onredo;
              attribute Function? onresize;
              attribute Function? onscroll;
              attribute Function? onstorage;
-             attribute Function? onundo;
              attribute Function? onunload;
   };
 
