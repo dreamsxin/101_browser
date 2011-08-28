@@ -57,9 +57,6 @@
     <ClCompile Include="..\..\..\src\TestSuite\Test_GIF.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\TestSuite\Test_Algorithm_BitRead.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\TestSuite\Test_Algorithm_BinarySearch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

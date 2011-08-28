@@ -21,6 +21,4 @@ void testAlgorithm()
 {
 	printf("Testing Algorithm - BinarySearch\n");
 	testAlgorithm_BinarySearch();
-	printf("Testing Algorithm - BitRead\n");
-	testAlgorithm_BitRead();
 }

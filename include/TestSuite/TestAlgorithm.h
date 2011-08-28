@@ -24,7 +24,6 @@
 extern "C" {
 #endif
 
-void testAlgorithm_BitRead();
 void testAlgorithm_BinarySearch();
 
 #ifdef __cplusplus
