@@ -1,4 +1,5 @@
 *.gif binary
+*.jpg binary
 *.png binary
 *.raw binary
 LICENCE -crlf

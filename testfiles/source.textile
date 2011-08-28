@@ -61,6 +61,42 @@ h2. Subfolder "imagetestsuite"
 
 http://code.google.com/p/imagetestsuite/
 
+h2. Subfolder "jpeg"
+
+h3. Subfolder "xhtml-print"
+
+h4. jpeg400jfif.jpg
+
+http://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/jpeg400jfif.jpg
+
+Referenced in http://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/A_2_1-BF-01.htm
+
+According to this source it is a "JPEG Baseline 420/411 EXIF Image".
+
+h4. jpeg420exif.jpg
+
+http://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/jpeg420exif.jpg
+
+Referenced in http://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/A_2_1-BF-01.htm
+
+According to this source it is a "JPEG Baseline 422 JFIF Image".
+
+h4. jpeg422jfif.jpg
+
+Source: http://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/jpeg422jfif.jpg
+
+Referenced in http://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/A_2_1-BF-01.htm
+
+According to this source it is a "JPEG Baseline 400 JFIF Image".
+
+h4. jpeg444.jpg
+
+http://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/jpeg444.jpg
+
+Referenced in http://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/A_2_1-BF-01.htm and http://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/A_2_2-BF-01.htm
+
+According to these sources it is a "JPEG Baseline 444 Image" and an "Image With All Possible APPx Markers".
+
 h2. Subfolder "png"
 
 All images are taken from PngSuite by Willem van Schaik. See http://www.schaik.com/pngsuite/ (on http://www.libpng.org/pub/png/pngsuite.html it is mirrored).

@@ -43,9 +43,9 @@ data/*/*.zip
 data/*/*.doc
 log.txt
 
-# JPEG images
-*.jpg
-*.JPG
+# Don't include T083 and T087 test data, since I'm not sure whether this is legal...
+testfiles/T083v1_0/*
+testfiles/T087v1_0/*
 
 *.jcp
 *.jcu
