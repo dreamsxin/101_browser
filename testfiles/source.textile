@@ -71,7 +71,7 @@ http://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/jpeg400jfif.jpg
 
 Referenced in http://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/A_2_1-BF-01.htm
 
-According to this source it is a "JPEG Baseline 420/411 EXIF Image".
+According to this source it is a "JPEG Baseline 400 JFIF Image".
 
 h4. jpeg420exif.jpg
 
@@ -79,7 +79,7 @@ http://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/jpeg420exif.jpg
 
 Referenced in http://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/A_2_1-BF-01.htm
 
-According to this source it is a "JPEG Baseline 422 JFIF Image".
+According to this source it is a "JPEG Baseline 420/411 EXIF Image".
 
 h4. jpeg422jfif.jpg
 
@@ -87,7 +87,7 @@ Source: http://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/jpeg422jfif.jpg
 
 Referenced in http://www.w3.org/MarkUp/Test/xhtml-print/20050519/tests/A_2_1-BF-01.htm
 
-According to this source it is a "JPEG Baseline 400 JFIF Image".
+According to this source it is a "JPEG Baseline 422 JFIF Image".
 
 h4. jpeg444.jpg
 
