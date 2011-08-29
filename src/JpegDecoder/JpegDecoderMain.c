@@ -22,8 +22,17 @@
 
 int main()
 {
-	char filename[] = 
-		"testfiles/T083v1_0/T83_process1/A1.jpg";
+	char* filenames[] = {
+		// JPEG Baseline 420/411 EXIF Image
+		"testfiles/jpeg/xhtml-print/jpeg420exif.jpg",
+		// JPEG Baseline 422 JFIF Image
+		"testfiles/jpeg/xhtml-print/jpeg422jfif.jpg",
+		// JPEG Baseline 400 JFIF Image
+		"testfiles/jpeg/xhtml-print/jpeg400jfif.jpg",
+		// JPEG Baseline 444 Image/Image With All Possible APPx Markers
+		"testfiles/jpeg/xhtml-print/jpeg444.jpg",
+		
+		"testfiles/T083v1_0/T83_process1/A1.jpg"
 		//"testfiles/T083v1_0/T83_process1/B1.jpg";
 		//"testfiles/T083v1_0/T83_process1/B2.jpg";
 
@@ -116,20 +125,32 @@ int main()
 
 		//"testfiles/T087v1_0/T87_test-1-2-3-4-5-6/T8C0E0.JLS";
 		//"testfiles/T087v1_0/T87_test-1-2-3-4-5-6/T8C0E3.JLS";
+		};
 
-	FileByteStreamState fileByteStreamState;
-	ReadResult readResult;
+	int idx;
 
-	if (!fileByteReadStreamStateInit(filename, &fileByteStreamState))
+	for (idx = 0; idx < sizeof(filenames)/sizeof(filenames[0]); idx++)
 	{
-		fprintf(stderr, "Could not open file %s\n", filename);
-		exit(1);
+		FileByteStreamState fileByteStreamState;
+		ReadResult readResult;
+
+		printf("Opening file %s\n", filenames[idx]);
+
+		if (!fileByteReadStreamStateInit(filenames[idx], &fileByteStreamState))
+		{
+			fprintf(stderr, "Could not open file %s\n", filenames[idx]);
+			exit(1);
+		}
+
+		if ((readResult = Decode_image(&fileByteStreamState, getFileByteStreamInterface())) != ReadResultOK)
+		{
+			fprintf(stderr, "Error when reading file: %s; error code: %u\n", filenames[idx], readResult);
+		}
+
+		fileByteReadStreamStateDestroy(&fileByteStreamState);
+
+		printf("\n\n");
 	}
 
-	if ((readResult = Decode_image(&fileByteStreamState, getFileByteStreamInterface())) != ReadResultOK)
-	{
-		fprintf(stderr, "Error when reading file: %s; error code: %u\n", filename, readResult);
-	}
-
-	fileByteReadStreamStateDestroy(&fileByteStreamState);
+	
 }

@@ -94,8 +94,23 @@ void printSegmentName(unsigned char in_marker)
 	case 0xDD:
 		printf("DRI");
 		break;
-	case 0xE0:
-		printf("APP_0");
+	case APP_0_MARKER:  // 0xE0
+	case APP_1_MARKER:  // 0xE1
+	case APP_2_MARKER:  // 0xE2
+	case APP_3_MARKER:  // 0xE3
+	case APP_4_MARKER:  // 0xE4
+	case APP_5_MARKER:  // 0xE5
+	case APP_6_MARKER:  // 0xE6
+	case APP_7_MARKER:  // 0xE7
+	case APP_8_MARKER:  // 0xE8
+	case APP_9_MARKER:  // 0xE9
+	case APP_10_MARKER: // 0xEA
+	case APP_11_MARKER: // 0xEB
+	case APP_12_MARKER: // 0xEC
+	case APP_13_MARKER: // 0xED
+	case APP_14_MARKER: // 0xEE
+	case APP_15_MARKER: // 0xEF
+		printf("APP_%u", in_marker-APP_0_MARKER);
 		break;
 	case 0xFE:
 		printf("COM");
