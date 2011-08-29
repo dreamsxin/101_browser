@@ -60,8 +60,6 @@ typedef struct
 	             // of scan component specification parameters 
 	             // (Csj, Tdj, and Taj) present in the scan header.
 
-	
-
 	/*
 	* Ns tells us how large the array is that componentSpecificationParameters
 	* is pointing to.
