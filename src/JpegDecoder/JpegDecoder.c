@@ -150,19 +150,8 @@ void Decode_frame(SetjmpStreamState *in_out_pSetjmpStreamState,
 		currentMarker = readMarker(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface);
 	}
 
-	if (in_pJpegContext->restartIntervalState.isRestartIntervalInitialized)
-	{
-		Decode_scan(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, 
+	Decode_scan(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, 
 			in_pJpegContext->restartIntervalState.restartInterval);
-	}
-	else
-	{
-		SetjmpState invalidDataSetjmpState;
-		setjmpStateInit(&invalidDataSetjmpState, in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-			ReadResultInvalidData, printHandler);
-		setjmpStateLongjmp(&invalidDataSetjmpState, 
-			"Decode_frame: trying to call Decode_scan but no restart interval was defined.");
-	}
 
 	// TODO: further markers can occur before EOI
 }
