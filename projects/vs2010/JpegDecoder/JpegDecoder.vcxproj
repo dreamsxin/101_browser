@@ -92,12 +92,13 @@
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegDecoderMarkers.h" />
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegDecoderUtil.h" />
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegSegments.h" />
+    <ClInclude Include="..\..\..\include\JpegDecoder\JpegSegmentsRead.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoder.c" />
     <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoderMain.c" />
     <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoderUtil.c" />
-    <ClCompile Include="..\..\..\src\JpegDecoder\JpegSegments.c" />
+    <ClCompile Include="..\..\..\src\JpegDecoder\JpegSegmentsRead.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IO\IO.vcxproj">

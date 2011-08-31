@@ -22,12 +22,19 @@
 
 typedef struct
 {
+	bool isRestartIntervalInitialized;
+	RestartInterval restartInterval;
+} RestartIntervalState;
+
+typedef struct
+{
 	bool isQuantizationTableInitialized[4];
 	QuantizationTable quantizationTables[4];
 } QuantizationTablesState;
 
 typedef struct
 {
+	RestartIntervalState restartIntervalState;
 	QuantizationTablesState quantizationTablesState;
 } JpegContext;
 

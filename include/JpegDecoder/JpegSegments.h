@@ -23,19 +23,13 @@
 #include "Util/ReadResult.h"
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 
 #pragma pack(push, 1)
-
 
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4214) // nonstandard extension used : bit field types other than int
 #endif
-
 
 // B.2.3 Scan header syntax
 typedef struct
@@ -77,11 +71,6 @@ typedef struct
 	uint8_t Ah : 4;
 } ScanHeader;
 
-void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState, 
-	ByteStreamInterface in_setjmpStreamReadInterface, 
-	ScanHeader* in_pScanHeader);
-
-
 // B.2.4.1 Quantization table-specification syntax
 typedef struct
 {
@@ -103,7 +92,6 @@ typedef struct
 #pragma warning(pop)
 #endif
 
-
 // B.2.4.4 Restart interval definition syntax
 typedef struct
 {
@@ -111,15 +99,6 @@ typedef struct
 	uint16_t Ri; // Specifies the number of MCU in the restart interval.
 } RestartInterval;
 
-void readRestartInterval(SetjmpStreamState *in_out_pSetjmpStreamState, 
-	ByteStreamInterface in_setjmpStreamReadInterface, 
-	RestartInterval* in_pRestartInterval);
-
-
 #pragma pack(pop)
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

@@ -30,18 +30,21 @@
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\JpegDecoder\JpegSegmentsRead.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoderMain.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\JpegDecoder\JpegSegments.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoderUtil.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoder.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\JpegDecoder\JpegSegmentsRead.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

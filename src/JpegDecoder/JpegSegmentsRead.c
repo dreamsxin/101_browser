@@ -1,43 +1,48 @@
 /*
- * Copyright 2008-2011 Wolfgang Keller
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+* Copyright 2008-2011 Wolfgang Keller
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
-#include "JpegDecoder/JpegSegments.h"
+#include "JpegDecoder/JpegSegmentsRead.h"
 #include "MiniStdlib/memory.h"  // for ENDIANNESS_CONVERT_SIMPLE
 #include "MiniStdlib/safe_free.h"
 #include "SetjmpUtil/ConditionalLongjmp.h"
 
 void readRestartInterval(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_setjmpStreamReadInterface, 
-	RestartInterval* in_pRestartInterval)
+	RestartIntervalState* in_pRestartIntervalState)
 {
 	SetjmpState invalidDataSetjmpState;
 	
-	(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, in_pRestartInterval, sizeof(*in_pRestartInterval));
+	(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
+		&in_pRestartIntervalState->restartInterval, sizeof(in_pRestartIntervalState->restartInterval));
 
-	ENDIANNESS_CONVERT_SIMPLE(in_pRestartInterval->Lr);
-	ENDIANNESS_CONVERT_SIMPLE(in_pRestartInterval->Ri);
+	in_pRestartIntervalState->isRestartIntervalInitialized = true;
 
-	printf("Lr = %u\tRi = %u\n", in_pRestartInterval->Lr, in_pRestartInterval->Ri);
+	ENDIANNESS_CONVERT_SIMPLE(in_pRestartIntervalState->restartInterval.Lr);
+	ENDIANNESS_CONVERT_SIMPLE(in_pRestartIntervalState->restartInterval.Ri);
+
+	printf("Lr = %u\tRi = %u\n", 
+		in_pRestartIntervalState->restartInterval.Lr, 
+		in_pRestartIntervalState->restartInterval.Ri);
 
 	setjmpStateInit(&invalidDataSetjmpState, 
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
 		ReadResultInvalidData, printHandler);
 
 	setjmpStateLongjmpIf(&invalidDataSetjmpState, 
-		in_pRestartInterval->Lr != 4, 
+		in_pRestartIntervalState->restartInterval.Lr != 4, 
 		"Expected size 4 of DRI segment");
 }
 
