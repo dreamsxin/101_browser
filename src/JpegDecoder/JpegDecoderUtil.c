@@ -26,19 +26,17 @@ bool isStandaloneMarker(unsigned char in_marker)
 {
 	switch (in_marker)
 	{
-		// TEM
-	case 0x01:
-		// RST_0 to RST_7
-	case 0xD0:
-	case 0xD1:
-	case 0xD2:
-	case 0xD3:
-	case 0xD4:
-	case 0xD5:
-	case 0xD6:
-	case 0xD7:
-	case SOI_MARKER: // 0xD8
-	case EOI_MARKER: // 0xD9
+	case TEM_MARKER:   // 0x01
+	case RST_0_MARKER: // 0xD0
+	case RST_1_MARKER: // 0xD1
+	case RST_2_MARKER: // 0xD2
+	case RST_3_MARKER: // 0xD3
+	case RST_4_MARKER: // 0xD4
+	case RST_5_MARKER: // 0xD5
+	case RST_6_MARKER: // 0xD6
+	case RST_7_MARKER: // 0xD7
+	case SOI_MARKER:   // 0xD8
+	case EOI_MARKER:   // 0xD9
 		return true;
 	default:
 		return false;
@@ -88,10 +86,10 @@ void printSegmentName(unsigned char in_marker)
 	case SOS_MARKER:    // 0xDA
 		printf("SOS");
 		break;
-	case 0xDB:
+	case DQT_MARKER:    // 0xDB
 		printf("DQT");
 		break;
-	case 0xDD:
+	case DRI_MARKER:    // 0xDD
 		printf("DRI");
 		break;
 	case APP_0_MARKER:  // 0xE0
@@ -112,7 +110,7 @@ void printSegmentName(unsigned char in_marker)
 	case APP_15_MARKER: // 0xEF
 		printf("APP_%u", in_marker-APP_0_MARKER);
 		break;
-	case 0xFE:
+	case COM_MARKER:    // 0xFE
 		printf("COM");
 		break;
 	default:

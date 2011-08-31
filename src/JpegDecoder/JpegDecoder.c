@@ -56,8 +56,8 @@ ReadResult Decode_image(void *in_pStreamState,
 
 	if (currentMarker != SOI_MARKER)
 	{
-		fprintf(stderr, "Expected SOI marker\n");
-		exit(1);
+		longjmpWithHandler(setjmpReadStreamState.setjmpState.mpJmpBuffer, ReadResultInvalidData, 
+			printHandler, "Decode_image: expected SOI marker");
 	}
 
 	// SOI is a standalone marker
@@ -72,9 +72,14 @@ ReadResult Decode_image(void *in_pStreamState,
 		currentMarker != SOF_1_MARKER  && 
 		currentMarker != SOF_2_MARKER  && 
 		currentMarker != SOF_3_MARKER  && 
+		currentMarker != SOF_5_MARKER  && 
+		currentMarker != SOF_6_MARKER  && 
+		currentMarker != SOF_7_MARKER  && 
 		currentMarker != SOF_9_MARKER  && 
 		currentMarker != SOF_10_MARKER && 
 		currentMarker != SOF_11_MARKER &&
+		currentMarker != SOF_13_MARKER &&
+		currentMarker != SOF_14_MARKER &&
 		currentMarker != SOF_15_MARKER &&
 		currentMarker != SOF_55_MARKER)
 	{
@@ -107,8 +112,8 @@ ReadResult Decode_image(void *in_pStreamState,
 			defaultMarkerInterpreter(&setjmpReadStreamState, setjmpReadStreamInterface, currentMarker);
 			break;
 		default:
-			fprintf(stderr, "Invalid marker in Decode_image. Exiting.\n");
-			return ReadResultInvalidData;
+			longjmpWithHandler(setjmpReadStreamState.setjmpState.mpJmpBuffer, ReadResultInvalidData, 
+				printHandler, "Decode_image: invalid marker in Decode_image");
 		}
 		
 		currentMarker = readMarker(&setjmpReadStreamState, setjmpReadStreamInterface);
@@ -116,8 +121,6 @@ ReadResult Decode_image(void *in_pStreamState,
 
 	Decode_frame(&setjmpReadStreamState, setjmpReadStreamInterface, 
 		currentMarker, restartIntervalFound ? &restartInterval : NULL);
-
-	return ReadResultOK;
 }
 
 // E.2.2 Control procedure for decoding a frame

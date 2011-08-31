@@ -32,7 +32,8 @@ ReadResult Decode_image(void *in_pStreamState,
 // E.2.2 Control procedure for decoding a frame
 void Decode_frame(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_setjmpStreamReadInterface, 
-	unsigned char currentMarker, RestartInterval* in_pri);
+	unsigned char currentMarker, bool in_restartIntervalFound, 
+	RestartInterval* in_pri);
 // E.2.3 Control procedure for decoding a scan
 void Decode_scan(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_setjmpStreamReadInterface, 
