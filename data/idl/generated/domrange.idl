@@ -2,9 +2,9 @@ module domrange
 {
   interface Range {
     readonly attribute Node? startContainer;
-    readonly attribute long startOffset;
+    readonly attribute unsigned long startOffset;
     readonly attribute Node? endContainer;
-    readonly attribute long endOffset;
+    readonly attribute unsigned long endOffset;
     readonly attribute boolean collapsed;
     readonly attribute Node commonAncestorContainer;
   
@@ -35,8 +35,8 @@ module domrange
     Range              cloneRange();
     void               detach();
   
-    boolean            isPointInRange(Node parent, long offset);
-    short              comparePoint(Node parent, long offset);
+    boolean            isPointInRange(Node parent, unsigned long offset);
+    short              comparePoint(Node parent, unsigned long offset);
   
     boolean            intersectsNode(Node node);
   
@@ -45,23 +45,23 @@ module domrange
 
   interface Selection {
     readonly attribute Node? anchorNode;
-    readonly attribute long anchorOffset;
+    readonly attribute unsigned long anchorOffset;
     readonly attribute Node? focusNode;
-    readonly attribute long focusOffset;
+    readonly attribute unsigned long focusOffset;
   
     readonly attribute boolean isCollapsed;
-    void               collapse(Node parentNode, long offset);
+    void               collapse(Node parentNode, unsigned long offset);
     void               collapseToStart();
     void               collapseToEnd();
   
-    void               extend(Node parentNode, long offset);
+    void               extend(Node parentNode, unsigned long offset);
     void               modify(DOMString alter, DOMString direction, DOMString granularity);
   
     void               selectAllChildren(Node parentNode);
     void               deleteFromDocument();
   
-    readonly attribute long rangeCount;
-    Range              getRangeAt(long index);
+    readonly attribute unsigned long rangeCount;
+    Range              getRangeAt(unsigned long index);
     void               addRange(Range range);
     void               removeRange(Range range);
     void               removeAllRanges();
