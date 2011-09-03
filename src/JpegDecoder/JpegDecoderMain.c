@@ -29,7 +29,7 @@ int main()
 		"testfiles/jpeg/xhtml-print/jpeg422jfif.jpg",
 		// JPEG Baseline 400 JFIF Image
 		"testfiles/jpeg/xhtml-print/jpeg400jfif.jpg",
-		// JPEG Baseline 444 Image/Image With All Possible APPx Markers
+		// JPEG Baseline 444 Image; Image With All Possible APPx Markers
 		"testfiles/jpeg/xhtml-print/jpeg444.jpg",
 		
 		"testfiles/T083v1_0/T83_process1/A1.jpg"
