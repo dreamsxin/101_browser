@@ -88,14 +88,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegContext.h" />
-    <ClInclude Include="..\..\..\include\JpegDecoder\JpegDecoder.h" />
+    <ClInclude Include="..\..\..\include\JpegDecoder\JpegDecoder_SectionE.h" />
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegDecoderMarkers.h" />
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegDecoderUtil.h" />
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegSegments.h" />
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegSegmentsRead.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoder.c" />
+    <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoder_SectionE.c" />
     <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoderMain.c" />
     <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoderUtil.c" />
     <ClCompile Include="..\..\..\src\JpegDecoder\JpegSegmentsRead.c" />

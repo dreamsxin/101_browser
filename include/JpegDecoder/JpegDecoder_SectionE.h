@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef _JpegDecoder
-#define _JpegDecoder
+#ifndef _JpegDecoder_SectionE
+#define _JpegDecoder_SectionE
 
 #include "MiniStdlib/MTAx_cstdio.h"
 #include "IO/ByteStream.h"
