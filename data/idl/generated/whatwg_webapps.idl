@@ -85,7 +85,6 @@ module webapps
     readonly attribute DOMElementMap cssElementMap;
   
     // dynamic markup insertion
-             attribute DOMString innerHTML;
     HTMLDocument open(optional DOMString type, optional DOMString replace);
     WindowProxy open(DOMString url, DOMString name, DOMString features, optional boolean replace);
     void close();
@@ -171,11 +170,6 @@ module webapps
   };
 
   interface HTMLElement : Element {
-    // dynamic markup insertion
-             attribute DOMString innerHTML;
-             attribute DOMString outerHTML;
-    void insertAdjacentHTML(DOMString position, DOMString text);
-  
     // metadata attributes
              attribute DOMString id;
              attribute DOMString title;

@@ -115,7 +115,7 @@ module domcore
     const unsigned short DOCUMENT_POSITION_CONTAINED_BY = 0x10;
     const unsigned short DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 0x20; // historical
     unsigned short compareDocumentPosition(Node other);
-    boolean contains(Node other);
+    boolean contains(Node? other);
   
              attribute DOMString? nodeValue;
              attribute DOMString? textContent;
@@ -248,9 +248,9 @@ module domcore
   };
 
   interface Range {
-    readonly attribute Node? startContainer;
+    readonly attribute Node startContainer;
     readonly attribute unsigned long startOffset;
-    readonly attribute Node? endContainer;
+    readonly attribute Node endContainer;
     readonly attribute unsigned long endOffset;
     readonly attribute boolean collapsed;
     readonly attribute Node commonAncestorContainer;
@@ -291,13 +291,13 @@ module domcore
 
   interface NodeIterator {
     readonly attribute Node root;
-    readonly attribute Node referenceNode;
+    readonly attribute Node? referenceNode;
     readonly attribute boolean pointerBeforeReferenceNode;
     readonly attribute unsigned long whatToShow;
-    readonly attribute NodeFilter filter;
+    readonly attribute NodeFilter? filter;
   
-    Node nextNode();
-    Node previousNode();
+    Node? nextNode();
+    Node? previousNode();
   
     void detach();
   };
@@ -305,16 +305,16 @@ module domcore
   interface TreeWalker {
     readonly attribute Node root;
     readonly attribute unsigned long whatToShow;
-    readonly attribute NodeFilter filter;
+    readonly attribute NodeFilter? filter;
              attribute Node currentNode;
   
-    Node parentNode();
-    Node firstChild();
-    Node lastChild();
-    Node previousSibling();
-    Node nextSibling();
-    Node previousNode();
-    Node nextNode();
+    Node? parentNode();
+    Node? firstChild();
+    Node? lastChild();
+    Node? previousSibling();
+    Node? nextSibling();
+    Node? previousNode();
+    Node? nextNode();
   };
 
   [Callback]
