@@ -17,7 +17,6 @@
 #ifndef _JpegDecoder_SectionE
 #define _JpegDecoder_SectionE
 
-#include "MiniStdlib/MTAx_cstdio.h"
 #include "IO/ByteStream.h"
 #include "IO/SetjmpStream.h"
 #include "JpegDecoder/JpegContext.h"

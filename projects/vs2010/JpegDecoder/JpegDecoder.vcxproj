@@ -91,6 +91,7 @@
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegDecoder_SectionE.h" />
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegDecoderMarkers.h" />
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegDecoderUtil.h" />
+    <ClInclude Include="..\..\..\include\JpegDecoder\JpegDecoder_SectionF.h" />
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegSegments.h" />
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegSegmentsRead.h" />
   </ItemGroup>

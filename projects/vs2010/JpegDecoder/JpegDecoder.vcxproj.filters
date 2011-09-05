@@ -33,6 +33,9 @@
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegDecoder_SectionE.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\JpegDecoder\JpegDecoder_SectionF.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoderMain.c">
