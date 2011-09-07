@@ -319,6 +319,8 @@ module webapps
              attribute DOMString type;
              attribute DOMString charset;
              attribute DOMString text;
+  
+    readonly attribute DOMString readyState;
   };
 
   interface HTMLBodyElement : HTMLElement {
