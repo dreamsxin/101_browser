@@ -163,6 +163,8 @@ module domcore
   
     Event createEvent(DOMString eventInterfaceName);
   
+    Range createRange();
+  
     NodeIterator createNodeIterator(Node root, optional unsigned long whatToShow, optional NodeFilter? filter);
     TreeWalker createTreeWalker(Node root, optional unsigned long whatToShow, optional NodeFilter? filter);
   };
