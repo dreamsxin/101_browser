@@ -14,9 +14,5 @@
 * limitations under the License.
 */
 
-#ifndef _JpegDecoder_SectionF
-#define _JpegDecoder_SectionF
+#include "JpegDecoder/T81_SectionF.h"
 
-
-
-#endif

@@ -30,10 +30,10 @@
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegSegmentsRead.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\JpegDecoder\JpegDecoder_SectionE.h">
+    <ClInclude Include="..\..\..\include\JpegDecoder\T81_SectionE.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\JpegDecoder\JpegDecoder_SectionF.h">
+    <ClInclude Include="..\..\..\include\JpegDecoder\T81_SectionF.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -47,7 +47,10 @@
     <ClCompile Include="..\..\..\src\JpegDecoder\JpegSegmentsRead.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\JpegDecoder\JpegDecoder_SectionE.c">
+    <ClCompile Include="..\..\..\src\JpegDecoder\T81_SectionE.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\JpegDecoder\T81_SectionF.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

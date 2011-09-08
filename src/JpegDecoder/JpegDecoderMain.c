@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-#include "JpegDecoder/JpegDecoder_SectionE.h"
+#include "JpegDecoder/T81_SectionE.h"
 #include "IO/FileByteStream.h"
 #include <stdlib.h>
-#include <assert.h>
 
 
 int main()

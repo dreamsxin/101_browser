@@ -14,11 +14,11 @@
 * limitations under the License.
 */
 
+#include "JpegDecoder/T81_SectionE.h"
 #include "MiniStdlib/MTAx_cstdlib.h"
 #include "MiniStdlib/cassert.h"
 #include "MiniStdlib/cstring.h" // for memset
 #include "JpegDecoder/JpegDecoderMarkers.h"
-#include "JpegDecoder/JpegDecoder_SectionE.h"
 #include "JpegDecoder/JpegDecoderUtil.h"
 #include "JpegDecoder/JpegSegmentsRead.h"
 #include "SetjmpUtil/ConditionalLongjmp.h"
