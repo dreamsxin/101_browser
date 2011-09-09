@@ -14,3 +14,29 @@ http://www.webmfiles.org/wp-content/uploads/video/big-buck-bunny_trailer.webm
 http://video.blendertestbuilds.de/download.blender.org/peach/trailer_480p.mov
 http://www.webmfiles.org/wp-content/uploads/video/elephants-dream.webm
 )
+
+http://ctndigital.com/ctnd/lab/vp8-webm/
+(more exactly:
+http://ctnnyc.com/webm/avatar1.webm
+)
+
+On http://forums.mozillazine.org/viewtopic.php?f=23&t=1919639 there are more links to test videos
+Among them:
+http://dev.opera.com/articles/view/opera-supports-webm-video/
+which links to
+http://devfiles.myopera.com/articles/1891/custom-controls-webm-720p.html (video URL: http://lachy.id.au/lib/media/elephantsdream/Elephants_Dream-720p-Stereo.webm)
+http://devfiles.myopera.com/articles/1891/custom-controls-webm-360p.html (video URL: http://lachy.id.au/lib/media/elephantsdream/Elephants_Dream-360p-Stereo.webm)
+http://devfiles.myopera.com/articles/1891/sunflower-webm.html (video URL: http://people.opera.com/shwetankd/webm/sunflower.webm)
+http://people.opera.com/patrickl/experiments/webm/fancy-swap/ (video URLs:
+http://people.opera.com/patrickl/experiments/webm/videos/fridge.mp4
+http://people.opera.com/patrickl/experiments/webm/videos/fridge.ogv
+http://people.opera.com/patrickl/experiments/webm/videos/fridge.webm
+http://people.opera.com/patrickl/experiments/webm/videos/garden1.mp4
+http://people.opera.com/patrickl/experiments/webm/videos/garden1.ogv
+http://people.opera.com/patrickl/experiments/webm/videos/garden1.webm
+http://people.opera.com/patrickl/experiments/webm/videos/garden2.mp4
+http://people.opera.com/patrickl/experiments/webm/videos/garden2.ogv
+http://people.opera.com/patrickl/experiments/webm/videos/garden2.webm
+http://people.opera.com/patrickl/experiments/webm/videos/windowsill.mp4
+http://people.opera.com/patrickl/experiments/webm/videos/windowsill.ogv
+http://people.opera.com/patrickl/experiments/webm/videos/windowsill.webm
