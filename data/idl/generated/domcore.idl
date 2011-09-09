@@ -128,9 +128,9 @@ module domcore
     boolean isSameNode(Node? node);
     boolean isEqualNode(Node? node);
   
-    DOMString lookupPrefix([TreatNullAs=EmptyString] DOMString namespace);
+    DOMString lookupPrefix(DOMString? namespace);
     DOMString lookupNamespaceURI(DOMString? prefix);
-    boolean isDefaultNamespace([TreatNullAs=EmptyString] DOMString namespace);
+    boolean isDefaultNamespace(DOMString? namespace);
   };
 
   interface Document : Node {
@@ -147,12 +147,12 @@ module domcore
     readonly attribute DocumentType? doctype;
     readonly attribute Element? documentElement;
     NodeList getElementsByTagName(DOMString qualifiedName);
-    NodeList getElementsByTagNameNS(DOMString namespace, DOMString localName);
+    NodeList getElementsByTagNameNS(DOMString? namespace, DOMString localName);
     NodeList getElementsByClassName(DOMString classNames);
     Element? getElementById(DOMString elementId);
   
     Element createElement([TreatNullAs=EmptyString] DOMString localName);
-    Element createElementNS(DOMString namespace, DOMString qualifiedName);
+    Element createElementNS(DOMString? namespace, DOMString qualifiedName);
     DocumentFragment createDocumentFragment();
     Text createTextNode(DOMString data);
     Comment createComment(DOMString data);
@@ -172,8 +172,8 @@ module domcore
   interface DOMImplementation {
     boolean hasFeature(DOMString feature, [TreatNullAs=EmptyString] DOMString version);
   
-    DocumentType createDocumentType([TreatNullAs=EmptyString] DOMString qualifiedName, DOMString publicId, DOMString systemId);
-    Document createDocument([TreatNullAs=EmptyString] DOMString namespace, [TreatNullAs=EmptyString] DOMString qualifiedName, DocumentType? doctype);
+    DocumentType createDocumentType(DOMString qualifiedName, DOMString publicId, DOMString systemId);
+    Document createDocument(DOMString? namespace, DOMString qualifiedName, DocumentType? doctype);
     Document createHTMLDocument(DOMString title);
   };
 
@@ -198,16 +198,16 @@ module domcore
   
     readonly attribute Attr[] attributes;
     DOMString? getAttribute(DOMString qualifiedName);
-    DOMString? getAttributeNS(DOMString namespace, DOMString localName);
+    DOMString? getAttributeNS(DOMString? namespace, DOMString localName);
     void setAttribute(DOMString qualifiedName, DOMString value);
-    void setAttributeNS(DOMString namespace, DOMString qualifiedName, DOMString value);
+    void setAttributeNS(DOMString? namespace, DOMString qualifiedName, DOMString value);
     void removeAttribute(DOMString qualifiedName);
-    void removeAttributeNS(DOMString namespace, DOMString localName);
+    void removeAttributeNS(DOMString? namespace, DOMString localName);
     boolean hasAttribute(DOMString qualifiedName);
-    boolean hasAttributeNS(DOMString namespace, DOMString localName);
+    boolean hasAttributeNS(DOMString? namespace, DOMString localName);
   
     NodeList getElementsByTagName(DOMString qualifiedName);
-    NodeList getElementsByTagNameNS(DOMString namespace, DOMString localName);
+    NodeList getElementsByTagNameNS(DOMString? namespace, DOMString localName);
     NodeList getElementsByClassName(DOMString classNames);
   
     readonly attribute HTMLCollection children;
