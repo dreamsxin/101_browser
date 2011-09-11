@@ -2,7 +2,7 @@ module microdata
 {
   interface HTMLPropertiesCollection : HTMLCollection {
     // inherits length and item()
-    caller getter PropertyNodeList? namedItem(DOMString name); // overrides inherited namedItem()
+    legacycaller getter PropertyNodeList? namedItem(DOMString name); // overrides inherited namedItem()
     readonly attribute DOMStringList names;
   };
   

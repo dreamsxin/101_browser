@@ -21,13 +21,21 @@ module webstorage
   };
   Window implements WindowLocalStorage;
 
+  [Constructor(DOMString type, optional StorageEventInit eventInitDict)]
   interface StorageEvent : Event {
     readonly attribute DOMString key;
     readonly attribute DOMString? oldValue;
     readonly attribute DOMString? newValue;
     readonly attribute DOMString url;
     readonly attribute Storage? storageArea;
-    void initStorageEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, DOMString keyArg, DOMString? oldValueArg, DOMString? newValueArg, DOMString urlArg, Storage? storageAreaArg);
+  };
+  
+  dictionary StorageEventInit : EventInit {
+    DOMString key;
+    DOMString? oldValue;
+    DOMString? newValue;
+    DOMString url;
+    Storage? storageArea;
   };
 
 

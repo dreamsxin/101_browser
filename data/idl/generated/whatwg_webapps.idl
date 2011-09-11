@@ -2,13 +2,13 @@ module webapps
 {
   interface HTMLAllCollection : HTMLCollection {
     // inherits length and item()
-    caller getter object? namedItem(DOMString name); // overrides inherited namedItem()
+    legacycaller getter object? namedItem(DOMString name); // overrides inherited namedItem()
     HTMLAllCollection tags(DOMString tagName);
   };
 
   interface HTMLFormControlsCollection : HTMLCollection {
     // inherits length and item()
-    caller getter object? namedItem(DOMString name); // overrides inherited namedItem()
+    legacycaller getter object? namedItem(DOMString name); // overrides inherited namedItem()
   };
   
   interface RadioNodeList : NodeList {
@@ -18,7 +18,7 @@ module webapps
   interface HTMLOptionsCollection : HTMLCollection {
     // inherits item()
              attribute unsigned long length; // overrides inherited length
-    caller getter object? namedItem(DOMString name); // overrides inherited namedItem()
+    legacycaller getter object? namedItem(DOMString name); // overrides inherited namedItem()
     setter creator void (unsigned long index, HTMLOptionElement option);
     void add(HTMLOptionElement element, optional HTMLElement? before);
     void add(HTMLOptGroupElement element, optional HTMLElement? before);
@@ -30,7 +30,7 @@ module webapps
 
   interface HTMLPropertiesCollection : HTMLCollection {
     // inherits length and item()
-    caller getter PropertyNodeList? namedItem(DOMString name); // overrides inherited namedItem()
+    legacycaller getter PropertyNodeList? namedItem(DOMString name); // overrides inherited namedItem()
     readonly attribute DOMStringList names;
   };
   
@@ -148,7 +148,6 @@ module webapps
              attribute Function? onplaying;
              attribute Function? onprogress;
              attribute Function? onratechange;
-             attribute Function? onreadystatechange;
              attribute Function? onreset;
              attribute Function? onscroll;
              attribute Function? onseeked;
@@ -161,6 +160,9 @@ module webapps
              attribute Function? ontimeupdate;
              attribute Function? onvolumechange;
              attribute Function? onwaiting;
+  
+    // special event handler IDL attributes that only apply to Document objects
+             attribute Function? onreadystatechange;
   };
   Document implements HTMLDocument;
 
@@ -256,7 +258,6 @@ module webapps
              attribute Function? onplaying;
              attribute Function? onprogress;
              attribute Function? onratechange;
-             attribute Function? onreadystatechange;
              attribute Function? onreset;
              attribute Function? onscroll;
              attribute Function? onseeked;
@@ -319,8 +320,6 @@ module webapps
              attribute DOMString type;
              attribute DOMString charset;
              attribute DOMString text;
-  
-    readonly attribute DOMString readyState;
   };
 
   interface HTMLBodyElement : HTMLElement {
@@ -556,7 +555,7 @@ module webapps
     // tracks
     readonly attribute AudioTrackList audioTracks;
     readonly attribute VideoTrackList videoTracks;
-    readonly attribute TextTrackList textTracks;
+    readonly attribute TextTrack[] textTracks;
     MutableTextTrack addTextTrack(DOMString kind, optional DOMString label, optional DOMString language);
   };
 
@@ -657,8 +656,6 @@ module webapps
   
              attribute Function? oncuechange;
   };
-  
-  typedef TextTrack[] TextTrackList;
 
   interface MutableTextTrack : TextTrack {
    void addCue(TextTrackCue cue);
@@ -927,8 +924,8 @@ module webapps
   
     readonly attribute HTMLFormControlsCollection elements;
     readonly attribute long length;
-    caller getter Element (unsigned long index);
-    caller getter object (DOMString name);
+    legacycaller getter Element (unsigned long index);
+    legacycaller getter object (DOMString name);
   
     void submit();
     void reset();
@@ -1321,7 +1318,6 @@ module webapps
              attribute Function? onpopstate;
              attribute Function? onprogress;
              attribute Function? onratechange;
-             attribute Function? onreadystatechange;
              attribute Function? onreset;
              attribute Function? onresize;
              attribute Function? onscroll;
@@ -1372,20 +1368,33 @@ module webapps
     DOMString resolveURL(DOMString url);
   };
 
+  [Constructor(DOMString type, optional PopStateEventInit eventInitDict)]
   interface PopStateEvent : Event {
     readonly attribute any state;
-    void initPopStateEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, any stateArg);
+  };
+  
+  dictionary PopStateEventInit : EventInit {
+    any state;
   };
 
+  [Constructor(DOMString type, optional HashChangeEventInit eventInitDict)]
   interface HashChangeEvent : Event {
     readonly attribute DOMString oldURL;
     readonly attribute DOMString newURL;
-    void initHashChangeEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, DOMString oldURLArg, DOMString newURLArg);
+  };
+  
+  dictionary HashChangeEventInit : EventInit {
+    DOMString oldURL;
+    DOMString newURL;
   };
 
+  [Constructor(DOMString type, optional PageTransitionEventInit eventInitDict)]
   interface PageTransitionEvent : Event {
     readonly attribute boolean persisted;
-    void initPageTransitionEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, boolean persistedArg);
+  };
+  
+  dictionary PageTransitionEventInit : EventInit {
+    boolean persisted;
   };
 
   interface BeforeUnloadEvent : Event {
@@ -1528,10 +1537,13 @@ module webapps
     void handleEvent(DOMString data);
   };
 
+  [Constructor(DOMString type, optional DragEventInit eventInitDict)]
   interface DragEvent : MouseEvent {
     readonly attribute DataTransfer? dataTransfer;
+  };
   
-    void initDragEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, any dummyArg, long detailArg, long screenXArg, long screenYArg, long clientXArg, long clientYArg, boolean ctrlKeyArg, boolean altKeyArg, boolean shiftKeyArg, boolean metaKeyArg, unsigned short buttonArg, EventTarget relatedTargetArg, DataTransfer? dataTransferArg);
+  dictionary DragEventInit : MouseEventInit {
+    DataTransfer? dataTransfer;
   };
 
   [NoInterfaceObject]
@@ -1559,7 +1571,7 @@ module webapps
   [Constructor(MediaStream parentStream)]
   interface MediaStream : EventTarget {
     readonly attribute DOMString label;
-    readonly attribute MediaStreamTrackList tracks;
+    readonly attribute MediaStreamTrack[] tracks;
   
     MediaStreamRecorder record();
   
@@ -1572,8 +1584,6 @@ module webapps
   interface LocalMediaStream : MediaStream {
     void stop();
   };
-  
-  typedef MediaStreamTrack[] MediaStreamTrackList;
   
   interface MediaStreamTrack {
     readonly attribute DOMString kind;
@@ -1625,9 +1635,13 @@ module webapps
     void handleEvent(DOMString message, PeerConnection source);
   };
 
+  [Constructor(DOMString type, optional MediaStreamEventInit eventInitDict)]
   interface MediaStreamEvent : Event {
     readonly attribute MediaStream? stream;
-    void initMediaStreamEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, MediaStream? streamArg);
+  };
+  
+  dictionary MediaStreamEventInit : EventInit {
+    DOMString MediaStream? stream;
   };
 
   interface WorkerGlobalScope : EventTarget {
@@ -1654,11 +1668,17 @@ module webapps
              attribute Function? onconnect;
   };
 
+  [Constructor(DOMString type, optional ErrorEventInit eventInitDict)]
   interface ErrorEvent : Event {
     readonly attribute DOMString message;
     readonly attribute DOMString filename;
     readonly attribute unsigned long lineno;
-    void initErrorEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, DOMString messageArg, DOMString filenameArg, unsigned long linenoArg);
+  };
+  
+  dictionary ErrorEventInit : EventInit {
+    DOMString message;
+    DOMString filename;
+    unsigned long lineno;
   };
 
   [Supplemental, NoInterfaceObject]
@@ -1704,13 +1724,21 @@ module webapps
     readonly attribute DOMString hash;
   };
 
+  [Constructor(DOMString type, optional MessageEventInit eventInitDict)]
   interface MessageEvent : Event {
     readonly attribute any data;
     readonly attribute DOMString origin;
     readonly attribute DOMString lastEventId;
     readonly attribute WindowProxy? source;
-    readonly attribute MessagePort[] ports;
-    void initMessageEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, any dataArg, DOMString originArg, DOMString lastEventIdArg, WindowProxy? sourceArg, sequence<MessagePort> portsArg);
+    readonly attribute MessagePort[]? ports;
+  };
+  
+  dictionary MessageEventInit : EventInit {
+    any data;
+    DOMString origin;
+    DOMString lastEventId;
+    WindowProxy? source;
+    MessagePort[]? ports;
   };
 
   [Constructor(DOMString url)]
@@ -1759,11 +1787,17 @@ module webapps
     void send(Blob data);
   };
 
+  [Constructor(DOMString type, optional CloseEventInit eventInitDict)]
   interface CloseEvent : Event {
     readonly attribute boolean wasClean;
     readonly attribute unsigned short code;
     readonly attribute DOMString reason;
-    void initCloseEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, boolean wasCleanArg, unsigned short codeArg, DOMString reasonArg);
+  };
+  
+  dictionary CloseEventInit : EventInit {
+    boolean wasClean;
+    unsigned short code;
+    DOMString reason;
   };
 
   [Constructor]
@@ -1803,13 +1837,21 @@ module webapps
   };
   Window implements WindowLocalStorage;
 
+  [Constructor(DOMString type, optional StorageEventInit eventInitDict)]
   interface StorageEvent : Event {
     readonly attribute DOMString key;
     readonly attribute DOMString? oldValue;
     readonly attribute DOMString? newValue;
     readonly attribute DOMString url;
     readonly attribute Storage? storageArea;
-    void initStorageEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, DOMString keyArg, DOMString? oldValueArg, DOMString? newValueArg, DOMString urlArg, Storage? storageAreaArg);
+  };
+  
+  dictionary StorageEventInit : EventInit {
+    DOMString key;
+    DOMString? oldValue;
+    DOMString? newValue;
+    DOMString url;
+    Storage? storageArea;
   };
 
   interface HTMLAppletElement : HTMLElement {

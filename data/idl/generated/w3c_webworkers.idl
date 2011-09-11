@@ -23,11 +23,17 @@ module webworkers
              attribute Function? onconnect;
   };
 
+  [Constructor(DOMString type, optional ErrorEventInit eventInitDict)]
   interface ErrorEvent : Event {
     readonly attribute DOMString message;
     readonly attribute DOMString filename;
     readonly attribute unsigned long lineno;
-    void initErrorEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, DOMString messageArg, DOMString filenameArg, unsigned long linenoArg);
+  };
+  
+  dictionary ErrorEventInit : EventInit {
+    DOMString message;
+    DOMString filename;
+    unsigned long lineno;
   };
 
   [Supplemental, NoInterfaceObject]

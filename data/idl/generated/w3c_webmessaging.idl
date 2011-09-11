@@ -1,12 +1,20 @@
 module webmessaging
 {
+  [Constructor(DOMString type, optional MessageEventInit eventInitDict)]
   interface MessageEvent : Event {
     readonly attribute any data;
     readonly attribute DOMString origin;
     readonly attribute DOMString lastEventId;
     readonly attribute WindowProxy? source;
-    readonly attribute MessagePort[] ports;
-    void initMessageEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, any dataArg, DOMString originArg, DOMString lastEventIdArg, WindowProxy? sourceArg, sequence<MessagePort> portsArg);
+    readonly attribute MessagePort[]? ports;
+  };
+  
+  dictionary MessageEventInit : EventInit {
+    any data;
+    DOMString origin;
+    DOMString lastEventId;
+    WindowProxy? source;
+    MessagePort[]? ports;
   };
 
   [Constructor]

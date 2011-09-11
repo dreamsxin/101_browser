@@ -29,11 +29,17 @@ module websockets
     void send(Blob data);
   };
 
+  [Constructor(DOMString type, optional CloseEventInit eventInitDict)]
   interface CloseEvent : Event {
     readonly attribute boolean wasClean;
     readonly attribute unsigned short code;
     readonly attribute DOMString reason;
-    void initCloseEvent(DOMString typeArg, boolean canBubbleArg, boolean cancelableArg, boolean wasCleanArg, unsigned short codeArg, DOMString reasonArg);
+  };
+  
+  dictionary CloseEventInit : EventInit {
+    boolean wasClean;
+    unsigned short code;
+    DOMString reason;
   };
 
 
