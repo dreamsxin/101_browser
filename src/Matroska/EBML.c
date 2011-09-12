@@ -93,9 +93,17 @@ ReadResult readEbmlElementID(void *in_out_pReadStreamState,
 }
 
 ReadResult readEBmlElementSize(void *in_out_pReadStreamState, 
-	ByteStreamInterface in_readInterface, uint64_t *out_size)
+	ByteStreamInterface in_readInterface, uint64_t *out_pSize)
 {
-	uint8_t currentByte, remainingBytes;
+	return readEBml_vint(in_out_pReadStreamState, in_readInterface, 
+		out_pSize);
+}
+
+ReadResult readEbml_int_raw(void *in_out_pReadStreamState, 
+	ByteStreamInterface in_readInterface, uint64_t *out_pVint,
+	uint8_t *out_pLengthMinusOne, bool *out_pIsReserved)
+{
+	uint8_t currentByte, remainingBytes, idx;
 	bool isReservedSize; // gets initialized below
 
 	if ((*in_readInterface.mpfRead)(in_out_pReadStreamState, 
@@ -113,25 +121,76 @@ ReadResult readEBmlElementSize(void *in_out_pReadStreamState,
 	* Q: Why remainingBytes+1 and not remainingBytes?
 	* A: Because we also have to mask away the leading 1.
 	*/
-	*out_size = currentByte & (0xFF >> (remainingBytes+1));
+	*out_pVint = currentByte & (0xFF >> (remainingBytes+1));
 
-	while (remainingBytes)
+	for (idx = 0; idx < remainingBytes; idx++)
 	{
 		if ((*in_readInterface.mpfRead)(in_out_pReadStreamState, 
 			&currentByte, 1) != 1)
 			return ReadResultPrematureEndOfStream;
 
 		// Shift currentByte in from below
-		*out_size = ((*out_size) << 8) | currentByte;
+		*out_pVint = ((*out_pVint) << 8) | currentByte;
 
 		if (isReservedSize && currentByte != 0xFF)
 			isReservedSize = false;
-
-		remainingBytes--;
 	}
 
+	if (out_pIsReserved)
+		*out_pIsReserved = isReservedSize;
+
+	if (out_pLengthMinusOne)
+		*out_pLengthMinusOne = remainingBytes;
+
+	return ReadResultOK;
+}
+
+ReadResult readEBml_vint(void *in_out_pReadStreamState, 
+	ByteStreamInterface in_readInterface, uint64_t *out_pVint)
+{
+	bool isReservedSize;
+	ReadResult readResult = readEbml_int_raw(in_out_pReadStreamState, 
+		in_readInterface, out_pVint, NULL, &isReservedSize);
+
+	if (ReadResultOK != readResult)
+		return readResult;
+
 	if (isReservedSize)
-		*out_size = UINT64_MAX;
+		*out_pVint = UINT64_MAX;
+
+	return ReadResultOK;
+}
+
+const int64_t vsint_subtr[] = {
+	0x80,
+	0x4000,
+	0x200000,
+	0x10000000,
+	0x0800000000,
+	0x040000000000,
+	0x02000000000000,
+	0x0100000000000000
+};
+
+ReadResult readEBml_svint(void *in_out_pReadStreamState, 
+	ByteStreamInterface in_readInterface, int64_t *out_pVsint)
+{
+	bool isReservedSize;
+	uint8_t lengthMinusOne;
+	ReadResult readResult = readEbml_int_raw(in_out_pReadStreamState, 
+		in_readInterface, (uint64_t*) out_pVsint, &lengthMinusOne, &isReservedSize);
+
+	if (ReadResultOK != readResult)
+		return readResult;
+
+	if (isReservedSize)
+		*out_pVsint = INT64_MIN;
+	else
+	{
+		assert(lengthMinusOne < 8);
+		if (*out_pVsint & (1LL << (6+7*lengthMinusOne)))
+			*out_pVsint -= vsint_subtr[lengthMinusOne];
+	}
 
 	return ReadResultOK;
 }
