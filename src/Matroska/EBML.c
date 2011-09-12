@@ -161,17 +161,6 @@ ReadResult readEBml_vint(void *in_out_pReadStreamState,
 	return ReadResultOK;
 }
 
-const int64_t vsint_subtr[] = {
-	0x80,
-	0x4000,
-	0x200000,
-	0x10000000,
-	0x0800000000,
-	0x040000000000,
-	0x02000000000000,
-	0x0100000000000000
-};
-
 ReadResult readEBml_svint(void *in_out_pReadStreamState, 
 	ByteStreamInterface in_readInterface, int64_t *out_pVsint)
 {
@@ -188,8 +177,16 @@ ReadResult readEBml_svint(void *in_out_pReadStreamState,
 	else
 	{
 		assert(lengthMinusOne < 8);
+		/*
+		* This tests whether the number is negative (most signifificant bit is 
+		* set - the case that we have a reserved size is caught further above)
+		*/
 		if (*out_pVsint & (1LL << (6+7*lengthMinusOne)))
-			*out_pVsint -= vsint_subtr[lengthMinusOne];
+			/*
+			* Set all higher bits to one, too (assuming two-complement 
+			* representation of negative numbers)
+			*/
+			*out_pVsint |= UINT64_MAX << (7*(lengthMinusOne+1));
 	}
 
 	return ReadResultOK;
