@@ -40,5 +40,5 @@ void testFailed(const char *_Message, const char *_File, unsigned int _Line)
 	testNr++;
 
 	if (exitOnFailure)
-		exit(-1);
+		exit(EXIT_FAILURE);
 }

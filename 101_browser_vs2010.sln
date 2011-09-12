@@ -57,6 +57,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ISO_base_media_file_format"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SetjmpUtil", "projects\vs2010\SetjmpUtil\SetjmpUtil.vcxproj", "{DC55D83D-E17A-4960-B26F-8DB3C539A1CF}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Matroska", "projects\vs2010\Matroska\Matroska.vcxproj", "{07C83321-A408-4C6C-9557-5C9C1D592250}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -403,6 +405,18 @@ Global
 		{DC55D83D-E17A-4960-B26F-8DB3C539A1CF}.LIB Release|Win32.Build.0 = Release|Win32
 		{DC55D83D-E17A-4960-B26F-8DB3C539A1CF}.Release|Win32.ActiveCfg = Release|Win32
 		{DC55D83D-E17A-4960-B26F-8DB3C539A1CF}.Release|Win32.Build.0 = Release|Win32
+		{07C83321-A408-4C6C-9557-5C9C1D592250}.Debug|Win32.ActiveCfg = Debug|Win32
+		{07C83321-A408-4C6C-9557-5C9C1D592250}.Debug|Win32.Build.0 = Debug|Win32
+		{07C83321-A408-4C6C-9557-5C9C1D592250}.LIB ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{07C83321-A408-4C6C-9557-5C9C1D592250}.LIB ASM Debug|Win32.Build.0 = Debug|Win32
+		{07C83321-A408-4C6C-9557-5C9C1D592250}.LIB ASM Release|Win32.ActiveCfg = Release|Win32
+		{07C83321-A408-4C6C-9557-5C9C1D592250}.LIB ASM Release|Win32.Build.0 = Release|Win32
+		{07C83321-A408-4C6C-9557-5C9C1D592250}.LIB Debug|Win32.ActiveCfg = Debug|Win32
+		{07C83321-A408-4C6C-9557-5C9C1D592250}.LIB Debug|Win32.Build.0 = Debug|Win32
+		{07C83321-A408-4C6C-9557-5C9C1D592250}.LIB Release|Win32.ActiveCfg = Release|Win32
+		{07C83321-A408-4C6C-9557-5C9C1D592250}.LIB Release|Win32.Build.0 = Release|Win32
+		{07C83321-A408-4C6C-9557-5C9C1D592250}.Release|Win32.ActiveCfg = Release|Win32
+		{07C83321-A408-4C6C-9557-5C9C1D592250}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

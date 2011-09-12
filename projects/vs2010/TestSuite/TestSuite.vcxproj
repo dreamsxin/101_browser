@@ -101,6 +101,8 @@
     <ClCompile Include="..\..\..\src\TestSuite\Test_Interval.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_IO.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_IteratorInstances.cpp" />
+    <ClCompile Include="..\..\..\src\TestSuite\Test_Libc.c" />
+    <ClCompile Include="..\..\..\src\TestSuite\Test_Matroska.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_MiniStdlib.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_OuterBorderIterator.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_PNG.c" />
@@ -134,6 +136,9 @@
     </ProjectReference>
     <ProjectReference Include="..\IO\IO.vcxproj">
       <Project>{13a1ed8a-63a2-4eae-88dd-3f8811a4b673}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Matroska\Matroska.vcxproj">
+      <Project>{07c83321-a408-4c6c-9557-5c9c1d592250}</Project>
     </ProjectReference>
     <ProjectReference Include="..\MiniStdlib\MiniStdlib.vcxproj">
       <Project>{6c7c9fbb-39b4-42cc-a000-c0ff2f61388e}</Project>

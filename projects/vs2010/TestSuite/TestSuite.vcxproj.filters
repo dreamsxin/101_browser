@@ -81,6 +81,12 @@
     <ClCompile Include="..\..\..\src\TestSuite\Test_SetjmpUtil.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\TestSuite\Test_Libc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\TestSuite\Test_Matroska.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\TestSuite\IteratorTestUtil.h">

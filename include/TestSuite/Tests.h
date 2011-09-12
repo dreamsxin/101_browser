@@ -20,6 +20,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+void test_Libc();
 void testAlgorithm();
 void testGIF();
 void testSetjmpUtil();
@@ -40,6 +41,7 @@ extern "C" {
 void testBigNumber();
 void testASCIIStringUnicodeIterator();
 void testHTML5();
+void test_Matroska();
 void test_MiniStdlib();
 void test_PNG();
 void test_RFC1950();

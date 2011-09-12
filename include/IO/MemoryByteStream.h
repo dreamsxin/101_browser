@@ -36,6 +36,8 @@ DLLEXPORT void memoryByteStreamReadStateInit(
 	MemoryByteStreamReadState *in_pMemoryByteStreamReadState,
 	const void *in_pBuffer, size_t in_bufferSize);
 
+DLLEXPORT void memoryByteStreamReadStateReset(MemoryByteStreamReadState *in_pMemoryByteStreamReadState);
+
 DLLEXPORT size_t memoryByteReadStreamRead(void *in_out_pMemoryByteStreamReadState, 
 	void *out_pBuffer, size_t in_count);
 
