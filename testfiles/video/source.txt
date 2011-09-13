@@ -16,9 +16,10 @@ http://www.webmfiles.org/wp-content/uploads/video/elephants-dream.webm
 )
 
 http://ctndigital.com/ctnd/lab/vp8-webm/
-(more exactly:
-http://ctnnyc.com/webm/avatar1.webm
-)
+(more exactly: http://ctnnyc.com/webm/avatar1.webm)
+
+http://ctndigital.com/ctnd/lab/2012-webm/
+(more exactly: http://cdn.ctnhd.com/webm/2012.webm
 
 On http://forums.mozillazine.org/viewtopic.php?f=23&t=1919639 there are more links to test videos
 Among them:
@@ -40,3 +41,4 @@ http://people.opera.com/patrickl/experiments/webm/videos/garden2.webm
 http://people.opera.com/patrickl/experiments/webm/videos/windowsill.mp4
 http://people.opera.com/patrickl/experiments/webm/videos/windowsill.ogv
 http://people.opera.com/patrickl/experiments/webm/videos/windowsill.webm
+)
