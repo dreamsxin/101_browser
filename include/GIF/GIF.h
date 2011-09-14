@@ -33,6 +33,7 @@ extern "C" {
 #pragma warning(push)
 #pragma warning(disable : 4214)
 #endif
+
 typedef struct
 {
 	uint16_t Logical_Screen_Width;

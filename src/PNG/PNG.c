@@ -17,7 +17,7 @@
 #include "PNG/PNG.h"
 #include <string.h> // for memcmp
 #include "MiniStdlib/MTAx_cstdlib.h" // for the conversation functions for endianness
-#include "PNG/CRC.h"
+#include "CRC/CRC.h"
 #include "IO/fread.h"
 #include "RFC1950/RFC1950_zlib.h"
 
@@ -49,7 +49,7 @@ ReadResult read_PNG(FILE* in_pngFile)
 	if (memcmp(readPngSignature, PNG_signature, 8) != 0)
 		return ReadResultInvalidData;
 
-	readChecksum = CRC_init();
+	readChecksum = CRC_init(true);
 	readResult = read_PNG_Chunk_Header(&pngChunkHeader, &isEndOfStream, in_pngFile, &readChecksum);
 	if (readResult != ReadResultOK)
 		return readResult;
@@ -67,7 +67,7 @@ ReadResult read_PNG(FILE* in_pngFile)
 
 	while (1)
 	{
-		readChecksum = CRC_init();
+		readChecksum = CRC_init(true);
 		readResult = read_PNG_Chunk_Header(&pngChunkHeader, &isEndOfStream, in_pngFile, &readChecksum);
 
 		if (readResult != ReadResultOK)
@@ -146,8 +146,21 @@ ReadResult read_PNG_Chunk_Header(PNG_Chunk_Header *out_pHeader,
 
 	out_pHeader->length = _byteswap_ulong(out_pHeader->length);
 
+	/*
+	* 5.5 Cyclic Redundancy Code algorithm
+	* 
+	* "The CRC polynomial employed is
+	* x^32 + x^26 + x^23 + x^22 + x^16 + x^12 + x^11 + x^10 + x^8 + x^7 + x^5 + x^4 + x^2 + x + 1
+	* In PNG, the 32-bit CRC is initialized to all 1's, and then the data from 
+	* each byte is processed from the least significant bit (1) to the most 
+	* significant bit (128)."
+	* 
+	* Note that the bits are written here in seemingly reverse order, because
+	* "For the purpose of separating into bytes and ordering, the least significant 
+	* bit of the 32-bit CRC is defined to be the coefficient of the x^31 term."
+	*/
 	readHeaderBytes = fread_withState(&out_pHeader->chunkType, 1, sizeof(out_pHeader->chunkType), in_pngFile, 
-		in_pCurrentCRC, &CRC_stateUpdate);
+		in_pCurrentCRC, &CRC_stateUpdate_update_LSB_to_MSB);
 
 	if (sizeof(out_pHeader->chunkType) != readHeaderBytes)
 	{
@@ -171,7 +184,7 @@ ReadResult read_PNG_Chunk_Data_and_CRC(const PNG_Chunk_Header *in_pHeader,
 		!= ReadResultOK)
 		return readResult;
 
-	*in_pCurrentCRC = CRC_terminate(*in_pCurrentCRC);
+	*in_pCurrentCRC = CRC_terminate(*in_pCurrentCRC, true);
 
 	if (fread(&chunkCRC, sizeof(chunkCRC), 1, in_pngFile) != 1)
 	{
@@ -198,7 +211,7 @@ ReadResult read_PNG_Chunk_Data_Default(const PNG_Chunk_Header *in_pHeader,
 		if (fread(&aByte, 1, 1, in_pngFile) != 1)
 			return ReadResultPrematureEndOfStream;
 
-		*in_pCurrentCRC = CRC_update(*in_pCurrentCRC, aByte);
+		*in_pCurrentCRC = CRC_update_LSB_to_MSB(*in_pCurrentCRC, aByte);
 	}
 
 	return ReadResultOK;
@@ -214,7 +227,7 @@ ReadResult read_PNG_Chunk_Data_IHDR(const PNG_Chunk_Header *in_pHeader,
 		return ReadResultInvalidData;
 	}
 
-	if (fread_withState(pChunkDataIHDR, sizeof(*pChunkDataIHDR), 1, in_pngFile, in_pCurrentCRC, &CRC_stateUpdate) != 1)
+	if (fread_withState(pChunkDataIHDR, sizeof(*pChunkDataIHDR), 1, in_pngFile, in_pCurrentCRC, &CRC_stateUpdate_update_LSB_to_MSB) != 1)
 	{
 		return ReadResultPrematureEndOfStream;
 	}
@@ -290,7 +303,7 @@ ReadResult read_PNG_Chunk_Data_IDAT(const PNG_Chunk_Header *in_pHeader,
 		if (fread(&aByte, 1, 1, in_pngFile) != 1)
 			return ReadResultPrematureEndOfStream;
 
-		*in_pCurrentCRC = CRC_update(*in_pCurrentCRC, aByte);
+		*in_pCurrentCRC = CRC_update_LSB_to_MSB(*in_pCurrentCRC, aByte);
 	}
 
 	return ReadResultOK;

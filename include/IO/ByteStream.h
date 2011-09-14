@@ -28,7 +28,6 @@ typedef struct
 {
 	size_t (*mpfRead)(void *in_out_pByteStreamInterface, void *out_pBuffer, size_t in_count);
 	size_t (*mpfWrite)(void *in_out_pByteStreamInterface, const void *in_pBuffer, size_t in_count);
-	bool (*mpfSeek)(void *in_out_pByteStreamInterface, long offset, int origin);
 } ByteStreamInterface;
 
 typedef struct

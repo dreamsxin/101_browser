@@ -43,11 +43,13 @@ void testASCIIStringUnicodeIterator();
 void testHTML5();
 void test_Matroska();
 void test_MiniStdlib();
+void test_CRC();
 void test_PNG();
 void test_RFC1950();
 void test_RFC1951();
 void test_Coroutine();
 void test_IO();
+void test_Ogg();
 
 #ifdef __cplusplus
 }

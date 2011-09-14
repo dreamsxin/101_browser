@@ -1,5 +1,5 @@
 /*
-* Copyright 2008-2011 Wolfgang Keller
+* Copyright 2011 Wolfgang Keller
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
-#include "PNG/PNG.h"
+#include "Ogg/Ogg.h"
 
-void test_PNG()
+void test_Ogg()
 {
 
 }

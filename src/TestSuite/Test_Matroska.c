@@ -43,6 +43,11 @@ void test_EBML()
 	uint8_t unknownTest6[] = { 0x03, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 	uint8_t unknownTest7[] = { 0x01, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 
+#ifdef _WIN32
+#pragma warning(push)
+#pragma warning(disable : 4221)
+#endif
+
 	uint8_t *unknownTests[] = { unknownTest0, unknownTest1, unknownTest2, 
 		unknownTest3, unknownTest4, unknownTest5, unknownTest6, unknownTest7 };
 
@@ -73,6 +78,10 @@ void test_EBML()
 	
 	uint8_t *signedTest2[] = { signedTest2_0, signedTest2_1, signedTest2_2, 
 		signedTest2_3, signedTest2_4, signedTest2_5, signedTest2_6, signedTest2_7 };
+
+#ifdef _WIN32
+#pragma warning(pop)
+#endif
 
 	uint8_t elementID[4];
 	uint64_t vint;

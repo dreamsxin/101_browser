@@ -15,12 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\PNG\PNG.h">
+    <ClInclude Include="..\..\..\include\Ogg\Ogg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\Ogg\Skeleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\PNG\PNG.c">
+    <ClCompile Include="..\..\..\src\Ogg\Ogg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Ogg\Skeleton.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -87,6 +87,12 @@
     <ClCompile Include="..\..\..\src\TestSuite\Test_Matroska.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\TestSuite\Test_CRC.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\TestSuite\Test_Ogg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\TestSuite\IteratorTestUtil.h">

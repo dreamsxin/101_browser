@@ -57,10 +57,14 @@ int main()
 	testGIF();
 	printf("Testing Coroutine\n");
 	test_Coroutine();
+	printf("Testing CRC\n");
+	test_CRC();
 	printf("Testing PNG\n");
 	test_PNG();
 	printf("Testing Matroska\n");
 	test_Matroska();
+	printf("Testing Ogg\n");
+	test_Ogg();
 
 	return 0;
 }

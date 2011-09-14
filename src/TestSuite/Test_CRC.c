@@ -16,9 +16,23 @@
 
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
-#include "PNG/PNG.h"
+#include "CRC/CRC.h"
 
-void test_PNG()
+void test_CRC()
 {
+	uint8_t buffer[] = {'I', 'E', 'N', 'D'};
+	uint32_t currentCRC;
 
+	// First a manual computing
+	currentCRC = CRC_init(true);
+	currentCRC = CRC_update_LSB_to_MSB(currentCRC, buffer[0]);
+	currentCRC = CRC_update_LSB_to_MSB(currentCRC, buffer[1]);
+	currentCRC = CRC_update_LSB_to_MSB(currentCRC, buffer[2]);
+	currentCRC = CRC_update_LSB_to_MSB(currentCRC, buffer[3]);
+	currentCRC = CRC_terminate(currentCRC, true);
+	test(currentCRC == 0xAE426082);
+
+	// Now an automatic computation
+	currentCRC = CRC_compute_LSB_TO_MSB(buffer, 4, true, true);
+	test(currentCRC == 0xAE426082);
 }

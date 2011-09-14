@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{1940C115-B73B-4D30-871A-7EB8421DDADF}</ProjectGuid>
+    <ProjectGuid>{9BDC084F-7A50-4D3D-B73D-6A064ECCCABA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>PNG</RootNamespace>
+    <RootNamespace>Ogg</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -40,7 +40,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)out\vs2010\$(Configuration)\</OutDir>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -50,29 +49,26 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;PNG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;OGG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)include</AdditionalIncludeDirectories>
       <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>IO.lib;MiniStdlib.lib;RFC1950.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;PNG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;OGG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
@@ -80,29 +76,15 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>IO.lib;MiniStdlib.lib;RFC1950.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)out\vs2010\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\PNG\PNG.h" />
+    <ClInclude Include="..\..\..\include\Ogg\Ogg.h" />
+    <ClInclude Include="..\..\..\include\Ogg\Skeleton.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\PNG\PNG.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CRC\CRC.vcxproj">
-      <Project>{0095cd5c-cd78-4957-80c5-6014a16a08ea}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\IO\IO.vcxproj">
-      <Project>{13a1ed8a-63a2-4eae-88dd-3f8811a4b673}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\MiniStdlib\MiniStdlib.vcxproj">
-      <Project>{6c7c9fbb-39b4-42cc-a000-c0ff2f61388e}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\RFC1950\RFC1950.vcxproj">
-      <Project>{28bfb0ab-dcec-4383-a146-f32756b31677}</Project>
-    </ProjectReference>
+    <ClCompile Include="..\..\..\src\Ogg\Ogg.c" />
+    <ClCompile Include="..\..\..\src\Ogg\Skeleton.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
