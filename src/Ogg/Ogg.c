@@ -57,6 +57,9 @@ ReadResult readAndCheckOggPageHeader(void *in_out_pReadStreamState,
 		return ReadResultPrematureEndOfStream;
 	}
 
+	*out_pCrc = CRC_foldl_MSB_to_LSB(*out_pCrc, &out_pOggPageHeader->number_page_segments, 
+		1+out_pOggPageHeader->number_page_segments);
+
 	return ReadResultOK;
 }
 
@@ -90,6 +93,12 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 			if (fisheadIdentHeader.Version_major != 0x3 ||
 				fisheadIdentHeader.Version_minor != 0x0)
 				return ReadResultNotImplemented;
+
+			crc = CRC_foldl_MSB_to_LSB(crc, &fisheadIdentHeader, 
+				oggPageHeader.lacing_values[0]);
+
+			if (crc != oggPageHeader.CRC_checksum)
+				return ReadResultInvalidData;
 		}
 		else
 			return ReadResultNotImplemented;
@@ -115,6 +124,14 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 			{
 				if (in_readInterface.mpfRead(in_out_pReadStreamState, &byte, 1) != 1)
 					return ReadResultPrematureEndOfStream;
+				
+				crc = CRC_foldl_MSB_to_LSB(crc, &byte, 1);
+			}
+
+			if (currentPageSegment == oggPageHeader.number_page_segments - 1)
+			{
+				if (crc != oggPageHeader.CRC_checksum)
+					return ReadResultInvalidData;
 			}
 		}
 	}
