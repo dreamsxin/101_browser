@@ -41,15 +41,15 @@ typedef struct
 	{
 		uint8_t continuation : 1;
 		uint8_t bos : 1;
-		uint8_t unused0 : 1;
 		uint8_t eos : 1;
-		uint8_t unused1 : 4;
+		uint8_t unused : 5;
 	} header_type_flag;
 	uint64_t granule_position;
 	uint32_t bitstream_serial_number;
 	uint32_t page_sequence_number;
 	uint32_t CRC_checksum;
 	uint8_t number_page_segments;
+	uint8_t lacing_values[255];
 } OggPageHeader;
 
 #ifdef _WIN32

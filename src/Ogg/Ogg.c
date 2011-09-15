@@ -25,7 +25,8 @@ ReadResult readAndCheckOggPageHeader(void *in_out_pReadStreamState,
 	ByteStreamInterface in_readInterface, OggPageHeader *out_pOggPageHeader)
 {
 	if (in_readInterface.mpfRead(in_out_pReadStreamState, out_pOggPageHeader, 
-		sizeof(OggPageHeader)) != sizeof(OggPageHeader))
+		offsetof(OggPageHeader, lacing_values)) 
+		!= offsetof(OggPageHeader, lacing_values))
 		return ReadResultPrematureEndOfStream;
 
 	if (memcmp(out_pOggPageHeader->capture_pattern, OggS, 4))
@@ -34,9 +35,16 @@ ReadResult readAndCheckOggPageHeader(void *in_out_pReadStreamState,
 	if (out_pOggPageHeader->stream_structure_version != 0)
 		return ReadResultNotImplemented;
 
-	if (out_pOggPageHeader->header_type_flag.unused0 || 
-		out_pOggPageHeader->header_type_flag.unused1)
+	if (out_pOggPageHeader->header_type_flag.unused)
 		return ReadResultInvalidData;
+
+	if (in_readInterface.mpfRead(in_out_pReadStreamState, 
+		out_pOggPageHeader->lacing_values, 
+		out_pOggPageHeader->number_page_segments) != 
+		out_pOggPageHeader->number_page_segments)
+	{
+		return ReadResultPrematureEndOfStream;
+	}
 
 	return ReadResultOK;
 }
@@ -46,7 +54,6 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 {
 	OggPageHeader oggPageHeader;
 	ReadResult readResult;
-	int count = 0;
 
 	if ((readResult = readAndCheckOggPageHeader(in_out_pReadStreamState, 
 		in_readInterface, &oggPageHeader)) != ReadResultOK)
@@ -57,12 +64,7 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 
 	if (oggPageHeader.number_page_segments == 0x01)
 	{
-		uint8_t lacingValue;
-
-		if (in_readInterface.mpfRead(in_out_pReadStreamState, &lacingValue, 1) != 1)
-			return ReadResultPrematureEndOfStream;
-
-		if (lacingValue == 0x40)
+		if (oggPageHeader.lacing_values[0] == 0x40)
 		{
 			FisheadIdentHeader fisheadIdentHeader;
 
@@ -85,31 +87,23 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 
 	while (!oggPageHeader.header_type_flag.eos)
 	{
-		count++;
-
+		uint8_t currentPageSegment;
+		
 		if ((readResult = readAndCheckOggPageHeader(in_out_pReadStreamState, 
 			in_readInterface, &oggPageHeader)) != ReadResultOK)
 			return readResult;
 
-		if (oggPageHeader.number_page_segments == 0x01)
+		for (currentPageSegment = 0; currentPageSegment < oggPageHeader.number_page_segments; 
+			currentPageSegment++)
 		{
 			uint8_t byte;
 			uint8_t idx;
-			uint8_t lacingValue;
 
-			if (in_readInterface.mpfRead(in_out_pReadStreamState, &lacingValue, 1) != 1)
-				return ReadResultPrematureEndOfStream;
-
-			for (idx = 0; idx < lacingValue; idx++)
+			for (idx = 0; idx < oggPageHeader.lacing_values[currentPageSegment]; idx++)
 			{
 				if (in_readInterface.mpfRead(in_out_pReadStreamState, &byte, 1) != 1)
 					return ReadResultPrematureEndOfStream;
 			}
-		}
-		else
-		{
-			printf("Count: %i\n", count);
-			return ReadResultNotImplemented;
 		}
 	}
 
