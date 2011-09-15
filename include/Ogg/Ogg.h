@@ -18,6 +18,7 @@
 #define _Ogg_Ogg_h
 
 #include "MiniStdlib/cstdint.h"
+#include "MiniStdlib/declspec.h"
 #include "IO/ByteStream.h"
 #include "Util/ReadResult.h"
 
@@ -38,12 +39,11 @@ typedef struct
 	uint8_t stream_structure_version;
 	struct
 	{
-		uint8_t unused0 : 1;
 		uint8_t continuation : 1;
 		uint8_t bos : 1;
-		uint8_t unused1 : 1;
+		uint8_t unused0 : 1;
 		uint8_t eos : 1;
-		uint8_t unused2 : 3;
+		uint8_t unused1 : 4;
 	} header_type_flag;
 	uint64_t granule_position;
 	uint32_t bitstream_serial_number;
@@ -58,7 +58,7 @@ typedef struct
 
 #pragma pack(pop)
 
-ReadResult readOgg(void *in_out_pReadStreamState, 
+DLLEXPORT ReadResult readOgg(void *in_out_pReadStreamState, 
 	ByteStreamInterface in_readInterface);
 
 #ifdef __cplusplus

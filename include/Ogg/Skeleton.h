@@ -17,6 +17,7 @@
 #ifndef _Ogg_Skeleton_h
 #define _Ogg_Skeleton_h
 
+#include "MiniStdlib/cstdint.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,7 +25,17 @@ extern "C" {
 
 #pragma pack(push, 1)
 
-
+typedef struct
+{
+	char Identifier[8]; // 'fishead\0'
+	uint16_t Version_major;
+	uint16_t Version_minor;
+	uint64_t Presentationtime_numerator;
+	uint64_t Presentationtime_denominator;
+	uint64_t Basetime_numerator;
+	uint64_t Basetime_denominator;
+	uint32_t UTC[5];
+} FisheadIdentHeader;
 
 #pragma pack(pop)
 

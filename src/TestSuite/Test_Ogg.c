@@ -17,8 +17,24 @@
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
 #include "Ogg/Ogg.h"
+#include "Ogg/Skeleton.h"
+#include "IO/FileByteStream.h"
 
 void test_Ogg()
 {
+	FileByteStreamState fileByteStreamState;
+	bool result;
 
+	test(64 == sizeof(FisheadIdentHeader));
+	
+	result = fileByteReadStreamStateInit("testfiles/video/big_buck_bunny.ogv", 
+		&fileByteStreamState);
+
+	test(result);
+
+	if (result)
+	{
+		test(ReadResultOK == readOgg(&fileByteStreamState, getFileByteStreamInterface()));
+		fileByteReadStreamStateDestroy(&fileByteStreamState);
+	}
 }

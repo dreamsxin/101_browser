@@ -29,12 +29,6 @@ typedef enum
 	*/
 	ReadResultOverdueEndOfStream,
 
-	/*
-	* ReadResultInvalidVersion is returned when the read data could 
-	* be correct, but the claimed version of the file format does not
-	* fit.
-	*/
-	ReadResultInvalidVersion,
 	ReadResultInvalidData,
 	ReadResultAllocationFailure,
 	ReadResultNotImplemented,
@@ -52,7 +46,7 @@ typedef enum
 	ReadResultWriteError,
 
 	/*
-	* When we don't know what kind of error it is we use this. Should
+	* When we don't know what kind of error it is, we use this. Should
 	* be avoided if possible.
 	*/
 	ReadResultSomeError

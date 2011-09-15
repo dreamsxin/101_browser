@@ -148,6 +148,9 @@
     <ProjectReference Include="..\MiniStdlib\MiniStdlib.vcxproj">
       <Project>{6c7c9fbb-39b4-42cc-a000-c0ff2f61388e}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Ogg\Ogg.vcxproj">
+      <Project>{9bdc084f-7a50-4d3d-b73d-6a064ecccaba}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\PNG\PNG.vcxproj">
       <Project>{1940c115-b73b-4d30-871a-7eb8421ddadf}</Project>
     </ProjectReference>
