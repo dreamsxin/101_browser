@@ -46,12 +46,12 @@ DLLEXPORT uint32_t CRC_terminate(uint32_t in_currentCRC, bool in_invertAfter);
 /*!
 * Precondition: the function CRC_init() was called before.
 */
-DLLEXPORT uint32_t CRC_foldl_LSB_TO_MSB(uint32_t in_currentCRC, uint8_t *in_buffer, size_t in_bufferSize);
-DLLEXPORT uint32_t CRC_foldl_MSB_TO_LSB(uint32_t in_currentCRC, uint8_t *in_buffer, size_t in_bufferSize);
+DLLEXPORT uint32_t CRC_foldl_LSB_to_MSB(uint32_t in_currentCRC, void *in_pBuffer, size_t in_bufferSize);
+DLLEXPORT uint32_t CRC_foldl_MSB_to_LSB(uint32_t in_currentCRC, void *in_pBuffer, size_t in_bufferSize);
 
-DLLEXPORT uint32_t CRC_compute_LSB_TO_MSB(uint8_t *in_buffer, size_t in_bufferSize, 
+DLLEXPORT uint32_t CRC_compute_LSB_to_MSB(void *in_pBuffer, size_t in_bufferSize, 
 	bool in_invertBefore, bool in_invertAfter);
-DLLEXPORT uint32_t CRC_compute_MSB_TO_LSB(uint8_t *in_buffer, size_t in_bufferSize, 
+DLLEXPORT uint32_t CRC_compute_MSB_to_LSB(void *in_pBuffer, size_t in_bufferSize, 
 	bool in_invertBefore, bool in_invertAfter);
 
 /*!

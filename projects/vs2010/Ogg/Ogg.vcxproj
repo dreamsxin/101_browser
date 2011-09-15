@@ -86,6 +86,11 @@
     <ClCompile Include="..\..\..\src\Ogg\Ogg.c" />
     <ClCompile Include="..\..\..\src\Ogg\Skeleton.c" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CRC\CRC.vcxproj">
+      <Project>{0095cd5c-cd78-4957-80c5-6014a16a08ea}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

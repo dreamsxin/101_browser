@@ -33,6 +33,6 @@ void test_CRC()
 	test(currentCRC == 0xAE426082);
 
 	// Now an automatic computation
-	currentCRC = CRC_compute_LSB_TO_MSB(buffer, 4, true, true);
+	currentCRC = CRC_compute_LSB_to_MSB(buffer, 4, true, true);
 	test(currentCRC == 0xAE426082);
 }

@@ -16,14 +16,18 @@
 
 #include "Ogg/Ogg.h"
 #include "Ogg/Skeleton.h"
+#include "CRC/CRC.h"
 #include "MiniStdlib/cstring.h"
 #include "MiniStdlib/MTAx_cstdio.h"
 
 const char OggS[4] = { 'O', 'g', 'g', 'S' };
 
 ReadResult readAndCheckOggPageHeader(void *in_out_pReadStreamState, 
-	ByteStreamInterface in_readInterface, OggPageHeader *out_pOggPageHeader)
+	ByteStreamInterface in_readInterface, OggPageHeader *out_pOggPageHeader, 
+	uint32_t *out_pCrc)
 {
+	*out_pCrc = CRC_init(false);
+	
 	if (in_readInterface.mpfRead(in_out_pReadStreamState, out_pOggPageHeader, 
 		offsetof(OggPageHeader, lacing_values)) 
 		!= offsetof(OggPageHeader, lacing_values))
@@ -37,6 +41,13 @@ ReadResult readAndCheckOggPageHeader(void *in_out_pReadStreamState,
 
 	if (out_pOggPageHeader->header_type_flag.unused)
 		return ReadResultInvalidData;
+
+	*out_pCrc = CRC_foldl_MSB_to_LSB(*out_pCrc, out_pOggPageHeader, 
+		offsetof(OggPageHeader, CRC_checksum));
+	*out_pCrc = CRC_update_MSB_to_LSB(*out_pCrc, 0);
+	*out_pCrc = CRC_update_MSB_to_LSB(*out_pCrc, 0);
+	*out_pCrc = CRC_update_MSB_to_LSB(*out_pCrc, 0);
+	*out_pCrc = CRC_update_MSB_to_LSB(*out_pCrc, 0);
 
 	if (in_readInterface.mpfRead(in_out_pReadStreamState, 
 		out_pOggPageHeader->lacing_values, 
@@ -54,9 +65,10 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 {
 	OggPageHeader oggPageHeader;
 	ReadResult readResult;
+	uint32_t crc;
 
 	if ((readResult = readAndCheckOggPageHeader(in_out_pReadStreamState, 
-		in_readInterface, &oggPageHeader)) != ReadResultOK)
+		in_readInterface, &oggPageHeader, &crc)) != ReadResultOK)
 		return readResult;
 
 	if (!oggPageHeader.header_type_flag.bos)
@@ -90,7 +102,7 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 		uint8_t currentPageSegment;
 		
 		if ((readResult = readAndCheckOggPageHeader(in_out_pReadStreamState, 
-			in_readInterface, &oggPageHeader)) != ReadResultOK)
+			in_readInterface, &oggPageHeader, &crc)) != ReadResultOK)
 			return readResult;
 
 		for (currentPageSegment = 0; currentPageSegment < oggPageHeader.number_page_segments; 

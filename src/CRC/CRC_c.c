@@ -66,7 +66,7 @@ void initCRC_Tables()
 }
 
 static uint32_t initializeCrcTableAndReturnInitialCrc(bool in_invertBefore);
-static uint32_t initialCrc();
+static uint32_t initialCrc(bool in_invertBefore);
 
 uint32_t (*crcInitFun)(bool) = initializeCrcTableAndReturnInitialCrc;
 
@@ -74,7 +74,7 @@ static uint32_t initializeCrcTableAndReturnInitialCrc(bool in_invertBefore)
 {
 	initCRC_Tables();
 	crcInitFun = initialCrc;
-	return initialCrc();
+	return initialCrc(in_invertBefore);
 }
 
 static uint32_t initialCrc(bool in_invertBefore)
@@ -108,28 +108,28 @@ uint32_t CRC_terminate(uint32_t in_currentCRC, bool in_invertAfter)
 		return in_currentCRC;
 }
 
-uint32_t CRC_compute_LSB_TO_MSB(uint8_t *in_buffer, size_t in_bufferSize, 
+uint32_t CRC_compute_LSB_to_MSB(void *in_pBuffer, size_t in_bufferSize, 
 	bool in_invertBefore, bool in_invertAfter)
 {
-	return CRC_terminate(CRC_foldl_LSB_TO_MSB(CRC_init(in_invertBefore), 
-		in_buffer, in_bufferSize), in_invertAfter);
+	return CRC_terminate(CRC_foldl_LSB_to_MSB(CRC_init(in_invertBefore), 
+		in_pBuffer, in_bufferSize), in_invertAfter);
 }
 
-uint32_t CRC_compute_MSB_TO_LSB(uint8_t *in_buffer, size_t in_bufferSize, 
+uint32_t CRC_compute_MSB_TO_LSB(void *in_pBuffer, size_t in_bufferSize, 
 	bool in_invertBefore, bool in_invertAfter)
 {
-	return CRC_terminate(CRC_foldl_MSB_TO_LSB(CRC_init(in_invertBefore), 
-		in_buffer, in_bufferSize), in_invertAfter);
+	return CRC_terminate(CRC_foldl_MSB_to_LSB(CRC_init(in_invertBefore), 
+		in_pBuffer, in_bufferSize), in_invertAfter);
 }
 
 void CRC_stateUpdate_update_LSB_to_MSB(void *in_pState, const void *in_pBuffer, size_t in_count)
 {
 	uint32_t *pState = (uint32_t*) in_pState;
-	*pState = CRC_foldl_LSB_TO_MSB(*pState, (uint8_t*) in_pBuffer, in_count);
+	*pState = CRC_foldl_LSB_to_MSB(*pState, (uint8_t*) in_pBuffer, in_count);
 }
 
 void CRC_stateUpdate_update_MSB_to_LSB(void *in_pState, const void *in_pBuffer, size_t in_count)
 {
 	uint32_t *pState = (uint32_t*) in_pState;
-	*pState = CRC_foldl_MSB_TO_LSB(*pState, (uint8_t*) in_pBuffer, in_count);
+	*pState = CRC_foldl_MSB_to_LSB(*pState, (uint8_t*) in_pBuffer, in_count);
 }

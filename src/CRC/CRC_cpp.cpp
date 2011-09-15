@@ -17,14 +17,14 @@
 #include "CRC/CRC.h"
 #include "Template/HigherOrderFunctions/Fold.h"
 
-uint32_t CRC_foldl_LSB_TO_MSB(uint32_t in_currentCRC, uint8_t *in_buffer, size_t in_bufferSize)
+uint32_t CRC_foldl_LSB_to_MSB(uint32_t in_currentCRC, void *in_pBuffer, size_t in_bufferSize)
 {
 	return MTAx::HigherOrderFunctions::foldl<uint32_t, uint8_t>(
-		&CRC_update_LSB_to_MSB, in_currentCRC, in_buffer, in_bufferSize);
+		&CRC_update_LSB_to_MSB, in_currentCRC, (uint8_t*) in_pBuffer, in_bufferSize);
 }
 
-uint32_t CRC_foldl_MSB_TO_LSB(uint32_t in_currentCRC, uint8_t *in_buffer, size_t in_bufferSize)
+uint32_t CRC_foldl_MSB_to_LSB(uint32_t in_currentCRC, void *in_pBuffer, size_t in_bufferSize)
 {
 	return MTAx::HigherOrderFunctions::foldl<uint32_t, uint8_t>(
-		&CRC_update_MSB_to_LSB, in_currentCRC, in_buffer, in_bufferSize);
+		&CRC_update_MSB_to_LSB, in_currentCRC, (uint8_t*) in_pBuffer, in_bufferSize);
 }
