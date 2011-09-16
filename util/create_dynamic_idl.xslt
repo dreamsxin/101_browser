@@ -31,6 +31,19 @@
 </xsl:text>
   </xsl:template>
   
+  <!-- For File API -->
+  <xsl:template match="h:code[@class='idl-code']">
+    <xsl:variable name="text">
+      <xsl:value-of select="."/>
+    </xsl:variable>
+    <xsl:text>  </xsl:text>
+    <xsl:call-template name="string-replace-all">
+      <xsl:with-param name="text" select="$text" />
+      <xsl:with-param name="replace" select="'&#xA;'" />
+      <xsl:with-param name="by" select="'&#xA;  '" />
+    </xsl:call-template>
+  </xsl:template>
+  
   <!-- For IndexedDB (not working properly, since there are elements to add - TODO) -->
   <xsl:template match="h:dl[@class='idl']/h:dt">
     <xsl:variable name="text">
