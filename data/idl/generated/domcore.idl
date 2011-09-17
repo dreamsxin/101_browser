@@ -151,7 +151,7 @@ module domcore
     NodeList getElementsByClassName(DOMString classNames);
     Element? getElementById(DOMString elementId);
   
-    Element createElement([TreatNullAs=EmptyString] DOMString localName);
+    Element createElement(DOMString localName);
     Element createElementNS(DOMString? namespace, DOMString qualifiedName);
     DocumentFragment createDocumentFragment();
     Text createTextNode(DOMString data);
