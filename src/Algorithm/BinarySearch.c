@@ -15,21 +15,29 @@
  */
 
 #include "Algorithm/BinarySearch.h"
+#include "MiniStdlib/cstdint.h"
 #include <assert.h>
 
-size_t binarySearch(const void* in_pToFind, const void* in_pFirst, size_t in_count, size_t in_size,
-					IntermediateCompareResult (*in_pCompare)(const void* in_pToFind, const void* in_pDatum))
+bool binarySearch(const void* in_pToFind, const void* in_pFirst, size_t in_count, size_t in_size,
+	IntermediateCompareResult (*in_pCompare)(const void* in_pToFind, const void* in_pDatum), 
+	size_t *out_pIndex)
 {
 	size_t firstIndex;
 	size_t  lastIndex;
 	IntermediateCompareResult result;
 	
 	if (in_count == 0u)
-		return (size_t) -1;
+	{
+		if (out_pIndex)
+			*out_pIndex = 0;
+
+		return false;
+	}
 
 	firstIndex = 0;
 	lastIndex = in_count-1;
 
+	assert(lastIndex != (size_t) -1);
 	assert(firstIndex <= lastIndex);
 
 	while (firstIndex < lastIndex)
@@ -100,27 +108,77 @@ size_t binarySearch(const void* in_pToFind, const void* in_pFirst, size_t in_cou
 		else if (result == IntermediateCompareResultLess)
 		{
 			if (center == 0)
-				return -1;
+			{
+				if (out_pIndex)
+					*out_pIndex = 0;
+
+				return false;
+			}
 			else
 				lastIndex = center-1;
 		}
 		else
 		{
-			return center;
+			if (out_pIndex)
+				*out_pIndex = center;
+
+			return true;
 		}
 	}
 
+	/*
+	* Q: Can this case even happen?
+	* A: Yes, it can. Let the array consist of
+	*    {0, 1, 3, 4} and we look for 2.
+	*    Then: firstIndex == 0 and lastIndex == 3. Then center == 1.
+	*
+	*    Since 2 > 1 we set
+	*    firstIndex = 2 (lastIndex stays 3).
+	*
+	*    The new center is 2.
+	*
+	*    Next we see 2 < 3
+	*    So we set lastIndex = center - 1 ( = 1)
+	*    and get a case where this condition is satisfied.
+	*/
 	if (firstIndex > lastIndex)
-		return -1;
+	{
+		/*
+		* We could only get in this case when we got IntermediateCompareResultLess
+		* as result.
+		* Then we have lastIndex = center-1 and
+		* toFind < array[center].
+		* So center (=lastIndex + 1) is the correct value.
+		*/
+		if (out_pIndex)
+			*out_pIndex = lastIndex+1;
+
+		return false;
+	}
 
 	result = (*in_pCompare)(in_pToFind, ((const uint8_t*) in_pFirst)+in_size*firstIndex);
 
-	if (result == IntermediateCompareResultGreater || result == IntermediateCompareResultLess)
+	assert(firstIndex == lastIndex);
+
+	if (result == IntermediateCompareResultGreater)
 	{
-		return -1;
+		if (out_pIndex)
+			*out_pIndex = firstIndex+1;
+
+		return false;
+	}
+	else if (result == IntermediateCompareResultLess)
+	{
+		if (out_pIndex)
+			*out_pIndex = firstIndex;
+
+		return false;
 	}
 	else
 	{
-		return firstIndex;
+		if (out_pIndex)
+			*out_pIndex = firstIndex;
+
+		return true;
 	}
 }

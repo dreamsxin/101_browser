@@ -18,10 +18,10 @@
 #define _BinarySearch_h
 
 #include "Algorithm/CompareResult.h"
-#include "MiniStdlib/cstdint.h"
  // for size_t
 #include "MiniStdlib/cstddef.h"
 #include "MiniStdlib/declspec.h"
+#include "MiniStdlib/cstdbool.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,8 +29,12 @@ extern "C" {
 
 /*
  * Does a binary search to find *in_toFind and returns 
- * a value x: 0<=x<=in_count-1: the index or (size_t) -1 if nothing
- * was found.
+ * true: if found
+ * false: if not found
+ * 
+ * In *out_pIndex we store (if NULL != out_pIndex)
+ * if found: the index of the element to find
+ * if not found: the index of the next larger element (make sure that in_count < SIZE_MAX)
  * 
  * Parameters:
  * in_pToFind:  the element (it may be of another type than the array to follow) to find
@@ -40,8 +44,9 @@ extern "C" {
  * in_pCompare: a comparator function taking a pointer to in_pToFind and a pointer of an array
  *              element
  */
-DLLEXPORT size_t binarySearch(const void* in_pToFind, const void* in_pFirst, size_t in_count, size_t in_size,
-	IntermediateCompareResult (*in_pCompare)(const void* in_pToFind, const void* in_pDatum));
+DLLEXPORT bool binarySearch(const void* in_pToFind, const void* in_pFirst, size_t in_count, size_t in_size,
+	IntermediateCompareResult (*in_pCompare)(const void* in_pToFind, const void* in_pDatum), 
+	size_t *out_pIndex);
 
 #ifdef __cplusplus
 }

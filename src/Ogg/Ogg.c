@@ -19,6 +19,7 @@
 #include "CRC/CRC.h"
 #include "MiniStdlib/cstring.h"
 #include "MiniStdlib/MTAx_cstdio.h"
+#include "Algorithm/BinarySearch.h"
 
 const char OggS[4] = { 'O', 'g', 'g', 'S' };
 
@@ -63,6 +64,11 @@ ReadResult readAndCheckOggPageHeader(void *in_out_pReadStreamState,
 	return ReadResultOK;
 }
 
+typedef struct
+{
+	uint32_t bitstream_serial_number;
+} OggBitstreamState;
+
 ReadResult readOgg(void *in_out_pReadStreamState, 
 	ByteStreamInterface in_readInterface)
 {
@@ -70,9 +76,13 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 	ReadResult readResult;
 	uint32_t crc;
 
+	OggBitstreamState *pBitstreamStates = NULL;
+
 	if ((readResult = readAndCheckOggPageHeader(in_out_pReadStreamState, 
 		in_readInterface, &oggPageHeader, &crc)) != ReadResultOK)
 		return readResult;
+	
+	printf("Serial number: %x\n", oggPageHeader.bitstream_serial_number);
 
 	if (!oggPageHeader.header_type_flag.bos)
 		return ReadResultInvalidData;
@@ -113,6 +123,8 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 		if ((readResult = readAndCheckOggPageHeader(in_out_pReadStreamState, 
 			in_readInterface, &oggPageHeader, &crc)) != ReadResultOK)
 			return readResult;
+		
+		printf("Serial number: %x\n", oggPageHeader.bitstream_serial_number);
 
 		for (currentPageSegment = 0; currentPageSegment < oggPageHeader.number_page_segments; 
 			currentPageSegment++)

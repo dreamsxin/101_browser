@@ -136,7 +136,6 @@ const Type* BinaryTree<Type, NodePropertyType>::get(
 		case ExtendedCompareResultContains:
 		case ExtendedCompareResultNotComparableLess:
 		case ExtendedCompareResultNotComparableGreater:
-		case ExtendedCompareResultErrorInCode:
 			terminate = true;
 			break;
 		case ExtendedCompareResultLess:
@@ -145,6 +144,8 @@ const Type* BinaryTree<Type, NodePropertyType>::get(
 		case ExtendedCompareResultGreater:
 			actNode = actNode->right();
 			break;
+		default:
+			assert(false);
 		}
 	}
 

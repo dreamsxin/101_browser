@@ -48,9 +48,6 @@ typedef enum _ExtendedCompareResult
 	// that is not identical to one of the intervals
 	ExtendedCompareResultNotComparableLess,    // for example when the rest of the interval is less than their intersection
 	ExtendedCompareResultNotComparableGreater, // for example when the rest of the interval is greater than their intersection
-
-	ExtendedCompareResultErrorInCode           // this should never be returned (it is there to detect errors in the code as
-	                      // forgotten cases)
 } ExtendedCompareResult;
 
 #endif

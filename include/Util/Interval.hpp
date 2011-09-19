@@ -66,7 +66,7 @@ template <typename Type> ExtendedCompareResult compareIntervals(const Interval<T
 	if (in_a.const_x0()>in_b.const_x0() && in_a.const_x1()>in_b.const_x1())
 		return ExtendedCompareResultNotComparableGreater;
 
-	return ExtendedCompareResultErrorInCode;
+	assert(false);
 }
 
 template <typename Type> IntermediateCompareResult compareElementInterval
