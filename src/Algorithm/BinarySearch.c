@@ -130,7 +130,7 @@ bool binarySearch(const void* in_pToFind, const void* in_pFirst, size_t in_count
 	* Q: Can this case even happen?
 	* A: Yes, it can. Let the array consist of
 	*    {0, 1, 3, 4} and we look for 2.
-	*    Then: firstIndex == 0 and lastIndex == 3. Then center == 1.
+	*    So firstIndex == 0 and lastIndex == 3. Then center == 1.
 	*
 	*    Since 2 > 1 we set
 	*    firstIndex = 2 (lastIndex stays 3).
@@ -138,7 +138,7 @@ bool binarySearch(const void* in_pToFind, const void* in_pFirst, size_t in_count
 	*    The new center is 2.
 	*
 	*    Next we see 2 < 3
-	*    So we set lastIndex = center - 1 ( = 1)
+	*    So we set lastIndex = center - 1 ( = 1) (firstIndex stays 2)
 	*    and get a case where this condition is satisfied.
 	*/
 	if (firstIndex > lastIndex)
