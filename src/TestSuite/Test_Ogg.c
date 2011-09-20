@@ -25,10 +25,7 @@ static const char *ogg_filenames[] = {
 	"testfiles/video/fridge.ogv",
 	"testfiles/video/garden1.ogv",
 	"testfiles/video/garden2.ogv",
-	// TODO
-#if 0
 	"testfiles/video/VfE.ogv",
-#endif
 	"testfiles/video/windowsill.ogv"
 };
 
@@ -38,7 +35,8 @@ void test_Ogg()
 	bool result;
 	int idx;
 
-	test(64 == sizeof(FisheadIdentHeader));
+	test(64 == sizeof(FisheadIdentHeader30));
+	test(80 == sizeof(FisheadIdentHeader40));
 
 	for (idx = 0; idx < sizeof(ogg_filenames)/sizeof(char*); idx++)
 	{
@@ -51,7 +49,8 @@ void test_Ogg()
 
 		if (result)
 		{
-			test(ReadResultOK == readOgg(&fileByteStreamState, getFileByteStreamInterface()));
+			ReadResult readResult = readOgg(&fileByteStreamState, getFileByteStreamInterface());
+			test(ReadResultOK == readResult);
 			fileByteReadStreamStateDestroy(&fileByteStreamState);
 		}
 	}

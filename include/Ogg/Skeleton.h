@@ -35,7 +35,14 @@ typedef struct
 	uint64_t Basetime_numerator;
 	uint64_t Basetime_denominator;
 	uint32_t UTC[5];
-} FisheadIdentHeader;
+} FisheadIdentHeader30;
+
+typedef struct
+{
+	FisheadIdentHeader30 fisheadIdentHeader30;
+	uint64_t Segment_length_in_bytes;
+	uint64_t Content_byte_offset;
+} FisheadIdentHeader40;
 
 #pragma pack(pop)
 

@@ -120,20 +120,30 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 
 	if (oggPageHeader.number_page_segments == 0x01)
 	{
-		if (oggPageHeader.lacing_values[0] == 0x40)
+		if (oggPageHeader.lacing_values[0] == sizeof(FisheadIdentHeader30) ||
+			oggPageHeader.lacing_values[0] == sizeof(FisheadIdentHeader40))
 		{
-			FisheadIdentHeader fisheadIdentHeader;
+			FisheadIdentHeader40 fisheadIdentHeader;
 
 			if (in_readInterface.mpfRead(in_out_pReadStreamState, &fisheadIdentHeader, 
-				sizeof(FisheadIdentHeader)) != sizeof(FisheadIdentHeader))
+				oggPageHeader.lacing_values[0]) != oggPageHeader.lacing_values[0])
 				return ReadResultPrematureEndOfStream;
 
-			if (memcmp(fisheadIdentHeader.Identifier, "fishead", 8))
+			if (memcmp(fisheadIdentHeader.fisheadIdentHeader30.Identifier, "fishead", 8))
 				return ReadResultNotImplemented;
 
-			if (fisheadIdentHeader.Version_major != 0x3 ||
-				fisheadIdentHeader.Version_minor != 0x0)
+			if (oggPageHeader.lacing_values[0] == sizeof(FisheadIdentHeader30) && 
+				(fisheadIdentHeader.fisheadIdentHeader30.Version_major != 0x3 || 
+				fisheadIdentHeader.fisheadIdentHeader30.Version_minor != 0x0))
+			{
 				return ReadResultNotImplemented;
+			}
+			else if (oggPageHeader.lacing_values[0] == sizeof(FisheadIdentHeader40) && 
+				(fisheadIdentHeader.fisheadIdentHeader30.Version_major != 0x4 || 
+				fisheadIdentHeader.fisheadIdentHeader30.Version_minor != 0x0))
+			{
+				return ReadResultNotImplemented;
+			}
 
 			crc = CRC_foldl_MSB_to_LSB(crc, &fisheadIdentHeader, 
 				oggPageHeader.lacing_values[0]);
