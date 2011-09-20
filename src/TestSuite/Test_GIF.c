@@ -26,7 +26,7 @@ typedef struct
 	ReadResult readResult;
 } Char96ReadResultPair;
 
-char* filenames[] = {
+static char* gif_filenames[] = {
 	"testfiles/gif/wikipedia/GifSampleSmall.gif",
 	"testfiles/gif/wikipedia/GifSample.gif",
 	/*
@@ -59,7 +59,7 @@ char* filenames[] = {
 	"testfiles/gif/fileformat.info/WFPC06.GIF"
 };
 
-Char96ReadResultPair filenameResults[] = 
+static Char96ReadResultPair filenameResults[] = 
 {
 	{"testfiles/imagetestsuite/gif/0646caeb9b9161c777f117007921a687.gif", ReadResultInvalidData}, 
 	{"testfiles/imagetestsuite/gif/243d9798466d64aba0acaa41f980bea6.gif", ReadResultInvalidData}, 
@@ -92,15 +92,15 @@ void testGIF()
 	test(sizeof(Graphic_Control_Extension) == 5);
 	test(sizeof(Image_Descriptor) == 10);
 
-	for (idx = 0; idx < sizeof(filenames)/sizeof(filenames[0]); idx++)
+	for (idx = 0; idx < sizeof(gif_filenames)/sizeof(char*); idx++)
 	{
 		GIF_Data_Stream dataStream;
 		ReadResult readResult;
 		FileByteStreamState fileByteStreamState;
 
-		if (!fileByteReadStreamStateInit(filenames[idx], &fileByteStreamState))
+		if (!fileByteReadStreamStateInit(gif_filenames[idx], &fileByteStreamState))
 		{
-			fprintf(stderr, "Could not open file %s\n", filenames[idx]);
+			fprintf(stderr, "Could not open file %s\n", gif_filenames[idx]);
 			exit(1);
 		}
 

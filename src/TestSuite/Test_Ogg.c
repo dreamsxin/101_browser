@@ -20,21 +20,39 @@
 #include "Ogg/Skeleton.h"
 #include "IO/FileByteStream.h"
 
+static const char *ogg_filenames[] = {
+	"testfiles/video/big_buck_bunny.ogv",
+	"testfiles/video/fridge.ogv",
+	"testfiles/video/garden1.ogv",
+	"testfiles/video/garden2.ogv",
+	// TODO
+#if 0
+	"testfiles/video/VfE.ogv",
+#endif
+	"testfiles/video/windowsill.ogv"
+};
+
 void test_Ogg()
 {
 	FileByteStreamState fileByteStreamState;
 	bool result;
+	int idx;
 
 	test(64 == sizeof(FisheadIdentHeader));
-	
-	result = fileByteReadStreamStateInit("testfiles/video/big_buck_bunny.ogv", 
-		&fileByteStreamState);
 
-	test(result);
-
-	if (result)
+	for (idx = 0; idx < sizeof(ogg_filenames)/sizeof(char*); idx++)
 	{
-		test(ReadResultOK == readOgg(&fileByteStreamState, getFileByteStreamInterface()));
-		fileByteReadStreamStateDestroy(&fileByteStreamState);
+		printf("Testing file %s\n", ogg_filenames[idx]);
+
+		result = fileByteReadStreamStateInit(ogg_filenames[idx], 
+			&fileByteStreamState);
+
+		test(result);
+
+		if (result)
+		{
+			test(ReadResultOK == readOgg(&fileByteStreamState, getFileByteStreamInterface()));
+			fileByteReadStreamStateDestroy(&fileByteStreamState);
+		}
 	}
 }
