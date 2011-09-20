@@ -239,7 +239,6 @@ module domcore
   interface Text : CharacterData {
     Text splitText(unsigned long offset);
     readonly attribute DOMString wholeText;
-    Text? replaceWholeText(DOMString data);
   };
 
   interface ProcessingInstruction : CharacterData {
