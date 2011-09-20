@@ -73,7 +73,14 @@ ReadResult readAndCheckOggPageHeader(void *in_out_pReadStreamState,
 typedef struct
 {
 	uint32_t bitstream_serial_number;
+	uint32_t page_sequence_number;
 } OggBitstreamState;
+
+void initOggBitstreamState(OggBitstreamState *out_pOggBitstreamState, uint32_t in_serial_number)
+{
+	out_pOggBitstreamState->bitstream_serial_number = in_serial_number;
+	out_pOggBitstreamState->page_sequence_number = 0;
+}
 
 IntermediateCompareResult oggBitStreamStateSearch(const void *in_pSerialNumber, 
 	const void *in_pOggBitstreamState)
@@ -115,7 +122,9 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 	*/
 
 #if 0
-	printf("Serial number: %x\n", oggPageHeader.bitstream_serial_number);
+	printf("Serial number: %x\nPage sequence number: %u\n", 
+		oggPageHeader.bitstream_serial_number, 
+		oggPageHeader.page_sequence_number);
 #endif
 
 	if (oggPageHeader.number_page_segments == 0x01)
@@ -156,12 +165,16 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 	}
 	else
 		return ReadResultNotImplemented;
+
+	if (oggPageHeader.page_sequence_number != 0)
+		return ReadResultInvalidData;
 	
 	if ((pBitstreamStates = (OggBitstreamState *) malloc(sizeof(OggBitstreamState))) == NULL)
 	{
 		return ReadResultAllocationFailure;
 	}
-	pBitstreamStates[0].bitstream_serial_number = oggPageHeader.bitstream_serial_number;
+
+	initOggBitstreamState(pBitstreamStates, oggPageHeader.bitstream_serial_number);
 	bitstreamStatesCount = 1;
 
 	while (bitstreamStatesCount != 0)
@@ -177,7 +190,9 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 		}
 
 #if 0
-		printf("Serial number: %x\n", oggPageHeader.bitstream_serial_number);
+		printf("Serial number: %x\nPage sequence number: %u\n", 
+			oggPageHeader.bitstream_serial_number, 
+			oggPageHeader.page_sequence_number);
 #endif
 
 		if (!binarySearch(&oggPageHeader.bitstream_serial_number, pBitstreamStates, 
@@ -187,6 +202,9 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 			OggBitstreamState *newStates;
 
 			if (!oggPageHeader.header_type_flag.bos)
+				return ReadResultInvalidData;
+
+			if (oggPageHeader.page_sequence_number != 0)
 				return ReadResultInvalidData;
 
 			if (!oggPageHeader.header_type_flag.eos)
@@ -202,13 +220,17 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 				pBitstreamStates = newStates;
 				memmove(pBitstreamStates+index+1, pBitstreamStates+index, 
 					(bitstreamStatesCount-index)*sizeof(OggBitstreamState));
-				pBitstreamStates[index].bitstream_serial_number = 
-					oggPageHeader.bitstream_serial_number;
+				initOggBitstreamState(pBitstreamStates+index, oggPageHeader.bitstream_serial_number);
 				bitstreamStatesCount++;
 			}
 		}
 		else
 		{
+			if (oggPageHeader.page_sequence_number != pBitstreamStates[index].page_sequence_number+1)
+				return ReadResultInvalidData;
+
+			pBitstreamStates[index].page_sequence_number++;
+
 			if (oggPageHeader.header_type_flag.eos)
 			{
 				OggBitstreamState *newStates;

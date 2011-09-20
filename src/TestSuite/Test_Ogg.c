@@ -25,6 +25,11 @@ static const char *ogg_filenames[] = {
 	"testfiles/video/fridge.ogv",
 	"testfiles/video/garden1.ogv",
 	"testfiles/video/garden2.ogv",
+	"testfiles/video/sintel_trailer-480p.ogv",
+	// An "evil" example of a file containing no Skeleton
+#if 0
+	"testfiles/video/trailer_400p.ogg",
+#endif
 	"testfiles/video/VfE.ogv",
 	"testfiles/video/windowsill.ogv"
 };

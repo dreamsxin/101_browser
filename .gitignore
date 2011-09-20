@@ -93,4 +93,4 @@ doc/*.toc
 *.webm
 *.mp4
 *.ogv
-
+testfiles/video/*.ogg
