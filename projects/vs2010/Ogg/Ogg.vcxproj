@@ -87,8 +87,14 @@
     <ClCompile Include="..\..\..\src\Ogg\Skeleton.c" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Algorithm\Algorithm.vcxproj">
+      <Project>{98c64ca2-13f9-461b-b271-7cd09f048491}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\CRC\CRC.vcxproj">
       <Project>{0095cd5c-cd78-4957-80c5-6014a16a08ea}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\MiniStdlib\MiniStdlib.vcxproj">
+      <Project>{6c7c9fbb-39b4-42cc-a000-c0ff2f61388e}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -17,8 +17,10 @@
 #include "Ogg/Ogg.h"
 #include "Ogg/Skeleton.h"
 #include "CRC/CRC.h"
-#include "MiniStdlib/cstring.h"
-#include "MiniStdlib/MTAx_cstdio.h"
+#include "MiniStdlib/cstring.h"      // for memcmp
+#include "MiniStdlib/MTAx_cstdlib.h" // for malloc
+#include "MiniStdlib/MTAx_cstdio.h"  // for printf
+#include "MiniStdlib/safe_free.h"
 #include "Algorithm/BinarySearch.h"
 
 const char OggS[4] = { 'O', 'g', 'g', 'S' };
@@ -41,6 +43,10 @@ ReadResult readAndCheckOggPageHeader(void *in_out_pReadStreamState,
 		return ReadResultNotImplemented;
 
 	if (out_pOggPageHeader->header_type_flag.unused)
+		return ReadResultInvalidData;
+
+	if (out_pOggPageHeader->header_type_flag.bos && 
+		out_pOggPageHeader->header_type_flag.continuation)
 		return ReadResultInvalidData;
 
 	*out_pCrc = CRC_foldl_MSB_to_LSB(*out_pCrc, out_pOggPageHeader, 
@@ -69,6 +75,20 @@ typedef struct
 	uint32_t bitstream_serial_number;
 } OggBitstreamState;
 
+IntermediateCompareResult oggBitStreamStateSearch(const void *in_pSerialNumber, 
+	const void *in_pOggBitstreamState)
+{
+	uint32_t serialNumber = *(uint32_t*) in_pSerialNumber;
+	OggBitstreamState *pOggBitstreamState = (OggBitstreamState*) in_pOggBitstreamState;
+	
+	if (serialNumber < pOggBitstreamState->bitstream_serial_number)
+		return IntermediateCompareResultLess;
+	else if (serialNumber > pOggBitstreamState->bitstream_serial_number)
+		return IntermediateCompareResultGreater;
+	else
+		return IntermediateCompareResultEqual;
+}
+
 ReadResult readOgg(void *in_out_pReadStreamState, 
 	ByteStreamInterface in_readInterface)
 {
@@ -76,16 +96,27 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 	ReadResult readResult;
 	uint32_t crc;
 
+	size_t bitstreamStatesCount = 0;
 	OggBitstreamState *pBitstreamStates = NULL;
 
 	if ((readResult = readAndCheckOggPageHeader(in_out_pReadStreamState, 
 		in_readInterface, &oggPageHeader, &crc)) != ReadResultOK)
 		return readResult;
-	
-	printf("Serial number: %x\n", oggPageHeader.bitstream_serial_number);
 
 	if (!oggPageHeader.header_type_flag.bos)
 		return ReadResultInvalidData;
+
+	if (oggPageHeader.header_type_flag.eos)
+		return ReadResultInvalidData;
+	
+	/*
+	* Continuation flag is checked in readAndCheckOggPageHeader.
+	* So there is no need to check it here.
+	*/
+
+#if 0
+	printf("Serial number: %x\n", oggPageHeader.bitstream_serial_number);
+#endif
 
 	if (oggPageHeader.number_page_segments == 0x01)
 	{
@@ -115,16 +146,84 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 	}
 	else
 		return ReadResultNotImplemented;
+	
+	if ((pBitstreamStates = (OggBitstreamState *) malloc(sizeof(OggBitstreamState))) == NULL)
+	{
+		return ReadResultAllocationFailure;
+	}
+	pBitstreamStates[0].bitstream_serial_number = oggPageHeader.bitstream_serial_number;
+	bitstreamStatesCount = 1;
 
-	while (!oggPageHeader.header_type_flag.eos)
+	while (bitstreamStatesCount != 0)
 	{
 		uint8_t currentPageSegment;
-		
+		size_t index;
+
 		if ((readResult = readAndCheckOggPageHeader(in_out_pReadStreamState, 
 			in_readInterface, &oggPageHeader, &crc)) != ReadResultOK)
+		{
+			safe_free(&pBitstreamStates);
 			return readResult;
-		
+		}
+
+#if 0
 		printf("Serial number: %x\n", oggPageHeader.bitstream_serial_number);
+#endif
+
+		if (!binarySearch(&oggPageHeader.bitstream_serial_number, pBitstreamStates, 
+			bitstreamStatesCount, sizeof(OggBitstreamState), 
+			oggBitStreamStateSearch, &index))
+		{
+			OggBitstreamState *newStates;
+
+			if (!oggPageHeader.header_type_flag.bos)
+				return ReadResultInvalidData;
+
+			if (!oggPageHeader.header_type_flag.eos)
+			{
+				newStates = (OggBitstreamState*) realloc(pBitstreamStates, (bitstreamStatesCount+1)*sizeof(OggBitstreamState));
+				
+				if (!newStates)
+				{
+					safe_free(&pBitstreamStates);
+					return ReadResultAllocationFailure;
+				}
+				
+				pBitstreamStates = newStates;
+				memmove(pBitstreamStates+index+1, pBitstreamStates+index, 
+					(bitstreamStatesCount-index)*sizeof(OggBitstreamState));
+				pBitstreamStates[index].bitstream_serial_number = 
+					oggPageHeader.bitstream_serial_number;
+				bitstreamStatesCount++;
+			}
+		}
+		else
+		{
+			if (oggPageHeader.header_type_flag.eos)
+			{
+				OggBitstreamState *newStates;
+
+				memmove(pBitstreamStates+index, pBitstreamStates+index+1, 
+					(bitstreamStatesCount-index-1)*sizeof(OggBitstreamState));
+
+				newStates = (OggBitstreamState*) realloc(pBitstreamStates, (bitstreamStatesCount-1)*sizeof(OggBitstreamState));
+
+				/*
+				* Q: Why 1 and not 0?
+				* A: Because bitstreamStatesCount won't be decremented 
+				* until further below.
+				*/
+				if (!newStates && bitstreamStatesCount > 1)
+				{
+					safe_free(&pBitstreamStates);
+					return ReadResultInternalInconsistency;
+				}
+
+				pBitstreamStates = newStates;
+				
+				bitstreamStatesCount--;
+			}
+		}
 
 		for (currentPageSegment = 0; currentPageSegment < oggPageHeader.number_page_segments; 
 			currentPageSegment++)
@@ -135,7 +234,10 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 			for (idx = 0; idx < oggPageHeader.lacing_values[currentPageSegment]; idx++)
 			{
 				if (in_readInterface.mpfRead(in_out_pReadStreamState, &byte, 1) != 1)
+				{
+					safe_free(&pBitstreamStates);
 					return ReadResultPrematureEndOfStream;
+				}
 				
 				crc = CRC_foldl_MSB_to_LSB(crc, &byte, 1);
 			}
@@ -143,10 +245,14 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 			if (currentPageSegment == oggPageHeader.number_page_segments - 1)
 			{
 				if (crc != oggPageHeader.CRC_checksum)
+				{
+					safe_free(&pBitstreamStates);
 					return ReadResultInvalidData;
+				}
 			}
 		}
 	}
 
+	safe_free(&pBitstreamStates);
 	return ReadResultOK;
 }
