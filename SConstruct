@@ -44,7 +44,16 @@ CoroutinePosix = env.Clone()
 CoroutinePosix.SharedLibrary('bin/CoroutinePosix', Glob('src/CoroutinePosix/*.c'))
 
 PNG = env.Clone()
-PNG.SharedLibrary('bin/PNG', Glob('src/PNG/*.c')+Glob('src/PNG/*.cpp'))
+PNG.SharedLibrary('bin/PNG', Glob('src/PNG/*.c'))
+
+CRC = env.Clone()
+CRC.SharedLibrary('bin/CRC', Glob('src/CRC/*.c')+Glob('src/CRC/*.cpp'))
+
+Ogg = env.Clone()
+Ogg.SharedLibrary('bin/Ogg', Glob('src/Ogg/*.c'))
+
+Matroska = env.Clone()
+Matroska.SharedLibrary('bin/Matroska', Glob('src/Matroska/*.c'))
 
 IO = env.Clone()
 IO.Append(LIBS = ['MiniStdlib'])
@@ -55,6 +64,6 @@ GIF.SharedLibrary('bin/GIF', Glob('src/GIF/*.c'))
 
 testsuite = env.Clone()
 # testsuite.Append(CCFLAGS = '-fprofile-arcs -ftest-coverage', LIBS = ['gcov'])
-testsuite.Append(LIBS = ['MiniStdlib', 'BigNumber', 'RFC1950', 'RFC1951', 'Unicode', 'HTML5', 'Algorithm', 'SetjmpUtil', 'CoroutinePosix', 'GIF', 'IO', 'PNG'])
+testsuite.Append(LIBS = ['MiniStdlib', 'BigNumber', 'RFC1950', 'RFC1951', 'Unicode', 'HTML5', 'Algorithm', 'SetjmpUtil', 'CoroutinePosix', 'GIF', 'IO', 'PNG', 'CRC', 'Ogg', 'Matroska'])
 testsuite.Program('bin/TestSuite', Glob('src/TestSuite/*.cpp')+Glob('src/TestSuite/*.c'), LIBPATH = ['#/bin','#/lib'])
 
