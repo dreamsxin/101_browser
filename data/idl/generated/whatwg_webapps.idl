@@ -173,7 +173,6 @@ module webapps
 
   interface HTMLElement : Element {
     // metadata attributes
-             attribute DOMString id;
              attribute DOMString title;
              attribute DOMString lang;
              attribute DOMString dir;
@@ -555,7 +554,7 @@ module webapps
     // tracks
     readonly attribute AudioTrackList audioTracks;
     readonly attribute VideoTrackList videoTracks;
-    readonly attribute TextTrack[] textTracks;
+    readonly attribute TextTrackList textTracks;
     MutableTextTrack addTextTrack(DOMString kind, optional DOMString label, optional DOMString language);
   };
 
@@ -571,7 +570,9 @@ module webapps
     readonly attribute unsigned long length;
     getter AudioTrack (unsigned long index);
     AudioTrack? getTrackById(DOMString id);
+  
     [TreatNonCallableAsNull] attribute Function? onchange;
+    [TreatNonCallableAsNull] attribute Function? onaddtrack;
   };
   
   interface AudioTrack {
@@ -587,7 +588,9 @@ module webapps
     getter VideoTrack (unsigned long index);
     VideoTrack? getTrackById(DOMString id);
     readonly attribute long selectedIndex;
+  
     [TreatNonCallableAsNull] attribute Function? onchange;
+    [TreatNonCallableAsNull] attribute Function? onaddtrack;
   };
   
   interface VideoTrack {
@@ -631,6 +634,13 @@ module webapps
     [TreatNonCallableAsNull] attribute Function? onpause;
     [TreatNonCallableAsNull] attribute Function? onratechange;
     [TreatNonCallableAsNull] attribute Function? onvolumechange;
+  };
+
+  interface TextTrackList {
+    readonly attribute unsigned long length;
+    getter TextTrack (unsigned long index);
+  
+    [TreatNonCallableAsNull] attribute Function? onaddtrack;
   };
 
   interface TextTrack : EventTarget {
@@ -699,6 +709,15 @@ module webapps
     readonly attribute unsigned long length;
     double start(unsigned long index);
     double end(unsigned long index);
+  };
+
+  [Constructor(DOMString type, optional TrackEventInit eventInitDict)]
+  interface TrackEvent : Event {
+    readonly attribute object? track;
+  };
+  
+  dictionary TrackEventInit : EventInit {
+    object? Track;
   };
 
   interface HTMLCanvasElement : HTMLElement {
@@ -1907,16 +1926,17 @@ module webapps
   };
 
   interface HTMLFrameElement : HTMLElement {
-             attribute DOMString frameBorder;
-             attribute DOMString longDesc;
-             attribute DOMString marginHeight;
-             attribute DOMString marginWidth;
              attribute DOMString name;
-             attribute boolean noResize;
              attribute DOMString scrolling;
              attribute DOMString src;
+             attribute DOMString frameBorder;
+             attribute DOMString longDesc;
+             attribute boolean noResize;
     readonly attribute Document? contentDocument;
     readonly attribute WindowProxy? contentWindow;
+  
+    [TreatNullAs=EmptyString] attribute DOMString marginHeight;
+    [TreatNullAs=EmptyString] attribute DOMString marginWidth;
   };
 
   partial interface HTMLAnchorElement {
@@ -1938,12 +1958,12 @@ module webapps
   };
 
   partial interface HTMLBodyElement {
-             attribute DOMString text;
-             attribute DOMString bgColor;
-             attribute DOMString background;
-             attribute DOMString link;
-             attribute DOMString vLink;
-             attribute DOMString aLink;
+    [TreatNullAs=EmptyString] attribute DOMString text;
+    [TreatNullAs=EmptyString] attribute DOMString link;
+    [TreatNullAs=EmptyString] attribute DOMString vLink;
+    [TreatNullAs=EmptyString] attribute DOMString aLink;
+    [TreatNullAs=EmptyString] attribute DOMString bgColor;
+                              attribute DOMString background;
   };
 
   partial interface HTMLBRElement {
@@ -1980,9 +2000,9 @@ module webapps
   };
 
   interface HTMLFontElement : HTMLElement {
-             attribute DOMString color;
-             attribute DOMString face;
-             attribute DOMString size; 
+    [TreatNullAs=EmptyString] attribute DOMString color;
+                              attribute DOMString face;
+                              attribute DOMString size; 
   };
 
   partial interface HTMLHeadingElement {
@@ -2003,20 +2023,22 @@ module webapps
 
   partial interface HTMLIFrameElement {
              attribute DOMString align;
+             attribute DOMString scrolling;
              attribute DOMString frameBorder;
              attribute DOMString longDesc;
-             attribute DOMString marginHeight;
-             attribute DOMString marginWidth;
-             attribute DOMString scrolling;
+  
+    [TreatNullAs=EmptyString] attribute DOMString marginHeight;
+    [TreatNullAs=EmptyString] attribute DOMString marginWidth;
   };
 
   partial interface HTMLImageElement {
              attribute DOMString name;
              attribute DOMString align;
-             attribute DOMString border;
              attribute unsigned long hspace;
-             attribute DOMString longDesc;
              attribute unsigned long vspace;
+             attribute DOMString longDesc;
+  
+    [TreatNullAs=EmptyString] attribute DOMString border;
   };
 
   partial interface HTMLInputElement {
@@ -2049,14 +2071,15 @@ module webapps
   partial interface HTMLObjectElement {
              attribute DOMString align;
              attribute DOMString archive;
-             attribute DOMString border;
              attribute DOMString code;
-             attribute DOMString codeBase;
-             attribute DOMString codeType;
              attribute boolean declare;
              attribute unsigned long hspace;
              attribute DOMString standby;
              attribute unsigned long vspace;
+             attribute DOMString codeBase;
+             attribute DOMString codeType;
+  
+    [TreatNullAs=EmptyString] attribute DOMString border;
   };
 
   partial interface HTMLOListElement {
@@ -2083,13 +2106,14 @@ module webapps
 
   partial interface HTMLTableElement {
              attribute DOMString align;
-             attribute DOMString bgColor;
-             attribute DOMString cellPadding;
-             attribute DOMString cellSpacing;
              attribute DOMString frame;
              attribute DOMString rules;
              attribute DOMString summary;
              attribute DOMString width;
+  
+    [TreatNullAs=EmptyString] attribute DOMString bgColor;
+    [TreatNullAs=EmptyString] attribute DOMString cellPadding;
+    [TreatNullAs=EmptyString] attribute DOMString cellSpacing;
   };
 
   partial interface HTMLTableSectionElement {
@@ -2103,21 +2127,24 @@ module webapps
              attribute DOMString abbr;
              attribute DOMString align;
              attribute DOMString axis;
-             attribute DOMString bgColor;
+             attribute DOMString height;
+             attribute DOMString width;
+  
              attribute DOMString ch;
              attribute DOMString chOff;
-             attribute DOMString height;
              attribute boolean noWrap;
              attribute DOMString vAlign;
-             attribute DOMString width;
+  
+    [TreatNullAs=EmptyString] attribute DOMString bgColor;
   };
 
   partial interface HTMLTableRowElement {
              attribute DOMString align;
-             attribute DOMString bgColor;
              attribute DOMString ch;
              attribute DOMString chOff;
              attribute DOMString vAlign;
+  
+    [TreatNullAs=EmptyString] attribute DOMString bgColor;
   };
 
   partial interface HTMLUListElement {
@@ -2126,11 +2153,11 @@ module webapps
   };
 
   partial interface HTMLDocument {
-             attribute DOMString fgColor;
-             attribute DOMString bgColor;
-             attribute DOMString linkColor;
-             attribute DOMString vlinkColor;
-             attribute DOMString alinkColor;
+    [TreatNullAs=EmptyString] attribute DOMString fgColor;
+    [TreatNullAs=EmptyString] attribute DOMString linkColor;
+    [TreatNullAs=EmptyString] attribute DOMString vlinkColor;
+    [TreatNullAs=EmptyString] attribute DOMString alinkColor;
+    [TreatNullAs=EmptyString] attribute DOMString bgColor;
   
     readonly attribute HTMLCollection anchors;
     readonly attribute HTMLCollection applets;

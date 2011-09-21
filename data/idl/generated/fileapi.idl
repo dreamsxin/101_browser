@@ -15,7 +15,7 @@ module fileapi
         
         Blob slice(optional long long start,
                    optional long long end,
-                   [TreatUndefinedAs=EmptyString] optional DOMString contentType); 
+                   optional DOMString contentType); 
       
       };
         
