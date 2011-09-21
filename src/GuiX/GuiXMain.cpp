@@ -234,10 +234,46 @@ void printEvent(int type)
 {
 	switch(type)
 	{
-	case KeyPress:
+	case KeyPress:         // 2
 		printf("KeyPress\n");
 		break;
-	case ClientMessage:
+	case KeyRelease:       // 3
+		printf("KeyRelease (currently not handled)\n");
+		break;
+	case ButtonPress:      // 4
+		printf("ButtonPress (currently not handled)\n");
+		break;
+	case ButtonRelease:    // 5
+		printf("ButtonRelease (currently not handled)\n");
+		break;
+	case MotionNotify:     // 6
+		printf("MotionNotify (currently not handled)\n");
+		break;
+	case EnterNotify:      // 7
+		printf("EnterNotify (currently not handled)\n");
+		break;
+	case LeaveNotify:      // 8
+		printf("LeaveNotify (currently not handled)\n");
+		break;
+	case Expose:           // 12
+		printf("Expose (currently not handled)\n");
+		break;
+	case VisibilityNotify: // 15
+		printf("VisibilityNotify (currently not handled)\n");
+		break;
+	case UnmapNotify:      // 18 - for example minimization
+		printf("UnmapNotify (currently not handled)\n");
+		break;
+	case MapNotify:        // 19
+		printf("MapNotify (currently not handled)\n");
+		break;
+	case ReparentNotify:   // 21
+		printf("ReparentNotify (currently not handled)\n");
+		break;
+	case ConfigureNotify:  // 22
+		printf("ConfigureNotify\n");
+		break;
+	case ClientMessage:    // 33
 		printf("ClientMessage\n");
 		break;
 	default:
@@ -268,20 +304,14 @@ void mainLoop(OZO_Display* pDisplay, const OZO_Window* pWindow, OZO_Atoms* pAtom
 
 			switch(event.type)
 			{
-			case KeyPress:
+			case KeyPress:        // 2
 				if (XLookupKeysym(&event.xkey, 0) == XK_Escape)
 				{
 					done = true;
                     		}
 				break;
-			case ClientMessage:
-				if((Atom) event.xclient.data.l[0] == pAtoms->deleteWindow)
-				{
-					done = true;
-				}
-				break;
-			case CreateNotify:
-        		case ConfigureNotify:
+			case CreateNotify:    // 16
+        		case ConfigureNotify: // 22
 			{
 				int newWidth, newHeight;
 				if (event.type == CreateNotify) {
@@ -300,6 +330,13 @@ void mainLoop(OZO_Display* pDisplay, const OZO_Window* pWindow, OZO_Atoms* pAtom
 					ReshapeGL(newWidth, newHeight);
 				}
 			}
+				break;
+			case ClientMessage:   // 33
+				if((Atom) event.xclient.data.l[0] == pAtoms->deleteWindow)
+				{
+					done = true;
+				}
+				break;
 			default:
 				break;
 			}
