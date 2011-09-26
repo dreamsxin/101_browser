@@ -27,7 +27,6 @@ module domcore
     const unsigned short INVALID_NODE_TYPE_ERR = 24;
     const unsigned short DATA_CLONE_ERR = 25;
     unsigned short code;
-    DOMString name;
   };
 
   [Constructor(DOMString type, optional EventInit eventInitDict)]
@@ -123,6 +122,7 @@ module domcore
     Node appendChild(Node node);
     Node replaceChild(Node node, Node child);
     Node removeChild(Node child);
+    void normalize();
   
     Node cloneNode(optional boolean deep);
     boolean isSameNode(Node? node);

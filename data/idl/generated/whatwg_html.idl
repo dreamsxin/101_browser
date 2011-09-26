@@ -818,13 +818,7 @@ module html
   interface ImageData {
     readonly attribute unsigned long width;
     readonly attribute unsigned long height;
-    readonly attribute CanvasPixelArray data;
-  };
-  
-  interface CanvasPixelArray {
-    readonly attribute unsigned long length;
-    getter octet (unsigned long index);
-    setter void (unsigned long index, [Clamp] octet value);
+    readonly attribute Uint8ClampedArray data;
   };
 
   interface HTMLMapElement : HTMLElement {
@@ -1216,14 +1210,14 @@ module html
              attribute DOMString label;
   };
 
-  [ReplaceableNamedProperties] 
+  [ReplaceableNamedProperties]
   interface Window : EventTarget {
     // the current browsing context
-    readonly attribute WindowProxy window;
-    readonly attribute WindowProxy self;
-    readonly attribute Document document;
+    [Unforgeable] readonly attribute WindowProxy window;
+    [Replaceable] readonly attribute WindowProxy self;
+    [Unforgeable] readonly attribute Document document;
              attribute DOMString name; 
-    [PutForwards=href] readonly attribute Location location;
+    [PutForwards=href, Unforgeable] readonly attribute Location location;
     readonly attribute History history;
   
     boolean find(optional DOMString aString, optional boolean aCaseSensitive, optional boolean aBackwards, optional boolean aWrapAround, optional boolean aWholeWord, optional boolean aSearchInFrames, optional boolean aShowDialog);
@@ -1243,7 +1237,7 @@ module html
     // other browsing contexts
     [Replaceable] readonly attribute WindowProxy frames;
     [Replaceable] readonly attribute unsigned long length;
-    readonly attribute WindowProxy top;
+    [Unforgeable] readonly attribute WindowProxy top;
              attribute WindowProxy opener;
     readonly attribute WindowProxy parent;
     readonly attribute Element? frameElement;
