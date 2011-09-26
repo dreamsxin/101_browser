@@ -46,7 +46,7 @@ http://people.opera.com/patrickl/experiments/webm/videos/windowsill.webm
 More testfiles (Theora, H.264):
 http://www.bigbuckbunny.org/index.php/download/
 
-http://video.blendertestbuilds.de/download.php?file=download.blender.org/peach/trailer_400p.ogg
+http://download.blender.org/peach/trailer/trailer_400p.ogg
 (linked from http://www.bigbuckbunny.org/index.php/trailer-page/ - other versions are available there, too)
 
 
