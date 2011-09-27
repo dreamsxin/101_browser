@@ -646,7 +646,7 @@ module html
              attribute Function? onload;
              attribute Function? onerror;
   
-    const unsigned short OFF = 0;
+    const unsigned short DISABLED = 0;
     const unsigned short HIDDEN = 1;
     const unsigned short SHOWING = 2;
              attribute unsigned short mode;
