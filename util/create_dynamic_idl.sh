@@ -33,6 +33,10 @@ wget http://matroska.svn.sourceforge.net/viewvc/matroska/trunk/foundation_src/sp
 ./create_single_dynamic_idl.sh http://dev.w3.org/csswg/cssom/ cssom ../data/idl/generated/cssom.idl
 ./create_single_dynamic_idl.sh http://dev.w3.org/csswg/cssom-view/ cssom_view ../data/idl/generated/cssom-view-module.idl
 
+./create_single_dynamic_idl.sh http://dev.w3.org/2006/webapi/FileAPI/ fileapi ../data/idl/generated/fileapi.idl
+
+./create_single_dynamic_idl.sh http://www.w3c-test.org/webperf/specs/NavigationTiming/ navigationtiming ../data/idl/generated/navigationtiming.idl
+
 wget http://www.w3.org/TR/xproc/ -O temp.html
 java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.HTML2XML temp.html temp.xml
 java -cp out XsltTransform temp.xml create_xproc_grammar.xslt ../data/web_grammar/generated/xproc.txt
