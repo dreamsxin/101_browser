@@ -14,15 +14,15 @@ module websockets
     readonly attribute unsigned long bufferedAmount;
   
     // networking
-             attribute Function? onopen;
-             attribute Function? onerror;
-             attribute Function? onclose;
+    [TreatNonCallableAsNull] attribute Function? onopen;
+    [TreatNonCallableAsNull] attribute Function? onerror;
+    [TreatNonCallableAsNull] attribute Function? onclose;
     readonly attribute DOMString extensions;
     readonly attribute DOMString protocol;
     void close([Clamp] optional unsigned short code, optional DOMString reason);
   
     // messaging
-             attribute Function? onmessage;
+    [TreatNonCallableAsNull] attribute Function? onmessage;
              attribute DOMString binaryType;
     void send(DOMString data);
     void send(ArrayBuffer data);

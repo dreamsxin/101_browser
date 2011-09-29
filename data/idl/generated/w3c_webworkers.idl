@@ -5,22 +5,22 @@ module webworkers
     readonly attribute WorkerLocation location;
   
     void close();
-             attribute Function? onerror;
-             attribute Function? onoffline;
-             attribute Function? ononline;
+    [TreatNonCallableAsNull] attribute Function? onerror;
+    [TreatNonCallableAsNull] attribute Function? onoffline;
+    [TreatNonCallableAsNull] attribute Function? ononline;
   };
   WorkerGlobalScope implements WorkerUtils;
 
   [Supplemental, NoInterfaceObject]
   interface DedicatedWorkerGlobalScope : WorkerGlobalScope {
-    void postMessage(any message, optional sequence<Transferable> transfer);           attribute Function? onmessage;
+    void postMessage(any message, optional sequence<Transferable> transfer);  [TreatNonCallableAsNull] attribute Function? onmessage;
   };
 
   [Supplemental, NoInterfaceObject]
   interface SharedWorkerGlobalScope : WorkerGlobalScope {
     readonly attribute DOMString name;
     readonly attribute ApplicationCache applicationCache;
-             attribute Function? onconnect;
+    [TreatNonCallableAsNull] attribute Function? onconnect;
   };
 
   [Constructor(DOMString type, optional ErrorEventInit eventInitDict)]
@@ -38,14 +38,14 @@ module webworkers
 
   [Supplemental, NoInterfaceObject]
   interface AbstractWorker : EventTarget {
-             attribute Function? onerror;
+    [TreatNonCallableAsNull] attribute Function? onerror;
   };
 
   [Constructor(DOMString scriptURL)]
   interface Worker : AbstractWorker {
     void terminate();
   
-    void postMessage(any message, optional sequence<Transferable> transfer);           attribute Function? onmessage;
+    void postMessage(any message, optional sequence<Transferable> transfer);  [TreatNonCallableAsNull] attribute Function? onmessage;
   };
 
   [Constructor(DOMString scriptURL, optional DOMString name)]

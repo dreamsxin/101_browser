@@ -11,9 +11,9 @@ module serversent
     readonly attribute unsigned short readyState;
   
     // networking
-             attribute Function? onopen;
-             attribute Function? onmessage;
-             attribute Function? onerror;
+    [TreatNonCallableAsNull] attribute Function? onopen;
+    [TreatNonCallableAsNull] attribute Function? onmessage;
+    [TreatNonCallableAsNull] attribute Function? onerror;
     void close();
   };
 

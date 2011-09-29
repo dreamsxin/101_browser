@@ -28,7 +28,7 @@ module webmessaging
     void close();
   
     // event handlers
-             attribute Function? onmessage;
+    [TreatNonCallableAsNull] attribute Function? onmessage;
   };
   MessagePort implements Transferable;
 

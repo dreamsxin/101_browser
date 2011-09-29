@@ -107,62 +107,62 @@ module webapps
     readonly attribute HTMLCollection commands;
   
     // event handler IDL attributes
-             attribute Function? onabort;
-             attribute Function? onblur;
-             attribute Function? oncanplay;
-             attribute Function? oncanplaythrough;
-             attribute Function? onchange;
-             attribute Function? onclick;
-             attribute Function? oncontextmenu;
-             attribute Function? oncuechange;
-             attribute Function? ondblclick;
-             attribute Function? ondrag;
-             attribute Function? ondragend;
-             attribute Function? ondragenter;
-             attribute Function? ondragleave;
-             attribute Function? ondragover;
-             attribute Function? ondragstart;
-             attribute Function? ondrop;
-             attribute Function? ondurationchange;
-             attribute Function? onemptied;
-             attribute Function? onended;
-             attribute Function? onerror;
-             attribute Function? onfocus;
-             attribute Function? oninput;
-             attribute Function? oninvalid;
-             attribute Function? onkeydown;
-             attribute Function? onkeypress;
-             attribute Function? onkeyup;
-             attribute Function? onload;
-             attribute Function? onloadeddata;
-             attribute Function? onloadedmetadata;
-             attribute Function? onloadstart;
-             attribute Function? onmousedown;
-             attribute Function? onmousemove;
-             attribute Function? onmouseout;
-             attribute Function? onmouseover;
-             attribute Function? onmouseup;
-             attribute Function? onmousewheel;
-             attribute Function? onpause;
-             attribute Function? onplay;
-             attribute Function? onplaying;
-             attribute Function? onprogress;
-             attribute Function? onratechange;
-             attribute Function? onreset;
-             attribute Function? onscroll;
-             attribute Function? onseeked;
-             attribute Function? onseeking;
-             attribute Function? onselect;
-             attribute Function? onshow;
-             attribute Function? onstalled;
-             attribute Function? onsubmit;
-             attribute Function? onsuspend;
-             attribute Function? ontimeupdate;
-             attribute Function? onvolumechange;
-             attribute Function? onwaiting;
+    [TreatNonCallableAsNull] attribute Function? onabort;
+    [TreatNonCallableAsNull] attribute Function? onblur;
+    [TreatNonCallableAsNull] attribute Function? oncanplay;
+    [TreatNonCallableAsNull] attribute Function? oncanplaythrough;
+    [TreatNonCallableAsNull] attribute Function? onchange;
+    [TreatNonCallableAsNull] attribute Function? onclick;
+    [TreatNonCallableAsNull] attribute Function? oncontextmenu;
+    [TreatNonCallableAsNull] attribute Function? oncuechange;
+    [TreatNonCallableAsNull] attribute Function? ondblclick;
+    [TreatNonCallableAsNull] attribute Function? ondrag;
+    [TreatNonCallableAsNull] attribute Function? ondragend;
+    [TreatNonCallableAsNull] attribute Function? ondragenter;
+    [TreatNonCallableAsNull] attribute Function? ondragleave;
+    [TreatNonCallableAsNull] attribute Function? ondragover;
+    [TreatNonCallableAsNull] attribute Function? ondragstart;
+    [TreatNonCallableAsNull] attribute Function? ondrop;
+    [TreatNonCallableAsNull] attribute Function? ondurationchange;
+    [TreatNonCallableAsNull] attribute Function? onemptied;
+    [TreatNonCallableAsNull] attribute Function? onended;
+    [TreatNonCallableAsNull] attribute Function? onerror;
+    [TreatNonCallableAsNull] attribute Function? onfocus;
+    [TreatNonCallableAsNull] attribute Function? oninput;
+    [TreatNonCallableAsNull] attribute Function? oninvalid;
+    [TreatNonCallableAsNull] attribute Function? onkeydown;
+    [TreatNonCallableAsNull] attribute Function? onkeypress;
+    [TreatNonCallableAsNull] attribute Function? onkeyup;
+    [TreatNonCallableAsNull] attribute Function? onload;
+    [TreatNonCallableAsNull] attribute Function? onloadeddata;
+    [TreatNonCallableAsNull] attribute Function? onloadedmetadata;
+    [TreatNonCallableAsNull] attribute Function? onloadstart;
+    [TreatNonCallableAsNull] attribute Function? onmousedown;
+    [TreatNonCallableAsNull] attribute Function? onmousemove;
+    [TreatNonCallableAsNull] attribute Function? onmouseout;
+    [TreatNonCallableAsNull] attribute Function? onmouseover;
+    [TreatNonCallableAsNull] attribute Function? onmouseup;
+    [TreatNonCallableAsNull] attribute Function? onmousewheel;
+    [TreatNonCallableAsNull] attribute Function? onpause;
+    [TreatNonCallableAsNull] attribute Function? onplay;
+    [TreatNonCallableAsNull] attribute Function? onplaying;
+    [TreatNonCallableAsNull] attribute Function? onprogress;
+    [TreatNonCallableAsNull] attribute Function? onratechange;
+    [TreatNonCallableAsNull] attribute Function? onreset;
+    [TreatNonCallableAsNull] attribute Function? onscroll;
+    [TreatNonCallableAsNull] attribute Function? onseeked;
+    [TreatNonCallableAsNull] attribute Function? onseeking;
+    [TreatNonCallableAsNull] attribute Function? onselect;
+    [TreatNonCallableAsNull] attribute Function? onshow;
+    [TreatNonCallableAsNull] attribute Function? onstalled;
+    [TreatNonCallableAsNull] attribute Function? onsubmit;
+    [TreatNonCallableAsNull] attribute Function? onsuspend;
+    [TreatNonCallableAsNull] attribute Function? ontimeupdate;
+    [TreatNonCallableAsNull] attribute Function? onvolumechange;
+    [TreatNonCallableAsNull] attribute Function? onwaiting;
   
     // special event handler IDL attributes that only apply to Document objects
-             attribute Function? onreadystatechange;
+    [TreatNonCallableAsNull] attribute Function? onreadystatechange;
   };
   Document implements HTMLDocument;
 
@@ -217,59 +217,59 @@ module webapps
     readonly attribute CSSStyleDeclaration style;
   
     // event handler IDL attributes
-             attribute Function? onabort;
-             attribute Function? onblur;
-             attribute Function? oncanplay;
-             attribute Function? oncanplaythrough;
-             attribute Function? onchange;
-             attribute Function? onclick;
-             attribute Function? oncontextmenu;
-             attribute Function? oncuechange;
-             attribute Function? ondblclick;
-             attribute Function? ondrag;
-             attribute Function? ondragend;
-             attribute Function? ondragenter;
-             attribute Function? ondragleave;
-             attribute Function? ondragover;
-             attribute Function? ondragstart;
-             attribute Function? ondrop;
-             attribute Function? ondurationchange;
-             attribute Function? onemptied;
-             attribute Function? onended;
-             attribute Function? onerror;
-             attribute Function? onfocus;
-             attribute Function? oninput;
-             attribute Function? oninvalid;
-             attribute Function? onkeydown;
-             attribute Function? onkeypress;
-             attribute Function? onkeyup;
-             attribute Function? onload;
-             attribute Function? onloadeddata;
-             attribute Function? onloadedmetadata;
-             attribute Function? onloadstart;
-             attribute Function? onmousedown;
-             attribute Function? onmousemove;
-             attribute Function? onmouseout;
-             attribute Function? onmouseover;
-             attribute Function? onmouseup;
-             attribute Function? onmousewheel;
-             attribute Function? onpause;
-             attribute Function? onplay;
-             attribute Function? onplaying;
-             attribute Function? onprogress;
-             attribute Function? onratechange;
-             attribute Function? onreset;
-             attribute Function? onscroll;
-             attribute Function? onseeked;
-             attribute Function? onseeking;
-             attribute Function? onselect;
-             attribute Function? onshow;
-             attribute Function? onstalled;
-             attribute Function? onsubmit;
-             attribute Function? onsuspend;
-             attribute Function? ontimeupdate;
-             attribute Function? onvolumechange;
-             attribute Function? onwaiting;
+    [TreatNonCallableAsNull] attribute Function? onabort;
+    [TreatNonCallableAsNull] attribute Function? onblur;
+    [TreatNonCallableAsNull] attribute Function? oncanplay;
+    [TreatNonCallableAsNull] attribute Function? oncanplaythrough;
+    [TreatNonCallableAsNull] attribute Function? onchange;
+    [TreatNonCallableAsNull] attribute Function? onclick;
+    [TreatNonCallableAsNull] attribute Function? oncontextmenu;
+    [TreatNonCallableAsNull] attribute Function? oncuechange;
+    [TreatNonCallableAsNull] attribute Function? ondblclick;
+    [TreatNonCallableAsNull] attribute Function? ondrag;
+    [TreatNonCallableAsNull] attribute Function? ondragend;
+    [TreatNonCallableAsNull] attribute Function? ondragenter;
+    [TreatNonCallableAsNull] attribute Function? ondragleave;
+    [TreatNonCallableAsNull] attribute Function? ondragover;
+    [TreatNonCallableAsNull] attribute Function? ondragstart;
+    [TreatNonCallableAsNull] attribute Function? ondrop;
+    [TreatNonCallableAsNull] attribute Function? ondurationchange;
+    [TreatNonCallableAsNull] attribute Function? onemptied;
+    [TreatNonCallableAsNull] attribute Function? onended;
+    [TreatNonCallableAsNull] attribute Function? onerror;
+    [TreatNonCallableAsNull] attribute Function? onfocus;
+    [TreatNonCallableAsNull] attribute Function? oninput;
+    [TreatNonCallableAsNull] attribute Function? oninvalid;
+    [TreatNonCallableAsNull] attribute Function? onkeydown;
+    [TreatNonCallableAsNull] attribute Function? onkeypress;
+    [TreatNonCallableAsNull] attribute Function? onkeyup;
+    [TreatNonCallableAsNull] attribute Function? onload;
+    [TreatNonCallableAsNull] attribute Function? onloadeddata;
+    [TreatNonCallableAsNull] attribute Function? onloadedmetadata;
+    [TreatNonCallableAsNull] attribute Function? onloadstart;
+    [TreatNonCallableAsNull] attribute Function? onmousedown;
+    [TreatNonCallableAsNull] attribute Function? onmousemove;
+    [TreatNonCallableAsNull] attribute Function? onmouseout;
+    [TreatNonCallableAsNull] attribute Function? onmouseover;
+    [TreatNonCallableAsNull] attribute Function? onmouseup;
+    [TreatNonCallableAsNull] attribute Function? onmousewheel;
+    [TreatNonCallableAsNull] attribute Function? onpause;
+    [TreatNonCallableAsNull] attribute Function? onplay;
+    [TreatNonCallableAsNull] attribute Function? onplaying;
+    [TreatNonCallableAsNull] attribute Function? onprogress;
+    [TreatNonCallableAsNull] attribute Function? onratechange;
+    [TreatNonCallableAsNull] attribute Function? onreset;
+    [TreatNonCallableAsNull] attribute Function? onscroll;
+    [TreatNonCallableAsNull] attribute Function? onseeked;
+    [TreatNonCallableAsNull] attribute Function? onseeking;
+    [TreatNonCallableAsNull] attribute Function? onselect;
+    [TreatNonCallableAsNull] attribute Function? onshow;
+    [TreatNonCallableAsNull] attribute Function? onstalled;
+    [TreatNonCallableAsNull] attribute Function? onsubmit;
+    [TreatNonCallableAsNull] attribute Function? onsuspend;
+    [TreatNonCallableAsNull] attribute Function? ontimeupdate;
+    [TreatNonCallableAsNull] attribute Function? onvolumechange;
+    [TreatNonCallableAsNull] attribute Function? onwaiting;
   };
   
   interface HTMLUnknownElement : HTMLElement { };
@@ -323,24 +323,24 @@ module webapps
   };
 
   interface HTMLBodyElement : HTMLElement {
-             attribute Function? onafterprint;
-             attribute Function? onbeforeprint;
-             attribute Function? onbeforeunload;
-             attribute Function? onblur;
-             attribute Function? onerror;
-             attribute Function? onfocus;
-             attribute Function? onhashchange;
-             attribute Function? onload;
-             attribute Function? onmessage;
-             attribute Function? onoffline;
-             attribute Function? ononline;
-             attribute Function? onpopstate;
-             attribute Function? onpagehide;
-             attribute Function? onpageshow;
-             attribute Function? onresize;
-             attribute Function? onscroll;
-             attribute Function? onstorage;
-             attribute Function? onunload;
+    [TreatNonCallableAsNull] attribute Function? onafterprint;
+    [TreatNonCallableAsNull] attribute Function? onbeforeprint;
+    [TreatNonCallableAsNull] attribute Function? onbeforeunload;
+    [TreatNonCallableAsNull] attribute Function? onblur;
+    [TreatNonCallableAsNull] attribute Function? onerror;
+    [TreatNonCallableAsNull] attribute Function? onfocus;
+    [TreatNonCallableAsNull] attribute Function? onhashchange;
+    [TreatNonCallableAsNull] attribute Function? onload;
+    [TreatNonCallableAsNull] attribute Function? onmessage;
+    [TreatNonCallableAsNull] attribute Function? onoffline;
+    [TreatNonCallableAsNull] attribute Function? ononline;
+    [TreatNonCallableAsNull] attribute Function? onpopstate;
+    [TreatNonCallableAsNull] attribute Function? onpagehide;
+    [TreatNonCallableAsNull] attribute Function? onpageshow;
+    [TreatNonCallableAsNull] attribute Function? onresize;
+    [TreatNonCallableAsNull] attribute Function? onscroll;
+    [TreatNonCallableAsNull] attribute Function? onstorage;
+    [TreatNonCallableAsNull] attribute Function? onunload;
   };
 
   interface HTMLHeadingElement : HTMLElement {};
@@ -571,7 +571,7 @@ module webapps
     readonly attribute unsigned long length;
     getter AudioTrack (unsigned long index);
     AudioTrack? getTrackById(DOMString id);
-             attribute Function? onchange;
+    [TreatNonCallableAsNull] attribute Function? onchange;
   };
   
   interface AudioTrack {
@@ -587,7 +587,7 @@ module webapps
     getter VideoTrack (unsigned long index);
     VideoTrack? getTrackById(DOMString id);
     readonly attribute long selectedIndex;
-             attribute Function? onchange;
+    [TreatNonCallableAsNull] attribute Function? onchange;
   };
   
   interface VideoTrack {
@@ -616,21 +616,21 @@ module webapps
              attribute double volume;
              attribute boolean muted;
   
-             attribute Function? onemptied;
-             attribute Function? onloadedmetadata;
-             attribute Function? onloadeddata;
-             attribute Function? oncanplay;
-             attribute Function? oncanplaythrough;
-             attribute Function? onplaying;
-             attribute Function? onended;
-             attribute Function? onwaiting;
+    [TreatNonCallableAsNull] attribute Function? onemptied;
+    [TreatNonCallableAsNull] attribute Function? onloadedmetadata;
+    [TreatNonCallableAsNull] attribute Function? onloadeddata;
+    [TreatNonCallableAsNull] attribute Function? oncanplay;
+    [TreatNonCallableAsNull] attribute Function? oncanplaythrough;
+    [TreatNonCallableAsNull] attribute Function? onplaying;
+    [TreatNonCallableAsNull] attribute Function? onended;
+    [TreatNonCallableAsNull] attribute Function? onwaiting;
   
-             attribute Function? ondurationchange;
-             attribute Function? ontimeupdate;
-             attribute Function? onplay;
-             attribute Function? onpause;
-             attribute Function? onratechange;
-             attribute Function? onvolumechange;
+    [TreatNonCallableAsNull] attribute Function? ondurationchange;
+    [TreatNonCallableAsNull] attribute Function? ontimeupdate;
+    [TreatNonCallableAsNull] attribute Function? onplay;
+    [TreatNonCallableAsNull] attribute Function? onpause;
+    [TreatNonCallableAsNull] attribute Function? onratechange;
+    [TreatNonCallableAsNull] attribute Function? onvolumechange;
   };
 
   interface TextTrack : EventTarget {
@@ -643,8 +643,8 @@ module webapps
     const unsigned short LOADED = 2;
     const unsigned short ERROR = 3;
     readonly attribute unsigned short readyState;
-             attribute Function? onload;
-             attribute Function? onerror;
+    [TreatNonCallableAsNull] attribute Function? onload;
+    [TreatNonCallableAsNull] attribute Function? onerror;
   
     const unsigned short DISABLED = 0;
     const unsigned short HIDDEN = 1;
@@ -654,7 +654,7 @@ module webapps
     readonly attribute TextTrackCueList? cues;
     readonly attribute TextTrackCueList? activeCues;
   
-             attribute Function? oncuechange;
+    [TreatNonCallableAsNull] attribute Function? oncuechange;
   };
 
   interface MutableTextTrack : TextTrack {
@@ -691,8 +691,8 @@ module webapps
     DOMString getCueAsSource();
     DocumentFragment getCueAsHTML();
   
-             attribute Function? onenter;
-             attribute Function? onexit;
+    [TreatNonCallableAsNull] attribute Function? onenter;
+    [TreatNonCallableAsNull] attribute Function? onexit;
   };
 
   interface TimeRanges {
@@ -1241,7 +1241,7 @@ module webapps
              attribute WindowProxy opener;
     readonly attribute WindowProxy parent;
     readonly attribute Element? frameElement;
-    WindowProxy open(optional DOMString url, optional DOMString target, optional DOMString features, optional DOMString replace);
+    WindowProxy open(optional DOMString url, optional DOMString target, optional DOMString features, optional boolean replace);
     getter WindowProxy (unsigned long index);
     getter object (DOMString name);
   
@@ -1261,72 +1261,72 @@ module webapps
     void postMessage(any message, DOMString targetOrigin, optional sequence<Transferable> transfer);
   
     // event handler IDL attributes
-             attribute Function? onabort;
-             attribute Function? onafterprint;
-             attribute Function? onbeforeprint;
-             attribute Function? onbeforeunload;
-             attribute Function? onblur;
-             attribute Function? oncanplay;
-             attribute Function? oncanplaythrough;
-             attribute Function? onchange;
-             attribute Function? onclick;
-             attribute Function? oncontextmenu;
-             attribute Function? oncuechange;
-             attribute Function? ondblclick;
-             attribute Function? ondrag;
-             attribute Function? ondragend;
-             attribute Function? ondragenter;
-             attribute Function? ondragleave;
-             attribute Function? ondragover;
-             attribute Function? ondragstart;
-             attribute Function? ondrop;
-             attribute Function? ondurationchange;
-             attribute Function? onemptied;
-             attribute Function? onended;
-             attribute Function? onerror;
-             attribute Function? onfocus;
-             attribute Function? onhashchange;
-             attribute Function? oninput;
-             attribute Function? oninvalid;
-             attribute Function? onkeydown;
-             attribute Function? onkeypress;
-             attribute Function? onkeyup;
-             attribute Function? onload;
-             attribute Function? onloadeddata;
-             attribute Function? onloadedmetadata;
-             attribute Function? onloadstart;
-             attribute Function? onmessage;
-             attribute Function? onmousedown;
-             attribute Function? onmousemove;
-             attribute Function? onmouseout;
-             attribute Function? onmouseover;
-             attribute Function? onmouseup;
-             attribute Function? onmousewheel;
-             attribute Function? onoffline;
-             attribute Function? ononline;
-             attribute Function? onpause;
-             attribute Function? onplay;
-             attribute Function? onplaying;
-             attribute Function? onpagehide;
-             attribute Function? onpageshow;
-             attribute Function? onpopstate;
-             attribute Function? onprogress;
-             attribute Function? onratechange;
-             attribute Function? onreset;
-             attribute Function? onresize;
-             attribute Function? onscroll;
-             attribute Function? onseeked;
-             attribute Function? onseeking;
-             attribute Function? onselect;
-             attribute Function? onshow;
-             attribute Function? onstalled;
-             attribute Function? onstorage;
-             attribute Function? onsubmit;
-             attribute Function? onsuspend;
-             attribute Function? ontimeupdate;
-             attribute Function? onunload;
-             attribute Function? onvolumechange;
-             attribute Function? onwaiting;
+    [TreatNonCallableAsNull] attribute Function? onabort;
+    [TreatNonCallableAsNull] attribute Function? onafterprint;
+    [TreatNonCallableAsNull] attribute Function? onbeforeprint;
+    [TreatNonCallableAsNull] attribute Function? onbeforeunload;
+    [TreatNonCallableAsNull] attribute Function? onblur;
+    [TreatNonCallableAsNull] attribute Function? oncanplay;
+    [TreatNonCallableAsNull] attribute Function? oncanplaythrough;
+    [TreatNonCallableAsNull] attribute Function? onchange;
+    [TreatNonCallableAsNull] attribute Function? onclick;
+    [TreatNonCallableAsNull] attribute Function? oncontextmenu;
+    [TreatNonCallableAsNull] attribute Function? oncuechange;
+    [TreatNonCallableAsNull] attribute Function? ondblclick;
+    [TreatNonCallableAsNull] attribute Function? ondrag;
+    [TreatNonCallableAsNull] attribute Function? ondragend;
+    [TreatNonCallableAsNull] attribute Function? ondragenter;
+    [TreatNonCallableAsNull] attribute Function? ondragleave;
+    [TreatNonCallableAsNull] attribute Function? ondragover;
+    [TreatNonCallableAsNull] attribute Function? ondragstart;
+    [TreatNonCallableAsNull] attribute Function? ondrop;
+    [TreatNonCallableAsNull] attribute Function? ondurationchange;
+    [TreatNonCallableAsNull] attribute Function? onemptied;
+    [TreatNonCallableAsNull] attribute Function? onended;
+    [TreatNonCallableAsNull] attribute Function? onerror;
+    [TreatNonCallableAsNull] attribute Function? onfocus;
+    [TreatNonCallableAsNull] attribute Function? onhashchange;
+    [TreatNonCallableAsNull] attribute Function? oninput;
+    [TreatNonCallableAsNull] attribute Function? oninvalid;
+    [TreatNonCallableAsNull] attribute Function? onkeydown;
+    [TreatNonCallableAsNull] attribute Function? onkeypress;
+    [TreatNonCallableAsNull] attribute Function? onkeyup;
+    [TreatNonCallableAsNull] attribute Function? onload;
+    [TreatNonCallableAsNull] attribute Function? onloadeddata;
+    [TreatNonCallableAsNull] attribute Function? onloadedmetadata;
+    [TreatNonCallableAsNull] attribute Function? onloadstart;
+    [TreatNonCallableAsNull] attribute Function? onmessage;
+    [TreatNonCallableAsNull] attribute Function? onmousedown;
+    [TreatNonCallableAsNull] attribute Function? onmousemove;
+    [TreatNonCallableAsNull] attribute Function? onmouseout;
+    [TreatNonCallableAsNull] attribute Function? onmouseover;
+    [TreatNonCallableAsNull] attribute Function? onmouseup;
+    [TreatNonCallableAsNull] attribute Function? onmousewheel;
+    [TreatNonCallableAsNull] attribute Function? onoffline;
+    [TreatNonCallableAsNull] attribute Function? ononline;
+    [TreatNonCallableAsNull] attribute Function? onpause;
+    [TreatNonCallableAsNull] attribute Function? onplay;
+    [TreatNonCallableAsNull] attribute Function? onplaying;
+    [TreatNonCallableAsNull] attribute Function? onpagehide;
+    [TreatNonCallableAsNull] attribute Function? onpageshow;
+    [TreatNonCallableAsNull] attribute Function? onpopstate;
+    [TreatNonCallableAsNull] attribute Function? onprogress;
+    [TreatNonCallableAsNull] attribute Function? onratechange;
+    [TreatNonCallableAsNull] attribute Function? onreset;
+    [TreatNonCallableAsNull] attribute Function? onresize;
+    [TreatNonCallableAsNull] attribute Function? onscroll;
+    [TreatNonCallableAsNull] attribute Function? onseeked;
+    [TreatNonCallableAsNull] attribute Function? onseeking;
+    [TreatNonCallableAsNull] attribute Function? onselect;
+    [TreatNonCallableAsNull] attribute Function? onshow;
+    [TreatNonCallableAsNull] attribute Function? onstalled;
+    [TreatNonCallableAsNull] attribute Function? onstorage;
+    [TreatNonCallableAsNull] attribute Function? onsubmit;
+    [TreatNonCallableAsNull] attribute Function? onsuspend;
+    [TreatNonCallableAsNull] attribute Function? ontimeupdate;
+    [TreatNonCallableAsNull] attribute Function? onunload;
+    [TreatNonCallableAsNull] attribute Function? onvolumechange;
+    [TreatNonCallableAsNull] attribute Function? onwaiting;
   };
 
   interface BarProp {
@@ -1412,14 +1412,14 @@ module webapps
     void swapCache();
   
     // events
-             attribute Function? onchecking;
-             attribute Function? onerror;
-             attribute Function? onnoupdate;
-             attribute Function? ondownloading;
-             attribute Function? onprogress;
-             attribute Function? onupdateready;
-             attribute Function? oncached;
-             attribute Function? onobsolete;
+    [TreatNonCallableAsNull] attribute Function? onchecking;
+    [TreatNonCallableAsNull] attribute Function? onerror;
+    [TreatNonCallableAsNull] attribute Function? onnoupdate;
+    [TreatNonCallableAsNull] attribute Function? ondownloading;
+    [TreatNonCallableAsNull] attribute Function? onprogress;
+    [TreatNonCallableAsNull] attribute Function? onupdateready;
+    [TreatNonCallableAsNull] attribute Function? oncached;
+    [TreatNonCallableAsNull] attribute Function? onobsolete;
   };
 
   [NoInterfaceObject]
@@ -1572,7 +1572,7 @@ module webapps
     const unsigned short LIVE = 1;
     const unsigned short ENDED = 2;
     readonly attribute unsigned short readyState;
-             attribute Function? onended;
+    [TreatNonCallableAsNull] attribute Function? onended;
   };
   
   interface LocalMediaStream : MediaStream {
@@ -1617,11 +1617,11 @@ module webapps
     void close();
   
     // connection quality information
-             attribute Function? onconnecting;
-             attribute Function? onopen;
-             attribute Function? onmessage;
-             attribute Function? onaddstream;
-             attribute Function? onremovestream;
+    [TreatNonCallableAsNull] attribute Function? onconnecting;
+    [TreatNonCallableAsNull] attribute Function? onopen;
+    [TreatNonCallableAsNull] attribute Function? onmessage;
+    [TreatNonCallableAsNull] attribute Function? onaddstream;
+    [TreatNonCallableAsNull] attribute Function? onremovestream;
   };
   
   [Callback=FunctionOnly, NoInterfaceObject]
@@ -1643,23 +1643,23 @@ module webapps
     readonly attribute WorkerLocation location;
   
     void close();
-             attribute Function? onerror;
-             attribute Function? onoffline;
-             attribute Function? ononline;
+    [TreatNonCallableAsNull] attribute Function? onerror;
+    [TreatNonCallableAsNull] attribute Function? onoffline;
+    [TreatNonCallableAsNull] attribute Function? ononline;
   };
   WorkerGlobalScope implements WorkerUtils;
 
   [Supplemental, NoInterfaceObject]
   interface DedicatedWorkerGlobalScope : WorkerGlobalScope {
     void postMessage(any message, optional sequence<Transferable> transfer);
-             attribute Function? onmessage;
+    [TreatNonCallableAsNull] attribute Function? onmessage;
   };
 
   [Supplemental, NoInterfaceObject]
   interface SharedWorkerGlobalScope : WorkerGlobalScope {
     readonly attribute DOMString name;
     readonly attribute ApplicationCache applicationCache;
-             attribute Function? onconnect;
+    [TreatNonCallableAsNull] attribute Function? onconnect;
   };
 
   [Constructor(DOMString type, optional ErrorEventInit eventInitDict)]
@@ -1677,7 +1677,7 @@ module webapps
 
   [Supplemental, NoInterfaceObject]
   interface AbstractWorker : EventTarget {
-             attribute Function? onerror;
+    [TreatNonCallableAsNull] attribute Function? onerror;
   
   };
 
@@ -1686,7 +1686,7 @@ module webapps
     void terminate();
   
     void postMessage(any message, optional sequence<Transferable> transfer);
-             attribute Function? onmessage;
+    [TreatNonCallableAsNull] attribute Function? onmessage;
   };
 
   [Constructor(DOMString scriptURL, optional DOMString name)]
@@ -1746,9 +1746,9 @@ module webapps
     readonly attribute unsigned short readyState;
   
     // networking
-             attribute Function? onopen;
-             attribute Function? onmessage;
-             attribute Function? onerror;
+    [TreatNonCallableAsNull] attribute Function? onopen;
+    [TreatNonCallableAsNull] attribute Function? onmessage;
+    [TreatNonCallableAsNull] attribute Function? onerror;
     void close();
   };
 
@@ -1766,15 +1766,15 @@ module webapps
     readonly attribute unsigned long bufferedAmount;
   
     // networking
-             attribute Function? onopen;
-             attribute Function? onerror;
-             attribute Function? onclose;
+    [TreatNonCallableAsNull] attribute Function? onopen;
+    [TreatNonCallableAsNull] attribute Function? onerror;
+    [TreatNonCallableAsNull] attribute Function? onclose;
     readonly attribute DOMString extensions;
     readonly attribute DOMString protocol;
     void close([Clamp] optional unsigned short code, optional DOMString reason);
   
     // messaging
-             attribute Function? onmessage;
+    [TreatNonCallableAsNull] attribute Function? onmessage;
              attribute DOMString binaryType;
     void send(DOMString data);
     void send(ArrayBuffer data);
@@ -1806,7 +1806,7 @@ module webapps
     void close();
   
     // event handlers
-             attribute Function? onmessage;
+    [TreatNonCallableAsNull] attribute Function? onmessage;
   };
   MessagePort implements Transferable;
 
@@ -1875,9 +1875,9 @@ module webapps
              attribute unsigned long vspace;
              attribute DOMString width;
   
-             attribute Function? onbounce;
-             attribute Function? onfinish;
-             attribute Function? onstart;
+    [TreatNonCallableAsNull] attribute Function? onbounce;
+    [TreatNonCallableAsNull] attribute Function? onfinish;
+    [TreatNonCallableAsNull] attribute Function? onstart;
   
     void start();
     void stop();
@@ -1886,24 +1886,24 @@ module webapps
   interface HTMLFrameSetElement : HTMLElement {
              attribute DOMString cols;
              attribute DOMString rows;
-             attribute Function? onafterprint;
-             attribute Function? onbeforeprint;
-             attribute Function? onbeforeunload;
-             attribute Function? onblur;
-             attribute Function? onerror;
-             attribute Function? onfocus;
-             attribute Function? onhashchange;
-             attribute Function? onload;
-             attribute Function? onmessage;
-             attribute Function? onoffline;
-             attribute Function? ononline;
-             attribute Function? onpagehide;
-             attribute Function? onpageshow;
-             attribute Function? onpopstate;
-             attribute Function? onresize;
-             attribute Function? onscroll;
-             attribute Function? onstorage;
-             attribute Function? onunload;
+    [TreatNonCallableAsNull] attribute Function? onafterprint;
+    [TreatNonCallableAsNull] attribute Function? onbeforeprint;
+    [TreatNonCallableAsNull] attribute Function? onbeforeunload;
+    [TreatNonCallableAsNull] attribute Function? onblur;
+    [TreatNonCallableAsNull] attribute Function? onerror;
+    [TreatNonCallableAsNull] attribute Function? onfocus;
+    [TreatNonCallableAsNull] attribute Function? onhashchange;
+    [TreatNonCallableAsNull] attribute Function? onload;
+    [TreatNonCallableAsNull] attribute Function? onmessage;
+    [TreatNonCallableAsNull] attribute Function? onoffline;
+    [TreatNonCallableAsNull] attribute Function? ononline;
+    [TreatNonCallableAsNull] attribute Function? onpagehide;
+    [TreatNonCallableAsNull] attribute Function? onpageshow;
+    [TreatNonCallableAsNull] attribute Function? onpopstate;
+    [TreatNonCallableAsNull] attribute Function? onresize;
+    [TreatNonCallableAsNull] attribute Function? onscroll;
+    [TreatNonCallableAsNull] attribute Function? onstorage;
+    [TreatNonCallableAsNull] attribute Function? onunload;
   };
 
   interface HTMLFrameElement : HTMLElement {
