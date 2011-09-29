@@ -70,16 +70,27 @@ ReadResult readAndCheckOggPageHeader(void *in_out_pReadStreamState,
 	return ReadResultOK;
 }
 
+typedef enum
+{
+	OggBitstreamTypeUnknown,
+	OggBitstreamTypeTheora,
+	OggBitstreamTypeVorbis,
+	OggBitstreamTypeSkeleton
+} OggBitstreamType;
+
 typedef struct
 {
 	uint32_t bitstream_serial_number;
 	uint32_t page_sequence_number;
+	OggBitstreamType oggBitstreamType;
 } OggBitstreamState;
 
-void initOggBitstreamState(OggBitstreamState *out_pOggBitstreamState, uint32_t in_serial_number)
+void initOggBitstreamState(OggBitstreamState *out_pOggBitstreamState, uint32_t in_serial_number, 
+	OggBitstreamType in_oggBitstreamType)
 {
 	out_pOggBitstreamState->bitstream_serial_number = in_serial_number;
 	out_pOggBitstreamState->page_sequence_number = 0;
+	out_pOggBitstreamState->oggBitstreamType = in_oggBitstreamType;
 }
 
 IntermediateCompareResult oggBitStreamStateSearch(const void *in_pSerialNumber, 
@@ -174,7 +185,8 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 		return ReadResultAllocationFailure;
 	}
 
-	initOggBitstreamState(pBitstreamStates, oggPageHeader.bitstream_serial_number);
+	initOggBitstreamState(pBitstreamStates, oggPageHeader.bitstream_serial_number, 
+		OggBitstreamTypeSkeleton);
 	bitstreamStatesCount = 1;
 
 	while (bitstreamStatesCount != 0)
@@ -220,7 +232,8 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 				pBitstreamStates = newStates;
 				memmove(pBitstreamStates+index+1, pBitstreamStates+index, 
 					(bitstreamStatesCount-index)*sizeof(OggBitstreamState));
-				initOggBitstreamState(pBitstreamStates+index, oggPageHeader.bitstream_serial_number);
+				initOggBitstreamState(pBitstreamStates+index, oggPageHeader.bitstream_serial_number, 
+					OggBitstreamTypeUnknown);
 				bitstreamStatesCount++;
 			}
 		}
