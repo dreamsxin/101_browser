@@ -1657,6 +1657,86 @@ module html
     DOMString MediaStream? stream;
   };
 
+  interface WorkerGlobalScope : EventTarget {
+    readonly attribute WorkerGlobalScope self;
+    readonly attribute WorkerLocation location;
+  
+    void close();
+    [TreatNonCallableAsNull] attribute Function? onerror;
+    [TreatNonCallableAsNull] attribute Function? onoffline;
+    [TreatNonCallableAsNull] attribute Function? ononline;
+  };
+  WorkerGlobalScope implements WorkerUtils;
+
+  [Supplemental, NoInterfaceObject]
+  interface DedicatedWorkerGlobalScope : WorkerGlobalScope {
+    void postMessage(any message, optional sequence<Transferable> transfer);
+    [TreatNonCallableAsNull] attribute Function? onmessage;
+  };
+
+  [Supplemental, NoInterfaceObject]
+  interface SharedWorkerGlobalScope : WorkerGlobalScope {
+    readonly attribute DOMString name;
+    readonly attribute ApplicationCache applicationCache;
+    [TreatNonCallableAsNull] attribute Function? onconnect;
+  };
+
+  [Constructor(DOMString type, optional ErrorEventInit eventInitDict)]
+  interface ErrorEvent : Event {
+    readonly attribute DOMString message;
+    readonly attribute DOMString filename;
+    readonly attribute unsigned long lineno;
+  };
+  
+  dictionary ErrorEventInit : EventInit {
+    DOMString message;
+    DOMString filename;
+    unsigned long lineno;
+  };
+
+  [Supplemental, NoInterfaceObject]
+  interface AbstractWorker : EventTarget {
+    [TreatNonCallableAsNull] attribute Function? onerror;
+  
+  };
+
+  [Constructor(DOMString scriptURL)]
+  interface Worker : AbstractWorker {
+    void terminate();
+  
+    void postMessage(any message, optional sequence<Transferable> transfer);
+    [TreatNonCallableAsNull] attribute Function? onmessage;
+  };
+
+  [Constructor(DOMString scriptURL, optional DOMString name)]
+  interface SharedWorker : AbstractWorker {
+    readonly attribute MessagePort port;
+  };
+
+  [NoInterfaceObject]
+  interface WorkerUtils {
+    void importScripts(DOMString... urls);
+    readonly attribute WorkerNavigator navigator;
+  };
+  WorkerUtils implements WindowTimers;
+  WorkerUtils implements WindowBase64;
+
+  interface WorkerNavigator {};
+  WorkerNavigator implements NavigatorID;
+  WorkerNavigator implements NavigatorOnLine;
+
+  interface WorkerLocation {
+    // URL decomposition IDL attributes
+    stringifier readonly attribute DOMString href;
+    readonly attribute DOMString protocol;
+    readonly attribute DOMString host;
+    readonly attribute DOMString hostname;
+    readonly attribute DOMString port;
+    readonly attribute DOMString pathname;
+    readonly attribute DOMString search;
+    readonly attribute DOMString hash;
+  };
+
   [Constructor(DOMString type, optional MessageEventInit eventInitDict)]
   interface MessageEvent : Event {
     readonly attribute any data;
@@ -1674,6 +1754,65 @@ module html
     MessagePort[]? ports;
   };
 
+  [Constructor(DOMString url)]
+  interface EventSource : EventTarget {
+    readonly attribute DOMString url;
+  
+    // ready state
+    const unsigned short CONNECTING = 0;
+    const unsigned short OPEN = 1;
+    const unsigned short CLOSED = 2;
+    readonly attribute unsigned short readyState;
+  
+    // networking
+    [TreatNonCallableAsNull] attribute Function? onopen;
+    [TreatNonCallableAsNull] attribute Function? onmessage;
+    [TreatNonCallableAsNull] attribute Function? onerror;
+    void close();
+  };
+
+  [Constructor(DOMString url, optional DOMString protocols),
+   Constructor(DOMString url, optional DOMString[] protocols)]
+  interface WebSocket : EventTarget {
+    readonly attribute DOMString url;
+  
+    // ready state
+    const unsigned short CONNECTING = 0;
+    const unsigned short OPEN = 1;
+    const unsigned short CLOSING = 2;
+    const unsigned short CLOSED = 3;
+    readonly attribute unsigned short readyState;
+    readonly attribute unsigned long bufferedAmount;
+  
+    // networking
+    [TreatNonCallableAsNull] attribute Function? onopen;
+    [TreatNonCallableAsNull] attribute Function? onerror;
+    [TreatNonCallableAsNull] attribute Function? onclose;
+    readonly attribute DOMString extensions;
+    readonly attribute DOMString protocol;
+    void close([Clamp] optional unsigned short code, optional DOMString reason);
+  
+    // messaging
+    [TreatNonCallableAsNull] attribute Function? onmessage;
+             attribute DOMString binaryType;
+    void send(DOMString data);
+    void send(ArrayBuffer data);
+    void send(Blob data);
+  };
+
+  [Constructor(DOMString type, optional CloseEventInit eventInitDict)]
+  interface CloseEvent : Event {
+    readonly attribute boolean wasClean;
+    readonly attribute unsigned short code;
+    readonly attribute DOMString reason;
+  };
+  
+  dictionary CloseEventInit : EventInit {
+    boolean wasClean;
+    unsigned short code;
+    DOMString reason;
+  };
+
   [Constructor]
   interface MessageChannel {
     readonly attribute MessagePort port1;
@@ -1689,6 +1828,44 @@ module html
     [TreatNonCallableAsNull] attribute Function? onmessage;
   };
   MessagePort implements Transferable;
+
+  interface Storage {
+    readonly attribute unsigned long length;
+    DOMString? key(unsigned long index);
+    getter DOMString getItem(DOMString key);
+    setter creator void setItem(DOMString key, DOMString value);
+    deleter void removeItem(DOMString key);
+    void clear();
+  };
+
+  [NoInterfaceObject]
+  interface WindowSessionStorage {
+    readonly attribute Storage sessionStorage;
+  };
+  Window implements WindowSessionStorage;
+
+  [NoInterfaceObject]
+  interface WindowLocalStorage {
+    readonly attribute Storage localStorage;
+  };
+  Window implements WindowLocalStorage;
+
+  [Constructor(DOMString type, optional StorageEventInit eventInitDict)]
+  interface StorageEvent : Event {
+    readonly attribute DOMString key;
+    readonly attribute DOMString? oldValue;
+    readonly attribute DOMString? newValue;
+    readonly attribute DOMString url;
+    readonly attribute Storage? storageArea;
+  };
+  
+  dictionary StorageEventInit : EventInit {
+    DOMString key;
+    DOMString? oldValue;
+    DOMString? newValue;
+    DOMString url;
+    Storage? storageArea;
+  };
 
   interface HTMLAppletElement : HTMLElement {
              attribute DOMString align;

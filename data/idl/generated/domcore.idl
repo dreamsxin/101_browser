@@ -29,6 +29,10 @@ module domcore
     unsigned short code;
   };
 
+  interface DOMError {
+    readonly attribute DOMString name;
+  };
+
   [Constructor(DOMString type, optional EventInit eventInitDict)]
   interface Event {
     readonly attribute DOMString type;
