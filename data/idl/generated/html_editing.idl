@@ -1,0 +1,38 @@
+module html_editing
+{
+  interface Selection {
+    readonly attribute Node? anchorNode;
+    readonly attribute unsigned long anchorOffset;
+    readonly attribute Node? focusNode;
+    readonly attribute unsigned long focusOffset;
+  
+    readonly attribute boolean isCollapsed;
+    void               collapse(Node parentNode, unsigned long offset);
+    void               collapseToStart();
+    void               collapseToEnd();
+  
+    void               extend(Node parentNode, unsigned long offset);
+    void               modify(DOMString alter, DOMString direction, DOMString granularity);
+  
+    void               selectAllChildren(Node parentNode);
+    void               deleteFromDocument();
+  
+    readonly attribute unsigned long rangeCount;
+    Range              getRangeAt(unsigned long index);
+    void               addRange(Range range);
+    void               removeRange(Range range);
+    void               removeAllRanges();
+  
+    stringifier;
+  };
+
+  partial interface Document {
+    Selection getSelection();
+  };
+
+  partial interface Window {
+    Selection getSelection();
+  };
+
+
+};

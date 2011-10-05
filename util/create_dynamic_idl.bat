@@ -32,6 +32,8 @@ CALL create_single_dynamic_idl.bat http://dev.w3.org/2006/webapi/FileAPI/ fileap
 
 CALL create_single_dynamic_idl.bat http://www.w3c-test.org/webperf/specs/NavigationTiming/ navigationtiming ../data/idl/generated/navigationtiming.idl
 
+CALL create_single_dynamic_idl.bat http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html html_editing ../data/idl/generated/html_editing.idl
+
 REM wget http://dvcs.w3.org/hg/IndexedDB/raw-file/tip/Overview.html -O temp.html
 REM java -cp htmlparser-1.3.1.jar nu.validator.htmlparser.tools.HTML2XML temp.html temp.xml
 REM java -cp out XsltTransform temp.xml create_idl.xslt namespace indexeddb ../data/idl/generated/indexeddb.idl
