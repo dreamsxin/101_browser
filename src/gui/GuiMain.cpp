@@ -218,8 +218,17 @@ bool createWindow(Window* in_window, std::wstring in_titleText,
 				  BYTE in_colorBits, BYTE in_depthBits)
 {
 	int			PixelFormat;											// Holds The Results After Searching For A Match
-	DWORD		dwExStyle = WS_EX_APPWINDOW;							// Window Extended Style
-	DWORD		dwStyle = WS_OVERLAPPEDWINDOW;							// Window Style
+	// Previously we had dwExStyle = WS_EX_APPWINDOW;
+	DWORD		dwExStyle = 0;											// Window Extended Style
+	/*
+	* Q: What does this style attribute mean?
+	* A: WS_OVERLAPPEDWINDOW: If you use the WS_OVERLAPPED style, the window has a 
+	*    title bar and border. If you use the WS_OVERLAPPEDWINDOW style, the 
+	*    window has a title bar, sizing border, window menu, and minimize and 
+	*    maximize buttons.
+	*    (see http://msdn.microsoft.com/en-us/library/windows/desktop/ms632599.aspx)
+	*/
+	DWORD		dwStyle = WS_OVERLAPPEDWINDOW;
 	RECT		windowRect;												// Grabs Rectangle Upper Left / Lower Right Values
 	windowRect.left=(long) 0;											// Set Left Value To 0
 	windowRect.right=(long) in_window->width;							// Set Right Value To Requested Width
