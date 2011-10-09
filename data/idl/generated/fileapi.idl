@@ -30,10 +30,10 @@ module fileapi
   interface FileReader: EventTarget {
   
     // async read methods
-    void readAsArrayBuffer(Blob blob) raises (OperationNotAllowedException);
-    void readAsBinaryString(Blob blob) raises (OperationNotAllowedException);
-    void readAsText(Blob blob, optional DOMString encoding) raises (OperationNotAllowedException);
-    void readAsDataURL(Blob blob) raises (OperationNotAllowedException);
+    void readAsArrayBuffer(Blob blob);
+    void readAsBinaryString(Blob blob);
+    void readAsText(Blob blob, optional DOMString encoding);
+    void readAsDataURL(Blob blob);
   
     void abort();
   
@@ -48,7 +48,7 @@ module fileapi
     // File or Blob data
     readonly attribute any result;
     
-    readonly attribute FileError error;
+    readonly attribute DOMError error;
   
     // event handler attributes
     attribute [TreatNonCallableAsNull] Function? onloadstart;
@@ -72,40 +72,6 @@ module fileapi
     DOMString readAsText(Blob blob, optional DOMString encoding) raises (FileException);
     DOMString readAsDataURL(Blob blob) raises (FileException); 
   };
-    
-   interface FileError {
-     // File error codes
-     
-     const unsigned short NOT_FOUND_ERR = 1;
-     const unsigned short SECURITY_ERR = 2;
-     const unsigned short ABORT_ERR = 3;
-     const unsigned short NOT_READABLE_ERR = 4;
-     const unsigned short ENCODING_ERR = 5;
-   
-     readonly attribute unsigned short code;
-  
-  };
-    
-   exception FileException {
-    
-    const unsigned short NOT_FOUND_ERR = 1;
-    const unsigned short SECURITY_ERR = 2;
-    const unsigned short ABORT_ERR = 3;
-    
-    const unsigned short NOT_READABLE_ERR = 4;
-    const unsigned short ENCODING_ERR = 5;
-   
-    unsigned short code;
-    
-  };
-    
-    exception OperationNotAllowedException {
-     
-     const unsigned short NOT_ALLOWED_ERR = 1;
-     
-     unsigned short code;
-     
-    };
     
   partial interface URL {
   
