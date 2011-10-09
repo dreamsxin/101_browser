@@ -73,6 +73,9 @@ CompiledProgram::CompiledProgram(Program in_program)
 
 	if (!VirtualProtect(mpProg, size(), PAGE_EXECUTE, &flOldProtect))
 		exit(0);
+
+	if (!FlushInstructionCache(GetCurrentProcess(), mpProg, size()))
+		exit(0);
 }
 
 CompiledProgram::~CompiledProgram()
