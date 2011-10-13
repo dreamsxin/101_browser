@@ -19,64 +19,63 @@ module fileapi
       
       };
         
-    interface File : Blob {
+  	  interface File : Blob {
   
-        readonly attribute DOMString name;
-        readonly attribute Date lastModifiedDate;
-  };
-      
+  	      readonly attribute DOMString name;
+  	      readonly attribute Date lastModifiedDate;
+  	};
+  	    
   
-  [Constructor]
-  interface FileReader: EventTarget {
+  	[Constructor]
+  	interface FileReader: EventTarget {
   
-    // async read methods
-    void readAsArrayBuffer(Blob blob);
-    void readAsBinaryString(Blob blob);
-    void readAsText(Blob blob, optional DOMString encoding);
-    void readAsDataURL(Blob blob);
+  	  // async read methods
+  	  void readAsArrayBuffer(Blob blob);
+  	  void readAsBinaryString(Blob blob);
+  	  void readAsText(Blob blob, optional DOMString encoding);
+  	  void readAsDataURL(Blob blob);
   
-    void abort();
+  	  void abort();
   
-    // states
-    const unsigned short EMPTY = 0;
-    const unsigned short LOADING = 1;
-    const unsigned short DONE = 2;
-    
-    
-    readonly attribute unsigned short readyState;
+  	  // states
+  	  const unsigned short EMPTY = 0;
+  	  const unsigned short LOADING = 1;
+  	  const unsigned short DONE = 2;
   
-    // File or Blob data
-    readonly attribute any result;
-    
-    readonly attribute DOMError error;
   
-    // event handler attributes
-    attribute [TreatNonCallableAsNull] Function? onloadstart;
-    attribute [TreatNonCallableAsNull] Function? onprogress;
-    attribute [TreatNonCallableAsNull] Function? onload;
-    attribute [TreatNonCallableAsNull] Function? onabort;
-    attribute [TreatNonCallableAsNull] Function? onerror;
-    attribute [TreatNonCallableAsNull] Function? onloadend;
+  	  readonly attribute unsigned short readyState;
   
-  };
-      
+  	  // File or Blob data
+  	  readonly attribute any result;
   
-  [Constructor]
-  interface FileReaderSync {
+  	  readonly attribute DOMError error;
   
-    // Synchronously return strings
-    // All methods raise FileException
-    
-    ArrayBuffer readAsArrayBuffer(Blob blob) raises (FileException);
-    DOMString readAsBinaryString(Blob blob) raises (FileException); 
-    DOMString readAsText(Blob blob, optional DOMString encoding) raises (FileException);
-    DOMString readAsDataURL(Blob blob) raises (FileException); 
-  };
-    
-  partial interface URL {
+  	  // event handler attributes
+  	  attribute [TreatNonCallableAsNull] Function? onloadstart;
+  	  attribute [TreatNonCallableAsNull] Function? onprogress;
+  	  attribute [TreatNonCallableAsNull] Function? onload;
+  	  attribute [TreatNonCallableAsNull] Function? onabort;
+  	  attribute [TreatNonCallableAsNull] Function? onerror;
+  	  attribute [TreatNonCallableAsNull] Function? onloadend;
   
-      static DOMString createObjectURL(Blob blob);
-      static void revokeObjectURL(DOMString url);
-  };
+  	};
+  	    
   
+  	[Constructor]
+  	interface FileReaderSync {
+  
+  	  // Synchronously return strings
+  
+  	  ArrayBuffer readAsArrayBuffer(Blob blob);
+  	  DOMString readAsBinaryString(Blob blob); 
+  	  DOMString readAsText(Blob blob, optional DOMString encoding);
+  	  DOMString readAsDataURL(Blob blob);
+  	};
+  	  
+  	partial interface URL {
+  
+  	    static DOMString createObjectURL(Blob blob);
+  	    static void revokeObjectURL(DOMString url);
+  	};
+  	
 };

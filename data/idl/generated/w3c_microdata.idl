@@ -19,7 +19,7 @@ module microdata
   partial interface HTMLElement {
     // microdata 
              attribute boolean itemScope;
-             attribute DOMString itemType;
+    [PutForwards=value] readonly attribute DOMSettableTokenList itemType;
              attribute DOMString itemId;
     [PutForwards=value] readonly attribute DOMSettableTokenList itemRef;
     [PutForwards=value] readonly attribute DOMSettableTokenList itemProp;
