@@ -459,6 +459,12 @@ module html5
              attribute DOMString label;
              attribute boolean default;
   
+    const unsigned short NONE = 0;
+    const unsigned short LOADING = 1;
+    const unsigned short LOADED = 2;
+    const unsigned short ERROR = 3;
+    readonly attribute unsigned short readyState;
+  
     readonly attribute TextTrack track;
   };
 
@@ -612,14 +618,6 @@ module html5
     readonly attribute DOMString kind;
     readonly attribute DOMString label;
     readonly attribute DOMString language;
-  
-    const unsigned short NONE = 0;
-    const unsigned short LOADING = 1;
-    const unsigned short LOADED = 2;
-    const unsigned short ERROR = 3;
-    readonly attribute unsigned short readyState;
-    [TreatNonCallableAsNull] attribute Function? onload;
-    [TreatNonCallableAsNull] attribute Function? onerror;
   
     const unsigned short DISABLED = 0;
     const unsigned short HIDDEN = 1;
