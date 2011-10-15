@@ -20,7 +20,12 @@
 typedef enum
 {
 	ReadResultOK,
-
+	
+	/*
+	* A special case of ReadResultPrematureEndOfStream when exactly 0 bytes
+	* could be read and this could be correct in some cases.
+	*/
+	ReadResultNullData,
 	ReadResultPrematureEndOfStream,
 	/*
 	* Exactly the opposite of ReadResultPrematureEndOfStream:

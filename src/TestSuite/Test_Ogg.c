@@ -26,13 +26,14 @@ static const char *ogg_filenames[] = {
 	"testfiles/video/garden1.ogv",
 	"testfiles/video/garden2.ogv",
 	"testfiles/video/sintel_trailer-480p.ogv",
-	// An "evil" example of a file containing no Skeleton
-#if 0
-	"testfiles/video/trailer_400p.ogg",
-#endif
 	"testfiles/video/VfE.ogv",
-	"testfiles/video/windowsill.ogv"
+	"testfiles/video/windowsill.ogv",
+
+	// An "evil" example of a file containing no Skeleton
+	"testfiles/video/trailer_400p.ogg"
 };
+
+static const char zerobytes_filename[] = "testfiles/various/zerobytes.bin";
 
 void test_Ogg()
 {
@@ -58,5 +59,19 @@ void test_Ogg()
 			test(ReadResultOK == readResult);
 			fileByteReadStreamStateDestroy(&fileByteStreamState);
 		}
+	}
+
+	printf("Testing file %s\n", zerobytes_filename);
+
+	result = fileByteReadStreamStateInit(zerobytes_filename, 
+		&fileByteStreamState);
+
+	test(result);
+
+	if (result)
+	{
+		ReadResult readResult = readOgg(&fileByteStreamState, getFileByteStreamInterface());
+		test(ReadResultOK == readResult);
+		fileByteReadStreamStateDestroy(&fileByteStreamState);
 	}
 }

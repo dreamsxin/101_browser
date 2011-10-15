@@ -29,11 +29,16 @@ ReadResult readAndCheckOggPageHeader(void *in_out_pReadStreamState,
 	ByteStreamInterface in_readInterface, OggPageHeader *out_pOggPageHeader, 
 	uint32_t *out_pCrc)
 {
-	*out_pCrc = CRC_init(false);
+	size_t readCount;
 	
-	if (in_readInterface.mpfRead(in_out_pReadStreamState, out_pOggPageHeader, 
-		offsetof(OggPageHeader, lacing_values)) 
-		!= offsetof(OggPageHeader, lacing_values))
+	*out_pCrc = CRC_init(false);
+
+	readCount = in_readInterface.mpfRead(in_out_pReadStreamState, out_pOggPageHeader, 
+		offsetof(OggPageHeader, lacing_values));
+	
+	if (0 == readCount)
+		return ReadResultNullData;
+	else if (readCount != offsetof(OggPageHeader, lacing_values))
 		return ReadResultPrematureEndOfStream;
 
 	if (memcmp(out_pOggPageHeader->capture_pattern, OggS, 4))
@@ -116,96 +121,21 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 
 	size_t bitstreamStatesCount = 0;
 	OggBitstreamState *pBitstreamStates = NULL;
+	// Tells us whether the current block is the first block
+	bool firstBlock = true;
 
-	if ((readResult = readAndCheckOggPageHeader(in_out_pReadStreamState, 
-		in_readInterface, &oggPageHeader, &crc)) != ReadResultOK)
-		return readResult;
-
-	if (!oggPageHeader.header_type_flag.bos)
-		return ReadResultInvalidData;
-
-	if (oggPageHeader.header_type_flag.eos)
-		return ReadResultInvalidData;
-	
-	/*
-	* Continuation flag is checked in readAndCheckOggPageHeader.
-	* So there is no need to check it here.
-	*/
-
-#if 0
-	printf("Serial number: %x\nPage sequence number: %u\n", 
-		oggPageHeader.bitstream_serial_number, 
-		oggPageHeader.page_sequence_number);
-#endif
-
-	if (oggPageHeader.number_page_segments == 0x01)
-	{
-		if (oggPageHeader.lacing_values[0] == sizeof(FisheadIdentHeader30) ||
-			oggPageHeader.lacing_values[0] == sizeof(FisheadIdentHeader40))
-		{
-			FisheadIdentHeader40 fisheadIdentHeader;
-
-			if (in_readInterface.mpfRead(in_out_pReadStreamState, &fisheadIdentHeader, 
-				oggPageHeader.lacing_values[0]) != oggPageHeader.lacing_values[0])
-				return ReadResultPrematureEndOfStream;
-
-			if (memcmp(fisheadIdentHeader.fisheadIdentHeader30.Identifier, "fishead", 8))
-				return ReadResultNotImplemented;
-
-			if (oggPageHeader.lacing_values[0] == sizeof(FisheadIdentHeader30) && 
-				(fisheadIdentHeader.fisheadIdentHeader30.Version_major != 0x3 || 
-				fisheadIdentHeader.fisheadIdentHeader30.Version_minor != 0x0))
-			{
-				return ReadResultNotImplemented;
-			}
-			else if (oggPageHeader.lacing_values[0] == sizeof(FisheadIdentHeader40) && 
-				(fisheadIdentHeader.fisheadIdentHeader30.Version_major != 0x4 || 
-				fisheadIdentHeader.fisheadIdentHeader30.Version_minor != 0x0))
-			{
-				return ReadResultNotImplemented;
-			}
-
-			crc = CRC_foldl_MSB_to_LSB(crc, &fisheadIdentHeader, 
-				oggPageHeader.lacing_values[0]);
-
-			if (crc != oggPageHeader.CRC_checksum)
-				return ReadResultInvalidData;
-		}
-		else
-			return ReadResultNotImplemented;
-	}
-	else
-		return ReadResultNotImplemented;
-
-	if (oggPageHeader.page_sequence_number != 0)
-		return ReadResultInvalidData;
-	
-	if ((pBitstreamStates = (OggBitstreamState *) malloc(sizeof(OggBitstreamState))) == NULL)
-	{
-		return ReadResultAllocationFailure;
-	}
-
-	initOggBitstreamState(pBitstreamStates, oggPageHeader.bitstream_serial_number, 
-		OggBitstreamTypeSkeleton);
-	bitstreamStatesCount = 1;
-
-	while (bitstreamStatesCount != 0)
+	do
 	{
 		uint8_t currentPageSegment;
 		size_t index;
 
-		if ((readResult = readAndCheckOggPageHeader(in_out_pReadStreamState, 
-			in_readInterface, &oggPageHeader, &crc)) != ReadResultOK)
-		{
-			safe_free(&pBitstreamStates);
-			return readResult;
-		}
+		readResult = readAndCheckOggPageHeader(in_out_pReadStreamState, 
+			in_readInterface, &oggPageHeader, &crc);
 
-#if 0
-		printf("Serial number: %x\nPage sequence number: %u\n", 
-			oggPageHeader.bitstream_serial_number, 
-			oggPageHeader.page_sequence_number);
-#endif
+		if (firstBlock && ReadResultNullData == readResult)
+			return ReadResultOK;
+		else if (readResult != ReadResultOK)
+			return readResult;
 
 		if (!binarySearch(&oggPageHeader.bitstream_serial_number, pBitstreamStates, 
 			bitstreamStatesCount, sizeof(OggBitstreamState), 
@@ -214,6 +144,9 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 			OggBitstreamState *newStates;
 
 			if (!oggPageHeader.header_type_flag.bos)
+				return ReadResultInvalidData;
+
+			if (oggPageHeader.header_type_flag.continuation)
 				return ReadResultInvalidData;
 
 			if (oggPageHeader.page_sequence_number != 0)
@@ -254,6 +187,10 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 				newStates = (OggBitstreamState*) realloc(pBitstreamStates, (bitstreamStatesCount-1)*sizeof(OggBitstreamState));
 
 				/*
+				* We test whether the allocation failed.
+				* If we tried to allocate 0 bytes NULL may be returned - but must not otherwise
+				* (since the new block is smaller than the old one).
+				*
 				* Q: Why 1 and not 0?
 				* A: Because bitstreamStatesCount won't be decremented 
 				* until further below.
@@ -296,7 +233,50 @@ ReadResult readOgg(void *in_out_pReadStreamState,
 				}
 			}
 		}
+
+		firstBlock = false;
+	} while (bitstreamStatesCount != 0);
+
+#if 0
+	if (oggPageHeader.number_page_segments == 0x01)
+	{
+		if (oggPageHeader.lacing_values[0] == sizeof(FisheadIdentHeader30) ||
+			oggPageHeader.lacing_values[0] == sizeof(FisheadIdentHeader40))
+		{
+			FisheadIdentHeader40 fisheadIdentHeader;
+
+			if (in_readInterface.mpfRead(in_out_pReadStreamState, &fisheadIdentHeader, 
+				oggPageHeader.lacing_values[0]) != oggPageHeader.lacing_values[0])
+				return ReadResultPrematureEndOfStream;
+
+			if (memcmp(fisheadIdentHeader.fisheadIdentHeader30.Identifier, "fishead", 8))
+				return ReadResultNotImplemented;
+
+			if (oggPageHeader.lacing_values[0] == sizeof(FisheadIdentHeader30) && 
+				(fisheadIdentHeader.fisheadIdentHeader30.Version_major != 0x3 || 
+				fisheadIdentHeader.fisheadIdentHeader30.Version_minor != 0x0))
+			{
+				return ReadResultNotImplemented;
+			}
+			else if (oggPageHeader.lacing_values[0] == sizeof(FisheadIdentHeader40) && 
+				(fisheadIdentHeader.fisheadIdentHeader30.Version_major != 0x4 || 
+				fisheadIdentHeader.fisheadIdentHeader30.Version_minor != 0x0))
+			{
+				return ReadResultNotImplemented;
+			}
+
+			crc = CRC_foldl_MSB_to_LSB(crc, &fisheadIdentHeader, 
+				oggPageHeader.lacing_values[0]);
+
+			if (crc != oggPageHeader.CRC_checksum)
+				return ReadResultInvalidData;
+		}
+		else
+			return ReadResultNotImplemented;
 	}
+	else
+		return ReadResultNotImplemented;
+#endif
 
 	safe_free(&pBitstreamStates);
 	return ReadResultOK;
