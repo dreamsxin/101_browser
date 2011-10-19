@@ -122,11 +122,8 @@ module domcore
   
              attribute DOMString? nodeValue;
              attribute DOMString? textContent;
-    Node insertBefore(DOMString node, Node? child);
     Node insertBefore(Node node, Node? child);
-    Node appendChild(DOMString node);
     Node appendChild(Node node);
-    Node replaceChild(DOMString node, Node child);
     Node replaceChild(Node node, Node child);
     Node removeChild(Node child);
     void normalize();
@@ -284,7 +281,6 @@ module domcore
     void deleteContents()
     DocumentFragment extractContents();
     DocumentFragment cloneContents();
-    void insertNode(DOMString node);
     void insertNode(Node node);
     void surroundContents(Node newParent);
     Range cloneRange();
