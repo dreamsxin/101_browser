@@ -172,12 +172,14 @@ module domcore
     NodeIterator createNodeIterator(Node root, optional unsigned long whatToShow, optional NodeFilter? filter);
     TreeWalker createTreeWalker(Node root, optional unsigned long whatToShow, optional NodeFilter? filter);
   };
+  
+  interface XMLDocument : Document {};
 
   interface DOMImplementation {
     boolean hasFeature(DOMString feature, [TreatNullAs=EmptyString] DOMString version);
   
     DocumentType createDocumentType(DOMString qualifiedName, DOMString publicId, DOMString systemId);
-    Document createDocument(DOMString? namespace, DOMString qualifiedName, DocumentType? doctype);
+    XMLDocument createDocument(DOMString? namespace, DOMString qualifiedName, DocumentType? doctype);
     Document createHTMLDocument(DOMString title);
   };
 

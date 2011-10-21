@@ -58,7 +58,7 @@ module webapps
   interface Transferable { };
 
   [OverrideBuiltins]
-  interface HTMLDocument {
+  partial interface Document {
     // resource metadata management
     [PutForwards=href] readonly attribute Location? location;
     readonly attribute DOMString URL;
@@ -85,7 +85,7 @@ module webapps
     readonly attribute DOMElementMap cssElementMap;
   
     // dynamic markup insertion
-    HTMLDocument open(optional DOMString type, optional DOMString replace);
+    Document open(optional DOMString type, optional DOMString replace);
     WindowProxy open(DOMString url, DOMString name, DOMString features, optional boolean replace);
     void close();
     void write(DOMString... text);
@@ -164,10 +164,8 @@ module webapps
     // special event handler IDL attributes that only apply to Document objects
     [TreatNonCallableAsNull] attribute Function? onreadystatechange;
   };
-  Document implements HTMLDocument;
 
-  [NoInterfaceObject]
-  interface XMLDocumentLoader {
+  partial interface XMLDocument {
     boolean load(DOMString url);
   };
 
@@ -561,7 +559,7 @@ module webapps
     readonly attribute AudioTrackList audioTracks;
     readonly attribute VideoTrackList videoTracks;
     readonly attribute TextTrackList textTracks;
-    MutableTextTrack addTextTrack(DOMString kind, optional DOMString label, optional DOMString language);
+    TextTrack addTextTrack(DOMString kind, optional DOMString label, optional DOMString language);
   };
 
   interface MediaError {
@@ -662,12 +660,10 @@ module webapps
     readonly attribute TextTrackCueList? cues;
     readonly attribute TextTrackCueList? activeCues;
   
+    void addCue(TextTrackCue cue);
+    void removeCue(TextTrackCue cue);
+  
     [TreatNonCallableAsNull] attribute Function? oncuechange;
-  };
-
-  interface MutableTextTrack : TextTrack {
-   void addCue(TextTrackCue cue);
-   void removeCue(TextTrackCue cue);
   };
 
   interface TextTrackCueList {
@@ -676,27 +672,21 @@ module webapps
     TextTrackCue? getCueById(DOMString id);
   };
 
-  
   [Constructor(DOMString id, double startTime, double endTime, DOMString text, optional DOMString settings, optional boolean pauseOnExit)]
-  
   interface TextTrackCue : EventTarget {
     readonly attribute TextTrack? track;
-    readonly attribute DOMString id;
   
-    readonly attribute double startTime;
-    readonly attribute double endTime;
-    readonly attribute boolean pauseOnExit;
-  
-  
-    readonly attribute DOMString direction;
-    readonly attribute boolean snapToLines;
-    readonly attribute long linePosition;
-    readonly attribute long textPosition;
-    readonly attribute long size;
-    readonly attribute DOMString alignment;
-  
-  
-    DOMString getCueAsSource();
+             attribute DOMString id;
+             attribute double startTime;
+             attribute double endTime;
+             attribute boolean pauseOnExit;
+             attribute DOMString direction;
+             attribute boolean snapToLines;
+             attribute long linePosition;
+             attribute long textPosition;
+             attribute long size;
+             attribute DOMString alignment;
+             attribute DOMString cueAsSource;
     DocumentFragment getCueAsHTML();
   
     [TreatNonCallableAsNull] attribute Function? onenter;
@@ -1005,7 +995,6 @@ module webapps
              attribute DOMString value;
              attribute Date valueAsDate;
              attribute double valueAsNumber;
-    readonly attribute HTMLOptionElement? selectedOption;
              attribute DOMString width;
   
     void stepUp(optional long n);
@@ -1344,6 +1333,9 @@ module webapps
     [TreatNonCallableAsNull] attribute Function? onunload;
     [TreatNonCallableAsNull] attribute Function? onvolumechange;
     [TreatNonCallableAsNull] attribute Function? onwaiting;
+  
+    // legacy "interfaces"
+    readonly attribute Document HTMLDocument;
   };
 
   interface BarProp {
@@ -2094,7 +2086,7 @@ module webapps
   };
 
   partial interface HTMLPreElement {
-             attribute unsigned long width;
+             attribute long width;
   };
 
   partial interface HTMLScriptElement {
@@ -2150,7 +2142,7 @@ module webapps
              attribute DOMString type;
   };
 
-  partial interface HTMLDocument {
+  partial interface Document {
     [TreatNullAs=EmptyString] attribute DOMString fgColor;
     [TreatNullAs=EmptyString] attribute DOMString linkColor;
     [TreatNullAs=EmptyString] attribute DOMString vlinkColor;

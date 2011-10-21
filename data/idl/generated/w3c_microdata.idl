@@ -12,7 +12,7 @@ module microdata
     PropertyValueArray getValues();
   };
 
-  partial interface HTMLDocument { 
+  partial interface Document { 
     NodeList getItems(optional DOMString typeNames); // microdata
   };
   
