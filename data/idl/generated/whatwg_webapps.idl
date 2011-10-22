@@ -1335,7 +1335,7 @@ module webapps
     [TreatNonCallableAsNull] attribute Function? onwaiting;
   
     // legacy "interfaces"
-    readonly attribute Document HTMLDocument;
+    readonly attribute object HTMLDocument;
   };
 
   interface BarProp {
