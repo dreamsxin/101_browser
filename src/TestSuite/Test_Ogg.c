@@ -41,8 +41,8 @@ void test_Ogg()
 	bool result;
 	int idx;
 
-	test(64 == sizeof(FisheadIdentHeader30));
-	test(80 == sizeof(FisheadIdentHeader40));
+	test(0x40 == sizeof(FisheadIdentHeader30));
+	test(0x50 == sizeof(FisheadIdentHeader40));
 
 	for (idx = 0; idx < sizeof(ogg_filenames)/sizeof(char*); idx++)
 	{
