@@ -128,14 +128,16 @@ uint16_t bytesOfColorTable(uint8_t in_sizeOfColorTable);
 // Grammar words
 DLLEXPORT ReadResult read_GIF_Data_Stream(void *in_pStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	GIF_Data_Stream *in_pDataStream);
+	GIF_Data_Stream *in_pDataStream, void (*in_pfErrorHandler)(void *));
 void read_Logical_Screen(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	Logical_Screen *in_pLogicalScreen, bool in_is89a);
+	Logical_Screen *in_pLogicalScreen, bool in_is89a, 
+	void (*in_pfErrorHandler)(void *));
 void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
 	uint8_t in_introducer, bool in_is89a, 
-	const Logical_Screen *in_cpLogicalScreen);
+	const Logical_Screen *in_cpLogicalScreen, 
+	void (*in_pfErrorHandler)(void *));
 /*
 * Preconditions:
 * PRE:GIF_h_126: (0x21 == in_separator) || (0x2C == in_separator)
@@ -145,27 +147,30 @@ void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 void read_Graphic_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
 	uint8_t in_separator, uint8_t in_label, bool in_is89a, 
-	const Logical_Screen *in_cpLogicalScreen);
+	const Logical_Screen *in_cpLogicalScreen, 
+	void (*in_pfErrorHandler)(void *));
 void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
 	uint8_t in_separator, uint8_t in_label, bool in_is89a, 
-	const Logical_Screen *in_cpLogicalScreen);
+	const Logical_Screen *in_cpLogicalScreen, 
+	void (*in_pfErrorHandler)(void *));
 void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
 	TableBased_Image *in_pTableBasedImage, bool in_is89a, 
-	const Logical_Screen *in_cpLogicalScreen);
+	const Logical_Screen *in_cpLogicalScreen, 
+	void (*in_pfErrorHandler)(void *));
 /*
 * Precondition:
 * PRE:GIF_h_129: we have a GIF 89a file
 */
 void read_SpecialPurpose_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	uint8_t in_label);
+	uint8_t in_label, void (*in_pfErrorHandler)(void *));
 
 // Terminal symbols
 void read_Header(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	Header *in_pHeader, bool *out_pIs89a);
+	Header *in_pHeader, bool *out_pIs89a, void (*in_pfErrorHandler)(void *));
 void read_Trailer(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface);
 void read_Logical_Screen_Descriptor(SetjmpStreamState *in_out_pSetjmpStreamState, 
@@ -175,7 +180,7 @@ void read_Global_Color_Table(void *in_pStreamState,
 	ByteStreamInterface in_byteStreamReadInterface);
 #endif
 void read_Graphic_Control_Extension(SetjmpStreamState *in_out_pSetjmpStreamState, 
-	ByteStreamInterface in_byteStreamReadInterface);
+	ByteStreamInterface in_byteStreamReadInterface, void (*in_pfErrorHandler)(void *));
 
 void read_Plain_Text_Extension(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface);
@@ -183,7 +188,8 @@ void read_Plain_Text_Extension(SetjmpStreamState *in_out_pSetjmpStreamState,
 void read_Image_Descriptor(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
 	Image_Descriptor* out_pImageDescriptor, bool in_is89a, 
-	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor);
+	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor, 
+	void (*in_pfErrorHandler)(void *));
 #if 0
 void read_Local_Color_Table(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface);
@@ -192,13 +198,13 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	ByteStreamInterface in_byteStreamReadInterface, 
 	const Image_Descriptor *in_cpImageDescriptor, 
 	const Rgb8Color *in_pColorTable, 
-	uint16_t in_colorTableSize);
+	uint16_t in_colorTableSize, void (*in_pfErrorHandler)(void *));
 /*
 * Precondition:
 * PRE:GIF_h_148: we have a GIF 89a file
 */
 void read_Application_Extension(SetjmpStreamState *in_out_pSetjmpStreamState, 
-	ByteStreamInterface in_byteStreamReadInterface);
+	ByteStreamInterface in_byteStreamReadInterface, void (*in_pfErrorHandler)(void *));
 /*
 * Precondition:
 * PRE:GIF_h_158: we have a GIF 89a file

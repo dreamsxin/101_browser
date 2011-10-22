@@ -31,6 +31,9 @@ void setjmpStateLongjmp(SetjmpState *in_out_pSetjmpState,
 	void *in_pLongjmpHandlerParam)
 {
 	assert(NULL != in_out_pSetjmpState);
+
+	if (NULL == in_out_pSetjmpState)
+		return;
 	
 	if (in_out_pSetjmpState->mpfLongjmpHandlerFunction)
 		(*in_out_pSetjmpState->mpfLongjmpHandlerFunction)(in_pLongjmpHandlerParam);

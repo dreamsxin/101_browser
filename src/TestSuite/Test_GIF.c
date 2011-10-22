@@ -104,7 +104,7 @@ void testGIF()
 			exit(1);
 		}
 
-		readResult = read_GIF_Data_Stream(&fileByteStreamState, getFileByteStreamInterface(), &dataStream);
+		readResult = read_GIF_Data_Stream(&fileByteStreamState, getFileByteStreamInterface(), &dataStream, NULL);
 		test(ReadResultOK == readResult);
 
 		fileByteReadStreamStateDestroy(&fileByteStreamState);
@@ -124,7 +124,7 @@ void testGIF()
 			exit(1);
 		}
 
-		readResult = read_GIF_Data_Stream(&fileByteStreamState, getFileByteStreamInterface(), &dataStream);
+		readResult = read_GIF_Data_Stream(&fileByteStreamState, getFileByteStreamInterface(), &dataStream, NULL);
 		test(filenameResults[idx].readResult == readResult);
 
 		fileByteReadStreamStateDestroy(&fileByteStreamState);

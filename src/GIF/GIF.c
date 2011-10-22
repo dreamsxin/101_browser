@@ -45,7 +45,7 @@ uint16_t bytesOfColorTable(uint8_t in_sizeOfColorTable)
 
 ReadResult read_GIF_Data_Stream(void *in_pStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	GIF_Data_Stream *in_pDataStream)
+	GIF_Data_Stream *in_pDataStream, void (*in_pfErrorHandler)(void *))
 {
 	bool is89a;
 
@@ -63,16 +63,16 @@ ReadResult read_GIF_Data_Stream(void *in_pStreamState,
 		return (ReadResult) result;
 
 	read_Header(&setjmpReadStreamState, setjmpReadStreamInterface, 
-		&in_pDataStream->header, &is89a);
+		&in_pDataStream->header, &is89a, in_pfErrorHandler);
 
 	read_Logical_Screen(&setjmpReadStreamState, setjmpReadStreamInterface, 
-		&in_pDataStream->logicalScreen, is89a);
+		&in_pDataStream->logicalScreen, is89a, in_pfErrorHandler);
 
 	(*setjmpReadStreamInterface.mpfRead)(&setjmpReadStreamState, &lIntroducer, sizeof(lIntroducer));
 	while (GIF_TRAILER != lIntroducer)
 	{
 		read_Data(&setjmpReadStreamState, setjmpReadStreamInterface, 
-			lIntroducer, is89a, &in_pDataStream->logicalScreen);
+			lIntroducer, is89a, &in_pDataStream->logicalScreen, in_pfErrorHandler);
 		(*setjmpReadStreamInterface.mpfRead)(&setjmpReadStreamState, &lIntroducer, sizeof(lIntroducer));
 	}
 
@@ -81,13 +81,13 @@ ReadResult read_GIF_Data_Stream(void *in_pStreamState,
 
 void read_Header(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	Header *in_pHeader, bool *out_pIs89a)
+	Header *in_pHeader, bool *out_pIs89a, void (*in_pfErrorHandler)(void *))
 {
 	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, in_pHeader, sizeof(*in_pHeader));
 
 	longjmpIf(strncmp(in_pHeader->Signature, "GIF", sizeof(in_pHeader->Signature)) != 0, 
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
-		printHandler, "read_Header: invalid Signature");
+		in_pfErrorHandler, "read_Header: invalid Signature");
 
 	if (strncmp(in_pHeader->Version, "87a", sizeof(in_pHeader->Version)) == 0)
 	{
@@ -100,13 +100,13 @@ void read_Header(SetjmpStreamState *in_out_pSetjmpStreamState,
 	else
 	{
 		longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-			ReadResultInvalidData, printHandler, "read_Header: invalid Version");
+			ReadResultInvalidData, in_pfErrorHandler, "read_Header: invalid Version");
 	}
 }
 
 void read_SpecialPurpose_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	uint8_t in_label)
+	uint8_t in_label, void (*in_pfErrorHandler)(void *))
 {
 	switch (in_label)
 	{
@@ -122,18 +122,20 @@ void read_SpecialPurpose_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 		* Because of PRE:GIF_h_129 the precondition PRE:GIF_h_148
 		* is satisfied.
 		*/
-		read_Application_Extension(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
+		read_Application_Extension(in_out_pSetjmpStreamState, 
+			in_byteStreamReadInterface, in_pfErrorHandler);
 		return;
 	default:
 		longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-			ReadResultInvalidData, printHandler, 
+			ReadResultInvalidData, in_pfErrorHandler, 
 			"read_SpecialPurpose_Block: expecting Application Extension or Comment Extension");
 	}
 }
 
 void read_Logical_Screen(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	Logical_Screen *in_pLogicalScreen, bool in_is89a)
+	Logical_Screen *in_pLogicalScreen, bool in_is89a, 
+	void (*in_pfErrorHandler)(void *))
 {
 	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 		&in_pLogicalScreen->logicalScreenDescriptor, sizeof(Logical_Screen_Descriptor));
@@ -143,14 +145,14 @@ void read_Logical_Screen(SetjmpStreamState *in_out_pSetjmpStreamState,
 		if (in_pLogicalScreen->logicalScreenDescriptor.Sort_Flag)
 		{
 			longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-				ReadResultInvalidData, printHandler, 
+				ReadResultInvalidData, in_pfErrorHandler, 
 				"read_Logical_Screen: in GIF 87a the (GIF 89a) Sort Flag must be set to 0");
 		}
 
 		if (in_pLogicalScreen->logicalScreenDescriptor.Pixel_Aspect_Ratio)
 		{
 			longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-				ReadResultInvalidData, printHandler, 
+				ReadResultInvalidData, in_pfErrorHandler, 
 				"read_Logical_Screen: in GIF 87a the (GIF 89a) Pixel Aspect Ratio must be set to 0");
 		}
 	}
@@ -165,7 +167,7 @@ void read_Logical_Screen(SetjmpStreamState *in_out_pSetjmpStreamState,
 			>= colorsOfColorTable(in_pLogicalScreen->logicalScreenDescriptor.Size_Of_Global_Color_Table))
 		{
 			longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-				ReadResultInvalidData, printHandler, 
+				ReadResultInvalidData, in_pfErrorHandler, 
 				"read_Logical_Screen: Background Color Index is >= # colors in Global Color table");
 		}
 
@@ -197,7 +199,8 @@ void read_Logical_Screen(SetjmpStreamState *in_out_pSetjmpStreamState,
 void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
 	uint8_t in_introducer, bool in_is89a, 
-	const Logical_Screen *in_cpLogicalScreen)
+	const Logical_Screen *in_cpLogicalScreen, 
+	void (*in_pfErrorHandler)(void *))
 {
 	uint8_t lLabel;
 
@@ -227,20 +230,20 @@ void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 				* PRE:GIF_h_129 is satisfied.
 				*/
 				read_SpecialPurpose_Block(in_out_pSetjmpStreamState, 
-					in_byteStreamReadInterface, lLabel);
+					in_byteStreamReadInterface, lLabel, in_pfErrorHandler);
 				return;
 			}
 			else if (PLAIN_TEXT_LABEL == lLabel || GRAPHIC_CONTROL_LABEL == lLabel)
 			{
 				read_Graphic_Block(in_out_pSetjmpStreamState, 
 					in_byteStreamReadInterface, in_introducer, lLabel, 
-					in_is89a, in_cpLogicalScreen);
+					in_is89a, in_cpLogicalScreen, in_pfErrorHandler);
 				return;
 			}
 			else
 			{
 				longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-					ReadResultInvalidData, printHandler, 
+					ReadResultInvalidData, in_pfErrorHandler, 
 					"read_Data: the only accepted Extension Blocks are Graphic Control Extension and Plain Text Extension");
 			}
 		}
@@ -254,13 +257,13 @@ void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	{
 		read_Graphic_Block(in_out_pSetjmpStreamState, 
 			in_byteStreamReadInterface, in_introducer, 0, 
-			in_is89a, in_cpLogicalScreen);
+			in_is89a, in_cpLogicalScreen, in_pfErrorHandler);
 		return;
 	}
 	else
 	{
 		longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-			ReadResultInvalidData, printHandler, 
+			ReadResultInvalidData, in_pfErrorHandler, 
 			"read_Data: expecting Image Descriptor or Extension Introducer");
 	}
 }
@@ -268,12 +271,14 @@ void read_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 void read_Graphic_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
 	uint8_t in_separator, uint8_t in_label, bool in_is89a, 
-	const Logical_Screen *in_cpLogicalScreen)
+	const Logical_Screen *in_cpLogicalScreen, 
+	void (*in_pfErrorHandler)(void *))
 {
 	if (EXTENSION_INTRODUCER == in_separator && GRAPHIC_CONTROL_LABEL == in_label) 
 	{
 		// Precondition: we have a GIF 89a file
-		read_Graphic_Control_Extension(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
+		read_Graphic_Control_Extension(in_out_pSetjmpStreamState, 
+			in_byteStreamReadInterface, in_pfErrorHandler);
 
 		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 			&in_separator, sizeof(in_separator));
@@ -287,13 +292,14 @@ void read_Graphic_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 	read_GraphicRendering_Block(in_out_pSetjmpStreamState, 
 		in_byteStreamReadInterface, in_separator, in_label, 
-		in_is89a, in_cpLogicalScreen);
+		in_is89a, in_cpLogicalScreen, in_pfErrorHandler);
 }
 
 void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
 	uint8_t in_separator, uint8_t in_label, bool in_is89a, 
-	const Logical_Screen *in_cpLogicalScreen)
+	const Logical_Screen *in_cpLogicalScreen, 
+	void (*in_pfErrorHandler)(void *))
 {
 	if (IMAGE_SEPARATOR == in_separator)
 	{
@@ -301,7 +307,7 @@ void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 		read_TableBased_Image(in_out_pSetjmpStreamState, 
 			in_byteStreamReadInterface, &tableBasedImage, 
-			in_is89a, in_cpLogicalScreen);
+			in_is89a, in_cpLogicalScreen, in_pfErrorHandler);
 	}
 	// Plain Text Extension
 	else if (EXTENSION_INTRODUCER == in_separator)
@@ -309,7 +315,7 @@ void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 		if (PLAIN_TEXT_LABEL != in_label)
 		{
 			longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-				ReadResultInvalidData, printHandler, 
+				ReadResultInvalidData, in_pfErrorHandler, 
 				"read_GraphicRendering_Block: the only allowed extension is Plain Text Extension");
 		}
 
@@ -318,7 +324,7 @@ void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 	else
 	{
 		longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-			ReadResultInvalidData, printHandler, 
+			ReadResultInvalidData, in_pfErrorHandler, 
 			"read_GraphicRendering_Block: expecting Image Descriptor or Plain Text Extension");
 	}
 }
@@ -326,7 +332,8 @@ void read_GraphicRendering_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
 	TableBased_Image *in_pTableBasedImage, bool in_is89a, 
-	const Logical_Screen *in_cpLogicalScreen)
+	const Logical_Screen *in_cpLogicalScreen, 
+	void (*in_pfErrorHandler)(void *))
 {
 	// Initialising these 2 variables is not necessary, but does not hurt...
 	Rgb8Color *lpColorTable = NULL;
@@ -338,7 +345,7 @@ void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 	read_Image_Descriptor(in_out_pSetjmpStreamState, in_byteStreamReadInterface, 
 		&in_pTableBasedImage->imageDescriptor, in_is89a, 
-		&in_cpLogicalScreen->logicalScreenDescriptor);
+		&in_cpLogicalScreen->logicalScreenDescriptor, in_pfErrorHandler);
 
 	// Set localColorTable into a defined state (even if we do a longjmp)
 	in_pTableBasedImage->localColorTable = NULL;
@@ -380,12 +387,12 @@ void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState,
 	else
 	{
 		longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-			ReadResultInvalidData, printHandler, 
+			ReadResultInvalidData, in_pfErrorHandler, 
 			"read_TableBased_Image: neither Global Color Table nor Local Color Table is defined");
 	}
 
 	read_Image_Data(in_out_pSetjmpStreamState, in_byteStreamReadInterface, 
-		&in_pTableBasedImage->imageDescriptor, lpColorTable, lColorTableSize);
+		&in_pTableBasedImage->imageDescriptor, lpColorTable, lColorTableSize, in_pfErrorHandler);
 
 	if (in_pTableBasedImage->imageDescriptor.Local_Color_Table_Flag)
 	{
@@ -395,7 +402,7 @@ void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState,
 }
 
 void read_Graphic_Control_Extension(SetjmpStreamState *in_out_pSetjmpStreamState, 
-	ByteStreamInterface in_byteStreamReadInterface)
+	ByteStreamInterface in_byteStreamReadInterface, void (*in_pfErrorHandler)(void *))
 {
 	// Precondition: we have a GIF 89a file
 
@@ -407,18 +414,18 @@ void read_Graphic_Control_Extension(SetjmpStreamState *in_out_pSetjmpStreamState
 
 	longjmpIf(graphicControlExtension.Block_Size != 4, 
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-		ReadResultInvalidData, printHandler, "read_Graphic_Control_Extension: invalid Block Size");
+		ReadResultInvalidData, in_pfErrorHandler, "read_Graphic_Control_Extension: invalid Block Size");
 
 	longjmpIf(graphicControlExtension.Reserved != 0, 
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-		ReadResultInvalidData, printHandler, "read_Graphic_Control_Extension: reserved bits not zero");
+		ReadResultInvalidData, in_pfErrorHandler, "read_Graphic_Control_Extension: reserved bits not zero");
 
 	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState,
 		&terminator, sizeof(terminator));
 
 	longjmpIf(terminator != 0x00, 
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-		ReadResultInvalidData, printHandler, "read_Graphic_Control_Extension: no terminator");
+		ReadResultInvalidData, in_pfErrorHandler, "read_Graphic_Control_Extension: no terminator");
 }
 
 void read_Plain_Text_Extension(SetjmpStreamState *in_out_pSetjmpStreamState, 
@@ -431,7 +438,8 @@ void read_Plain_Text_Extension(SetjmpStreamState *in_out_pSetjmpStreamState,
 void read_Image_Descriptor(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
 	Image_Descriptor* out_pImageDescriptor, bool in_is89a, 
-	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor)
+	const Logical_Screen_Descriptor *in_cpLogicalScreenDescriptor, 
+	void (*in_pfErrorHandler)(void *))
 {
 	// sizeof(*in_pImageDescriptor)-1 since we have already read the first byte
 	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
@@ -441,17 +449,17 @@ void read_Image_Descriptor(SetjmpStreamState *in_out_pSetjmpStreamState,
 	{
 		longjmpIf(out_pImageDescriptor->Sort_Flag, 
 			in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
-			printHandler, "read_Image_Descriptor: in GIF 87a the (GIF 89a) Sort Flag must be set to 0");
+			in_pfErrorHandler, "read_Image_Descriptor: in GIF 87a the (GIF 89a) Sort Flag must be set to 0");
 	}
 
 	longjmpIf(out_pImageDescriptor->Reserved != 0, 
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
-		printHandler, "read_Image_Descriptor: reserved bits not null");
+		in_pfErrorHandler, "read_Image_Descriptor: reserved bits not null");
 
 	longjmpIf(
 		out_pImageDescriptor->Image_Left_Position >= in_cpLogicalScreenDescriptor->Logical_Screen_Width, 
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-		ReadResultInvalidData, printHandler, 
+		ReadResultInvalidData, in_pfErrorHandler, 
 		"read_Image_Descriptor: Image Left Position >= Logical Screen Width");
 
 	assert(out_pImageDescriptor->Image_Left_Position < in_cpLogicalScreenDescriptor->Logical_Screen_Width);
@@ -459,13 +467,13 @@ void read_Image_Descriptor(SetjmpStreamState *in_out_pSetjmpStreamState,
 		out_pImageDescriptor->Image_Width > 
 		in_cpLogicalScreenDescriptor->Logical_Screen_Width - out_pImageDescriptor->Image_Left_Position, 
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-		ReadResultInvalidData, printHandler, 
+		ReadResultInvalidData, in_pfErrorHandler, 
 		"read_Image_Descriptor: Image Left Position + Image Width > Logical Screen Width");
 
 	longjmpIf(
 		out_pImageDescriptor->Image_Top_Position >= in_cpLogicalScreenDescriptor->Logical_Screen_Height, 
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-		ReadResultInvalidData, printHandler, 
+		ReadResultInvalidData, in_pfErrorHandler, 
 		"read_Image_Descriptor: Image Top Position >= Logical Screen Height");
 
 	assert(out_pImageDescriptor->Image_Top_Position < in_cpLogicalScreenDescriptor->Logical_Screen_Height);
@@ -473,7 +481,7 @@ void read_Image_Descriptor(SetjmpStreamState *in_out_pSetjmpStreamState,
 		out_pImageDescriptor->Image_Height > 
 		in_cpLogicalScreenDescriptor->Logical_Screen_Height - out_pImageDescriptor->Image_Top_Position, 
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-		ReadResultInvalidData, printHandler, 
+		ReadResultInvalidData, in_pfErrorHandler, 
 		"read_Image_Descriptor: Image Top Position + Image Height > Logical Screen Height");
 }
 
@@ -540,7 +548,7 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	ByteStreamInterface in_byteStreamReadInterface, 
 	const Image_Descriptor *in_cpImageDescriptor, 
 	const Rgb8Color *in_pColorTable, 
-	uint16_t in_colorTableSize)
+	uint16_t in_colorTableSize, void (*in_pfErrorHandler)(void *))
 {
 	uint8_t LZW_Minimum_Code_Size;
 	BitReadState bitReadState;
@@ -569,7 +577,7 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	if (LZW_Minimum_Code_Size < 2 || LZW_Minimum_Code_Size > 8)
 	{
 		longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-			ReadResultInvalidData, printHandler, 
+			ReadResultInvalidData, in_pfErrorHandler, 
 			"read_Image_Data: invalid LZW minimum code size");
 	}
 	
@@ -641,14 +649,14 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 		if (readCount != currentCodeWordBitCount)
 		{
 			longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer,
-				ReadResultPrematureEndOfStream, printHandler, 
+				ReadResultPrematureEndOfStream, in_pfErrorHandler, 
 				"read_Image_Data: readCount != currentCodeWordBitCount");
 		}
 
 		if (currentCodeWord >= currentTableIndex)
 		{
 			longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-			ReadResultInvalidData, printHandler, 
+			ReadResultInvalidData, in_pfErrorHandler, 
 			"read_Image_Data: currentCodeWord >= currentTableIndex");
 		}
 
@@ -687,7 +695,7 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 				if (currentCodeWord >= in_colorTableSize)
 				{
 					longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-						ReadResultInvalidData, printHandler, 
+						ReadResultInvalidData, in_pfErrorHandler, 
 						"read_Image_Data: current pixel index is out of the bounds of the currently active color table");
 				}
 				
@@ -740,7 +748,7 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 				if (pixelsWritten == pixelsOfImageCount)
 				{
 					longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-						ReadResultInvalidData, printHandler, 
+						ReadResultInvalidData, in_pfErrorHandler, 
 						"read_Image_Data: more pixels than defined in Image Descriptor");
 				}
 
@@ -804,7 +812,7 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	if (streamState.Read_Bytes != streamState.Block_Size_Bytes)
 	{
 		longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
-			printHandler, "read_Image_Data: data after End of Information code");
+			in_pfErrorHandler, "read_Image_Data: data after End of Information code");
 	}
 
 	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
@@ -813,7 +821,7 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	// If there is no terminator block return failure
 	longjmpIf(0 != streamState.Block_Size_Bytes, 
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
-		printHandler, "read_Image_Data: no terminator block");
+		in_pfErrorHandler, "read_Image_Data: no terminator block");
 
 	/*
 	* Q: Why does this assertion hold?
@@ -824,7 +832,7 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	if (pixelsWritten < pixelsOfImageCount)
 	{
 		longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-			ReadResultInvalidData, printHandler, 
+			ReadResultInvalidData, in_pfErrorHandler, 
 			"read_Image_Data: less pixels than defined in Image Descriptor");
 	}
 
@@ -838,7 +846,7 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 }
 
 void read_Application_Extension(SetjmpStreamState *in_out_pSetjmpStreamState, 
-	ByteStreamInterface in_byteStreamReadInterface)
+	ByteStreamInterface in_byteStreamReadInterface, void (*in_pfErrorHandler)(void *))
 {
 	// Precondition: we have a GIF 89a file
 	Application_Extension applExt;
@@ -847,7 +855,7 @@ void read_Application_Extension(SetjmpStreamState *in_out_pSetjmpStreamState,
 		&applExt, sizeof(applExt));
 
 	longjmpIf(applExt.Block_Size != 11, in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-		ReadResultInvalidData, printHandler, "read_Application_Extension: Block Size has to be 11");
+		ReadResultInvalidData, in_pfErrorHandler, "read_Application_Extension: Block Size has to be 11");
 
 	if (strncmp(applExt.Application_Identifier, "NETSCAPE", 8) == 0 && 
 		strncmp(applExt.Application_Authentication_Code, "2.0", 3) == 0)
@@ -859,7 +867,7 @@ void read_Application_Extension(SetjmpStreamState *in_out_pSetjmpStreamState,
 			&blockSize, sizeof(blockSize));
 
 		longjmpIf(blockSize != 3, in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-			ReadResultInvalidData, printHandler, 
+			ReadResultInvalidData, in_pfErrorHandler, 
 			"read_Application_Extension: Block Size of NETSCAPE 2.0 Application Extension has to be 3");
 
 		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
@@ -871,7 +879,7 @@ void read_Application_Extension(SetjmpStreamState *in_out_pSetjmpStreamState,
 			&blockSize, sizeof(blockSize));
 
 		longjmpIf(blockSize != 0, in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-			ReadResultInvalidData, printHandler, 
+			ReadResultInvalidData, in_pfErrorHandler, 
 			"read_Application_Extension: expecting terminator block after NETSCAPE 2.0 Application Extension");
 	}
 	else
