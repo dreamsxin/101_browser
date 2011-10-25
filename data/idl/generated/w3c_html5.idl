@@ -1209,9 +1209,6 @@ module html5
              attribute DOMString pathname;
              attribute DOMString search;
              attribute DOMString hash;
-  
-    // resolving relative URLs
-    DOMString resolveURL(DOMString url);
   };
 
   [Constructor(DOMString type, optional PopStateEventInit eventInitDict)]
@@ -1293,11 +1290,11 @@ module html5
 
   [NoInterfaceObject]
   interface WindowTimers {
-    long setTimeout(Function handler, optional float timeout, any... args);
-    long setTimeout([AllowAny] DOMString handler, optional float timeout, any... args);
+    long setTimeout(Function handler, optional long timeout, any... args);
+    long setTimeout([AllowAny] DOMString handler, optional long timeout, any... args);
     void clearTimeout(long handle);
-    long setInterval(Function handler, optional float timeout, any... args);
-    long setInterval([AllowAny] DOMString handler, optional float timeout, any... args);
+    long setInterval(Function handler, optional long timeout, any... args);
+    long setInterval([AllowAny] DOMString handler, optional long timeout, any... args);
     void clearInterval(long handle);
   };
   Window implements WindowTimers;
