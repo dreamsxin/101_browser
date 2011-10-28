@@ -288,8 +288,8 @@ module domcore
     Range cloneRange();
     void detach();
   
-    boolean isPointInRange(Node parent, unsigned long offset);
-    short comparePoint(Node parent, unsigned long offset);
+    boolean isPointInRange(Node node, unsigned long offset);
+    short comparePoint(Node node, unsigned long offset);
   
     boolean intersectsNode(Node node);
   

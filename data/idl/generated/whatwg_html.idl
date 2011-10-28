@@ -975,7 +975,7 @@ module html
              attribute DOMString formMethod;
              attribute boolean formNoValidate;
              attribute DOMString formTarget;
-             attribute DOMString height;
+             attribute unsigned long height;
              attribute boolean indeterminate;
     readonly attribute HTMLElement? list;
              attribute DOMString max;
@@ -995,7 +995,7 @@ module html
              attribute DOMString value;
              attribute Date valueAsDate;
              attribute double valueAsNumber;
-             attribute DOMString width;
+             attribute unsigned long width;
   
     void stepUp(optional long n);
     void stepDown(optional long n);
@@ -1333,9 +1333,6 @@ module html
     [TreatNonCallableAsNull] attribute Function? onunload;
     [TreatNonCallableAsNull] attribute Function? onvolumechange;
     [TreatNonCallableAsNull] attribute Function? onwaiting;
-  
-    // legacy "interfaces"
-    readonly attribute object HTMLDocument;
   };
 
   interface BarProp {
