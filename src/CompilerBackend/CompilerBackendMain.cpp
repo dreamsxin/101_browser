@@ -22,8 +22,10 @@ int main(int argc, char *argv[])
 {
 	Program prog;
 	//prog.push_back(moveToRegister32(eax, 44));
-	prog.push_back(push32(44));
-	prog.push_back(pop32(eax));
+	prog.push_back(push_imm32(44));
+	prog.push_back(pop_register32(DataRegister32ECX));
+	prog.push_back(push_register32(DataRegister32ECX));
+	prog.push_back(pop_register32(DataRegister32EAX));
 	prog.push_back(ret());
 	CompiledProgram cprog(prog);
 

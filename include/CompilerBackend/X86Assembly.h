@@ -20,6 +20,7 @@
 #include <cstdio>
 #include <cstring>
 #include <vector>
+#include "MiniStdlib/cstdint.h"
 #include <windows.h>
 
 typedef std::vector<unsigned char> AssemblyInstruction;
@@ -43,15 +44,20 @@ enum Register16
 
 enum Register32
 {
-	eax = 0,
-	ecx = 1,
-	edx = 2,
-	ebx = 3
+	DataRegister32EAX = 0,
+	DataRegister32ECX = 1,
+	DataRegister32EDX = 2,
+	DataRegister32EBX = 3,
+	SpecialRegister32ESP = 4,
+	SpecialRegister32EBP = 5,
+	SpecialRegister32ESI = 6,
+	SpecialRegister32EDI = 7
 };
 
-AssemblyInstruction moveToRegister32(Register32 in_register, int in_value);
-AssemblyInstruction pop32(Register32 in_register);
-AssemblyInstruction push32(int in_value);
+AssemblyInstruction moveToRegister32(Register32 in_dataRegister, int in_value);
+AssemblyInstruction pop_register32(Register32 in_register);
+AssemblyInstruction push_imm32(uint32_t in_value);
+AssemblyInstruction push_register32(Register32 in_register);
 AssemblyInstruction ret();
 
 class CompiledProgram
