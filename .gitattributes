@@ -2,5 +2,6 @@
 *.jpg binary
 *.png binary
 *.raw binary
+*.webp binary
 LICENCE -crlf
 

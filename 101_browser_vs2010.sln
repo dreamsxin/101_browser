@@ -63,6 +63,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ogg", "projects\vs2010\Ogg\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CRC", "projects\vs2010\CRC\CRC.vcxproj", "{0095CD5C-CD78-4957-80C5-6014A16A08EA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WebP", "projects\vs2010\WebP\WebP.vcxproj", "{16AD393A-483F-4C06-951D-C486FFF30DCB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -445,6 +447,18 @@ Global
 		{0095CD5C-CD78-4957-80C5-6014A16A08EA}.LIB Release|Win32.Build.0 = Release|Win32
 		{0095CD5C-CD78-4957-80C5-6014A16A08EA}.Release|Win32.ActiveCfg = Release|Win32
 		{0095CD5C-CD78-4957-80C5-6014A16A08EA}.Release|Win32.Build.0 = Release|Win32
+		{16AD393A-483F-4C06-951D-C486FFF30DCB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{16AD393A-483F-4C06-951D-C486FFF30DCB}.Debug|Win32.Build.0 = Debug|Win32
+		{16AD393A-483F-4C06-951D-C486FFF30DCB}.LIB ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{16AD393A-483F-4C06-951D-C486FFF30DCB}.LIB ASM Debug|Win32.Build.0 = Debug|Win32
+		{16AD393A-483F-4C06-951D-C486FFF30DCB}.LIB ASM Release|Win32.ActiveCfg = Release|Win32
+		{16AD393A-483F-4C06-951D-C486FFF30DCB}.LIB ASM Release|Win32.Build.0 = Release|Win32
+		{16AD393A-483F-4C06-951D-C486FFF30DCB}.LIB Debug|Win32.ActiveCfg = Debug|Win32
+		{16AD393A-483F-4C06-951D-C486FFF30DCB}.LIB Debug|Win32.Build.0 = Debug|Win32
+		{16AD393A-483F-4C06-951D-C486FFF30DCB}.LIB Release|Win32.ActiveCfg = Release|Win32
+		{16AD393A-483F-4C06-951D-C486FFF30DCB}.LIB Release|Win32.Build.0 = Release|Win32
+		{16AD393A-483F-4C06-951D-C486FFF30DCB}.Release|Win32.ActiveCfg = Release|Win32
+		{16AD393A-483F-4C06-951D-C486FFF30DCB}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
