@@ -17,7 +17,7 @@
 #ifndef _JpegSegmentsRead
 #define _JpegSegmentsRead
 
-#include "JpegDecoder/JpegSegments.h"
+#include "JpegDecoder/T81_SectionB2_B3.h"
 #include "JpegDecoder/JpegDecoderUtil.h"
 #include "JpegDecoder/JpegContext.h"
 

@@ -42,6 +42,7 @@
     <OutDir>$(SolutionDir)out\vs2010\$(Configuration)\</OutDir>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreGeneratedCode>false</CodeAnalysisIgnoreGeneratedCode>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -92,7 +93,7 @@
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegDecoderUtil.h" />
     <ClInclude Include="..\..\..\include\JpegDecoder\T81_SectionE.h" />
     <ClInclude Include="..\..\..\include\JpegDecoder\T81_SectionF.h" />
-    <ClInclude Include="..\..\..\include\JpegDecoder\JpegSegments.h" />
+    <ClInclude Include="..\..\..\include\JpegDecoder\T81_SectionB2_B3.h" />
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegSegmentsRead.h" />
   </ItemGroup>
   <ItemGroup>

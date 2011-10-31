@@ -65,13 +65,14 @@ void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState,
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
 		ReadResultInvalidData, printHandler);
 
+	setjmpStateLongjmpIf(&invalidDataSetjmpState, 
+		in_pScanHeader->Ls != 6+2*in_pScanHeader->Ns, 
+		"readScanHeader: Ls must be 6+2*Ns");
+	// See table B.3
 	// CND:JpegSegmentsRead_c_70
 	setjmpStateLongjmpIf(&invalidDataSetjmpState, 
 		in_pScanHeader->Ns == 0 || in_pScanHeader->Ns>4, 
 		"readScanHeader: invalid value of Ns");
-	setjmpStateLongjmpIf(&invalidDataSetjmpState, 
-		in_pScanHeader->Ls != 6+2*in_pScanHeader->Ns, 
-		"readScanHeader: Ls must be 6+2*Ns");
 
 	printf("Ls = %u\tNs = %u\n", in_pScanHeader->Ls, in_pScanHeader->Ns);
 
@@ -81,6 +82,8 @@ void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 	// follows from CND:JpegSegmentsRead_c_70
 	assert(in_pScanHeader->Ns <= 4);
+
+	// Is initialized above
 
 	for (i=0; i<in_pScanHeader->Ns; i++)
 	{

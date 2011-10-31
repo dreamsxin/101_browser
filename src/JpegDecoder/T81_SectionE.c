@@ -150,8 +150,7 @@ void Decode_frame(SetjmpStreamState *in_out_pSetjmpStreamState,
 		currentMarker = readMarker(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface);
 	}
 
-	Decode_scan(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, 
-			in_pJpegContext->restartIntervalState.restartInterval);
+	Decode_scan(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, in_pJpegContext);
 
 	// TODO: further markers can occur before EOI
 }
@@ -159,21 +158,21 @@ void Decode_frame(SetjmpStreamState *in_out_pSetjmpStreamState,
 // E.2.3 Control procedure for decoding a scan
 void Decode_scan(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_setjmpStreamReadInterface, 
-	RestartInterval in_ri)
+	JpegContext *in_pJpegContext)
 {
 	size_t m = 0;
 
-	ScanHeader sh;
-	readScanHeader(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, &sh);
+	readScanHeader(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, &in_pJpegContext->scanHeader);
 
 	// TODO: There is a loop for this. Implement it
-	Decode_restart_interval(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, in_ri);
+	Decode_restart_interval(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, 
+		in_pJpegContext);
 }
 
 // E.2.4 Control procedure for decoding a restart interval
 void Decode_restart_interval(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_setjmpStreamReadInterface, 
-	RestartInterval in_ri)
+	const JpegContext *in_pcJpegContext)
 {
 	uint16_t currentMCUIndex = 0;
 
@@ -182,17 +181,17 @@ void Decode_restart_interval(SetjmpStreamState *in_out_pSetjmpStreamState,
 	do
 	{
 		currentMCUIndex++;
-		Decode_MCU();
-	} while (currentMCUIndex != in_ri.Ri);
+		Decode_MCU(in_pcJpegContext);
+	} while (currentMCUIndex != in_pcJpegContext->restartIntervalState.restartInterval.Ri);
 }
 
 void Reset_decoder()
 {
-
+	// TODO
 }
 
 // E.2.5 Control procedure for decoding a minimum coded unit (MCU)
-void Decode_MCU()
+void Decode_MCU(const JpegContext *in_pcJpegContext)
 {
 	size_t N = 0;
 

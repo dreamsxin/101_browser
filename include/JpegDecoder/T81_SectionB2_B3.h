@@ -14,8 +14,8 @@
 * limitations under the License.
 */
 
-#ifndef _JpegSegments
-#define _JpegSegments
+#ifndef _T81_SectionB2_B3
+#define _T81_SectionB2_B3
 
 #include "MiniStdlib/MTAx_cstdio.h"
 #include "MiniStdlib/cstdint.h"
@@ -31,8 +31,28 @@
 #pragma warning(disable : 4214) // nonstandard extension used : bit field types other than int
 #endif
 
+// B.2.2 Frame header syntax
+typedef struct _FrameComponentSpecificationParameter
+{
+	uint8_t C;
+	uint8_t H : 4;
+	uint8_t V : 4;
+	uint8_t Tq;
+} FrameComponentSpecificationParameter;
+
+typedef struct _FrameHeader
+{
+	uint8_t SOF_n;
+	uint16_t Lf;
+	uint8_t P;
+	uint16_t Y;
+	uint16_t X;
+	uint8_t Nf;
+	FrameComponentSpecificationParameter *pFrameComponentSpecificationParameters;
+} FrameHeader;
+
 // B.2.3 Scan header syntax
-typedef struct
+typedef struct _ScanComponentSpecificationParameter
 {
 	uint8_t Cs;
 	/*
@@ -44,7 +64,7 @@ typedef struct
 	uint8_t Td : 4;
 } ScanComponentSpecificationParameter;
 
-typedef struct
+typedef struct _ScanHeader
 {
 	uint16_t Ls; // Scan header length – Specifies the length of the 
 	             // scan header shown in Figure B.4 (see B.1.1.4).
@@ -72,7 +92,7 @@ typedef struct
 } ScanHeader;
 
 // B.2.4.1 Quantization table-specification syntax
-typedef struct
+typedef struct _QuantizationTable
 {
 	/*
 	* Note that the order is changed from the specification since
@@ -93,7 +113,7 @@ typedef struct
 #endif
 
 // B.2.4.4 Restart interval definition syntax
-typedef struct
+typedef struct _RestartInterval
 {
 	uint16_t Lr; // Define restart interval segment length
 	uint16_t Ri; // Specifies the number of MCU in the restart interval.

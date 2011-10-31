@@ -35,14 +35,14 @@ void Decode_frame(SetjmpStreamState *in_out_pSetjmpStreamState,
 // E.2.3 Control procedure for decoding a scan
 void Decode_scan(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_setjmpStreamReadInterface, 
-	RestartInterval in_ri);
+	JpegContext *in_pJpegContext);
 // E.2.4 Control procedure for decoding a restart interval
 void Decode_restart_interval(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_setjmpStreamReadInterface, 
-	RestartInterval in_ri);
+	const JpegContext *in_pcJpegContext);
 void Reset_decoder();
 // E.2.5 Control procedure for decoding a minimum coded unit (MCU)
-void Decode_MCU();
+void Decode_MCU(const JpegContext *in_pcJpegContext);
 void Decode_data_unit();
 
 #ifdef __cplusplus

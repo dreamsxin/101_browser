@@ -18,7 +18,7 @@
 #define _JpegContext_h
 
 #include "MiniStdlib/cstdbool.h"
-#include "JpegSegments.h"
+#include "JpegDecoder/T81_SectionB2_B3.h"
 
 typedef struct
 {
@@ -28,14 +28,14 @@ typedef struct
 
 typedef struct
 {
-	bool isQuantizationTableInitialized[4];
-	QuantizationTable quantizationTables[4];
+	QuantizationTable *quantizationTables[4];
 } QuantizationTablesState;
 
 typedef struct
 {
 	RestartIntervalState restartIntervalState;
 	QuantizationTablesState quantizationTablesState;
+	ScanHeader scanHeader;
 } JpegContext;
 
 #endif
