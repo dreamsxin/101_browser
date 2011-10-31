@@ -35,6 +35,7 @@ typedef struct
 {
 	RestartIntervalState restartIntervalState;
 	QuantizationTablesState quantizationTablesState;
+	FrameHeader frameHeader;
 	ScanHeader scanHeader;
 } JpegContext;
 

@@ -21,15 +21,17 @@
 #include "JpegDecoder/JpegDecoderUtil.h"
 #include "JpegDecoder/JpegContext.h"
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+void readFrameHeader(SetjmpStreamState *in_out_pSetjmpStreamState, 
+	ByteStreamInterface in_setjmpStreamReadInterface, 
+	FrameHeader* in_pFrameHeader, uint8_t in_SOF_n);
+
 void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_setjmpStreamReadInterface, 
 	ScanHeader* in_pScanHeader);
-
 
 void readRestartInterval(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_setjmpStreamReadInterface, 

@@ -137,8 +137,9 @@ void Decode_frame(SetjmpStreamState *in_out_pSetjmpStreamState,
 	ByteStreamInterface in_setjmpStreamReadInterface, 
 	uint8_t currentMarker, JpegContext *in_pJpegContext)
 {
-	// TODO: Replace by "Interpret frame header"
-	defaultMarkerInterpreter(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, currentMarker);
+	readFrameHeader(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, 
+		&in_pJpegContext->frameHeader, currentMarker);
+
 	currentMarker = readMarker(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface);
 
 	while (currentMarker != SOS_MARKER)

@@ -35,8 +35,13 @@
 typedef struct _FrameComponentSpecificationParameter
 {
 	uint8_t C;
-	uint8_t H : 4;
+	/*
+	* Note that the order is changed from the specification since
+	* the specification uses big-endian bit ordering while X86 compilers
+	* use little-endian
+	*/
 	uint8_t V : 4;
+	uint8_t H : 4;
 	uint8_t Tq;
 } FrameComponentSpecificationParameter;
 
