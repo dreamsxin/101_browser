@@ -20,6 +20,8 @@
 #include <vector>
 #include "Util/Iterator.h"
 #include "TestSuite/TestSuite.h"
+// for NULL
+#include "MiniStdlib/cstddef.h"
 
 template <typename IteratorState> 
 void runIteratorForward(IteratorState* in_pItState, 

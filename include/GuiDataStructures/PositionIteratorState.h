@@ -2,6 +2,8 @@
 #define _PositionIteratorState_h
 
 #include <vector>
+// for size_t
+#include "MiniStdlib/cstddef.h"
 
 template <typename Type> struct PositionIteratorState
 {

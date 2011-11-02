@@ -24,19 +24,22 @@
 #include "GuiDataStructures/TriangleStripBorderIterator.h"
 #include "GuiDataStructures/OuterBorderIterator.h"
 
+// for size_t
+#include "MiniStdlib/cstddef.h"
+
 void createStraightBorder(Vertex2<float> prevVertex, 
-						  Vertex2<float> currVertex,
-						  Vertex2<float> nextVertex,
-						  std::vector<Vertex2<float> >* pBorderTriangleStrip,
-						  float borderWidth, 
-						  size_t);
+                          Vertex2<float> currVertex,
+                          Vertex2<float> nextVertex,
+                          std::vector<Vertex2<float> >* pBorderTriangleStrip,
+                          float borderWidth, 
+                          size_t);
 
 void createRoundBorder(Vertex2<float> prevVertex, 
-					   Vertex2<float> currVertex,
-					   Vertex2<float> nextVertex,
-					   std::vector<Vertex2<float> >* pBorderTriangleStrip,
-					   float borderWidth, 
-					   size_t curveSegmentsCount);
+                       Vertex2<float> currVertex,
+                       Vertex2<float> nextVertex,
+                       std::vector<Vertex2<float> >* pBorderTriangleStrip,
+                       float borderWidth, 
+                       size_t curveSegmentsCount);
 
 /*!
 * triangleStrip: a triangle strip with non-repeating vertices
@@ -44,15 +47,14 @@ void createRoundBorder(Vertex2<float> prevVertex,
 * borderWidth: the desired width of the border
 */
 inline void createBorderTriangleStrip(
-									  DoubleIteratorInstance<
-									  TriangleStripBorderIterator<Vertex2<float> >::IteratorState> itInstance,
-									  std::vector<Vertex2<float> >* pBorderTriangleStrip,
-									  void (*borderCreatingFunction)(Vertex2<float>, 
-									  Vertex2<float>, Vertex2<float>, 
-									  std::vector<Vertex2<float> >*, 
-									  float, size_t),
-									  float borderWidth,
-									  size_t curveSegmentsCount)
+	DoubleIteratorInstance<
+	TriangleStripBorderIterator<Vertex2<float> >::IteratorState> itInstance,
+	std::vector<Vertex2<float> >* pBorderTriangleStrip,
+	void (*borderCreatingFunction)(Vertex2<float>, 
+		Vertex2<float>, Vertex2<float>, 
+		std::vector<Vertex2<float> >*, float, size_t),
+	float borderWidth,
+	size_t curveSegmentsCount)
 {
 	assert(itInstance.state.mpVector->size()>=2);
 
@@ -114,8 +116,8 @@ inline void createBorderTriangleStrip(
 * currentHeight: the height of the desired viewport
 */
 void createBoxVertices(std::vector<Vertex2<float> >* boxVertices,
-					   float left, float top, float width, float height,
-					   float currentHeight);
+                       float left, float top, float width, float height,
+                       float currentHeight);
 
 void drawVertexArray(const std::vector<Vertex2<float> >* vertices, Color4<float> colors[4]);
 
