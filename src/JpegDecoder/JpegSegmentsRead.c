@@ -15,6 +15,7 @@
 */
 
 #include "JpegDecoder/JpegSegmentsRead.h"
+#include "JpegDecoder/T81_TableB1.h"
 #include "MiniStdlib/memory.h"  // for ENDIANNESS_CONVERT_SIMPLE
 #include "MiniStdlib/safe_free.h"
 #include "SetjmpUtil/ConditionalLongjmp.h"
@@ -27,8 +28,44 @@ void readFrameHeader(SetjmpStreamState *in_out_pSetjmpStreamState,
 	jmp_buf allocFailureJmpBuf;
 	int result;
 	uint8_t idx;
+	T81_EncodingProcess encodingProcess;
+
+	assert(
+		SOF_0_MARKER == in_SOF_n  || 
+		SOF_1_MARKER == in_SOF_n  || 
+		SOF_2_MARKER == in_SOF_n  || 
+		SOF_3_MARKER == in_SOF_n  || 
+		SOF_5_MARKER == in_SOF_n  || 
+		SOF_6_MARKER == in_SOF_n  || 
+		SOF_7_MARKER == in_SOF_n  || 
+		SOF_9_MARKER == in_SOF_n  || 
+		SOF_10_MARKER == in_SOF_n || 
+		SOF_11_MARKER == in_SOF_n || 
+		SOF_13_MARKER == in_SOF_n || 
+		SOF_14_MARKER == in_SOF_n || 
+		SOF_15_MARKER == in_SOF_n || 
+		SOF_55_MARKER == in_SOF_n);
+
+	longjmpIf(
+		// Start Of Frame markers, differential, Huffman coding
+		SOF_5_MARKER == in_SOF_n  || 
+		SOF_6_MARKER == in_SOF_n  || 
+		SOF_7_MARKER == in_SOF_n  || 
+		// Start Of Frame markers, differential, arithmetic coding
+		SOF_13_MARKER == in_SOF_n || 
+		SOF_14_MARKER == in_SOF_n || 
+		SOF_15_MARKER == in_SOF_n ||
+		SOF_55_MARKER == in_SOF_n, 
+		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		ReadResultNotImplemented, printHandler, 
+		"readFrameHeader: differential coding (and T.87 frames) are currently unsupported");
 	
 	in_pFrameHeader->SOF_n = in_SOF_n;
+
+	encodingProcess = getEncodingProcess(in_SOF_n);
+
+	assert(T81_EncodingProcess_InvalidParameter != encodingProcess);
+
 	
 	(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 		&in_pFrameHeader->Lf, 
@@ -59,6 +96,49 @@ void readFrameHeader(SetjmpStreamState *in_out_pSetjmpStreamState,
 	(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 		in_pFrameHeader->pFrameComponentSpecificationParameters, 
 		in_pFrameHeader->Nf * sizeof(FrameComponentSpecificationParameter));
+
+	// Table B.2
+	if (
+		((T81_EncodingProcess_BaselineSequentialDCT == encodingProcess) && in_pFrameHeader->P != 8) ||
+		((T81_EncodingProcess_ExtendedSequentialDCT == encodingProcess || T81_EncodingProcess_ProgressiveDCT == encodingProcess) && in_pFrameHeader->P != 8 && in_pFrameHeader->P != 12) ||
+		((T81_EncodingProcess_Lossless == encodingProcess) && (in_pFrameHeader->P < 2 || in_pFrameHeader->P > 16)))
+	{
+		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
+	}
+	if (0 == in_pFrameHeader->X)
+	{
+		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
+	}
+	if (0 == in_pFrameHeader->Nf)
+	{
+		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
+	}
+	if (T81_EncodingProcess_ProgressiveDCT == encodingProcess && in_pFrameHeader->Nf > 4)
+	{
+		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
+	}
+
+	for (idx = 0; idx < in_pFrameHeader->Nf; idx++)
+	{
+		if (0 == in_pFrameHeader->pFrameComponentSpecificationParameters[idx].H ||
+			in_pFrameHeader->pFrameComponentSpecificationParameters[idx].H > 4)
+			longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
+
+		if (0 == in_pFrameHeader->pFrameComponentSpecificationParameters[idx].V ||
+			in_pFrameHeader->pFrameComponentSpecificationParameters[idx].V > 4)
+			longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
+
+		if ((
+			T81_EncodingProcess_BaselineSequentialDCT == encodingProcess || 
+			T81_EncodingProcess_ExtendedSequentialDCT == encodingProcess || 
+			T81_EncodingProcess_ProgressiveDCT == encodingProcess) && 
+			in_pFrameHeader->pFrameComponentSpecificationParameters[idx].Tq > 4)
+			longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
+
+		if (T81_EncodingProcess_Lossless == encodingProcess && 
+			in_pFrameHeader->pFrameComponentSpecificationParameters[idx].Tq != 0)
+			longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData);
+	}
 
 	printf("Lf = %u\tP = %u\tY = %u\tX=%u\tNf = %u\n", 
 		in_pFrameHeader->Lf, in_pFrameHeader->P, in_pFrameHeader->Y, 

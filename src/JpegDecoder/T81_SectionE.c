@@ -18,7 +18,7 @@
 #include "MiniStdlib/MTAx_cstdlib.h"
 #include "MiniStdlib/cassert.h"
 #include "MiniStdlib/cstring.h" // for memset
-#include "JpegDecoder/JpegDecoderMarkers.h"
+#include "JpegDecoder/T81_TableB1.h"
 #include "JpegDecoder/JpegDecoderUtil.h"
 #include "JpegDecoder/JpegSegmentsRead.h"
 #include "SetjmpUtil/ConditionalLongjmp.h"

@@ -14,8 +14,8 @@
 * limitations under the License.
 */
 
-#ifndef _JpegDecoderMarkers
-#define _JpegDecoderMarkers
+#ifndef _T81_TableB1_h
+#define _T81_TableB1_h
 
 // See  T.081 Table B.1 (page 32) – Marker code assignments
 

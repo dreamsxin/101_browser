@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "JpegDecoder/JpegDecoderMarkers.h"
+#include "JpegDecoder/T81_TableB1.h"
 #include "JpegDecoder/JpegDecoderUtil.h"
 #include "MiniStdlib/memory.h"  // for ENDIANNESS_CONVERT_SIMPLE
 #include "MiniStdlib/cstdint.h" // for uint16_t
@@ -194,4 +194,29 @@ void defaultMarkerInterpreter(SetjmpStreamState *in_out_pSetjmpStreamState,
 	}
 
 	printf("\n");
+}
+
+T81_EncodingProcess getEncodingProcess(uint8_t SOF_n)
+{
+	switch (SOF_n)
+	{
+	case SOF_0_MARKER:
+		return T81_EncodingProcess_BaselineSequentialDCT;
+	case SOF_1_MARKER:
+	case SOF_9_MARKER:
+		return T81_EncodingProcess_ExtendedSequentialDCT;
+	case SOF_2_MARKER:
+	case SOF_10_MARKER:
+		return T81_EncodingProcess_ProgressiveDCT;
+	case SOF_3_MARKER:
+	case SOF_11_MARKER:
+		return T81_EncodingProcess_Lossless;
+	default:
+		return T81_EncodingProcess_InvalidParameter;
+	}
+}
+
+T81_Coding getCoding(uint8_t SOF_n)
+{
+	return T81_Coding_InvalidParameter;
 }

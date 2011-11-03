@@ -89,7 +89,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegContext.h" />
-    <ClInclude Include="..\..\..\include\JpegDecoder\JpegDecoderMarkers.h" />
+    <ClInclude Include="..\..\..\include\JpegDecoder\T81_TableB1.h" />
     <ClInclude Include="..\..\..\include\JpegDecoder\JpegDecoderUtil.h" />
     <ClInclude Include="..\..\..\include\JpegDecoder\T81_SectionE.h" />
     <ClInclude Include="..\..\..\include\JpegDecoder\T81_SectionF.h" />
