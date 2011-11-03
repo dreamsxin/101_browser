@@ -51,12 +51,12 @@ module fileapi
   	  readonly attribute DOMError error;
   
   	  // event handler attributes
-  	  attribute [TreatNonCallableAsNull] Function? onloadstart;
-  	  attribute [TreatNonCallableAsNull] Function? onprogress;
-  	  attribute [TreatNonCallableAsNull] Function? onload;
-  	  attribute [TreatNonCallableAsNull] Function? onabort;
-  	  attribute [TreatNonCallableAsNull] Function? onerror;
-  	  attribute [TreatNonCallableAsNull] Function? onloadend;
+  	  [TreatNonCallableAsNull] attribute Function? onloadstart;
+  	  [TreatNonCallableAsNull] attribute Function? onprogress;
+  	  [TreatNonCallableAsNull] attribute Function? onload;
+  	  [TreatNonCallableAsNull] attribute Function? onabort;
+  	  [TreatNonCallableAsNull] attribute Function? onerror;
+  	  [TreatNonCallableAsNull] attribute Function? onloadend;
   
   	};
   	    

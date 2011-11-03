@@ -1,8 +1,9 @@
 module serversent
 {
-  [Constructor(DOMString url)]
+  [Constructor(DOMString url, optional EventSourceInit eventSourceInitDict)]
   interface EventSource : EventTarget {
     readonly attribute DOMString url;
+    readonly attribute boolean withCredentials;
   
     // ready state
     const unsigned short CONNECTING = 0;
@@ -15,6 +16,10 @@ module serversent
     [TreatNonCallableAsNull] attribute Function? onmessage;
     [TreatNonCallableAsNull] attribute Function? onerror;
     void close();
+  };
+  
+  dictionary EventSourceInit {
+    boolean withCredentials = false;
   };
 
 

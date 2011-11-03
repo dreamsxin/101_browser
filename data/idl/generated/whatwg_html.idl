@@ -162,7 +162,7 @@ module html
     [TreatNonCallableAsNull] attribute Function? onwaiting;
   
     // special event handler IDL attributes that only apply to Document objects
-    [TreatNonCallableAsNull] attribute Function? onreadystatechange;
+    [TreatNonCallableAsNull,LenientThis] attribute Function? onreadystatechange;
   };
 
   partial interface XMLDocument {
@@ -393,10 +393,8 @@ module html
              attribute DOMString hash;
   };
 
-  interface HTMLTimeElement : HTMLElement {
-             attribute DOMString dateTime;
-             attribute boolean pubDate;
-    readonly attribute Date? valueAsDate;
+  interface HTMLDataElement : HTMLElement {
+             attribute DOMString value;
   };
 
   interface HTMLSpanElement : HTMLElement {};
@@ -925,8 +923,8 @@ module html
   
     readonly attribute HTMLFormControlsCollection elements;
     readonly attribute long length;
-    legacycaller getter Element (unsigned long index);
-    legacycaller getter object (DOMString name);
+    getter Element (unsigned long index);
+    getter object (DOMString name);
   
     void submit();
     void reset();
@@ -1738,9 +1736,10 @@ module html
     MessagePort[]? ports;
   };
 
-  [Constructor(DOMString url)]
+  [Constructor(DOMString url, optional EventSourceInit eventSourceInitDict)]
   interface EventSource : EventTarget {
     readonly attribute DOMString url;
+    readonly attribute boolean withCredentials;
   
     // ready state
     const unsigned short CONNECTING = 0;
@@ -1753,6 +1752,10 @@ module html
     [TreatNonCallableAsNull] attribute Function? onmessage;
     [TreatNonCallableAsNull] attribute Function? onerror;
     void close();
+  };
+  
+  dictionary EventSourceInit {
+    boolean withCredentials = false;
   };
 
   [Constructor(DOMString url, optional DOMString protocols),

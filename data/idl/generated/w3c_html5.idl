@@ -141,7 +141,7 @@ module html5
     [TreatNonCallableAsNull] attribute Function? onwaiting;
   
     // special event handler IDL attributes that only apply to Document objects
-    [TreatNonCallableAsNull] attribute Function? onreadystatechange;
+    [TreatNonCallableAsNull,LenientThis] attribute Function? onreadystatechange;
   };
 
   partial interface XMLDocument {
@@ -358,10 +358,8 @@ module html5
              attribute DOMString hash;
   };
 
-  interface HTMLTimeElement : HTMLElement {
-             attribute DOMString dateTime;
-             attribute boolean pubDate;
-    readonly attribute Date? valueAsDate;
+  interface HTMLDataElement : HTMLElement {
+             attribute DOMString value;
   };
 
   interface HTMLSpanElement : HTMLElement {};
@@ -776,8 +774,8 @@ module html5
   
     readonly attribute HTMLFormControlsCollection elements;
     readonly attribute long length;
-    legacycaller getter Element (unsigned long index);
-    legacycaller getter object (DOMString name);
+    getter Element (unsigned long index);
+    getter object (DOMString name);
   
     void submit();
     void reset();

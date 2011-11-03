@@ -129,7 +129,6 @@ module domcore
     void normalize();
   
     Node cloneNode(optional boolean deep);
-    boolean isSameNode(Node? node);
     boolean isEqualNode(Node? node);
   
     DOMString lookupPrefix(DOMString? namespace);
