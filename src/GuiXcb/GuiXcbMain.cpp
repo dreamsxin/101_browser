@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <X11/Xlib.h>
+#include <xcb/xcb.h>
 #include <GL/glx.h>
 #include <cstdio>
 #include <cstdlib>
@@ -27,9 +27,14 @@ using namespace std;
 
 struct OZO_Display
 {
-	Display* display;
-	int screen;
-	Window rootWindow;
+	// Display* display;
+	xcb_connection_t *connection;
+
+	//int screen;
+	int screen_nbr;
+
+	//Window rootWindow;
+	xcb_window_t root_window;
 };
 
 struct OZO_Window
@@ -46,17 +51,36 @@ struct OZO_Atoms
 
 void cleanup(OZO_Display* pDisplay, OZO_Window* pWindow);
 
+xcb_screen_t *screen_of_display(xcb_connection_t *c, int screen)
+{
+	xcb_screen_iterator_t iter;
+
+	iter = xcb_setup_roots_iterator (xcb_get_setup (c));
+	for (; iter.rem; --screen, xcb_screen_next (&iter))
+		if (screen == 0)
+			return iter.data;
+
+	return NULL;
+}
+
 void initDisplay(OZO_Display* pDisplay, const char* displayName)
 {
-	if ((pDisplay->display = XOpenDisplay(displayName)) == NULL)
+	//if ((pDisplay->display = XOpenDisplay(displayName)) == NULL)
+	if ((pDisplay->connection = xcb_connect(displayName, &pDisplay->screen_nbr)) == NULL)
 	{
 		fprintf(stderr, "Could not open display\n");
 		cleanup(pDisplay, NULL);
 		exit(1);
 	}
 
-	pDisplay->screen = DefaultScreen(pDisplay->display);
-	pDisplay->rootWindow = RootWindow(pDisplay->display, pDisplay->screen);
+	//pDisplay->screen = DefaultScreen(pDisplay->display);
+
+	//pDisplay->rootWindow = RootWindow(pDisplay->display, pDisplay->screen);
+	xcb_screen_t *screen = screen_of_display(pDisplay->connection, pDisplay->screen_nbr);
+	if (screen)
+		pDisplay->root_window = screen->root;
+	else
+		pDisplay->root_window = { 0 };
 }
 
 GLXFBConfig* chooseFBConfig(const OZO_Display* pDisplay)
@@ -70,13 +94,14 @@ GLXFBConfig* chooseFBConfig(const OZO_Display* pDisplay)
 		None
 	};
 
-	GLXFBConfig * fbconfigArray;  /*  Array of FBConfigs  */
+	GLXFBConfig * fbconfigArray = NULL;  /*  Array of FBConfigs  */
         int fbconfigArraySize;        /*  Number of FBConfigs in the array  */
 
-	fbconfigArray = glXChooseFBConfig(pDisplay->display,
+	// TODO
+	/*fbconfigArray = glXChooseFBConfig(pDisplay->display,
 		pDisplay->screen,
 		attributes,
-		&fbconfigArraySize );
+		&fbconfigArraySize );*/
 		
 	return fbconfigArray;
 }
