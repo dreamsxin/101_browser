@@ -684,7 +684,7 @@ module webapps
              attribute long textPosition;
              attribute long size;
              attribute DOMString alignment;
-             attribute DOMString cueAsSource;
+             attribute DOMString text;
     DocumentFragment getCueAsHTML();
   
     [TreatNonCallableAsNull] attribute Function? onenter;
@@ -1527,7 +1527,7 @@ module webapps
     File? getAsFile();
   };
   
-  [Callback=FunctionOnly, NoInterfaceObject]
+  [Callback, NoInterfaceObject]
   interface FunctionStringCallback {
     void handleEvent(DOMString data);
   };
@@ -1547,7 +1547,7 @@ module webapps
   };
   Navigator implements NavigatorUserMedia;
   
-  [Callback=FunctionOnly, NoInterfaceObject]
+  [Callback, NoInterfaceObject]
   interface NavigatorUserMediaSuccessCallback {
     void handleEvent(LocalMediaStream stream);
   };
@@ -1558,7 +1558,7 @@ module webapps
     readonly attribute unsigned short code;
   };
   
-  [Callback=FunctionOnly, NoInterfaceObject]
+  [Callback, NoInterfaceObject]
   interface NavigatorUserMediaErrorCallback {
     void handleEvent(NavigatorUserMediaError error);
   };
@@ -1590,7 +1590,7 @@ module webapps
     void getRecordedData(BlobCallback? callback);
   };
   
-  [Callback=FunctionOnly, NoInterfaceObject]
+  [Callback, NoInterfaceObject]
   interface BlobCallback {
     void handleEvent(Blob blob);
   };
@@ -1625,7 +1625,7 @@ module webapps
     [TreatNonCallableAsNull] attribute Function? onremovestream;
   };
   
-  [Callback=FunctionOnly, NoInterfaceObject]
+  [Callback, NoInterfaceObject]
   interface SignalingCallback {
     void handleEvent(DOMString message, PeerConnection source);
   };

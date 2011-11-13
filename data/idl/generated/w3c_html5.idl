@@ -358,8 +358,10 @@ module html5
              attribute DOMString hash;
   };
 
-  interface HTMLDataElement : HTMLElement {
-             attribute DOMString value;
+  interface HTMLTimeElement : HTMLElement {
+             attribute DOMString dateTime;
+             attribute boolean pubDate;
+    readonly attribute Date? valueAsDate;
   };
 
   interface HTMLSpanElement : HTMLElement {};
