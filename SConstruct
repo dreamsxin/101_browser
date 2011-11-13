@@ -23,9 +23,13 @@ font_server = env.Clone()
 font_server.Append(LIBS = ['MiniStdlib'])
 font_server.Program('bin/FontServer', Glob('src/FontServer/*.cpp'), LIBPATH = ['#/lib'])
 
-guix = env.Clone()
-guix.Append(LIBS = ['X11', 'GL'])
-guix.Program('bin/GuiXlib', Glob('src/GuiXlib/*.cpp')+Glob('src/GuiOpenGL/*.cpp'))
+GuiXlib = env.Clone()
+GuiXlib.Append(LIBS = ['X11', 'GL'])
+GuiXlib.Program('bin/GuiXlib', Glob('src/GuiXlib/*.cpp')+Glob('src/GuiOpenGL/*.cpp'))
+
+#GuiXcb = env.Clone()
+#GuiXcb.Append(LIBS = ['xcb', 'GL'])
+#GuiXlib.Program('bin/GuiXcb', Glob('src/GuiXcb/*.cpp')+Glob('src/GuiOpenGL/*.cpp'))
 
 network_posix = env.Clone()
 network_posix.Program('bin/NetworkPosix', Glob('src/NetworkPosix/*.cpp'))
