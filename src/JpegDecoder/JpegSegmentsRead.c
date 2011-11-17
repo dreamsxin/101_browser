@@ -156,7 +156,7 @@ void readFrameHeader(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_setjmpStreamReadInterface, 
-	ScanHeader* in_pScanHeader)
+	ScanHeader* in_pScanHeader, const FrameHeader *in_pcFrameHeader)
 {
 	SetjmpState invalidDataSetjmpState;
 	SetjmpState allocationFailureSetjmpState;
@@ -181,6 +181,17 @@ void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState,
 		in_pScanHeader->Ns == 0 || in_pScanHeader->Ns>4, 
 		"readScanHeader: invalid value of Ns");
 
+
+
+	/*assert(T81_EncodingProcess_InvalidParameter != in_encodingProcess);
+	assert(T81_EncodingProcess_BaselineSequentialDCT == in_encodingProcess ||
+		T81_EncodingProcess_BaselineSequentialDCT == in_encodingProcess ||
+		T81_EncodingProcess_ExtendedSequentialDCT == in_encodingProcess ||
+		T81_EncodingProcess_ProgressiveDCT == in_encodingProcess ||
+		T81_EncodingProcess_Lossless == in_encodingProcess);*/
+
+
+
 	printf("Ls = %u\tNs = %u\n", in_pScanHeader->Ls, in_pScanHeader->Ns);
 
 	setjmpStateInit(&allocationFailureSetjmpState, 
@@ -198,15 +209,15 @@ void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState,
 			in_pScanHeader->componentSpecificationParameters+i, 
 			sizeof(ScanComponentSpecificationParameter));
 		
-		printf("Cs%u = %2X\t", i+1, in_pScanHeader->componentSpecificationParameters[i].Cs);
-		printf("Td%u = %1X\t", i+1, in_pScanHeader->componentSpecificationParameters[i].Td);
-		printf("Ta%u = %1X\n", i+1, in_pScanHeader->componentSpecificationParameters[i].Ta);
+		printf("Cs%u = %u\t", i+1, in_pScanHeader->componentSpecificationParameters[i].Cs);
+		printf("Td%u = %u\t", i+1, in_pScanHeader->componentSpecificationParameters[i].Td);
+		printf("Ta%u = %u\n", i+1, in_pScanHeader->componentSpecificationParameters[i].Ta);
 	}
 
 	(*in_setjmpStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 		&in_pScanHeader->Ss, sizeof(in_pScanHeader->Ss));
 
-	printf("Ss = %2X\tSe = %2X\tAh = %1X\tAl = %1X\n", 
+	printf("Ss = %u\tSe = %u\tAh = %u\tAl = %u\n", 
 		in_pScanHeader->Ss, in_pScanHeader->Se, in_pScanHeader->Ah, in_pScanHeader->Al);
 }
 

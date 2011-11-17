@@ -163,7 +163,8 @@ void Decode_scan(SetjmpStreamState *in_out_pSetjmpStreamState,
 {
 	size_t m = 0;
 
-	readScanHeader(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, &in_pJpegContext->scanHeader);
+	readScanHeader(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, 
+		&in_pJpegContext->scanHeader, &in_pJpegContext->frameHeader);
 
 	// TODO: There is a loop for this. Implement it
 	Decode_restart_interval(in_out_pSetjmpStreamState, in_setjmpStreamReadInterface, 

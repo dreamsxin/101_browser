@@ -24,14 +24,16 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+	
+// Section B.2.2
 void readFrameHeader(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_setjmpStreamReadInterface, 
 	FrameHeader* in_pFrameHeader, uint8_t in_SOF_n);
 
+// Section B.2.3
 void readScanHeader(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_setjmpStreamReadInterface, 
-	ScanHeader* in_pScanHeader);
+	ScanHeader* in_pScanHeader, const FrameHeader *in_pcFrameHeader);
 
 void readRestartInterval(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_setjmpStreamReadInterface, 
