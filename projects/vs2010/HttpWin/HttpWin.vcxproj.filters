@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\NetworkWin\NetworkWinMain.cpp">
+    <ClCompile Include="..\..\..\src\HttpWin\HttpWinMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
