@@ -109,4 +109,6 @@ http://www.cl.cam.ac.uk/~mgk25/ucs/examples/UTF-8-test.txt (linked from http://w
 
 h2. Subfolder "WebP"
 
-All files (1.webp to 5.webp and 1.sm.webp to 5.sm.webp) are taken from http://code.google.com/intl/de/speed/webp/gallery.html
+1.webp to 5.webp and 1.sm.webp to 5.sm.webp are taken from http://code.google.com/intl/de/speed/webp/gallery1.html
+
+This page is linked from http://code.google.com/intl/de/speed/webp/gallery.html
