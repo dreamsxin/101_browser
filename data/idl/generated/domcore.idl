@@ -70,7 +70,7 @@ module domcore
   
   dictionary CustomEventInit : EventInit {
     any detail;
-  }
+  };
 
   interface EventTarget {
     void addEventListener(DOMString type, EventListener? listener, optional boolean capture);
@@ -346,7 +346,7 @@ module domcore
     };
   
     short compareBoundaryPoints(CompareHow how, Range sourceRange);
-    void deleteContents()
+    void deleteContents();
     DocumentFragment extractContents();
     DocumentFragment cloneContents();
     void insertNode(Node node);

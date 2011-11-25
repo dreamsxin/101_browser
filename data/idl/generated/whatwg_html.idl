@@ -397,6 +397,10 @@ module html
              attribute DOMString value;
   };
 
+  interface HTMLTimeElement : HTMLElement {
+             attribute DOMString datetime;
+  };
+
   interface HTMLSpanElement : HTMLElement {};
 
   interface HTMLBRElement : HTMLElement {};
