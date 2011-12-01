@@ -269,13 +269,13 @@ module domcore
     readonly attribute DOMTokenList classList;
   
     readonly attribute Attr[] attributes;
-    DOMString? getAttribute(DOMString qualifiedName);
+    DOMString? getAttribute(DOMString name);
     DOMString? getAttributeNS(DOMString? namespace, DOMString localName);
-    void setAttribute(DOMString qualifiedName, DOMString value);
-    void setAttributeNS(DOMString? namespace, DOMString qualifiedName, DOMString value);
-    void removeAttribute(DOMString qualifiedName);
+    void setAttribute(DOMString name, DOMString value);
+    void setAttributeNS(DOMString? namespace, DOMString name, DOMString value);
+    void removeAttribute(DOMString name);
     void removeAttributeNS(DOMString? namespace, DOMString localName);
-    boolean hasAttribute(DOMString qualifiedName);
+    boolean hasAttribute(DOMString name);
     boolean hasAttributeNS(DOMString? namespace, DOMString localName);
   
     NodeList getElementsByTagName(DOMString qualifiedName);
@@ -291,11 +291,12 @@ module domcore
   };
 
   interface Attr {
+    readonly attribute DOMString name;
+             attribute DOMString value;
+  
     readonly attribute DOMString? namespaceURI;
     readonly attribute DOMString? prefix;
     readonly attribute DOMString localName;
-    readonly attribute DOMString name;
-             attribute DOMString value;
   };
 
   interface CharacterData : Node {
