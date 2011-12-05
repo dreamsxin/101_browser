@@ -107,7 +107,6 @@ void createOpenGLTexture(Texture* in_pTexture)
 		colorModeTextureFormat(in_pTexture->colorMode),   // the format of the colors
 		                                                  // GL_RGB, GL_RGBA etc.
 		GL_UNSIGNED_BYTE,                                 // the type of each component
-		in_pTexture->data
-		);
+		in_pTexture->data);
 }
 
