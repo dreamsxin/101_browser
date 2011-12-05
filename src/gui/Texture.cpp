@@ -85,6 +85,12 @@ void createOpenGLTexture(Texture* in_pTexture)
 {
 	glGenTextures(1, &in_pTexture->textureID);
 	glBindTexture(GL_TEXTURE_2D, in_pTexture->textureID);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // Linear Filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // Linear Filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,     GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,     GL_CLAMP_TO_EDGE);
+
 	glTexImage2D(GL_TEXTURE_2D,	                          // type of texture
 		0,                                                // the texture level
 		/*
@@ -103,9 +109,5 @@ void createOpenGLTexture(Texture* in_pTexture)
 		GL_UNSIGNED_BYTE,                                 // the type of each component
 		in_pTexture->data
 		);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // Linear Filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // Linear Filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,     GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,     GL_CLAMP_TO_EDGE);
 }
 
