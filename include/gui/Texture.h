@@ -47,6 +47,7 @@ void allocateTextureMemory(Texture* in_pTexture);
 void freeTextureMemory(Texture* in_pTexture);
 
 GLenum colorModeTextureFormat(ColorMode colorMode);
+GLenum colorModeInternalFormat(ColorMode colorMode);
 
 void createOpenGLTexture(Texture* in_pTexture);
 

@@ -22,12 +22,11 @@ size_t colorModePixelBytesCount(ColorMode colorMode)
 {
 	switch (colorMode)
 	{
-	case ColorModeInvalid:
-		return 0;
 	case ColorModeRGB:
 		return 3;
 	case ColorModeRGBA:
 		return 4;
+	case ColorModeInvalid:
 	default:
 		return 0;
 	}
@@ -58,12 +57,25 @@ GLenum colorModeTextureFormat(ColorMode colorMode)
 {
 	switch (colorMode)
 	{
-	case ColorModeInvalid:
-		return 0;
 	case ColorModeRGB:
 		return GL_RGB;
 	case ColorModeRGBA:
 		return GL_RGBA;
+	case ColorModeInvalid:
+	default:
+		return 0;
+	}
+}
+
+GLenum colorModeInternalFormat(ColorMode colorMode)
+{
+	switch (colorMode)
+	{
+	case ColorModeRGB:
+		return GL_RGB8;
+	case ColorModeRGBA:
+		return GL_RGBA8;
+	case ColorModeInvalid:
 	default:
 		return 0;
 	}
@@ -75,7 +87,14 @@ void createOpenGLTexture(Texture* in_pTexture)
 	glBindTexture(GL_TEXTURE_2D, in_pTexture->textureID);
 	glTexImage2D(GL_TEXTURE_2D,	                          // type of texture
 		0,                                                // the texture level
-		colorModePixelBytesCount(in_pTexture->colorMode), // number of bytes per pixel
+		/*
+		* Q: Why do we use GL_RGB8/GL_RGBA8 (this is what colorModeInternalFormat
+		*    returns) instead of 3 or 4?
+		*
+		* A: This is highly recommended on
+		*    http://www.opengl.org/wiki/Common_Mistakes#Image_precision
+		*/
+		colorModeInternalFormat(in_pTexture->colorMode),
 		in_pTexture->width,                               // width
 		in_pTexture->height,                              // height
 		0,                                                // border size
