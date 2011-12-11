@@ -109,4 +109,3 @@ void createOpenGLTexture(Texture* in_pTexture)
 		GL_UNSIGNED_BYTE,                                 // the type of each component
 		in_pTexture->data);
 }
-
