@@ -359,9 +359,7 @@ module html5
   };
 
   interface HTMLTimeElement : HTMLElement {
-             attribute DOMString dateTime;
-             attribute boolean pubDate;
-    readonly attribute Date? valueAsDate;
+             attribute DOMString datetime;
   };
 
   interface HTMLSpanElement : HTMLElement {};
@@ -651,7 +649,7 @@ module html5
              attribute long textPosition;
              attribute long size;
              attribute DOMString alignment;
-             attribute DOMString cueAsSource;
+             attribute DOMString text;
     DocumentFragment getCueAsHTML();
   
     [TreatNonCallableAsNull] attribute Function? onenter;
@@ -844,7 +842,7 @@ module html5
              attribute DOMString type;
              attribute DOMString defaultValue;
              attribute DOMString value;
-             attribute Date valueAsDate;
+             attribute Date? valueAsDate;
              attribute double valueAsNumber;
              attribute unsigned long width;
   
@@ -1367,7 +1365,7 @@ module html5
     readonly attribute DOMString type;
     void getAsString(FunctionStringCallback? callback);  File? getAsFile();};
   
-  [Callback=FunctionOnly, NoInterfaceObject]
+  [Callback, NoInterfaceObject]
   interface FunctionStringCallback {
     void handleEvent(DOMString data);
   };

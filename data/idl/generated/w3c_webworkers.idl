@@ -37,22 +37,24 @@ module webworkers
     unsigned long lineno;
   };
 
-  [Supplemental, NoInterfaceObject]
-  interface AbstractWorker : EventTarget {
+  [NoInterfaceObject]
+  interface AbstractWorker {
     [TreatNonCallableAsNull] attribute Function? onerror;
   };
 
   [Constructor(DOMString scriptURL)]
-  interface Worker : AbstractWorker {
+  interface Worker : EventTarget {
     void terminate();
   
     void postMessage(any message, optional sequence<Transferable> transfer);  [TreatNonCallableAsNull] attribute Function? onmessage;
   };
+  Worker implements AbstractWorker;
 
   [Constructor(DOMString scriptURL, optional DOMString name)]
-  interface SharedWorker : AbstractWorker {
+  interface SharedWorker : EventTarget {
     readonly attribute MessagePort port;
   };
+  SharedWorker implements AbstractWorker;
 
   [NoInterfaceObject]
   interface WorkerUtils {

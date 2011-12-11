@@ -366,19 +366,18 @@ module domcore
     void selectNode(Node refNode);
     void selectNodeContents(Node refNode);
   
-    enum CompareHow : unsigned short {
-      START_TO_START = 0,
-      START_TO_END   = 1,
-      END_TO_END     = 2,
-      END_TO_START   = 3
-    };
+    const unsigned short START_TO_START = 0,
+    const unsigned short START_TO_END = 1,
+    const unsigned short END_TO_END = 2,
+    const unsigned short END_TO_START = 3
+    short compareBoundaryPoints(unsigned short how, Range sourceRange);
   
-    short compareBoundaryPoints(CompareHow how, Range sourceRange);
     void deleteContents();
     DocumentFragment extractContents();
     DocumentFragment cloneContents();
     void insertNode(Node node);
     void surroundContents(Node newParent);
+  
     Range cloneRange();
     void detach();
   
