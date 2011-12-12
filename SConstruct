@@ -31,9 +31,6 @@ GuiXlib.Program('bin/GuiXlib', Glob('src/GuiXlib/*.cpp')+Glob('src/GuiOpenGL/*.c
 #GuiXcb.Append(LIBS = ['xcb', 'GL'])
 #GuiXlib.Program('bin/GuiXcb', Glob('src/GuiXcb/*.cpp')+Glob('src/GuiOpenGL/*.cpp'))
 
-network_posix = env.Clone()
-network_posix.Program('bin/NetworkPosix', Glob('src/NetworkPosix/*.cpp'))
-
 Unicode = env.Clone()
 Unicode.Append(LIBS = ['MiniStdlib'])
 Unicode.SharedLibrary('bin/Unicode', Glob('src/Unicode/*.c')+Glob('src/Unicode/*.cpp')+Glob('src/Unicode/generated/*.cpp'), LIBPATH = ['#/lib'])
@@ -66,8 +63,14 @@ IO.SharedLibrary('bin/IO', Glob('src/IO/*.c'), LIBPATH = ['#/lib'])
 GIF = env.Clone()
 GIF.SharedLibrary('bin/GIF', Glob('src/GIF/*.c'))
 
+Network = env.Clone()
+Network.SharedLibrary('bin/Network', Glob('src/NetworkPosix/*.c'))
+
+DNS = env.Clone()
+DNS.SharedLibrary('bin/DNS', Glob('src/DNS/*.c'))
+
 testsuite = env.Clone()
 # testsuite.Append(CCFLAGS = '-fprofile-arcs -ftest-coverage', LIBS = ['gcov'])
-testsuite.Append(LIBS = ['MiniStdlib', 'BigNumber', 'RFC1950', 'RFC1951', 'Unicode', 'HTML5', 'Algorithm', 'SetjmpUtil', 'CoroutinePosix', 'GIF', 'IO', 'PNG', 'CRC', 'Ogg', 'Matroska'])
+testsuite.Append(LIBS = ['MiniStdlib', 'BigNumber', 'RFC1950', 'RFC1951', 'Unicode', 'HTML5', 'Algorithm', 'SetjmpUtil', 'CoroutinePosix', 'GIF', 'Network', 'DNS', 'IO', 'PNG', 'CRC', 'Ogg', 'Matroska'])
 testsuite.Program('bin/TestSuite', Glob('src/TestSuite/*.cpp')+Glob('src/TestSuite/*.c'), LIBPATH = ['#/bin','#/lib'])
 

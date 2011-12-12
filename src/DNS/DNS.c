@@ -15,7 +15,7 @@
 */
 
 #include "DNS/DNS.h"
-#include <winsock2.h>
+#include "Network/Network.h"
 #include <assert.h>
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstring.h"
@@ -147,10 +147,10 @@ int prepareQNAME(char *in_out_preQNAME)
 
 int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 {
-	SOCKET udpSocket;
-	SOCKADDR_IN udpAddr;
-	SOCKADDR_IN remoteAddr;
-	int remoteAddrLen = sizeof(remoteAddr);
+	socket_t udpSocket;
+	sockaddr_in_t udpAddr;
+	sockaddr_in_t remoteAddr;
+	socklen_t remoteAddrLen = sizeof(remoteAddr);
 	int result;
 	char buffer0[512];
 	int buffer0Size;
@@ -188,6 +188,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 
 	udpAddr.sin_family = AF_INET;
 	udpAddr.sin_port = htons(53);
+	// TODO: Use inet_pton inet_addr (Reason: http://stackoverflow.com/a/2422653)
 	udpAddr.sin_addr.s_addr = inet_addr(in_cDnsServer);
 
 	buffer0Size = sizeof(Header)
@@ -231,7 +232,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	*/
 	*((uint16_t*) (buffer0 + sizeof(Header) + 1 + domainLen + 1 + 2)) = ntohs(1);
 	
-	result = sendto(udpSocket, buffer0, buffer0Size, 0, (SOCKADDR *) &udpAddr, sizeof(udpAddr));
+	result = sendto(udpSocket, buffer0, buffer0Size, 0, (sockaddr_t *) &udpAddr, sizeof(udpAddr));
 
 	/*
 	* To quote
@@ -249,9 +250,9 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 
 	assert(buffer0Size == result);
 
-	buffer1Size = recvfrom(udpSocket, buffer1, sizeof(buffer1), 0, (SOCKADDR*) &remoteAddr, &remoteAddrLen);
+	buffer1Size = recvfrom(udpSocket, buffer1, sizeof(buffer1), 0, (sockaddr_t *) &remoteAddr, &remoteAddrLen);
 	
-    if (SOCKET_ERROR == buffer1Size)
+	if (SOCKET_ERROR == buffer1Size)
 	{
 		return -1;
 	}

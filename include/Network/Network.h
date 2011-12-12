@@ -17,17 +17,33 @@
 #ifndef _NetworkWin_Network_h
 #define _NetworkWin_Network_h
 
-#include "MiniStdlib/declspec.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#include "MiniStdlib/declspec.h"
+
 #ifdef _WIN32
 #include <winsock2.h>
+#else
+#include <netinet/in.h> // sockaddr_in
+#include <sys/socket.h> // socket, AF_INET etc.
+#include <arpa/inet.h>  // inet_addr
+#include <unistd.h>     // close
+#endif
+
+#ifdef _WIN32
 typedef SOCKET socket_t;
+typedef SOCKADDR sockaddr_t;
+typedef SOCKADDR_IN sockaddr_in_t;
+typedef socklen_t int;
 #else
 typedef int socket_t;
+typedef struct sockaddr sockaddr_t;
+typedef struct sockaddr_in sockaddr_in_t;
+#define INVALID_SOCKET (-1)
+#define SOCKET_ERROR   (-1)
+#define closesocket close
 #endif
 
 DLLEXPORT int startupNetwork();

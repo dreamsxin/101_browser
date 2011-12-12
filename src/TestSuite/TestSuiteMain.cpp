@@ -66,10 +66,11 @@ int main()
 	test_PNG();
 	printf("Testing Matroska\n");
 	test_Matroska();
+#endif
+
 #ifndef __linux
 	printf("Testing Ogg\n");
 	test_Ogg();
-#endif
 #endif
 	if (startupNetwork())
 	{
