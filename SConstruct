@@ -27,10 +27,6 @@ GuiXlib = env.Clone()
 GuiXlib.Append(LIBS = ['X11', 'GL'])
 GuiXlib.Program('bin/GuiXlib', Glob('src/GuiXlib/*.cpp')+Glob('src/GuiOpenGL/*.cpp'))
 
-#GuiXcb = env.Clone()
-#GuiXcb.Append(LIBS = ['xcb', 'GL'])
-#GuiXlib.Program('bin/GuiXcb', Glob('src/GuiXcb/*.cpp')+Glob('src/GuiOpenGL/*.cpp'))
-
 Unicode = env.Clone()
 Unicode.Append(LIBS = ['MiniStdlib'])
 Unicode.SharedLibrary('bin/Unicode', Glob('src/Unicode/*.c')+Glob('src/Unicode/*.cpp')+Glob('src/Unicode/generated/*.cpp'), LIBPATH = ['#/lib'])
