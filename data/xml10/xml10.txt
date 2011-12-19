@@ -68,7 +68,8 @@ Prolog
 [24]   	VersionInfo	   ::=   	S 'version' Eq ("'" VersionNum "'" | '"' VersionNum '"')
 [25]   	Eq	   ::=   	S? '=' S?
 %[26]   	VersionNum	   ::=   	'1.' [0-9]+
-[26]   	VersionNum	   ::=   	'1.' ((('0' | [2-9]) [0-9]*) | ('1' [0-9]+))
+%[26]   	VersionNum	   ::=   	'1.' ((('0' | [2-9]) [0-9]*) | ('1' [0-9]+))
+[26]   	VersionNum	   ::=   	'1.0'
 [27]   	Misc	   ::=   	Comment | PI | S 
 
 Document Type Definition
