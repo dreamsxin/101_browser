@@ -179,6 +179,7 @@ module html5
     readonly attribute boolean? commandHidden;
     readonly attribute boolean? commandDisabled;
     readonly attribute boolean? commandChecked;
+  
     // styling
     readonly attribute CSSStyleDeclaration style;
   
@@ -1057,7 +1058,8 @@ module html5
              attribute DOMString icon;
              attribute boolean disabled;
              attribute boolean checked;
-             attribute DOMString radiogroup;};
+             attribute DOMString radiogroup;
+  };
 
   interface HTMLMenuElement : HTMLElement {
              attribute DOMString type;
@@ -1078,7 +1080,8 @@ module html5
     [Replaceable] readonly attribute BarProp personalbar;
     [Replaceable] readonly attribute BarProp scrollbars;
     [Replaceable] readonly attribute BarProp statusbar;
-    [Replaceable] readonly attribute BarProp toolbar;           attribute DOMString status;
+    [Replaceable] readonly attribute BarProp toolbar;
+             attribute DOMString status;
     void close();
     void stop();
     void focus();
@@ -1308,7 +1311,8 @@ module html5
   Navigator implements NavigatorStorageUtils;
 
   [NoInterfaceObject]
-  interface NavigatorID {  readonly attribute DOMString appName;
+  interface NavigatorID {
+    readonly attribute DOMString appName;
     readonly attribute DOMString appVersion;
     readonly attribute DOMString platform;
     readonly attribute DOMString userAgent;
@@ -1358,12 +1362,16 @@ module html5
     deleter void (unsigned long index);
     void clear();
   
-    DataTransferItem? add(DOMString data, DOMString type);  DataTransferItem? add(File data);};
+    DataTransferItem? add(DOMString data, DOMString type);
+    DataTransferItem? add(File data);
+  };
 
   interface DataTransferItem {
     readonly attribute DOMString kind;
     readonly attribute DOMString type;
-    void getAsString(FunctionStringCallback? callback);  File? getAsFile();};
+    void getAsString(FunctionStringCallback? callback);
+    File? getAsFile();
+  };
   
   [Callback, NoInterfaceObject]
   interface FunctionStringCallback {

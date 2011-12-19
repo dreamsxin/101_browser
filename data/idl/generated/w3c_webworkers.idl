@@ -13,7 +13,8 @@ module webworkers
   WorkerGlobalScope implements WorkerUtils;
 
   interface DedicatedWorkerGlobalScope {
-    void postMessage(any message, optional sequence<Transferable> transfer);  [TreatNonCallableAsNull] attribute Function? onmessage;
+    void postMessage(any message, optional sequence<Transferable> transfer);
+    [TreatNonCallableAsNull] attribute Function? onmessage;
   };
   DedicatedWorkerGlobalScope implements WorkerGlobalScope;
 
@@ -40,13 +41,15 @@ module webworkers
   [NoInterfaceObject]
   interface AbstractWorker {
     [TreatNonCallableAsNull] attribute Function? onerror;
+  
   };
 
   [Constructor(DOMString scriptURL)]
   interface Worker : EventTarget {
     void terminate();
   
-    void postMessage(any message, optional sequence<Transferable> transfer);  [TreatNonCallableAsNull] attribute Function? onmessage;
+    void postMessage(any message, optional sequence<Transferable> transfer);
+    [TreatNonCallableAsNull] attribute Function? onmessage;
   };
   Worker implements AbstractWorker;
 
