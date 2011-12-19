@@ -42,7 +42,8 @@ extern "C" {
 */
 DLLEXPORT ReadResult readEbmlElementID(void *in_out_pReadStreamState, 
 	ByteStreamInterface in_readInterface, uint8_t out_ID[4]);
-#define READ_EBML_ELEMENT_SIZE readEBml_vint
+DLLEXPORT ReadResult readEBml_elementSize(void *in_out_pReadStreamState, 
+	ByteStreamInterface in_readInterface, uint64_t *out_pSize);
 DLLEXPORT ReadResult readEBml_vint(void *in_out_pReadStreamState, 
 	ByteStreamInterface in_readInterface, uint64_t *out_pVint);
 DLLEXPORT ReadResult readEBml_svint(void *in_out_pReadStreamState, 

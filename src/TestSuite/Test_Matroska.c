@@ -24,32 +24,35 @@
 void test_EBML()
 {
 	/*
-	* Tests taken from http://matroska.org/files/matroska.pdf
+	* Tests test0 to test2 and reservedTests (with reservedTests extended
+	* from the examples there) are taken from
+	* http://matroska.org/files/matroska.pdf
 	* "2.1 Unsigned Integer Values of Variable Length (”vint“)"
-	*
-	* Note: unknownTests is an extended version of examples there.
 	*/
 	MemoryByteStreamReadState memoryByteStreamReadState;
+	ReadResult readResult;
+
 	uint8_t test0[] = { 0x3A, 0x41, 0xFE };
 	uint8_t test1[] = { 0x10, 0x1A, 0x41, 0xFE };
 	uint8_t test2[] = { 0x08, 0x00, 0x1A, 0x41, 0xFE };
 
-	uint8_t unknownTest0[] = { 0xFF };
-	uint8_t unknownTest1[] = { 0x7F, 0xFF };
-	uint8_t unknownTest2[] = { 0x3F, 0xFF, 0xFF };
-	uint8_t unknownTest3[] = { 0x1F, 0xFF, 0xFF, 0xFF };
-	uint8_t unknownTest4[] = { 0x0F, 0xFF, 0xFF, 0xFF, 0xFF };
-	uint8_t unknownTest5[] = { 0x07, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-	uint8_t unknownTest6[] = { 0x03, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-	uint8_t unknownTest7[] = { 0x01, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+	uint8_t reservedTest0[] = { 0xFF };
+	uint8_t reservedTest1[] = { 0x7F, 0xFF };
+	uint8_t reservedTest2[] = { 0x3F, 0xFF, 0xFF };
+	uint8_t reservedTest3[] = { 0x1F, 0xFF, 0xFF, 0xFF };
+	uint8_t reservedTest4[] = { 0x0F, 0xFF, 0xFF, 0xFF, 0xFF };
+	uint8_t reservedTest5[] = { 0x07, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+	uint8_t reservedTest6[] = { 0x03, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+	uint8_t reservedTest7[] = { 0x01, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 
 #ifdef _WIN32
 #pragma warning(push)
 #pragma warning(disable : 4221)
 #endif
 
-	uint8_t *unknownTests[] = { unknownTest0, unknownTest1, unknownTest2, 
-		unknownTest3, unknownTest4, unknownTest5, unknownTest6, unknownTest7 };
+	uint8_t *reservedTests[] = { reservedTest0, reservedTest1, reservedTest2, 
+		reservedTest3, reservedTest4, reservedTest5, reservedTest6, 
+		reservedTest7 };
 
 	/*
 	* Tests based on examples from
@@ -89,6 +92,8 @@ void test_EBML()
 
 	uint8_t idx;
 
+	// test0
+
 	memoryByteStreamReadStateInit(&memoryByteStreamReadState, 
 		test0, sizeof(test0));
 	memset(elementID, 0x42, 4);
@@ -99,9 +104,17 @@ void test_EBML()
 
 	memoryByteStreamReadStateReset(&memoryByteStreamReadState);
 	vint = 0xDEADBEEFDEADBEEF;
+	test(ReadResultOK == readEBml_elementSize(&memoryByteStreamReadState, 
+		getMemoryByteStreamReadInterface(), &vint));
+	test(0x1A41FE == vint);
+
+	memoryByteStreamReadStateReset(&memoryByteStreamReadState);
+	vint = 0xDEADBEEFDEADBEEF;
 	test(ReadResultOK == readEBml_vint(&memoryByteStreamReadState, 
 		getMemoryByteStreamReadInterface(), &vint));
 	test(0x1A41FE == vint);
+
+	// test1
 
 	memoryByteStreamReadStateInit(&memoryByteStreamReadState, 
 		test1, sizeof(test1));
@@ -112,9 +125,23 @@ void test_EBML()
 
 	memoryByteStreamReadStateReset(&memoryByteStreamReadState);
 	vint = 0xDEADBEEFDEADBEEF;
+	test(ReadResultOK == readEBml_elementSize(&memoryByteStreamReadState, 
+		getMemoryByteStreamReadInterface(), &vint));
+	test(0x1A41FE == vint);
+
+	memoryByteStreamReadStateReset(&memoryByteStreamReadState);
+	vint = 0xDEADBEEFDEADBEEF;
 	test(ReadResultOK == readEBml_vint(&memoryByteStreamReadState, 
 		getMemoryByteStreamReadInterface(), &vint));
 	test(0x1A41FE == vint);
+
+	memoryByteStreamReadStateReset(&memoryByteStreamReadState);
+	svint = 0xDEADBEEFDEADBEEF;
+	test(ReadResultOK == readEBml_svint(&memoryByteStreamReadState, 
+		getMemoryByteStreamReadInterface(), &svint));
+	test(0x1A41FE == svint);
+
+	// test2
 
 	memoryByteStreamReadStateInit(&memoryByteStreamReadState, 
 		test2, sizeof(test2));
@@ -132,23 +159,51 @@ void test_EBML()
 
 	memoryByteStreamReadStateReset(&memoryByteStreamReadState);
 	vint = 0xDEADBEEFDEADBEEF;
+	test(ReadResultOK == readEBml_elementSize(&memoryByteStreamReadState, 
+		getMemoryByteStreamReadInterface(), &vint));
+	test(0x1A41FE == vint);
+
+	memoryByteStreamReadStateReset(&memoryByteStreamReadState);
+	vint = 0xDEADBEEFDEADBEEF;
 	test(ReadResultOK == readEBml_vint(&memoryByteStreamReadState, 
 		getMemoryByteStreamReadInterface(), &vint));
 	test(0x1A41FE == vint);
 
-	// Now testing unknown lengths
+	memoryByteStreamReadStateReset(&memoryByteStreamReadState);
+	svint = 0xDEADBEEFDEADBEEF;
+	test(ReadResultOK == readEBml_svint(&memoryByteStreamReadState, 
+		getMemoryByteStreamReadInterface(), &svint));
+	test(0x1A41FE == svint);
+
+	// Now testing reserved lengths
 	for (idx = 0; idx < 8; idx++)
 	{
 		memoryByteStreamReadStateInit(&memoryByteStreamReadState, 
-			unknownTests[idx], idx+1);
-		test(ReadResultInvalidData == readEbmlElementID(&memoryByteStreamReadState, 
-			getMemoryByteStreamReadInterface(), elementID));
+			reservedTests[idx], idx+1);
+		readResult = readEbmlElementID(&memoryByteStreamReadState, 
+			getMemoryByteStreamReadInterface(), elementID);
+		if (idx < 4)
+			test(ReadResultOK == readResult);
+		else
+			test(ReadResultInvalidData == readResult);
+
+		memoryByteStreamReadStateReset(&memoryByteStreamReadState);
+		vint = 0xDEADBEEFDEADBEEF;
+		test(ReadResultOK == readEBml_elementSize(&memoryByteStreamReadState, 
+			getMemoryByteStreamReadInterface(), &vint));
+		test(UINT64_MAX == vint);
 
 		memoryByteStreamReadStateReset(&memoryByteStreamReadState);
 		vint = 0xDEADBEEFDEADBEEF;
 		test(ReadResultOK == readEBml_vint(&memoryByteStreamReadState, 
 			getMemoryByteStreamReadInterface(), &vint));
-		test(UINT64_MAX == vint);
+		test((1LL<<(7*(idx+1)))-1 == vint);
+
+		memoryByteStreamReadStateReset(&memoryByteStreamReadState);
+		svint = 0xDEADBEEFDEADBEEF;
+		test(ReadResultOK == readEBml_svint(&memoryByteStreamReadState, 
+			getMemoryByteStreamReadInterface(), &svint));
+		test(-1 == svint);
 	}
 
 	// The first svint test
@@ -156,12 +211,12 @@ void test_EBML()
 	{
 		memoryByteStreamReadStateInit(&memoryByteStreamReadState, 
 			signedTest1[idx], idx+1);
+		readResult = readEbmlElementID(&memoryByteStreamReadState, 
+			getMemoryByteStreamReadInterface(), elementID);
 		if (idx < 4)
-			test(ReadResultOK == readEbmlElementID(&memoryByteStreamReadState, 
-			getMemoryByteStreamReadInterface(), elementID));
+			test(ReadResultOK == readResult);
 		else
-			test(ReadResultInvalidData == readEbmlElementID(&memoryByteStreamReadState, 
-			getMemoryByteStreamReadInterface(), elementID));
+			test(ReadResultInvalidData == readResult);
 
 		memoryByteStreamReadStateReset(&memoryByteStreamReadState);
 		svint = 0xDEADBEEFDEADBEEF;
@@ -175,12 +230,18 @@ void test_EBML()
 	{
 		memoryByteStreamReadStateInit(&memoryByteStreamReadState, 
 			signedTest2[idx], idx+1);
+		readResult = readEbmlElementID(&memoryByteStreamReadState, 
+			getMemoryByteStreamReadInterface(), elementID);
 		if (idx < 4)
-			test(ReadResultOK == readEbmlElementID(&memoryByteStreamReadState, 
-			getMemoryByteStreamReadInterface(), elementID));
+			test(ReadResultOK == readResult);
 		else
-			test(ReadResultInvalidData == readEbmlElementID(&memoryByteStreamReadState, 
-			getMemoryByteStreamReadInterface(), elementID));
+			test(ReadResultInvalidData == readResult);
+
+		memoryByteStreamReadStateReset(&memoryByteStreamReadState);
+		vint = 0xDEADBEEFDEADBEEF;
+		test(ReadResultOK == readEBml_elementSize(&memoryByteStreamReadState, 
+			getMemoryByteStreamReadInterface(), &vint));
+		test(5 == vint);
 
 		memoryByteStreamReadStateReset(&memoryByteStreamReadState);
 		vint = 0xDEADBEEFDEADBEEF;
