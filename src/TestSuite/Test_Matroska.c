@@ -31,6 +31,7 @@ void test_EBML()
 	*/
 	MemoryByteStreamReadState memoryByteStreamReadState;
 	ReadResult readResult;
+	size_t bytesReadCount = 0xDEADBEEF;
 
 	uint8_t test0[] = { 0x3A, 0x41, 0xFE };
 	uint8_t test1[] = { 0x10, 0x1A, 0x41, 0xFE };
@@ -97,10 +98,11 @@ void test_EBML()
 	memoryByteStreamReadStateInit(&memoryByteStreamReadState, 
 		test0, sizeof(test0));
 	memset(elementID, 0x42, 4);
-	test(ReadResultOK == readEbmlElementID(&memoryByteStreamReadState, 
-		getMemoryByteStreamReadInterface(), elementID));
+	test(ReadResultOK == readEbml_elementID(&memoryByteStreamReadState, 
+		getMemoryByteStreamReadInterface(), elementID, &bytesReadCount));
 	test(0 == memcmp(elementID, test0, 3));
 	test(0x42 == elementID[3]);
+	test(3 == bytesReadCount);
 
 	memoryByteStreamReadStateReset(&memoryByteStreamReadState);
 	vint = 0xDEADBEEFDEADBEEF;
@@ -119,9 +121,10 @@ void test_EBML()
 	memoryByteStreamReadStateInit(&memoryByteStreamReadState, 
 		test1, sizeof(test1));
 	memset(elementID, 0x42, 4);
-	test(ReadResultOK == readEbmlElementID(&memoryByteStreamReadState, 
-		getMemoryByteStreamReadInterface(), elementID));
+	test(ReadResultOK == readEbml_elementID(&memoryByteStreamReadState, 
+		getMemoryByteStreamReadInterface(), elementID, &bytesReadCount));
 	test(0 == memcmp(elementID, test1, 4));
+	test(4 == bytesReadCount);
 
 	memoryByteStreamReadStateReset(&memoryByteStreamReadState);
 	vint = 0xDEADBEEFDEADBEEF;
@@ -148,8 +151,11 @@ void test_EBML()
 #if 0
 	memset(elementID, 0x42, 4);
 #endif
-	test(ReadResultInvalidData == readEbmlElementID(&memoryByteStreamReadState, 
-		getMemoryByteStreamReadInterface(), elementID));
+	bytesReadCount = 0xDEADBEEF;
+	test(ReadResultInvalidData == readEbml_elementID(&memoryByteStreamReadState, 
+		getMemoryByteStreamReadInterface(), elementID, &bytesReadCount));
+	// bytesReadCount must not be clobbered
+	test(0xDEADBEEF == bytesReadCount);
 	/*
 	* Remark: we don't do a test as (Pseudo-Code!):
 	* test(0 == memcmp(elementID, { 0x42, 0x42, 0x42, 0x42 }, 4));
@@ -180,12 +186,20 @@ void test_EBML()
 	{
 		memoryByteStreamReadStateInit(&memoryByteStreamReadState, 
 			reservedTests[idx], idx+1);
-		readResult = readEbmlElementID(&memoryByteStreamReadState, 
-			getMemoryByteStreamReadInterface(), elementID);
+		bytesReadCount = 0xDEADBEEF;
+		readResult = readEbml_elementID(&memoryByteStreamReadState, 
+			getMemoryByteStreamReadInterface(), elementID, &bytesReadCount);
 		if (idx < 4)
+		{
 			test(ReadResultOK == readResult);
+			test(idx + 1u == bytesReadCount);
+		}
 		else
+		{
 			test(ReadResultInvalidData == readResult);
+			// bytesReadCount must not be clobbered
+			test(0xDEADBEEF == bytesReadCount);
+		}
 
 		memoryByteStreamReadStateReset(&memoryByteStreamReadState);
 		vint = 0xDEADBEEFDEADBEEF;
@@ -197,7 +211,7 @@ void test_EBML()
 		vint = 0xDEADBEEFDEADBEEF;
 		test(ReadResultOK == readEBml_vint(&memoryByteStreamReadState, 
 			getMemoryByteStreamReadInterface(), &vint));
-		test((1LL<<(7*(idx+1)))-1 == vint);
+		test((1uLL<<(7*(idx+1)))-1 == vint);
 
 		memoryByteStreamReadStateReset(&memoryByteStreamReadState);
 		svint = 0xDEADBEEFDEADBEEF;
@@ -211,12 +225,20 @@ void test_EBML()
 	{
 		memoryByteStreamReadStateInit(&memoryByteStreamReadState, 
 			signedTest1[idx], idx+1);
-		readResult = readEbmlElementID(&memoryByteStreamReadState, 
-			getMemoryByteStreamReadInterface(), elementID);
+		bytesReadCount = 0xDEADBEEF;
+		readResult = readEbml_elementID(&memoryByteStreamReadState, 
+			getMemoryByteStreamReadInterface(), elementID, &bytesReadCount);
 		if (idx < 4)
+		{
 			test(ReadResultOK == readResult);
+			test(idx + 1u == bytesReadCount);
+		}
 		else
+		{
 			test(ReadResultInvalidData == readResult);
+			// bytesReadCount must not be clobbered
+			test(0xDEADBEEF == bytesReadCount);
+		}
 
 		memoryByteStreamReadStateReset(&memoryByteStreamReadState);
 		svint = 0xDEADBEEFDEADBEEF;
@@ -230,12 +252,20 @@ void test_EBML()
 	{
 		memoryByteStreamReadStateInit(&memoryByteStreamReadState, 
 			signedTest2[idx], idx+1);
-		readResult = readEbmlElementID(&memoryByteStreamReadState, 
-			getMemoryByteStreamReadInterface(), elementID);
+		bytesReadCount = 0xDEADBEEF;
+		readResult = readEbml_elementID(&memoryByteStreamReadState, 
+			getMemoryByteStreamReadInterface(), elementID, &bytesReadCount);
 		if (idx < 4)
+		{
 			test(ReadResultOK == readResult);
+			test(idx + 1u == bytesReadCount);
+		}
 		else
+		{
 			test(ReadResultInvalidData == readResult);
+			// bytesReadCount must not be clobbered
+			test(0xDEADBEEF == bytesReadCount);
+		}
 
 		memoryByteStreamReadStateReset(&memoryByteStreamReadState);
 		vint = 0xDEADBEEFDEADBEEF;

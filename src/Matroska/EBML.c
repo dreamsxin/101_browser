@@ -61,8 +61,9 @@ bool isReservedPossible(uint8_t in_firstByte, uint8_t in_remainingBytes)
 	return (in_firstByte | unusedBits) == UINT8_MAX;
 }
 
-ReadResult readEbmlElementID(void *in_out_pReadStreamState, 
-	ByteStreamInterface in_readInterface, uint8_t out_elementID[4])
+ReadResult readEbml_elementID(void *in_out_pReadStreamState, 
+	ByteStreamInterface in_readInterface, uint8_t out_elementID[4], 
+	size_t *out_pBytesReadCount)
 {
 	uint8_t remainingBytes;
 
@@ -81,6 +82,9 @@ ReadResult readEbmlElementID(void *in_out_pReadStreamState,
 			out_elementID+1, remainingBytes) != remainingBytes)
 			return ReadResultPrematureEndOfStream;
 	}
+
+	if (NULL != out_pBytesReadCount)
+		*out_pBytesReadCount = remainingBytes + 1;
 
 	return ReadResultOK;
 }

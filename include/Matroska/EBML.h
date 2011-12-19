@@ -40,8 +40,9 @@ extern "C" {
 * If not ReadResultOK is returned, you may not make any assumptions about
 * the content of the passed buffers after returning.
 */
-DLLEXPORT ReadResult readEbmlElementID(void *in_out_pReadStreamState, 
-	ByteStreamInterface in_readInterface, uint8_t out_ID[4]);
+DLLEXPORT ReadResult readEbml_elementID(void *in_out_pReadStreamState, 
+	ByteStreamInterface in_readInterface, uint8_t out_elementID[4], 
+	size_t *out_pBytesRead);
 DLLEXPORT ReadResult readEBml_elementSize(void *in_out_pReadStreamState, 
 	ByteStreamInterface in_readInterface, uint64_t *out_pSize);
 DLLEXPORT ReadResult readEBml_vint(void *in_out_pReadStreamState, 
