@@ -23,15 +23,22 @@
 
 void test_EBML()
 {
+	MemoryByteStreamReadState memoryByteStreamReadState;
+	ReadResult readResult;
+	size_t bytesReadCount = 0xDEADBEEF;
+	
+	uint8_t elementID[4];
+	uint64_t vint;
+	int64_t svint;
+
+	uint8_t idx;
+	
 	/*
 	* Tests test0 to test2 and reservedTests (with reservedTests extended
 	* from the examples there) are taken from
 	* http://matroska.org/files/matroska.pdf
 	* "2.1 Unsigned Integer Values of Variable Length (”vint“)"
 	*/
-	MemoryByteStreamReadState memoryByteStreamReadState;
-	ReadResult readResult;
-	size_t bytesReadCount = 0xDEADBEEF;
 
 	uint8_t test0[] = { 0x3A, 0x41, 0xFE };
 	uint8_t test1[] = { 0x10, 0x1A, 0x41, 0xFE };
@@ -86,12 +93,6 @@ void test_EBML()
 #ifdef _WIN32
 #pragma warning(pop)
 #endif
-
-	uint8_t elementID[4];
-	uint64_t vint;
-	int64_t svint;
-
-	uint8_t idx;
 
 	// test0
 
