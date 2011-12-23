@@ -235,9 +235,9 @@ module domcore
     NodeIterator createNodeIterator(Node root, optional unsigned long whatToShow, optional NodeFilter? filter);
     TreeWalker createTreeWalker(Node root, optional unsigned long whatToShow, optional NodeFilter? filter);
   
-    // NEW (using experimental IDL)
-    void prepend(Node | DOMString... nodes);
-    void append(Node | DOMString... nodes);
+    // NEW
+    void prepend((Node or DOMString)... nodes);
+    void append((Node or DOMString)... nodes);
   };
   
   interface XMLDocument : Document {};
@@ -251,9 +251,9 @@ module domcore
   };
 
   interface DocumentFragment : Node {
-    // NEW (using experimental IDL)
-    void prepend(Node | DOMString... nodes);
-    void append(Node | DOMString... nodes);
+    // NEW
+    void prepend((Node or DOMString)... nodes);
+    void append((Node or DOMString)... nodes);
   };
 
   interface DocumentType : Node {
@@ -261,10 +261,10 @@ module domcore
     readonly attribute DOMString publicId;
     readonly attribute DOMString systemId;
   
-    // NEW (using experimental IDL)
-    void before(Node | DOMString... nodes);
-    void after(Node | DOMString... nodes);
-    void replace(Node | DOMString... nodes);
+    // NEW
+    void before((Node or DOMString)... nodes);
+    void after((Node or DOMString)... nodes);
+    void replace((Node or DOMString)... nodes);
     void remove();
   };
 
@@ -299,12 +299,12 @@ module domcore
     readonly attribute Element? nextElementSibling;
     readonly attribute unsigned long childElementCount;
   
-    // NEW (using experimental IDL)
-    void prepend(Node | DOMString... nodes);
-    void append(Node | DOMString... nodes);
-    void before(Node | DOMString... nodes);
-    void after(Node | DOMString... nodes);
-    void replace(Node | DOMString... nodes);
+    // NEW
+    void prepend((Node or DOMString)... nodes);
+    void append((Node or DOMString)... nodes);
+    void before((Node or DOMString)... nodes);
+    void after((Node or DOMString)... nodes);
+    void replace((Node or DOMString)... nodes);
     void remove();
   };
 
@@ -326,10 +326,10 @@ module domcore
     void deleteData(unsigned long offset, unsigned long count);
     void replaceData(unsigned long offset, unsigned long count, DOMString data);
   
-    // NEW (using experimental IDL)
-    void before(Node | DOMString... nodes);
-    void after(Node | DOMString... nodes);
-    void replace(Node | DOMString... nodes);
+    // NEW
+    void before((Node or DOMString)... nodes);
+    void after((Node or DOMString)... nodes);
+    void replace((Node or DOMString)... nodes);
     void remove();
   };
 
