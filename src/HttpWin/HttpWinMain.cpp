@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
+#include "NetworkWin/NetworkWin.h"
+
 #include <cassert>
 #include <cstdio>
 #include <cstring>
-#include <ctime>
 #include <winsock2.h>
 #include <ws2tcpip.h>
-
-#include "BasicDataStructures/Endianess.h"
 
 char GETstring[] = "GET";
 
@@ -38,7 +37,7 @@ char port80String[] = "80";
 /*!
  * Parses the url
  *
- * Note that if in_pcUrl[*in_pAfterDomainPos] we have to send a backslash
+ * Note that if in_pcUrl[*in_pAfterDomainPos] we have to send a slash
  * in the http(s) request.
  * 
  * Return value:
@@ -126,13 +125,7 @@ int main(int argc, char** argv)
 
 	char* portString = port80String;
 
-	WORD wVersionRequired = MAKEWORD(2, 2);
-	WSADATA lWSAData;
-	int status;
-
-	status = WSAStartup(wVersionRequired, &lWSAData);
-
-	if (status != 0)
+	if (startupNetwork() != 0)
 	{
 		fprintf(stderr, "WSAStartup() failed\n");
 		exit(EXIT_FAILURE);
@@ -145,7 +138,7 @@ int main(int argc, char** argv)
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
 
-	status = getaddrinfo(url+domainPos, portString, &hints, &pAddrInfo);
+	int status = getaddrinfo(url+domainPos, portString, &hints, &pAddrInfo);
 
 	if (status != 0)
 	{
@@ -202,11 +195,11 @@ int main(int argc, char** argv)
 	{
 		fprintf(stderr, "recv() failed\n");
 		closesocket(serverSocket);
-		WSACleanup();
+		cleanupNetwork();
 		exit(EXIT_FAILURE);
 	}
 
 	closesocket(serverSocket);
-	WSACleanup();
-	return 0;
+	cleanupNetwork();
+	return EXIT_SUCCESS;
 }

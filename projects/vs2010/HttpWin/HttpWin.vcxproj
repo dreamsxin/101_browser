@@ -84,6 +84,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\src\HttpWin\HttpWinMain.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NetworkWin\NetworkWin.vcxproj">
+      <Project>{2c677072-65f4-457c-892c-aa167060bf3e}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

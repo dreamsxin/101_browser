@@ -19,7 +19,15 @@
 
 #include "MiniStdlib/declspec.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 DLLEXPORT int startupNetwork();
 DLLEXPORT int cleanupNetwork();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
