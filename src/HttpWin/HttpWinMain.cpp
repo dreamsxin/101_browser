@@ -20,8 +20,6 @@
 #include <ctime>
 #include <winsock2.h>
 #include <ws2tcpip.h>
-#include "CryptoWin/CryptoWin.h"
-#include "Crypto/TLS.h"
 
 #include "BasicDataStructures/Endianess.h"
 
@@ -30,13 +28,12 @@ char GETstring[] = "GET";
 void printUsageAndExit(char* argv0)
 {
 	printf(
-		"Usage: %s [COMMAND] protocol://url\n"
-		"Where protocol is http|https\n", argv0);
+		"Usage: %s COMMAND protocol://url\n"
+		"Where protocol is http (no other protocol supported at the moment)\n", argv0);
 	exit(0);
 }
 
 char port80String[] = "80";
-char port443String[] = "443";
 
 /*!
  * Parses the url
@@ -48,7 +45,7 @@ char port443String[] = "443";
  * true on success
  * false on failure
  */
-bool parseURL(const char* in_pcUrl, bool* in_pIsHttps, size_t* in_pDomainPos, 
+bool parseURL(const char* in_pcUrl, size_t* in_pDomainPos, 
 			  size_t* in_pAfterDomainPos)
 {
 	size_t lPosition = 0;
@@ -67,22 +64,8 @@ bool parseURL(const char* in_pcUrl, bool* in_pIsHttps, size_t* in_pDomainPos,
 	if (in_pcUrl[lPosition] != 'p')
 		return false;
 
-	bool lIsHttps;
-
 	lPosition++;
-	if (in_pcUrl[lPosition] == ':')
-	{
-		lIsHttps = false;
-	}
-	else if (in_pcUrl[lPosition] == 's')
-	{
-		lPosition++;
-		if (in_pcUrl[lPosition] == ':')
-			lIsHttps = true;
-		else
-			return false;
-	}
-	else
+	if (in_pcUrl[lPosition] != ':')
 		return false;
 
 	lPosition++;
@@ -100,7 +83,6 @@ bool parseURL(const char* in_pcUrl, bool* in_pIsHttps, size_t* in_pDomainPos,
 		lPosition++;
 	} while (in_pcUrl[lPosition] != 0x0 && in_pcUrl[lPosition] != '/');
 
-	*in_pIsHttps = lIsHttps;
 	*in_pDomainPos = lDomainPos;
 	*in_pAfterDomainPos = lPosition;
 	return true;
@@ -125,11 +107,10 @@ int main(int argc, char** argv)
 		command = GETstring;
 	}
 
-	bool useHttps;
 	size_t domainPos;
 	size_t afterDomainPos;
 
-	if (!parseURL(url, &useHttps, &domainPos, &afterDomainPos))
+	if (!parseURL(url, &domainPos, &afterDomainPos))
 	{
 		printUsageAndExit(argv[0]);
 	}
@@ -143,7 +124,7 @@ int main(int argc, char** argv)
 
 	printf("Domain: '%s'\nAfter domain: '%s'\n", url+domainPos, url+afterDomainPos);
 
-	char* portString = useHttps ? port443String : port80String;
+	char* portString = port80String;
 
 	WORD wVersionRequired = MAKEWORD(2, 2);
 	WSADATA lWSAData;
@@ -198,54 +179,23 @@ int main(int argc, char** argv)
 
 	freeaddrinfo(pAddrInfo);
 
-	if (!useHttps)
-	{
-		char requestString0[] = " /";
-		char requestString1[] = " HTTP/1.1\r\nHost: ";
-		char requestString2[] = "\r\n\r\n";
+	char requestString0[] = " /";
+	char requestString1[] = " HTTP/1.1\r\nHost: ";
+	char requestString2[] = "\r\n\r\n";
 
-		send(serverSocket, command, strlen(command), 0);
-		send(serverSocket, requestString0, strlen(requestString0), 0);
-		send(serverSocket, url+afterDomainPos, strlen(url+afterDomainPos), 0);
-		send(serverSocket, requestString1, strlen(requestString1), 0);
-		send(serverSocket, url+domainPos, strlen(url+domainPos), 0);
-		send(serverSocket, requestString2, strlen(requestString2), 0);
-	}
-	else
-	{
-		MTAx::TLS::TLSPlaintextHeader tlsPlaintextHeader;
-		tlsPlaintextHeader.type = MTAx::TLS::ContentType_handshake;
-		tlsPlaintextHeader.version = MTAx::TLS::TLS_1_2_ProtocolVersion;
-		
-		MTAx::Endianess::switchEndianess(&tlsPlaintextHeader.length);
-
-		MTAx::TLS::Random tlsRandom;
-		tlsRandom.gmt_unix_time = static_cast<uint32_t>(time(NULL));
-		
-		MTAx::Crypto::CryptoContext randomNumberContext = MTAx::Crypto::allocRandomNumberContext();
-		MTAx::Crypto::getRandomBytes(randomNumberContext, 
-			sizeof(tlsRandom.random_bytes), &tlsRandom.random_bytes);
-		MTAx::Crypto::freeRandomNumberContext(randomNumberContext);
-
-
-	}
+	send(serverSocket, command, strlen(command), 0);
+	send(serverSocket, requestString0, strlen(requestString0), 0);
+	send(serverSocket, url+afterDomainPos, strlen(url+afterDomainPos), 0);
+	send(serverSocket, requestString1, strlen(requestString1), 0);
+	send(serverSocket, url+domainPos, strlen(url+domainPos), 0);
+	send(serverSocket, requestString2, strlen(requestString2), 0);
 
 	char buffer[256];
 
 	while (0 < (status = recv(serverSocket, buffer, sizeof(buffer)-1, 0)))
 	{
-		if (!useHttps)
-		{
-			buffer[status] = 0;
-			printf("%s", buffer);
-		}
-		else
-		{
-			for (size_t currentElement=0; currentElement<(unsigned int) status; currentElement++)
-			{
-				printf("%2hu ", (unsigned short) buffer[currentElement]);
-			}
-		}
+		buffer[status] = 0;
+		printf("%s", buffer);
 	}
 
 	if (status == SOCKET_ERROR)

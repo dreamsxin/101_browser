@@ -84,11 +84,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\src\HttpWin\HttpWinMain.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CryptoWin\CryptoWin.vcxproj">
-      <Project>{1cf01257-9401-4fab-ae21-c9f67d0a0c44}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
