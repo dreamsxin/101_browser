@@ -97,6 +97,7 @@
     <ClCompile Include="..\..\..\src\TestSuite\Test_BigNumber.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_Coroutine.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_CRC.c" />
+    <ClCompile Include="..\..\..\src\TestSuite\Test_DNS.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_GIF.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_HTML5.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_Interval.cpp" />
@@ -132,6 +133,9 @@
     </ProjectReference>
     <ProjectReference Include="..\CRC\CRC.vcxproj">
       <Project>{0095cd5c-cd78-4957-80c5-6014a16a08ea}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\DNS\DNS.vcxproj">
+      <Project>{79cd55de-0a82-4d60-8e79-bdc141c509f3}</Project>
     </ProjectReference>
     <ProjectReference Include="..\GIF\GIF.vcxproj">
       <Project>{5fa06546-f277-4928-8478-41c474490ae6}</Project>

@@ -23,5 +23,9 @@ void test_Libc()
 	char buffer0 = 1;
 	char buffer1 = 2;
 
+	/*
+	* The only reason for this test is that I wasn't sure
+	* how memcmp behaves in this case.
+	*/
 	test(!memcmp(&buffer0, &buffer1, 0));
 }

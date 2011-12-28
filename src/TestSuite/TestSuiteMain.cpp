@@ -67,6 +67,8 @@ int main()
 	printf("Testing Ogg\n");
 	test_Ogg();
 #endif
+	printf("Testing DNS\n");
+	test_DNS();
 
 	return 0;
 }

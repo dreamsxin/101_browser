@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Copyright 2011 Wolfgang Keller
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,7 @@
 #include <assert.h>
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstring.h"
+#include "MiniStdlib/cstdbool.h"
 
 #pragma pack(push, 1)
 
@@ -57,8 +58,8 @@ void fillHeader(Header *out_pHeader)
 	out_pHeader->ID = 0;     // TODO: Change
 	out_pHeader->QR = 0;     // Query
 	out_pHeader->OPCODE = 0; // 0 a standard query (QUERY)
-	                          // 1  an inverse query (IQUERY)
-	                          // 2  a server status request (STATUS)
+	                         // 1  an inverse query (IQUERY)
+	                         // 2  a server status request (STATUS)
 	/*
 	* RFC 1035 - 4.1.1. Header section format
 	* "Recursion Desired - this bit may be set in a query and
@@ -75,7 +76,71 @@ void fillHeader(Header *out_pHeader)
 	out_pHeader->QDCOUNT = 1;
 }
 
-int readDNS(const char *udpServer)
+int prepareQNAME(char *in_out_preQNAME)
+{
+	/*
+	* Automaton for parsing QNAMEs (not including that each label must not
+	* be larger than 256 octets).
+	*
+	*
+	*  != '.', 0
+	*    ┌───┐
+	*    │   V
+	*   ┌─────┐    '.'     ┌─────┐
+	*   │     │───────────>│     │
+	*   │  1  │	           │  0  │<
+	*   │     │<───────────│     │
+	*   └─────┘	 != '.', 0 └─────┘
+	*      │                  │
+	*      │ 0                │ '.'
+	*      │                  │
+	*      V                  V
+	*   ╔═════╗          ╔═════════╗
+	*   ║ OK  ║          ║ FAILURE ║
+	*   ╚═════╝          ╚═════════╝
+	*/
+	
+	char *pCurrentLength = in_out_preQNAME;
+	char *pCurrentCharacterInLabel = in_out_preQNAME + 1;
+	// bytesCount == 0 <=> state == 0 
+	uint8_t bytesCount = 0;
+
+	while (*pCurrentCharacterInLabel)
+	{
+		if ('.' == *pCurrentCharacterInLabel)
+		{
+			if (0 == bytesCount)
+				// Failure
+				return 1;
+			else
+			{
+				*pCurrentLength = (char) bytesCount;
+				bytesCount = 0;
+				pCurrentLength = pCurrentCharacterInLabel;
+				pCurrentCharacterInLabel++;
+			}
+		}
+		else
+		{
+			if (0xFF == bytesCount)
+				// Failure
+				return 1;
+
+			pCurrentCharacterInLabel++;
+			bytesCount++;
+		}
+	}
+
+	if (0 == bytesCount)
+		return 1;
+	else
+	{
+		*pCurrentLength = (char) bytesCount;
+		return 0;
+	}
+}
+
+int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 {
 	SOCKET udpSocket;
 	SOCKADDR_IN udpAddr;
@@ -86,6 +151,7 @@ int readDNS(const char *udpServer)
 	int buffer0Size = 0;
 	char buffer1[512];
 	int buffer1Size = 512;
+	size_t domainLen = strlen(in_cDomain);
 	
 	/*
 	* Comments taken from
@@ -117,9 +183,22 @@ int readDNS(const char *udpServer)
 
 	udpAddr.sin_family = AF_INET;
 	udpAddr.sin_port = htons(53);
-	udpAddr.sin_addr.s_addr = inet_addr(udpServer);
+	udpAddr.sin_addr.s_addr = inet_addr(in_cDnsServer);
+
+	if (sizeof(Header)
+		+ 1 // length byte
+		+ domainLen
+		+ 1 // zero byte terminating the string
+		+ 2 // QTYPE
+		+ 2 // QNAME
+		> 512)
+	{
+		return -1;
+	}
 
 	fillHeader((Header *) buffer0);
+	
+	memcpy(buffer0 + sizeof(Header) + 1, in_cDomain, domainLen + 1);
 	// TODO Fill buffer
 
 	result = sendto(udpSocket, buffer0, buffer0Size, 0, (SOCKADDR *) &udpAddr, sizeof(udpAddr));

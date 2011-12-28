@@ -23,10 +23,26 @@
 extern "C" {
 #endif
 
+/*!
+* Parameters:
+* in_out_preQNAME - an arbitrary byte followed by a string
+* 
+* Return value: 0 - success
+*               1 - failure
+* 
+* This function replaces all dots ('.') (and the first byte) by the length
+* of the label following. If any label has a length of 256 or is empty, 1 is 
+* returned and the content of in_out_preQNAME is not defined.
+* 
+* You probably don't want to use this function directly. It is only marked as 
+* DLLEXPORT to enable testing.
+*/
+DLLEXPORT int prepareQNAME(char *in_out_preQNAME);
+
 /*
 * Assumption: startupNetwork() has successfully been called before.
 */
-DLLEXPORT int readDNS(const char *udpServer);
+DLLEXPORT int readDNS(const char *in_cDnsServer, const char *in_cDomain);
 
 #ifdef __cplusplus
 }

@@ -50,6 +50,7 @@ void test_RFC1951();
 void test_Coroutine();
 void test_IO();
 void test_Ogg();
+void test_DNS();
 
 #ifdef __cplusplus
 }
