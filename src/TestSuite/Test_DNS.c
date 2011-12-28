@@ -18,8 +18,9 @@
 #include "TestSuite/TestSuite.h"
 #include "DNS/DNS.h"
 #include <string.h>
+#include <stdio.h>
 
-void test_DNS()
+void test_prepareQNAME()
 {
 	char emptyString[] = "X";
 	char dotString[] = "X.";
@@ -104,4 +105,18 @@ void test_DNS()
 	test(prepareQNAME(overlong));
 	test(!prepareQNAME(notOverlong));
 	test(!memcmp(notOverlong, notOverlongResult, strlen(notOverlongResult) + 1));
+}
+
+void test_readDNS()
+{
+	test(!readDNS("8.8.8.8", "twitter.com"));
+}
+
+void test_DNS()
+{
+	printf("Testing DNS - prepareQNAME\n");
+	test_prepareQNAME();
+
+	printf("Testing DNS - readDNS\n");
+	test_readDNS();
 }

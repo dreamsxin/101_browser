@@ -152,6 +152,9 @@
     <ProjectReference Include="..\MiniStdlib\MiniStdlib.vcxproj">
       <Project>{6c7c9fbb-39b4-42cc-a000-c0ff2f61388e}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\NetworkWin\NetworkWin.vcxproj">
+      <Project>{2c677072-65f4-457c-892c-aa167060bf3e}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Ogg\Ogg.vcxproj">
       <Project>{9bdc084f-7a50-4d3d-b73d-6a064ecccaba}</Project>
     </ProjectReference>

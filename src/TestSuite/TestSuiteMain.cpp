@@ -18,11 +18,14 @@
 #include <cstring>
 #include <cwchar>
 #include "MiniStdlib/cstdint.h"
+#include "MiniStdlib/MTAx_cstdlib.h" // for exit
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
+#include "NetworkWin/NetworkWin.h"
 
 int main()
 {
+#if 0
 	printf("Testing Libc\n");
 	test_Libc();
 	printf("Testing MiniStdlib\n");
@@ -67,8 +70,17 @@ int main()
 	printf("Testing Ogg\n");
 	test_Ogg();
 #endif
+#endif
+	if (startupNetwork())
+	{
+		fprintf(stderr, "Could not start network\n");
+		exit(EXIT_FAILURE);
+	}
 	printf("Testing DNS\n");
+	
 	test_DNS();
+
+	cleanupNetwork();
 
 	return 0;
 }

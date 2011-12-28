@@ -31,14 +31,16 @@
 typedef struct
 {
 	uint16_t ID;
-	uint16_t QR : 1;
-	uint16_t OPCODE : 4;
-	uint16_t AA : 1;
-	uint16_t TC : 1;
-	uint16_t RD : 1;
-	uint16_t RA : 1;
-	uint16_t Z : 3;
-	uint16_t RCODE : 4;
+	uint8_t RD : 1;
+	uint8_t TC : 1;
+	uint8_t AA : 1;
+	uint8_t OPCODE : 4;
+	uint8_t QR : 1;
+	
+	uint8_t RCODE : 4;
+	uint8_t Z : 3;
+	uint8_t RA : 1;
+
 	uint16_t QDCOUNT;
 	uint16_t ANCOUNT;
 	uint16_t NSCOUNT;
@@ -73,7 +75,7 @@ void fillHeader(Header *out_pHeader)
 	* "QDCOUNT an unsigned 16 bit integer specifying the number of 
 	* entries in the question section."
 	*/
-	out_pHeader->QDCOUNT = 1;
+	out_pHeader->QDCOUNT = ntohs(1);
 }
 
 int prepareQNAME(char *in_out_preQNAME)
@@ -102,7 +104,7 @@ int prepareQNAME(char *in_out_preQNAME)
 	
 	char *pCurrentLength = in_out_preQNAME;
 	char *pCurrentCharacterInLabel = in_out_preQNAME + 1;
-	// bytesCount == 0 <=> state == 0 
+	// bytesCount == 0 <=> state == 0
 	uint8_t bytesCount = 0;
 
 	while (*pCurrentCharacterInLabel)
@@ -132,10 +134,12 @@ int prepareQNAME(char *in_out_preQNAME)
 	}
 
 	if (0 == bytesCount)
+		// Failure
 		return 1;
 	else
 	{
 		*pCurrentLength = (char) bytesCount;
+		// Success
 		return 0;
 	}
 }
@@ -148,7 +152,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	int remoteAddrLen = sizeof(remoteAddr);
 	int result;
 	char buffer0[512];
-	int buffer0Size = 0;
+	int buffer0Size;
 	char buffer1[512];
 	int buffer1Size = 512;
 	size_t domainLen = strlen(in_cDomain);
@@ -199,7 +203,31 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	fillHeader((Header *) buffer0);
 	
 	memcpy(buffer0 + sizeof(Header) + 1, in_cDomain, domainLen + 1);
-	// TODO Fill buffer
+	if (prepareQNAME(buffer0 + sizeof(Header)))
+	{
+		return -1;
+	}
+
+	// QTYPE field
+	// See 3.2.2. TYPE values and 3.2.3. QTYPE values
+
+	/*
+	* TYPE A
+	* Value: 1
+	* Meaning: a host address
+	*/
+	*((uint16_t*) (buffer0 + sizeof(Header) + 1 + domainLen + 1)) = ntohs(1);
+
+	// QCLASS field
+	// See 3.2.4. CLASS values and 3.2.5. QCLASS values
+
+	/*
+	* CLASS IN
+	* Value: 1
+	* Meaning: the Internet
+	*/
+	*((uint16_t*) (buffer0 + sizeof(Header) + 1 + domainLen + 1 + 2)) = ntohs(1);
+	buffer0Size = sizeof(Header) + 1 + domainLen + 1 + 2 + 2;
 
 	result = sendto(udpSocket, buffer0, buffer0Size, 0, (SOCKADDR *) &udpAddr, sizeof(udpAddr));
 
