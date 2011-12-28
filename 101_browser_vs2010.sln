@@ -67,6 +67,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HttpWin", "projects\vs2010\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetworkWin", "projects\vs2010\NetworkWin\NetworkWin.vcxproj", "{2C677072-65F4-457C-892C-AA167060BF3E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DNS", "projects\vs2010\DNS\DNS.vcxproj", "{79CD55DE-0A82-4D60-8E79-BDC141C509F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -473,6 +475,18 @@ Global
 		{2C677072-65F4-457C-892C-AA167060BF3E}.LIB Release|Win32.Build.0 = Release|Win32
 		{2C677072-65F4-457C-892C-AA167060BF3E}.Release|Win32.ActiveCfg = Release|Win32
 		{2C677072-65F4-457C-892C-AA167060BF3E}.Release|Win32.Build.0 = Release|Win32
+		{79CD55DE-0A82-4D60-8E79-BDC141C509F3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{79CD55DE-0A82-4D60-8E79-BDC141C509F3}.Debug|Win32.Build.0 = Debug|Win32
+		{79CD55DE-0A82-4D60-8E79-BDC141C509F3}.LIB ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{79CD55DE-0A82-4D60-8E79-BDC141C509F3}.LIB ASM Debug|Win32.Build.0 = Debug|Win32
+		{79CD55DE-0A82-4D60-8E79-BDC141C509F3}.LIB ASM Release|Win32.ActiveCfg = Release|Win32
+		{79CD55DE-0A82-4D60-8E79-BDC141C509F3}.LIB ASM Release|Win32.Build.0 = Release|Win32
+		{79CD55DE-0A82-4D60-8E79-BDC141C509F3}.LIB Debug|Win32.ActiveCfg = Debug|Win32
+		{79CD55DE-0A82-4D60-8E79-BDC141C509F3}.LIB Debug|Win32.Build.0 = Debug|Win32
+		{79CD55DE-0A82-4D60-8E79-BDC141C509F3}.LIB Release|Win32.ActiveCfg = Release|Win32
+		{79CD55DE-0A82-4D60-8E79-BDC141C509F3}.LIB Release|Win32.Build.0 = Release|Win32
+		{79CD55DE-0A82-4D60-8E79-BDC141C509F3}.Release|Win32.ActiveCfg = Release|Win32
+		{79CD55DE-0A82-4D60-8E79-BDC141C509F3}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
