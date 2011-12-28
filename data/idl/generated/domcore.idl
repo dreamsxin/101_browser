@@ -78,8 +78,7 @@ module domcore
     boolean dispatchEvent(Event event);
   };
   
-  [Callback]
-  interface EventListener {
+  callback interface EventListener {
     void handleEvent(Event event);
   };
 
@@ -89,10 +88,7 @@ module domcore
     void disconnect();
   };
   
-  [Callback]
-  interface MutationCallback {
-    void handleEvent(MutationRecord[] mutations, MutationObserver observer);
-  };
+  callback MutationCallback = void (MutationRecord[] mutations, MutationObserver observer);
   
   dictionary MutationObserverInit {
     // Mutation types
@@ -363,10 +359,10 @@ module domcore
     void selectNode(Node refNode);
     void selectNodeContents(Node refNode);
   
-    const unsigned short START_TO_START = 0,
-    const unsigned short START_TO_END = 1,
-    const unsigned short END_TO_END = 2,
-    const unsigned short END_TO_START = 3
+    const unsigned short START_TO_START = 0;
+    const unsigned short START_TO_END = 1;
+    const unsigned short END_TO_END = 2;
+    const unsigned short END_TO_START = 3;
     short compareBoundaryPoints(unsigned short how, Range sourceRange);
   
     void deleteContents();
