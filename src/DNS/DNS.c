@@ -204,6 +204,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	fillHeader((Header *) buffer0);
 	
 	memcpy(buffer0 + sizeof(Header) + 1, in_cDomain, domainLen + 1);
+
 	if (prepareQNAME(buffer0 + sizeof(Header)))
 	{
 		return -1;
