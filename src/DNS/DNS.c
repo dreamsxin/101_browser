@@ -189,13 +189,14 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	udpAddr.sin_port = htons(53);
 	udpAddr.sin_addr.s_addr = inet_addr(in_cDnsServer);
 
-	if (sizeof(Header)
-		+ 1 // length byte
+	buffer0Size = sizeof(Header)
+		+ 1  // length byte
 		+ domainLen
-		+ 1 // zero byte terminating the string
-		+ 2 // QTYPE
-		+ 2 // QNAME
-		> 512)
+		+ 1  // zero byte terminating the string
+		+ 2  // QTYPE
+		+ 2; // QNAME
+
+	if (buffer0Size > 512)
 	{
 		return -1;
 	}
@@ -227,8 +228,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	* Meaning: the Internet
 	*/
 	*((uint16_t*) (buffer0 + sizeof(Header) + 1 + domainLen + 1 + 2)) = ntohs(1);
-	buffer0Size = sizeof(Header) + 1 + domainLen + 1 + 2 + 2;
-
+	
 	result = sendto(udpSocket, buffer0, buffer0Size, 0, (SOCKADDR *) &udpAddr, sizeof(udpAddr));
 
 	/*
