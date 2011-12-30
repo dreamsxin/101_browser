@@ -34,7 +34,7 @@ wget http://matroska.svn.sourceforge.net/viewvc/matroska/trunk/foundation_src/sp
 
 ./create_single_dynamic_idl.sh http://dev.w3.org/2006/webapi/FileAPI/ fileapi ../data/idl/generated/fileapi.idl
 
-./create_single_dynamic_idl.sh http://www.w3c-test.org/webperf/specs/NavigationTiming/ navigationtiming ../data/idl/generated/navigationtiming.idl
+./create_single_dynamic_idl.sh http://dvcs.w3.org/hg/webperf/raw-file/tip/specs/NavigationTiming/Overview.html navigationtiming ../data/idl/generated/navigationtiming.idl
 
 ./create_single_dynamic_idl.sh http://dvcs.w3.org/hg/editing/raw-file/tip/editing.html html_editing ../data/idl/generated/html_editing.idl
 

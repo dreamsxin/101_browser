@@ -20,7 +20,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\NetworkWin\NetworkWin.h">
+    <ClInclude Include="..\..\..\include\Network\Network.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

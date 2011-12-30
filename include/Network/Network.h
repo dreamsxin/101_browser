@@ -14,13 +14,20 @@
 * limitations under the License.
 */
 
-#ifndef _NetworkWin_NetworkWin_h
-#define _NetworkWin_NetworkWin_h
+#ifndef _NetworkWin_Network_h
+#define _NetworkWin_Network_h
 
 #include "MiniStdlib/declspec.h"
 
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+#ifdef _WIN32
+#include <winsock2.h>
+typedef SOCKET socket_t;
+#else
+typedef int socket_t;
 #endif
 
 DLLEXPORT int startupNetwork();

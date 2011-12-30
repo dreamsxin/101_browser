@@ -14,8 +14,7 @@
 * limitations under the License.
 */
 
-#include "NetworkWin/NetworkWin.h"
-#include <winsock2.h>
+#include "Network/Network.h"
 
 int startupNetwork()
 {

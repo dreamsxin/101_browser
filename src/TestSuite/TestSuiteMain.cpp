@@ -21,11 +21,11 @@
 #include "MiniStdlib/MTAx_cstdlib.h" // for exit
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
-#include "NetworkWin/NetworkWin.h"
+#include "Network/Network.h"
 
 int main()
 {
-#if 0
+#if 1
 	printf("Testing Libc\n");
 	test_Libc();
 	printf("Testing MiniStdlib\n");

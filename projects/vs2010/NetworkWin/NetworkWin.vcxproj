@@ -85,7 +85,7 @@
     <ClCompile Include="..\..\..\src\NetworkWin\NetworkWin.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\NetworkWin\NetworkWin.h" />
+    <ClInclude Include="..\..\..\include\Network\Network.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

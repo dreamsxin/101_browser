@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "NetworkWin/NetworkWin.h"
+#include "Network/Network.h"
 
 #include <cassert>
 #include <cstdio>
