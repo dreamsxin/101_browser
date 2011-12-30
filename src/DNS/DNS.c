@@ -20,6 +20,7 @@
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstring.h"
 #include "MiniStdlib/cstdbool.h"
+#include <stdio.h> // for printf - only for testing
 
 #pragma pack(push, 1)
 
@@ -124,7 +125,7 @@ int prepareQNAME(char *in_out_preQNAME)
 		}
 		else
 		{
-			if (0xFF == bytesCount)
+			if (63 == bytesCount)
 				// Failure
 				return 1;
 
@@ -154,7 +155,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	char buffer0[512];
 	int buffer0Size;
 	char buffer1[512];
-	int buffer1Size = 512;
+	int buffer1Size;
 	size_t domainLen = strlen(in_cDomain);
 	
 	/*
@@ -248,11 +249,64 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 
 	assert(buffer0Size == result);
 
-	result = recvfrom(udpSocket, buffer1, sizeof(buffer1), 0, (SOCKADDR*) &remoteAddr, &remoteAddrLen);
-
-    if (SOCKET_ERROR == result)
+	buffer1Size = recvfrom(udpSocket, buffer1, sizeof(buffer1), 0, (SOCKADDR*) &remoteAddr, &remoteAddrLen);
+	
+    if (SOCKET_ERROR == buffer1Size)
 	{
 		return -1;
+	}
+
+	if (((Header *) buffer1)->ID != ((Header *) buffer0)->ID)
+	{
+		return -2;
+	}
+
+	if (((Header *) buffer1)->QR != 1)
+	{
+		return -2;
+	}
+
+	if (((Header *) buffer1)->OPCODE != ((Header *) buffer0)->OPCODE)
+	{
+		return -2;
+	}
+
+	// Check AA
+	printf("AA = %u\n", ((Header *) buffer1)->AA);
+	// Check TC
+	printf("TC = %u\n", ((Header *) buffer1)->TC);
+
+	if (((Header *) buffer1)->RD != ((Header *) buffer0)->RD)
+	{
+		return -2;
+	}
+
+	// Check RA
+	printf("RA = %u\n", ((Header *) buffer1)->RA);
+
+	if (((Header *) buffer1)->Z != 0)
+	{
+		return -2;
+	}
+
+	// Check RCODE
+	printf("RCODE = %u\n", ((Header *) buffer1)->RCODE);
+
+	if (((Header *) buffer1)->QDCOUNT != ((Header *) buffer0)->QDCOUNT)
+	{
+		return -2;
+	}
+
+	// Check ANCOUNT
+	printf("ANCOUNT = %u\n", ntohs(((Header *) buffer1)->ANCOUNT));
+	// Check NSCOUNT
+	printf("NSCOUNT = %u\n", ntohs(((Header *) buffer1)->NSCOUNT));
+	// Check ARCOUNT
+	printf("ARCOUNT = %u\n", ntohs(((Header *) buffer1)->ARCOUNT));
+
+	if (memcmp(buffer1+sizeof(Header), buffer0+sizeof(Header), buffer0Size-sizeof(Header)))
+	{
+		return -2;
 	}
 
 	closesocket(udpSocket);
