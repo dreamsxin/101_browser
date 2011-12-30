@@ -410,10 +410,8 @@ module domcore
     Node? nextNode();
   };
 
-  [Callback]
-  interface NodeFilter {
-  
-    // Constants for acceptNode
+  callback interface NodeFilter {
+    // Constants for acceptNode()
     const unsigned short FILTER_ACCEPT = 1;
     const unsigned short FILTER_REJECT = 2;
     const unsigned short FILTER_SKIP = 3;
