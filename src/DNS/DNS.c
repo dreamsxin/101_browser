@@ -203,7 +203,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	}
 
 	fillHeader((Header *) buffer0);
-	
+
 	memcpy(buffer0 + sizeof(Header) + 1, in_cDomain, domainLen + 1);
 
 	if (prepareQNAME(buffer0 + sizeof(Header)))
@@ -297,16 +297,36 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 		return -2;
 	}
 
+	((Header *) buffer1)->ANCOUNT = ntohs(((Header *) buffer1)->ANCOUNT);
+	((Header *) buffer1)->NSCOUNT = ntohs(((Header *) buffer1)->NSCOUNT);
+	((Header *) buffer1)->ARCOUNT = ntohs(((Header *) buffer1)->ARCOUNT);
+
 	// Check ANCOUNT
-	printf("ANCOUNT = %u\n", ntohs(((Header *) buffer1)->ANCOUNT));
+	printf("ANCOUNT = %u\n", ((Header *) buffer1)->ANCOUNT);
 	// Check NSCOUNT
-	printf("NSCOUNT = %u\n", ntohs(((Header *) buffer1)->NSCOUNT));
+	printf("NSCOUNT = %u\n", ((Header *) buffer1)->NSCOUNT);
 	// Check ARCOUNT
-	printf("ARCOUNT = %u\n", ntohs(((Header *) buffer1)->ARCOUNT));
+	printf("ARCOUNT = %u\n", ((Header *) buffer1)->ARCOUNT);
 
 	if (memcmp(buffer1+sizeof(Header), buffer0+sizeof(Header), buffer0Size-sizeof(Header)))
 	{
 		return -2;
+	}
+
+	if (0 == ((Header *) buffer1)->RCODE)
+	{
+		// TODO Sensitive handling
+		printf("Bla\n");
+	}
+	else if (3 == ((Header *) buffer1)->RCODE)
+	{
+		// TODO Sensitive handling
+		printf("Blub\n");
+	}
+	else
+	{
+		closesocket(udpSocket);
+		return -3; // not implemented
 	}
 
 	closesocket(udpSocket);

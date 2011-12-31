@@ -25,7 +25,7 @@
 
 int main()
 {
-#if 1
+#if 0
 	printf("Testing Libc\n");
 	test_Libc();
 	printf("Testing MiniStdlib\n");

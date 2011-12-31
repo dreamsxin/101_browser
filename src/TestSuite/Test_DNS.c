@@ -73,10 +73,22 @@ void test_prepareQNAME()
 
 void test_readDNS()
 {
-	test(!readDNS("8.8.8.8", "twitter.com"));
-	test(!readDNS("8.8.8.8", "blog.fefe.de"));
-	test(!readDNS("8.8.8.8", "fsf.org"));
-	test(!readDNS("8.8.8.8", "qwerzhgcysry.org"));
+	char server[] = 
+#if 1
+		"8.8.8.8";
+#endif
+#if 0
+		"217.237.149.205";
+#endif
+#if 0
+		"217.237.151.51";
+#endif
+
+	test(!readDNS(server, "twitter.com"));
+	test(!readDNS(server, "blog.fefe.de"));
+	test(!readDNS(server, "fsf.org"));
+	test(!readDNS(server, "qwerzhgcysry.org"));
+	test(!readDNS(server, "se"));
 }
 
 void test_DNS()
