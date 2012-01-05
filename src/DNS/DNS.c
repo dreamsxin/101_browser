@@ -315,11 +315,45 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 
 	if (0 == ((Header *) buffer1)->RCODE)
 	{
-		// TODO Sensitive handling
-		printf("Bla\n");
+		if (0 != ((Header *) buffer1)->ARCOUNT)
+			return -3;
+
+		// Either ANCOUNT or NSCOUNT must be != 0 (but exactly one of them)
+		
+		if (0 != ((Header *) buffer1)->ANCOUNT)
+		{
+			if (0 != ((Header *) buffer1)->NSCOUNT)
+				return -3;
+
+			assert(0 != ((Header *) buffer1)->ANCOUNT);
+			assert(0 == ((Header *) buffer1)->NSCOUNT);
+
+			// TODO Sensitive handling
+			printf("Bla1\n");
+		}
+		else
+		{
+			if (0 == ((Header *) buffer1)->NSCOUNT)
+				return -3;
+
+			assert(0 == ((Header *) buffer1)->ANCOUNT);
+			assert(0 != ((Header *) buffer1)->NSCOUNT);
+
+			// TODO Sensitive handling
+			printf("Bla2\n");
+		}
 	}
 	else if (3 == ((Header *) buffer1)->RCODE)
 	{
+		if (0 != ((Header *) buffer1)->ANCOUNT)
+			return -3;
+
+		if (0 == ((Header *) buffer1)->NSCOUNT)
+			return -3;
+
+		if (0 != ((Header *) buffer1)->ARCOUNT)
+			return -3;
+		
 		// TODO Sensitive handling
 		printf("Blub\n");
 	}
