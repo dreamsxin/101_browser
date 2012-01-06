@@ -8,15 +8,18 @@ module canvas
     // state
     void save(); // push state on state stack
     void restore(); // pop state stack and restore state
+  
     // transformations (default transform is the identity matrix)
     void scale(double x, double y);
     void rotate(double angle);
     void translate(double x, double y);
     void transform(double a, double b, double c, double d, double e, double f);
     void setTransform(double a, double b, double c, double d, double e, double f);
+  
     // compositing
              attribute double globalAlpha; // (default 1.0)
              attribute DOMString globalCompositeOperation; // (default source-over)
+  
     // colors and styles
              attribute any strokeStyle; // (default black)
              attribute any fillStyle; // (default black)
@@ -66,7 +69,8 @@ module canvas
              attribute DOMString textAlign; // "start", "end", "left", "right", "center" (default: "start")
              attribute DOMString textBaseline; // "top", "hanging", "middle", "alphabetic", "ideographic", "bottom" (default: "alphabetic")
     void fillText(DOMString text, double x, double y, optional double maxWidth);
-    void strokeText(DOMString text, double x, double y, optional double maxWidth);  TextMetrics measureText(DOMString text);
+    void strokeText(DOMString text, double x, double y, optional double maxWidth);
+    TextMetrics measureText(DOMString text);
   
     // drawing images
     void drawImage(HTMLImageElement image, double dx, double dy);
