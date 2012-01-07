@@ -1,0 +1,1 @@
+Be warned: the files xml_bomb_1.xml and xml_bomb_2.xml contain malicious data (so called xml bombs). Open them only if you know what you do.
