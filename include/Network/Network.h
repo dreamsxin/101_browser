@@ -36,7 +36,7 @@ extern "C" {
 typedef SOCKET socket_t;
 typedef SOCKADDR sockaddr_t;
 typedef SOCKADDR_IN sockaddr_in_t;
-typedef int socklen_t;
+typedef int socklen_t; // for use in recvfrom
 #else
 typedef int socket_t;
 typedef struct sockaddr sockaddr_t;
