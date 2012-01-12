@@ -656,14 +656,13 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 		}
 		else
 		{
+			uint8_t currentPaletteIndex;
+
 			assert(LZW_DecoderAction_DataAvailable == decoderAction);
 
-			while (pLZW_Decoder->stack.stackSize != 0)
+			while (!LZW_Decoder_popPaletteIndex(pLZW_Decoder, &currentPaletteIndex))
 			{
-				LZW_TreeNode *pCurrentNode = pLZW_Decoder->treeNodes + 
-					pLZW_Decoder->stack.lzwTreeIndices[pLZW_Decoder->stack.stackSize-1];
-
-				pLZW_Decoder->stack.stackSize--;
+				// TODO: Get color of palette index and write pixel
 
 				// CND:GIF_500
 				if (pixelsWritten == pixelsOfImageCount)
@@ -674,15 +673,16 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 				}
 
 				/*
-				* Otherwise write pixel. pCurrentNode->lastCode contains the
-				* color index to draw.
+				* Otherwise write pixel.
+				* TODO: Get color of palette index and write pixel
 				*/
 
-				// Follows from CND:LZW_90
-				assert(pCurrentNode->lastCode < in_colorTableSize);
 #if 0
-				printf("%u ", pCurrentNode->lastCode);
+				printf("%u ", currentPaletteIndex);
 #endif
+
+				// Follows from CND:LZW_90
+				assert(currentPaletteIndex < in_colorTableSize);
 
 				pixelsWritten++;
 			}

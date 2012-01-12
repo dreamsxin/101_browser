@@ -172,9 +172,29 @@ LZW_DecoderAction LZW_Decoder_handleCodeword(LZW_Decoder *in_out_pLZW_Decoder,
 		* not change the table until a clear code is received.  The Code Size is that
 		* of the maximum Code Size.  Processing other than this is done normally."
 		*/
+		assert(in_out_pLZW_Decoder->currentTableIndex <= 4096);
+
 		if (in_out_pLZW_Decoder->currentTableIndex < 4096)
 			in_out_pLZW_Decoder->currentTableIndex++;
 
+		assert(in_out_pLZW_Decoder->currentTableIndex <= 4096);
+
 		return LZW_DecoderAction_DataAvailable;
 	}	
+}
+
+int LZW_Decoder_popPaletteIndex(LZW_Decoder *in_out_pLZW_Decoder, 
+	uint8_t *out_pCurrentPaletteIndex)
+{
+	if (in_out_pLZW_Decoder->stack.stackSize != 0)
+	{
+		*out_pCurrentPaletteIndex = in_out_pLZW_Decoder->treeNodes[ 
+					in_out_pLZW_Decoder->stack.lzwTreeIndices[in_out_pLZW_Decoder->stack.stackSize-1]].lastCode;
+
+		in_out_pLZW_Decoder->stack.stackSize--;
+
+		return 0;
+	}
+	else
+		return 1;
 }
