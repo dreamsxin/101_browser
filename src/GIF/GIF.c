@@ -559,7 +559,6 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	jmp_buf freeMemoryJmpBuf;
 	int result;
 
-
 	uint32_t pixelsWritten = 0;
 	uint32_t pixelsOfImageCount = ((uint32_t) in_cpImageDescriptor->Image_Width) * 
 		((uint32_t) in_cpImageDescriptor->Image_Height);
@@ -573,12 +572,6 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 			ReadResultInvalidData, in_pfErrorHandler, 
 			"read_Image_Data: invalid LZW minimum code size");
 	}
-	
-#if 0
-	startCode = 1<<LZW_Minimum_Code_Size;
-	// ASGN:GIF_314
-	stopCode = startCode+1;
-#endif
 
 	// Initialize bitReadInterface
 	memset(&bitReadInterface, 0, sizeof(bitReadInterface));
