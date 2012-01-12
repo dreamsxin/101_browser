@@ -44,6 +44,10 @@ typedef struct
 		uint16_t lzwTreeIndices[4097];
 	} stack;
 
+	/*
+	* This variable also occurs in read_Image_Data (GIF.h).
+	* TODO: Remove this redundancy.
+	*/
 	uint8_t LZW_Minimum_Code_Size;
 	uint16_t startCode;
 	uint16_t stopCode;
