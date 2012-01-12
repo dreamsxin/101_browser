@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 Wolfgang Keller
+ * Copyright 2008-2012 Wolfgang Keller
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,20 +23,12 @@
 extern "C" {
 #endif
 
-/*
-* Q: What do we need this for?
-* A: Because some LZW Tree Nodes have no predecessor and we store indices 
-*    instead of pointers, we need some value that fills the role of the NULL
-*    pointer. This is what this sentinel is for.
-*/
-#define PREVIOUS_LZW_TREE_NODE_INDEX_SENTINEL UINT16_MAX
-
 typedef struct
 {
 	uint16_t previousLzwTreeNodeIndex;
 	uint8_t firstCode;
 	uint8_t lastCode;
-}  LZW_Tree_Node;
+} LZW_TreeNode;
 
 /*!
  * You should not allocate this on a stack. Use the heap or
@@ -44,25 +36,40 @@ typedef struct
  */
 typedef struct
 {
-	LZW_Tree_Node nodes[4097];
-} LZW_Tree;
+	 LZW_TreeNode treeNodes[4097];
+	
+	struct
+	{
+		uint16_t stackSize;
+		uint16_t lzwTreeIndices[4097];
+	} stack;
 
-/*!
- * Initializes the terminal nodes (color table entries) in the LZW tree
- */
-void initLZW_Tree(LZW_Tree *out_pLZW_Tree, uint16_t in_tableSize);
+	uint8_t LZW_Minimum_Code_Size;
+	uint16_t startCode;
+	uint16_t stopCode;
+	uint16_t currentTableIndex;
+	uint8_t currentCodeWordBitCount;
+} LZW_Decoder;
 
-/*!
- * You should not allocate this on a stack. Use the heap or
- * a global variable instead.
- */
-typedef struct
+void initLZW_Decoder(LZW_Decoder *out_pLZW_Decoder, uint8_t in_LZW_Minimum_Code_Size);
+uint8_t LZW_Decoder_getCurrentCodeWordBitCount(const LZW_Decoder *in_pLZW_Decoder);
+
+typedef enum
 {
-	uint16_t stackSize;
-	uint16_t lzwTreeIndices[4097];
-} LZW_Stack;
+	// When start code is handled - you do nothing
+	LZW_DecoderAction_DoNothing,
+	// When stop code is handled - you stop
+	LZW_DecoderAction_Terminate,
+	// You read data
+	LZW_DecoderAction_DataAvailable,
 
-void initLZW_Stack(LZW_Stack *out_pLZW_Stack);
+	// On all these error conditions you better terminate
+	LZW_DecoderAction_Error_CodewordGeqCurrentTableIndex,
+	LZW_DecoderAction_Error_CodewordGeqColorTableSize
+} LZW_DecoderAction;
+
+LZW_DecoderAction LZW_Decoder_handleCodeword(LZW_Decoder *in_out_pLZW_Decoder, 
+	uint16_t in_currentCodeword, uint16_t in_colorTableSize);
 
 #ifdef __cplusplus
 }

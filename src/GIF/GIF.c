@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright 2008-2011 Wolfgang Keller
+ * Copyright 2008-2012 Wolfgang Keller
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -555,17 +555,10 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	ByteStreamInterface bitReadInterface;
 
 	Image_Data_StreamState streamState;
-	LZW_Tree *pTree = NULL;
-	LZW_Stack *pStack = NULL;
+	LZW_Decoder *pLZW_Decoder = NULL;
 	jmp_buf freeMemoryJmpBuf;
 	int result;
 
-	uint16_t startCode;
-	uint16_t stopCode;
-	uint16_t currentTableIndex;
-	uint8_t currentCodeWordBitCount;
-
-	uint16_t currentCodeWord;
 
 	uint32_t pixelsWritten = 0;
 	uint32_t pixelsOfImageCount = ((uint32_t) in_cpImageDescriptor->Image_Width) * 
@@ -581,9 +574,11 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 			"read_Image_Data: invalid LZW minimum code size");
 	}
 	
+#if 0
 	startCode = 1<<LZW_Minimum_Code_Size;
 	// ASGN:GIF_314
 	stopCode = startCode+1;
+#endif
 
 	// Initialize bitReadInterface
 	memset(&bitReadInterface, 0, sizeof(bitReadInterface));
@@ -595,26 +590,16 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	if ((result = XCHG_AND_SETJMP(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
 		freeMemoryJmpBuf)) != 0)
 	{
-		if (pStack)
-		{
-			assert(pTree != NULL);
-			safe_free(&pStack);
-		}
-		if (pTree)
-			safe_free(&pTree);
+		if (pLZW_Decoder)
+			safe_free(&pLZW_Decoder);
 		
 		xchgAndLongjmp(freeMemoryJmpBuf, *in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, result);
 	}
 
-	pTree = (LZW_Tree *) longjmpMalloc(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-		ReadResultAllocationFailure, sizeof(LZW_Tree));
+	pLZW_Decoder = (LZW_Decoder *) longjmpMalloc(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+		ReadResultAllocationFailure, sizeof(LZW_Decoder));
 
-	pStack = (LZW_Stack *) longjmpMalloc(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-		ReadResultAllocationFailure, sizeof(LZW_Stack));
-
-	initLZW_Tree(pTree, 1<<LZW_Minimum_Code_Size);
-	currentTableIndex = stopCode + 1;
-	currentCodeWordBitCount = LZW_Minimum_Code_Size+1;
+	initLZW_Decoder(pLZW_Decoder, LZW_Minimum_Code_Size);
 	
 	while (1)
 	{
@@ -623,6 +608,8 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 		* read (to compare with the count that we want(ed) to read).
 		*/
 		size_t readCount;
+		LZW_DecoderAction decoderAction;
+		uint16_t currentCodeword;
 		
 		/*
 		 * Q: Why is it necessary to set currentCodeWord to 0?
@@ -635,9 +622,10 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 		 *    is what it is supposed to do). But it will not change the value
 		 *    of the upper byte, meaning we get a wrong code word.
 		 */
-		currentCodeWord = 0;
+		currentCodeword = 0;
 
-		readCount = readBitsLittleEndian(&bitReadState, &currentCodeWord, currentCodeWordBitCount);
+		readCount = readBitsLittleEndian(&bitReadState, &currentCodeword, 
+			LZW_Decoder_getCurrentCodeWordBitCount(pLZW_Decoder));
 
 		/*
 		* Q: Why can't we assert that readCount == currentCodeWordBitCount, 
@@ -645,104 +633,44 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 		*
 		* A: If the Image Data is terminated, but we read more bits than 
 		*    available, no longjmp is triggered.
+		*    TODO: Insert reason
 		*/
-		if (readCount != currentCodeWordBitCount)
+		if (readCount != LZW_Decoder_getCurrentCodeWordBitCount(pLZW_Decoder))
 		{
 			longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer,
 				ReadResultPrematureEndOfStream, in_pfErrorHandler, 
 				"read_Image_Data: readCount != currentCodeWordBitCount");
 		}
 
-		if (currentCodeWord >= currentTableIndex)
+		decoderAction = LZW_Decoder_handleCodeword(pLZW_Decoder, currentCodeword, 
+			in_colorTableSize);
+
+		if (LZW_DecoderAction_DoNothing == decoderAction)
+			continue;
+		else if (LZW_DecoderAction_Terminate == decoderAction)
+			break;
+		else if (LZW_DecoderAction_Error_CodewordGeqCurrentTableIndex == decoderAction)
 		{
 			longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-			ReadResultInvalidData, in_pfErrorHandler, 
-			"read_Image_Data: currentCodeWord >= currentTableIndex");
+				ReadResultInvalidData, in_pfErrorHandler, 
+				"read_Image_Data: currentCodeWord >= currentTableIndex");
 		}
-
-		// CND:GIF_375
-		if (startCode == currentCodeWord)
+		else if (LZW_DecoderAction_Error_CodewordGeqColorTableSize == decoderAction)
 		{
-			/*
-			 * Reiniting the tree is not (!) necessary at the moment - 
-			 * but if we change the implementation it could become...
-			 */
-
-			currentTableIndex = stopCode + 1;
-			currentCodeWordBitCount = LZW_Minimum_Code_Size+1;
-
-			continue;
-		}
-		// CND:GIF_388
-		else if (stopCode == currentCodeWord)
-		{
-			break;
+			longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
+				ReadResultInvalidData, in_pfErrorHandler, 
+				"read_Image_Data: current pixel index is out of the bounds of the currently active color table");
 		}
 		else
 		{
-			LZW_Tree_Node *pCurrentNode;
+			assert(LZW_DecoderAction_DataAvailable == decoderAction);
 
-			// Follows from CND:GIF_567
-			assert(currentTableIndex <= 4096);
-
-#if 0
-			printf("%u %u\n", currentTableIndex, currentCodeWord);
-#endif
-			// CND:GIF_415
-			if (currentCodeWord < startCode)
+			while (pLZW_Decoder->stack.stackSize != 0)
 			{
-				// CND:GIF_417
-				if (currentCodeWord >= in_colorTableSize)
-				{
-					longjmpWithHandler(in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, 
-						ReadResultInvalidData, in_pfErrorHandler, 
-						"read_Image_Data: current pixel index is out of the bounds of the currently active color table");
-				}
-				
-				pTree->nodes[currentTableIndex].previousLzwTreeNodeIndex = PREVIOUS_LZW_TREE_NODE_INDEX_SENTINEL;
-				pTree->nodes[currentTableIndex].firstCode = (uint8_t) currentCodeWord;
-				pTree->nodes[currentTableIndex].lastCode = (uint8_t) currentCodeWord;
-			}
-			else
-			{
-				/*
-				 * From CND:GIF_375 and CND:GIF_388 it follows that
-				 * currentCodeWord != startCode
-				 * and
-				 * currentCodeWord != stopCode
-				 * From ASGN:GIF_314 and because there is no subsequent assignment to
-				 * either startCode, stopCode or currentCodeWord we get:
-				 * currentCodeWord > stopCode or currentCodeWord < startCode
-				 * But the second case can't occur because of CND:GIF_415.
-				 */
-				assert(currentCodeWord > stopCode);
+				LZW_TreeNode *pCurrentNode = pLZW_Decoder->treeNodes + 
+					pLZW_Decoder->stack.lzwTreeIndices[pLZW_Decoder->stack.stackSize-1];
 
-				pCurrentNode = pTree->nodes+currentCodeWord;
-
-				pTree->nodes[currentTableIndex].previousLzwTreeNodeIndex = currentCodeWord;
-				pTree->nodes[currentTableIndex].firstCode = pCurrentNode->firstCode;
-				pTree->nodes[currentTableIndex].lastCode = (pCurrentNode+1)->firstCode;
-			}
-
-			initLZW_Stack(pStack);
-
-			pCurrentNode = pTree->nodes+currentTableIndex;
-
-			assert(pCurrentNode != NULL);
-			pStack->lzwTreeIndices[pStack->stackSize] = currentTableIndex;
-			pStack->stackSize++;
-
-			while (pCurrentNode->previousLzwTreeNodeIndex != PREVIOUS_LZW_TREE_NODE_INDEX_SENTINEL)
-			{
-				pCurrentNode = pTree->nodes+pCurrentNode->previousLzwTreeNodeIndex;
-				pStack->lzwTreeIndices[pStack->stackSize] = currentTableIndex;
-				pStack->stackSize++;
-			}
-
-			while (pStack->stackSize != 0)
-			{
-				pCurrentNode = pTree->nodes+pStack->lzwTreeIndices[pStack->stackSize-1];
-				pStack->stackSize--;
+				pLZW_Decoder->stack.stackSize--;
 
 				// CND:GIF_500
 				if (pixelsWritten == pixelsOfImageCount)
@@ -757,7 +685,7 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 				* color index to draw.
 				*/
 
-				// Follows from CND:GIF_417
+				// Follows from CND:LZW_90
 				assert(pCurrentNode->lastCode < in_colorTableSize);
 #if 0
 				printf("%u ", pCurrentNode->lastCode);
@@ -766,40 +694,6 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 				pixelsWritten++;
 			}
 		}
-
-		switch (currentTableIndex)
-		{
-		case 1<<3:
-		case 1<<4:
-		case 1<<5:
-		case 1<<6:
-		case 1<<7:
-		case 1<<8:
-		case 1<<9:
-		case 1<<10:
-		case 1<<11:
-			currentCodeWordBitCount++;
-			break;
-		}
-
-		// CND:GIF_567
-		/*
-		* To quote from GIF 89a specification:
-		* "There has been confusion about where clear codes can be found in the
-		* data stream.  As the specification says, they may appear at anytime.  There
-		* is not a requirement to send a clear code when the string table is full.
-		* 
-		* It is the encoder's decision as to when the table should be cleared.  When
-		* the table is full, the encoder can chose to use the table as is, making no
-		* changes to it until the encoder chooses to clear it.  The encoder during
-		* this time sends out codes that are of the maximum Code Size.
-		* 
-		* As we can see from the above, when the decoder's table is full, it must
-		* not change the table until a clear code is received.  The Code Size is that
-		* of the maximum Code Size.  Processing other than this is done normally."
-		*/
-		if (currentTableIndex < 4096)
-			currentTableIndex++;
 	}
 
 	/*
@@ -840,8 +734,7 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	printf("Pixels written: %u\n", pixelsWritten);
 #endif
 
-	safe_free(&pStack);
-	safe_free(&pTree);
+	safe_free(&pLZW_Decoder);
 	xchgJmpBuf(freeMemoryJmpBuf, *in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
 }
 
