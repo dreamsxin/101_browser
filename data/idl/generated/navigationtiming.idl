@@ -34,8 +34,6 @@ module navigationtiming
   };
 
   interface Performance {
-    const unsigned short PERF_NAVIGATION = 0;
-  
     readonly attribute PerformanceTiming timing;
     readonly attribute PerformanceNavigation navigation;
   };
