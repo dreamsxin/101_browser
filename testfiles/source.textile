@@ -12,6 +12,11 @@ All images are taken from http://www.fileformat.info/format/gif/sample/index.htm
 
 h3. Subfolder wikipedia
 
+h4. empty.gif
+
+Based on hex dump from http://en.wikipedia.org/wiki/File:Empty_GIF_hex.png
+Referenced in http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=470178688#File_format
+
 h4. GifSample.gif
 
 http://en.wikipedia.org/wiki/File:GifSample.gif
@@ -27,6 +32,14 @@ h4. Newtons_cradle_animation_book_2.gif
 http://en.wikipedia.org/wiki/File:Newtons_cradle_animation_book_2.gif
 (or more exactly: http://upload.wikimedia.org/wikipedia/commons/d/d3/Newtons_cradle_animation_book_2.gif)
 Referenced in http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=394783182#Usage
+
+http://en.wikipedia.org/wiki/File:Quilt_design_as_46x46_uncompressed_GIF.gif
+
+h4. Quilt_design_as_46x46_uncompressed_GIF.gif
+
+http://en.wikipedia.org/wiki/File:Quilt_design_as_46x46_uncompressed_GIF.gif
+(here you can also read an explanation)
+Referenced in http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=470178688#Uncompressed_GIF
 
 h4. Rotating_earth_(small).gif
 

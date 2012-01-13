@@ -202,7 +202,9 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	ByteStreamInterface in_byteStreamReadInterface, 
 	const Image_Descriptor *in_cpImageDescriptor, 
 	const Rgb8Color *in_pColorTable, 
-	uint16_t in_colorTableSize, void (*in_pfErrorHandler)(void *));
+	uint16_t in_colorTableSize, 
+	bool in_hasBackgroundColor, 
+	uint8_t in_backgroundColorIndex, void (*in_pfErrorHandler)(void *));
 /*
 * Precondition:
 * PRE:GIF_h_148: we have a GIF 89a file

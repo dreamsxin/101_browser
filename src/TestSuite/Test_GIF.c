@@ -27,12 +27,15 @@ typedef struct
 } Char96ReadResultPair;
 
 static char* gif_filenames[] = {
+	"testfiles/gif/wikipedia/empty.gif",
 	"testfiles/gif/wikipedia/GifSampleSmall.gif",
 	"testfiles/gif/wikipedia/GifSample.gif",
 	/*
 	* Provides test case for Application Extension block
 	*/
 	"testfiles/gif/wikipedia/Newtons_cradle_animation_book_2.gif",
+
+	"testfiles/gif/wikipedia/Quilt_design_as_46x46_uncompressed_GIF.gif",
 	/*
 	* Provides test case for Application Extension block
 	*/

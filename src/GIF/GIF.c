@@ -408,7 +408,21 @@ void read_TableBased_Image(SetjmpStreamState *in_out_pSetjmpStreamState,
 	}
 
 	read_Image_Data(in_out_pSetjmpStreamState, in_byteStreamReadInterface, 
-		&in_pTableBasedImage->imageDescriptor, lpColorTable, lColorTableSize, in_pfErrorHandler);
+		&in_pTableBasedImage->imageDescriptor, lpColorTable, lColorTableSize, 
+		/*
+		* GIF 89a specification section "18. Logical Screen Descriptor."
+		*
+		* iii) Global Color Table Flag - Flag indicating the presence of a
+		* Global Color Table; if the flag is set, the Global Color Table will
+		* immediately follow the Logical Screen Descriptor. This flag also
+		* selects the interpretation of the Background Color Index; if the
+		* flag is set, the value of the Background Color Index field should
+		* be used as the table index of the background color. (This field is
+		* the most significant bit of the byte.)
+		*/
+		in_cpLogicalScreen->logicalScreenDescriptor.Global_Color_Table_Flag, 
+		in_cpLogicalScreen->logicalScreenDescriptor.Background_Color_Index, 
+		in_pfErrorHandler);
 
 	if (in_pTableBasedImage->imageDescriptor.Local_Color_Table_Flag)
 	{
@@ -564,7 +578,9 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	ByteStreamInterface in_byteStreamReadInterface, 
 	const Image_Descriptor *in_cpImageDescriptor, 
 	const Rgb8Color *in_pColorTable, 
-	uint16_t in_colorTableSize, void (*in_pfErrorHandler)(void *))
+	uint16_t in_colorTableSize, 
+	bool in_hasBackgroundColor, 
+	uint8_t in_backgroundColorIndex, void (*in_pfErrorHandler)(void *))
 {
 	uint8_t LZW_Minimum_Code_Size;
 	BitReadState bitReadState;
@@ -705,7 +721,8 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 				* TODO: write pixel
 				*/
 				rgbaColor.rgb = in_pColorTable[currentPaletteIndex];
-				rgbaColor.a = 1; // TODO: Change
+				rgbaColor.a = (in_hasBackgroundColor && 
+					currentPaletteIndex == in_backgroundColorIndex) ? 0 : 255;
 
 				pixelsWritten++;
 			}
