@@ -59,16 +59,26 @@ ReadResult read_GIF_Data_Stream(void *in_pStreamState,
 		in_pStreamState, in_byteStreamReadInterface);
 	setjmpReadStreamInterface = getSetjmpStreamByteStreamInterface(&setjmpReadStreamState);
 	
+	in_pDataStream->logicalScreen.globalColorTable = NULL;
+
 	if ((result = setjmp(jmpBuf)) != 0)
+	{
+		if (in_pDataStream->logicalScreen.globalColorTable)
+		{
+			safe_free(&in_pDataStream->logicalScreen.globalColorTable);
+		}
+
 		return (ReadResult) result;
+	}
 
 	read_Header(&setjmpReadStreamState, setjmpReadStreamInterface, 
-		&in_pDataStream->header, &is89a, in_pfErrorHandler);
+		&is89a, in_pfErrorHandler);
 
 	read_Logical_Screen(&setjmpReadStreamState, setjmpReadStreamInterface, 
 		&in_pDataStream->logicalScreen, is89a, in_pfErrorHandler);
 
 	(*setjmpReadStreamInterface.mpfRead)(&setjmpReadStreamState, &lIntroducer, sizeof(lIntroducer));
+
 	while (GIF_TRAILER != lIntroducer)
 	{
 		read_Data(&setjmpReadStreamState, setjmpReadStreamInterface, 
@@ -76,24 +86,31 @@ ReadResult read_GIF_Data_Stream(void *in_pStreamState,
 		(*setjmpReadStreamInterface.mpfRead)(&setjmpReadStreamState, &lIntroducer, sizeof(lIntroducer));
 	}
 
+	if (in_pDataStream->logicalScreen.globalColorTable)
+	{
+		safe_free(&in_pDataStream->logicalScreen.globalColorTable);
+	}
+
 	return ReadResultOK;
 }
 
 void read_Header(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	Header *in_pHeader, bool *out_pIs89a, void (*in_pfErrorHandler)(void *))
+	bool *out_pIs89a, void (*in_pfErrorHandler)(void *))
 {
-	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, in_pHeader, sizeof(*in_pHeader));
+	Header header;
 
-	longjmpIf(strncmp(in_pHeader->Signature, "GIF", sizeof(in_pHeader->Signature)) != 0, 
+	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, &header, sizeof(header));
+
+	longjmpIf(strncmp(header.Signature, "GIF", sizeof(header.Signature)) != 0, 
 		in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultInvalidData, 
 		in_pfErrorHandler, "read_Header: invalid Signature");
 
-	if (strncmp(in_pHeader->Version, "87a", sizeof(in_pHeader->Version)) == 0)
+	if (strncmp(header.Version, "87a", sizeof(header.Version)) == 0)
 	{
 		*out_pIs89a = false;
 	}
-	else if (strncmp(in_pHeader->Version, "89a", sizeof(in_pHeader->Version)) == 0)
+	else if (strncmp(header.Version, "89a", sizeof(header.Version)) == 0)
 	{
 		*out_pIs89a = true;
 	}
@@ -186,7 +203,6 @@ void read_Logical_Screen(SetjmpStreamState *in_out_pSetjmpStreamState,
 		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 			in_pLogicalScreen->globalColorTable, bytesOfGlobalColorTable);
 
-		safe_free(&in_pLogicalScreen->globalColorTable);
 		xchgJmpBuf(freeMemoryJmpBuf, 
 			*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer);
 	}
@@ -563,6 +579,8 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 	uint32_t pixelsOfImageCount = ((uint32_t) in_cpImageDescriptor->Image_Width) * 
 		((uint32_t) in_cpImageDescriptor->Image_Height);
 
+	assert(in_pColorTable != NULL);
+
 	(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
 		&LZW_Minimum_Code_Size, sizeof(LZW_Minimum_Code_Size));
 
@@ -662,6 +680,8 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 			while (LZW_Decoder_popPaletteIndex(pLZW_Decoder, &currentPaletteIndex))
 			{
+				Rgba8Color rgbaColor;
+				
 				// TODO: Get color of palette index and write pixel
 
 				// CND:GIF_500
@@ -672,10 +692,6 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 						"read_Image_Data: more pixels than defined in Image Descriptor");
 				}
 
-				/*
-				* Otherwise write pixel.
-				* TODO: Get color of palette index and write pixel
-				*/
 
 #if 0
 				printf("%u ", currentPaletteIndex);
@@ -683,6 +699,13 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 				// Follows from CND:LZW_90
 				assert(currentPaletteIndex < in_colorTableSize);
+
+				/*
+				* Otherwise write pixel.
+				* TODO: write pixel
+				*/
+				rgbaColor.rgb = in_pColorTable[currentPaletteIndex];
+				rgbaColor.a = 1; // TODO: Change
 
 				pixelsWritten++;
 			}

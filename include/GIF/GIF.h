@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 Wolfgang Keller
+ * Copyright 2008-2012 Wolfgang Keller
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,11 +75,16 @@ typedef struct
 #pragma warning(pop)
 #endif
 
-
 typedef struct
 {
 	uint8_t r, g, b;
 } Rgb8Color;
+
+typedef struct
+{
+	Rgb8Color rgb;
+	uint8_t a;
+} Rgba8Color;
 
 typedef struct
 {
@@ -95,7 +100,6 @@ typedef struct
 
 typedef struct
 {
-	Header header;
 	Logical_Screen logicalScreen;
 } GIF_Data_Stream;
 
@@ -170,7 +174,7 @@ void read_SpecialPurpose_Block(SetjmpStreamState *in_out_pSetjmpStreamState,
 // Terminal symbols
 void read_Header(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface, 
-	Header *in_pHeader, bool *out_pIs89a, void (*in_pfErrorHandler)(void *));
+	bool *out_pIs89a, void (*in_pfErrorHandler)(void *));
 void read_Trailer(SetjmpStreamState *in_out_pSetjmpStreamState, 
 	ByteStreamInterface in_byteStreamReadInterface);
 void read_Logical_Screen_Descriptor(SetjmpStreamState *in_out_pSetjmpStreamState, 
