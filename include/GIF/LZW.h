@@ -18,6 +18,7 @@
 #define _LZW_h
 
 #include "MiniStdlib/cstdint.h"
+#include "MiniStdlib/cstdbool.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -79,10 +80,10 @@ LZW_DecoderAction LZW_Decoder_handleCodeword(LZW_Decoder *in_out_pLZW_Decoder,
 * When pixel data is available, this function gets exactly one pixel if possible.
 *
 * Return value:
-* 0 on success
-* 1 on failure
+* false on failure
+* true on success
 */
-int LZW_Decoder_popPaletteIndex(LZW_Decoder *in_out_pLZW_Decoder, 
+bool LZW_Decoder_popPaletteIndex(LZW_Decoder *in_out_pLZW_Decoder, 
 	uint8_t *out_pCurrentPaletteIndex);
 
 #ifdef __cplusplus

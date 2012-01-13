@@ -183,7 +183,7 @@ LZW_DecoderAction LZW_Decoder_handleCodeword(LZW_Decoder *in_out_pLZW_Decoder,
 	}	
 }
 
-int LZW_Decoder_popPaletteIndex(LZW_Decoder *in_out_pLZW_Decoder, 
+bool LZW_Decoder_popPaletteIndex(LZW_Decoder *in_out_pLZW_Decoder, 
 	uint8_t *out_pCurrentPaletteIndex)
 {
 	if (in_out_pLZW_Decoder->stack.stackSize != 0)
@@ -193,8 +193,8 @@ int LZW_Decoder_popPaletteIndex(LZW_Decoder *in_out_pLZW_Decoder,
 
 		in_out_pLZW_Decoder->stack.stackSize--;
 
-		return 0;
+		return true;
 	}
 	else
-		return 1;
+		return false;
 }

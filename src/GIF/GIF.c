@@ -660,7 +660,7 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 
 			assert(LZW_DecoderAction_DataAvailable == decoderAction);
 
-			while (!LZW_Decoder_popPaletteIndex(pLZW_Decoder, &currentPaletteIndex))
+			while (LZW_Decoder_popPaletteIndex(pLZW_Decoder, &currentPaletteIndex))
 			{
 				// TODO: Get color of palette index and write pixel
 
