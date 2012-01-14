@@ -7,14 +7,13 @@ module html_editing
     readonly attribute unsigned long focusOffset;
   
     readonly attribute boolean isCollapsed;
-    void               collapse(Node parentNode, unsigned long offset);
+    void               collapse(Node node, unsigned long offset);
     void               collapseToStart();
     void               collapseToEnd();
   
-    void               extend(Node parentNode, unsigned long offset);
-    void               modify(DOMString alter, DOMString direction, DOMString granularity);
+    void               extend(Node node, unsigned long offset);
   
-    void               selectAllChildren(Node parentNode);
+    void               selectAllChildren(Node node);
     void               deleteFromDocument();
   
     readonly attribute unsigned long rangeCount;
