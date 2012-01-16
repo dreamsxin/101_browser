@@ -15,9 +15,6 @@
 */
 
 #include <cstdio>
-#include <cstring>
-#include "MiniStdlib/cstdint.h"
-#include "MiniStdlib/MTAx_cstdlib.h" // for exit
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
 #include "Network/Network.h"
