@@ -56,7 +56,7 @@ void test_prepareQNAME()
 		"YYYYYYYYYYYYYYYY"
 		"YYYYYYYYYYYYYYYY"
 		"YYYYYYYYYYYYYYY"
-		"\x2se";
+		"\x02se";
 
 	test(prepareQNAME(emptyString));
 	test(prepareQNAME(dotString));
