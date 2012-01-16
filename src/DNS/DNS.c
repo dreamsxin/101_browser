@@ -159,6 +159,8 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	char buffer1[512];
 	int buffer1Size;
 	size_t domainLen = strlen(in_cDomain);
+	void *pointerTowardsBeginOfResponse = NULL;
+	size_t remaingSize = 0;
 	
 	/*
 	* Comments taken from
@@ -263,10 +265,17 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	assert(buffer0Size == result);
 
 	buffer1Size = recvfrom(udpSocket, buffer1, sizeof(buffer1), 0, (sockaddr_t *) &remoteAddr, &remoteAddrLen);
+
 	
 	if (SOCKET_ERROR == buffer1Size)
 	{
 		return -1;
+	}
+	
+	// CND:DNS_c_275
+	if (buffer1Size < buffer0Size)
+	{
+		return -2;
 	}
 
 	if (((Header *) buffer1)->ID != ((Header *) buffer0)->ID)
@@ -325,6 +334,11 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	{
 		return -2;
 	}
+
+	pointerTowardsBeginOfResponse = buffer1 + buffer0Size;
+	
+	// Is >= 0 because of CND:DNS_c_275
+	remaingSize = buffer1Size - buffer0Size;
 
 	if (0 == ((Header *) buffer1)->RCODE)
 	{
