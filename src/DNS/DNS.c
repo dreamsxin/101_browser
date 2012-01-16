@@ -123,7 +123,6 @@ int prepareQNAME(char *in_out_preQNAME)
 				*pCurrentLength = (char) bytesCount;
 				bytesCount = 0;
 				pCurrentLength = pCurrentCharacterInLabel;
-				pCurrentCharacterInLabel++;
 			}
 		}
 		else
@@ -131,10 +130,10 @@ int prepareQNAME(char *in_out_preQNAME)
 			if (63 == bytesCount)
 				// Failure
 				return 1;
-
-			pCurrentCharacterInLabel++;
 			bytesCount++;
 		}
+
+		pCurrentCharacterInLabel++;
 	}
 
 	if (0 == bytesCount)
