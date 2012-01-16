@@ -38,7 +38,7 @@ char port80String[] = "80";
  * Parses the url
  *
  * Note that if in_pcUrl[*in_pAfterDomainPos] we have to send a slash
- * in the http(s) request.
+ * in the http request.
  * 
  * Return value:
  * true on success
