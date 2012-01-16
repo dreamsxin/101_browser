@@ -158,13 +158,24 @@ int prepareQNAME(char *in_out_preQNAME)
 
 int readName(uint8_t **in_out_ppName, size_t *in_out_pBufferSize)
 {
-	if (*in_out_pBufferSize < 2)
+	if (0 == in_out_pBufferSize)
 		return -2;
 	
-	if (0xC0 == (*in_out_ppName)[0] && 0x0C == (*in_out_ppName)[1])
+	if (0xC0 == (0xC0 & (*in_out_ppName)[0]))
 	{
+		if (*in_out_pBufferSize < 2)
+			return -2;
+		
+		// TODO: Test for correct value (i. e. sensible offset)
 		(*in_out_ppName) += 2;
 		(*in_out_pBufferSize) -= 2;
+		return 0;
+	}
+	// TODO: More general string parsing (unluckily I have no test cases :-( )
+	else if (0x0 == (*in_out_ppName)[0])
+	{
+		(*in_out_ppName)++;
+		(*in_out_pBufferSize)--;
 		return 0;
 	}
 	else
@@ -409,8 +420,9 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 			assert(0 == ((Header *) buffer1)->NSCOUNT);
 			assert(0 == ((Header *) buffer1)->ARCOUNT);
 
-			handleRessourceRecords(((Header *) buffer1)->ANCOUNT, 
-				pointerTowardsBeginOfResponse, remainingSize);
+			if (result = handleRessourceRecords(((Header *) buffer1)->ANCOUNT, 
+				pointerTowardsBeginOfResponse, remainingSize))
+				longjmp(jmpBuf, result);
 		}
 		else
 		{
@@ -421,8 +433,9 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 			assert(0 != ((Header *) buffer1)->NSCOUNT);
 			assert(0 == ((Header *) buffer1)->ARCOUNT);
 
-			handleRessourceRecords(((Header *) buffer1)->NSCOUNT, 
-				pointerTowardsBeginOfResponse, remainingSize);
+			if (result = handleRessourceRecords(((Header *) buffer1)->NSCOUNT, 
+				pointerTowardsBeginOfResponse, remainingSize))
+				longjmp(jmpBuf, result);
 		}
 	}
 	else if (3 == ((Header *) buffer1)->RCODE)
@@ -440,8 +453,9 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 		assert(((Header *) buffer1)->NSCOUNT > 0);
 		assert(0 == ((Header *) buffer1)->ARCOUNT);
 		
-		handleRessourceRecords(((Header *) buffer1)->NSCOUNT, 
-			pointerTowardsBeginOfResponse, remainingSize);
+		if (result = handleRessourceRecords(((Header *) buffer1)->NSCOUNT, 
+			pointerTowardsBeginOfResponse, remainingSize))
+			longjmp(jmpBuf, result);
 	}
 	else
 		longjmp(jmpBuf, -3);

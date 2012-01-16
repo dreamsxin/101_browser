@@ -88,6 +88,7 @@ void test_readDNS()
 	test(!readDNS(server, "blog.fefe.de"));
 	test(!readDNS(server, "fsf.org"));
 	test(!readDNS(server, "qwerzhgcysry.org"));
+	test(!readDNS(server, "qwerzhgcysry.blu"));
 	test(!readDNS(server, "se"));
 }
 
