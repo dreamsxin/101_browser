@@ -174,7 +174,7 @@ int readName(uint8_t **in_out_ppName, size_t *in_out_pBufferSize)
 int handleRessourceRecords(size_t in_rrCount, 
 	uint8_t *in_pointerTowardsBeginOfResponse, size_t in_remainingSize)
 {
-	int currentRRIndex;
+	unsigned int currentRRIndex;
 	int result;
 
 	assert(in_rrCount > 0);
@@ -193,9 +193,16 @@ int handleRessourceRecords(size_t in_rrCount,
 
 		pRRMiddlePart = (RessourceRecordMiddlePart*) in_pointerTowardsBeginOfResponse;
 		pRRMiddlePart->TYPE = ntohs(pRRMiddlePart->TYPE);
-		pRRMiddlePart->CLASS = ntohs(pRRMiddlePart->TYPE);
+		pRRMiddlePart->CLASS = ntohs(pRRMiddlePart->CLASS);
 		pRRMiddlePart->TTL = ntohl(pRRMiddlePart->TTL);
 		pRRMiddlePart->RDLENGTH = ntohs(pRRMiddlePart->RDLENGTH);
+
+		printf("\tTYPE = %u\n"
+			"\tCLASS = %u\n"
+			"\tTTL = %u\n"
+			"\tRDLENGTH = %u\n",
+			pRRMiddlePart->TYPE, pRRMiddlePart->CLASS, 
+			pRRMiddlePart->TTL, pRRMiddlePart->RDLENGTH);
 
 		in_pointerTowardsBeginOfResponse += sizeof(RessourceRecordMiddlePart);
 		in_remainingSize -= sizeof(RessourceRecordMiddlePart);
