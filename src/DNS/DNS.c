@@ -381,7 +381,6 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 		
 		if (0 != ((Header *) buffer1)->ANCOUNT)
 		{
-			RessourceRecordMiddlePart *pRRMiddlePart;
 			int currentRRIndex;
 			
 			if (0 != ((Header *) buffer1)->NSCOUNT)
@@ -392,6 +391,8 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 
 			for (currentRRIndex = 0; currentRRIndex < ((Header *) buffer1)->ANCOUNT; currentRRIndex++)
 			{
+				RessourceRecordMiddlePart *pRRMiddlePart;
+				
 				result = readName(&pointerTowardsBeginOfResponse, &remainingSize);
 
 				if (result)
@@ -418,10 +419,6 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 
 			if (remainingSize != 0)
 				return -2;
-
-
-			// TODO Sensitive handling
-			printf("Bla1\n");
 		}
 		else
 		{
