@@ -16,7 +16,6 @@
 
 #include <cstdio>
 #include <cstring>
-#include <cwchar>
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/MTAx_cstdlib.h" // for exit
 #include "TestSuite/Tests.h"
