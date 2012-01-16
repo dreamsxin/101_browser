@@ -1,5 +1,5 @@
 ﻿/*
-* Copyright 2011 Wolfgang Keller
+* Copyright 2011-2012 Wolfgang Keller
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstring.h"
 #include "MiniStdlib/cstdbool.h"
+#include "MiniStdlib/csetjmp.h"
 #include <stdio.h> // for printf - only for testing
 
 #pragma pack(push, 1)
@@ -50,6 +51,14 @@ typedef struct
 	uint16_t NSCOUNT;
 	uint16_t ARCOUNT;
 } Header;
+
+typedef struct
+{
+	uint16_t TYPE;
+	uint16_t CLASS;
+	uint32_t TTL;
+	uint16_t RDLENGTH;
+} RessourceRecordMiddlePart;
 
 #ifdef _WIN32
 #pragma warning(pop)
@@ -147,9 +156,24 @@ int prepareQNAME(char *in_out_preQNAME)
 	}
 }
 
+int readName(uint8_t **in_out_ppName, size_t *in_out_pBufferSize)
+{
+	if (*in_out_pBufferSize < 2)
+		return -2;
+	
+	if (0xC0 == (*in_out_ppName)[0] && 0x0C == (*in_out_ppName)[1])
+	{
+		(*in_out_ppName) += 2;
+		(*in_out_pBufferSize) -= 2;
+		return 0;
+	}
+	else
+		return -3; // Not implemented
+}
+
 int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 {
-	socket_t udpSocket;
+	socket_t udpSocket = 0;
 	sockaddr_in_t udpAddr;
 	sockaddr_in_t remoteAddr;
 	socklen_t remoteAddrLen = sizeof(remoteAddr);
@@ -159,8 +183,17 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	char buffer1[512];
 	int buffer1Size;
 	size_t domainLen = strlen(in_cDomain);
-	void *pointerTowardsBeginOfResponse = NULL;
-	size_t remaingSize = 0;
+	uint8_t *pointerTowardsBeginOfResponse = NULL;
+	size_t remainingSize = 0;
+	jmp_buf jmpBuf;
+
+	if (result = setjmp(jmpBuf))
+	{
+		if (udpSocket)
+			closesocket(udpSocket);
+
+		return result;
+	}
 	
 	/*
 	* Comments taken from
@@ -202,7 +235,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 		*/
 		&udpAddr.sin_addr) != 1)
 	{
-		return -1;
+		longjmp(jmpBuf, -1);
 	}
 
 	buffer0Size = sizeof(Header)
@@ -214,7 +247,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 
 	if (buffer0Size > 512)
 	{
-		return -1;
+		longjmp(jmpBuf, -1);
 	}
 
 	fillHeader((Header *) buffer0);
@@ -223,7 +256,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 
 	if (prepareQNAME(buffer0 + sizeof(Header)))
 	{
-		return -1;
+		longjmp(jmpBuf, -1);
 	}
 
 	// QTYPE field
@@ -259,38 +292,37 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	*/
 	if (SOCKET_ERROR == result)
 	{
-		return -1;
+		longjmp(jmpBuf, -1);
 	}
 
 	assert(buffer0Size == result);
 
 	buffer1Size = recvfrom(udpSocket, buffer1, sizeof(buffer1), 0, (sockaddr_t *) &remoteAddr, &remoteAddrLen);
-
 	
 	if (SOCKET_ERROR == buffer1Size)
 	{
-		return -1;
+		longjmp(jmpBuf, -1);
 	}
 	
 	// CND:DNS_c_275
 	if (buffer1Size < buffer0Size)
 	{
-		return -2;
+		longjmp(jmpBuf, -2);
 	}
 
 	if (((Header *) buffer1)->ID != ((Header *) buffer0)->ID)
 	{
-		return -2;
+		longjmp(jmpBuf, -2);
 	}
 
 	if (((Header *) buffer1)->QR != 1)
 	{
-		return -2;
+		longjmp(jmpBuf, -2);
 	}
 
 	if (((Header *) buffer1)->OPCODE != ((Header *) buffer0)->OPCODE)
 	{
-		return -2;
+		longjmp(jmpBuf, -2);
 	}
 
 	// Check AA
@@ -300,7 +332,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 
 	if (((Header *) buffer1)->RD != ((Header *) buffer0)->RD)
 	{
-		return -2;
+		longjmp(jmpBuf, -2);
 	}
 
 	// Check RA
@@ -308,7 +340,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 
 	if (((Header *) buffer1)->Z != 0)
 	{
-		return -2;
+		longjmp(jmpBuf, -2);
 	}
 
 	// Check RCODE
@@ -316,7 +348,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 
 	if (((Header *) buffer1)->QDCOUNT != ((Header *) buffer0)->QDCOUNT)
 	{
-		return -2;
+		longjmp(jmpBuf, -2);
 	}
 
 	((Header *) buffer1)->ANCOUNT = ntohs(((Header *) buffer1)->ANCOUNT);
@@ -332,28 +364,61 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 
 	if (memcmp(buffer1+sizeof(Header), buffer0+sizeof(Header), buffer0Size-sizeof(Header)))
 	{
-		return -2;
+		longjmp(jmpBuf, -2);
 	}
 
-	pointerTowardsBeginOfResponse = buffer1 + buffer0Size;
+	pointerTowardsBeginOfResponse = (uint8_t *) buffer1 + buffer0Size;
 	
 	// Is >= 0 because of CND:DNS_c_275
-	remaingSize = buffer1Size - buffer0Size;
+	remainingSize = buffer1Size - buffer0Size;
 
 	if (0 == ((Header *) buffer1)->RCODE)
 	{
 		if (0 != ((Header *) buffer1)->ARCOUNT)
-			return -3;
+			longjmp(jmpBuf, -3);
 
 		// Either ANCOUNT or NSCOUNT must be != 0 (but exactly one of them)
 		
 		if (0 != ((Header *) buffer1)->ANCOUNT)
 		{
+			RessourceRecordMiddlePart *pRRMiddlePart;
+			int currentRRIndex;
+			
 			if (0 != ((Header *) buffer1)->NSCOUNT)
-				return -3;
+				longjmp(jmpBuf, -3);
 
 			assert(0 != ((Header *) buffer1)->ANCOUNT);
 			assert(0 == ((Header *) buffer1)->NSCOUNT);
+
+			for (currentRRIndex = 0; currentRRIndex < ((Header *) buffer1)->ANCOUNT; currentRRIndex++)
+			{
+				result = readName(&pointerTowardsBeginOfResponse, &remainingSize);
+
+				if (result)
+					longjmp(jmpBuf, result);
+
+				if (remainingSize < sizeof(RessourceRecordMiddlePart))
+					longjmp(jmpBuf, -2);
+				
+				pRRMiddlePart = (RessourceRecordMiddlePart*) pointerTowardsBeginOfResponse;
+				pRRMiddlePart->TYPE = ntohs(pRRMiddlePart->TYPE);
+				pRRMiddlePart->CLASS = ntohs(pRRMiddlePart->TYPE);
+				pRRMiddlePart->TTL = ntohl(pRRMiddlePart->TTL);
+				pRRMiddlePart->RDLENGTH = ntohs(pRRMiddlePart->RDLENGTH);
+
+				pointerTowardsBeginOfResponse += sizeof(RessourceRecordMiddlePart);
+				remainingSize -= sizeof(RessourceRecordMiddlePart);
+
+				if (remainingSize < pRRMiddlePart->RDLENGTH)
+					longjmp(jmpBuf, -2);
+
+				pointerTowardsBeginOfResponse += pRRMiddlePart->RDLENGTH;
+				remainingSize -= pRRMiddlePart->RDLENGTH;
+			}
+
+			if (remainingSize != 0)
+				return -2;
+
 
 			// TODO Sensitive handling
 			printf("Bla1\n");
@@ -361,7 +426,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 		else
 		{
 			if (0 == ((Header *) buffer1)->NSCOUNT)
-				return -3;
+				longjmp(jmpBuf, -3);
 
 			assert(0 == ((Header *) buffer1)->ANCOUNT);
 			assert(0 != ((Header *) buffer1)->NSCOUNT);
@@ -373,21 +438,22 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	else if (3 == ((Header *) buffer1)->RCODE)
 	{
 		if (0 != ((Header *) buffer1)->ANCOUNT)
-			return -3;
+		{
+			longjmp(jmpBuf, -3);
+		}
 
 		if (0 == ((Header *) buffer1)->NSCOUNT)
-			return -3;
+			longjmp(jmpBuf, -3);
 
 		if (0 != ((Header *) buffer1)->ARCOUNT)
-			return -3;
+			longjmp(jmpBuf, -3);
 		
 		// TODO Sensitive handling
 		printf("Blub\n");
 	}
 	else
 	{
-		closesocket(udpSocket);
-		return -3; // not implemented
+		longjmp(jmpBuf, -3);
 	}
 
 	closesocket(udpSocket);

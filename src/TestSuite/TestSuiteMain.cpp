@@ -65,8 +65,10 @@ int main()
 #endif
 
 #ifndef __linux
+#if 0
 	printf("Testing Ogg\n");
 	test_Ogg();
+#endif
 #endif
 	if (startupNetwork())
 	{
