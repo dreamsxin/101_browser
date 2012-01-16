@@ -16,6 +16,9 @@
 
 #include "DNS/DNS.h"
 #include "Network/Network.h"
+#ifdef _WIN32
+#include <Ws2tcpip.h> // for inet_pton - works only from Vista/Server 2008 on
+#endif
 #include <assert.h>
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstring.h"
@@ -189,7 +192,17 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	udpAddr.sin_family = AF_INET;
 	udpAddr.sin_port = htons(53);
 	// TODO: Use inet_pton inet_addr (Reason: http://stackoverflow.com/a/2422653)
-	udpAddr.sin_addr.s_addr = inet_addr(in_cDnsServer);
+	
+	if (inet_pton(AF_INET, in_cDnsServer, 
+		/*
+		* http://msdn.microsoft.com/en-us/library/cc805844%28VS.85%29.aspx
+		* "When the Family parameter is AF_INET, this buffer should be large enough
+		* to hold an IN_ADDR structure."
+		*/
+		&udpAddr.sin_addr) != 1)
+	{
+		return -1;
+	}
 
 	buffer0Size = sizeof(Header)
 		+ 1  // length byte
