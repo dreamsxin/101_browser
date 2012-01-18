@@ -22,7 +22,7 @@ h4. 2.1.1 Windows
 
 Windows Vista/Server 2008/7 (currently only tested under Windows 7, but the other ones should work). Note that not all parts of 101_browser will work under Windows XP or older, because some parts are using APIs that were introduced with Vista to simplify the code or add features.
 
-In other words: don't even attempt to get it to tun on Windows XP or older. It will save you frustration.
+In other words: better don't attempt to get 101_browser to tun on Windows XP or older. It will save you frustration.
 
 h4. 2.1.2 Linux
 
@@ -30,7 +30,7 @@ An up-to-date Linux distribution (I'm only testing under the most current Ubuntu
 
 h4. 2.1.3 Other Operation Systems
 
-There is *no* port to crApple MacOS X (and *none* is planned at the moment; if crApple is willing to donate a Mac, I'll think about reconsidering).
+There is *no* port to MacOS X (and *none* is planned at the moment, since I don't own a mac and I'm not willing to get one).
 
 h3. 2.2 Required software for building
 
@@ -53,4 +53,3 @@ h3. 3.2 Linux
 Type on your prompt (without the '$ '):
 
 $ scons
-
