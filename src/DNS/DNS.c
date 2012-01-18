@@ -247,7 +247,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	size_t remainingSize = 0;
 	jmp_buf jmpBuf;
 
-	if (result = setjmp(jmpBuf))
+	if ((result = setjmp(jmpBuf)) != 0)
 	{
 		if (udpSocket)
 			closesocket(udpSocket);
@@ -295,7 +295,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 		longjmp(jmpBuf, -1);
 
 	buffer0Size = sizeof(Header)
-		+ 1  // length byte
+		+ 1  // first length byte
 		+ domainLen
 		+ 1  // zero byte terminating the string
 		+ 2  // QTYPE
@@ -420,8 +420,8 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 			assert(0 == ((Header *) buffer1)->NSCOUNT);
 			assert(0 == ((Header *) buffer1)->ARCOUNT);
 
-			if (result = handleRessourceRecords(((Header *) buffer1)->ANCOUNT, 
-				pointerTowardsBeginOfResponse, remainingSize))
+			if ((result = handleRessourceRecords(((Header *) buffer1)->ANCOUNT, 
+				pointerTowardsBeginOfResponse, remainingSize)) != 0)
 				longjmp(jmpBuf, result);
 		}
 		else
@@ -433,8 +433,8 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 			assert(0 != ((Header *) buffer1)->NSCOUNT);
 			assert(0 == ((Header *) buffer1)->ARCOUNT);
 
-			if (result = handleRessourceRecords(((Header *) buffer1)->NSCOUNT, 
-				pointerTowardsBeginOfResponse, remainingSize))
+			if ((result = handleRessourceRecords(((Header *) buffer1)->NSCOUNT, 
+				pointerTowardsBeginOfResponse, remainingSize)) != 0)
 				longjmp(jmpBuf, result);
 		}
 	}
@@ -453,8 +453,8 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 		assert(((Header *) buffer1)->NSCOUNT > 0);
 		assert(0 == ((Header *) buffer1)->ARCOUNT);
 		
-		if (result = handleRessourceRecords(((Header *) buffer1)->NSCOUNT, 
-			pointerTowardsBeginOfResponse, remainingSize))
+		if ((result = handleRessourceRecords(((Header *) buffer1)->NSCOUNT, 
+			pointerTowardsBeginOfResponse, remainingSize)) != 0)
 			longjmp(jmpBuf, result);
 	}
 	else
