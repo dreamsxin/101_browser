@@ -27,7 +27,7 @@
 
 #pragma pack(push, 1)
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4214)
 #endif
@@ -59,7 +59,7 @@ typedef struct
 	uint16_t RDLENGTH;
 } RessourceRecordMiddlePart;
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #pragma warning(pop)
 #endif
 
@@ -182,46 +182,60 @@ int prepareQNAME(char *in_out_preQNAME, const char *in_pLabel,
 
 	assert(in_pLabel != NULL);
 
-	/*
-	* Explanation: 
-	* in_pBuffer + sizeof(Header) + 1, because byte at in_pBuffer + sizeof(Header) will
-	* be used for first length
-	* domainLen + 1, since we also want to copy the terminating 0x0 byte.
-	*/
-	strcpy(in_out_preQNAME + 1, in_pLabel);
-
-	while (*pCurrentCharacterInLabel)
+	if (!in_checkAnswerForCorrectness)
 	{
-		if ('.' == *pCurrentCharacterInLabel)
+		/*
+		* Explanation: 
+		* in_pBuffer + sizeof(Header) + 1, because byte at in_pBuffer + sizeof(Header) will
+		* be used for first length
+		* domainLen + 1, since we also want to copy the terminating 0x0 byte.
+		*/
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4996)
+#endif
+		strcpy(in_out_preQNAME + 1, in_pLabel);
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
+		while (*pCurrentCharacterInLabel)
 		{
-			if (0 == bytesCount)
-				// Failure
-				return DnsReturnValueErrorInvalidInput;
+			if ('.' == *pCurrentCharacterInLabel)
+			{
+				if (0 == bytesCount)
+					// Failure
+					return DnsReturnValueErrorInvalidInput;
+				else
+				{
+					*pCurrentLength = (char) bytesCount;
+					bytesCount = 0;
+					pCurrentLength = pCurrentCharacterInLabel;
+				}
+			}
 			else
 			{
-				*pCurrentLength = (char) bytesCount;
-				bytesCount = 0;
-				pCurrentLength = pCurrentCharacterInLabel;
+				if (63 == bytesCount)
+					// Failure
+					return DnsReturnValueErrorInvalidInput;
+				bytesCount++;
 			}
+
+			pCurrentCharacterInLabel++;
 		}
+
+		if (0 == bytesCount)
+			// Failure
+			return DnsReturnValueErrorInvalidInput;
 		else
 		{
-			if (63 == bytesCount)
-				// Failure
-				return DnsReturnValueErrorInvalidInput;
-			bytesCount++;
+			*pCurrentLength = (char) bytesCount;
+			// Success
+			return DnsReturnValueOK;
 		}
-
-		pCurrentCharacterInLabel++;
 	}
-
-	if (0 == bytesCount)
-		// Failure
-		return DnsReturnValueErrorInvalidInput;
 	else
 	{
-		*pCurrentLength = (char) bytesCount;
-		// Success
 		return DnsReturnValueOK;
 	}
 }
@@ -339,16 +353,9 @@ int prepareOrCheckPackage(const char *in_cDomain, char *in_pBuffer, int *in_out_
 	if (result)
 		return result;
 
-	if (!in_checkAnswerForCorrectness)
-	{
-		if ((result = prepareQNAME(in_pBuffer + sizeof(Header), in_cDomain, 
-			in_checkAnswerForCorrectness)) != 0)
-			return result;
-	}
-	else
-	{
-		// TODO
-	}
+	if ((result = prepareQNAME(in_pBuffer + sizeof(Header), in_cDomain, 
+		in_checkAnswerForCorrectness)) != 0)
+		return result;
 
 	if (!in_checkAnswerForCorrectness)
 	{
