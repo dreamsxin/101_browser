@@ -231,7 +231,6 @@ int handleRessourceRecords(size_t in_rrCount,
 	return 0;
 }
 
-static bool dnsConstantsInitialized = false;
 
 int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 {
@@ -248,12 +247,6 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	uint8_t *pointerTowardsBeginOfResponse = NULL;
 	size_t remainingSize = 0;
 	jmp_buf jmpBuf;
-
-	if (!dnsConstantsInitialized)
-	{
-
-		dnsConstantsInitialized = true;
-	}
 
 	if ((result = setjmp(jmpBuf)) != 0)
 	{
