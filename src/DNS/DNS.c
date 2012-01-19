@@ -66,11 +66,38 @@ typedef struct
 
 #pragma pack(pop)
 
+const uint16_t cDnsConstantID = 0; // TODO: Change
+const uint8_t cDnsConstantRD  = 1;
+#define DNS_CONSTANT_QDCOUNT (ntohs(1))
+
+// 
+/*
+* QTYPE field
+* See 3.2.2. TYPE values and 3.2.3. QTYPE values
+*
+* TYPE A
+* Value: 1
+* Meaning: a host address
+*/
+#define DNS_CONSTANT_QTYPE   (ntohs(1))
+
+/*
+* QCLASS field
+* See 3.2.4. CLASS values and 3.2.5. QCLASS values
+*
+* CLASS IN
+* Value: 1
+* Meaning: the Internet
+*/
+#define DNS_CONSTANT_QCLASS  (ntohs(1))
+
+
+
 void fillHeader(Header *out_pHeader)
 {
 	memset(out_pHeader, 0, sizeof(Header));
 
-	out_pHeader->ID = 0;     // TODO: Change
+	out_pHeader->ID = cDnsConstantID;
 	out_pHeader->QR = 0;     // Query
 	out_pHeader->OPCODE = 0; // 0 a standard query (QUERY)
 	                         // 1  an inverse query (IQUERY)
@@ -82,13 +109,13 @@ void fillHeader(Header *out_pHeader)
 	* the name server to pursue the query recursively.
 	* Recursive query support is optional."
 	*/
-	out_pHeader->RD = 1;
+	out_pHeader->RD = cDnsConstantRD;
 
 	/*
 	* "QDCOUNT an unsigned 16 bit integer specifying the number of 
 	* entries in the question section."
 	*/
-	out_pHeader->QDCOUNT = ntohs(1);
+	out_pHeader->QDCOUNT = DNS_CONSTANT_QDCOUNT;
 }
 
 int prepareQNAME(char *in_out_preQNAME)
@@ -316,25 +343,8 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	if (prepareQNAME(buffer0 + sizeof(Header)))
 		longjmp(jmpBuf, -1);
 
-	// QTYPE field
-	// See 3.2.2. TYPE values and 3.2.3. QTYPE values
-
-	/*
-	* TYPE A
-	* Value: 1
-	* Meaning: a host address
-	*/
-	*((uint16_t*) (buffer0 + sizeof(Header) + 1 + domainLen + 1)) = ntohs(1);
-
-	// QCLASS field
-	// See 3.2.4. CLASS values and 3.2.5. QCLASS values
-
-	/*
-	* CLASS IN
-	* Value: 1
-	* Meaning: the Internet
-	*/
-	*((uint16_t*) (buffer0 + sizeof(Header) + 1 + domainLen + 1 + 2)) = ntohs(1);
+	*((uint16_t*) (buffer0 + sizeof(Header) + 1 + domainLen + 1))     = DNS_CONSTANT_QTYPE;
+	*((uint16_t*) (buffer0 + sizeof(Header) + 1 + domainLen + 1 + 2)) = DNS_CONSTANT_QCLASS;
 	
 	result = sendto(udpSocket, buffer0, buffer0Size, 0, (sockaddr_t *) &udpAddr, sizeof(udpAddr));
 
@@ -361,7 +371,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	if (buffer1Size < buffer0Size)
 		longjmp(jmpBuf, -2);
 
-	if (((Header *) buffer1)->ID != ((Header *) buffer0)->ID)
+	if (((Header *) buffer1)->ID != cDnsConstantID)
 		longjmp(jmpBuf, -2);
 
 	if (((Header *) buffer1)->QR != 1)
@@ -375,7 +385,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	// Check TC
 	printf("TC = %u\n", ((Header *) buffer1)->TC);
 
-	if (((Header *) buffer1)->RD != ((Header *) buffer0)->RD)
+	if (((Header *) buffer1)->RD != cDnsConstantRD)
 		longjmp(jmpBuf, -2);
 
 	// Check RA
@@ -387,7 +397,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	// Check RCODE
 	printf("RCODE = %u\n", ((Header *) buffer1)->RCODE);
 
-	if (((Header *) buffer1)->QDCOUNT != ((Header *) buffer0)->QDCOUNT)
+	if (((Header *) buffer1)->QDCOUNT != DNS_CONSTANT_QDCOUNT)
 		longjmp(jmpBuf, -2);
 
 	((Header *) buffer1)->ANCOUNT = ntohs(((Header *) buffer1)->ANCOUNT);
@@ -401,7 +411,13 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	// Check ARCOUNT
 	printf("ARCOUNT = %u\n", ((Header *) buffer1)->ARCOUNT);
 
+	// TODO: Remove
 	if (memcmp(buffer1+sizeof(Header), buffer0+sizeof(Header), buffer0Size-sizeof(Header)))
+		longjmp(jmpBuf, -2);
+
+	if (DNS_CONSTANT_QTYPE  != *((uint16_t*) (buffer1 + sizeof(Header) + 1 + domainLen + 1)))
+		longjmp(jmpBuf, -2);
+	if (DNS_CONSTANT_QCLASS != *((uint16_t*) (buffer1 + sizeof(Header) + 1 + domainLen + 1 + 2)))
 		longjmp(jmpBuf, -2);
 
 	pointerTowardsBeginOfResponse = (uint8_t *) buffer1 + buffer0Size;
