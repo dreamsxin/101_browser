@@ -231,6 +231,8 @@ int handleRessourceRecords(size_t in_rrCount,
 	return 0;
 }
 
+static bool dnsConstantsInitialized = false;
+
 int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 {
 	socket_t udpSocket = 0;
@@ -242,10 +244,16 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	int buffer0Size;
 	char buffer1[512];
 	int buffer1Size;
-	size_t domainLen = strlen(in_cDomain);
+	size_t domainLen;
 	uint8_t *pointerTowardsBeginOfResponse = NULL;
 	size_t remainingSize = 0;
 	jmp_buf jmpBuf;
+
+	if (!dnsConstantsInitialized)
+	{
+
+		dnsConstantsInitialized = true;
+	}
 
 	if ((result = setjmp(jmpBuf)) != 0)
 	{
@@ -293,6 +301,11 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 		*/
 		&udpAddr.sin_addr) != 1)
 		longjmp(jmpBuf, -1);
+	
+	domainLen = strlen(in_cDomain);
+
+	if (domainLen > 512 - sizeof(Header) - 1 - domainLen - 2 - 2)
+		longjmp(jmpBuf, -1);
 
 	buffer0Size = sizeof(Header)
 		+ 1  // first length byte
@@ -301,8 +314,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 		+ 2  // QTYPE
 		+ 2; // QNAME
 
-	if (buffer0Size > 512)
-		longjmp(jmpBuf, -1);
+	assert(buffer0Size <= 512);
 
 	fillHeader((Header *) buffer0);
 
