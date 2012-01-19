@@ -24,7 +24,8 @@ module webmessaging
   };
 
   interface MessagePort : EventTarget {
-    void postMessage(any message, optional sequence<Transferable> transfer);  void start();
+    void postMessage(any message, optional sequence<Transferable> transfer);
+    void start();
     void close();
   
     // event handlers

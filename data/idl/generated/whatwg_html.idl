@@ -1,7 +1,8 @@
 module html
 {
   interface HTMLAllCollection : HTMLCollection {
-    // inherits length and item()
+    // inherits length and item(unsigned long index)
+    object? item(DOMString name);
     legacycaller getter object? namedItem(DOMString name); // overrides inherited namedItem()
     HTMLAllCollection tags(DOMString tagName);
   };
