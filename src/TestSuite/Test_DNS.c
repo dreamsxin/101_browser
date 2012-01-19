@@ -22,53 +22,54 @@
 
 void test_prepareQNAME()
 {
-	char emptyString[] = "X";
-	char dotString[] = "X.";
-	char reducedTwitter[] = "Xtwitter.";
-	char twittercom[] = "Xtwitter.com";
+	char buffer[128];
+	const char emptyString[] = "";
+	const char dotString[] = ".";
+	const char reducedTwitter[] = "twitter.";
+	const char twittercom[] = "twitter.com";
 	/*
 	* Q: Why this strange notation (also in the following results)?
 	* A: If we use "\x07twitter\x03com" the Visual Studio compiler
 	*    inserts a 0x3c character instead. I don't know whether
 	*    this is a bug of the Visual Studio compiler or not.
 	*/
-	char twittercomResult[] = "\x07twitter\x03" "com";
+	const char twittercomResult[] = "\x07twitter\x03" "com";
 
-	char wwwalumniovgude[] = "Xwww.alumni.ovgu.de";
-	char wwwalumniovgudeResult[] = "\x03www\x06" "alumni\x04ovgu\x02" "de";
+	const char wwwalumniovgude[] = "www.alumni.ovgu.de";
+	const char wwwalumniovgudeResult[] = "\x03www\x06" "alumni\x04ovgu\x02" "de";
 
-	char overlong[] = "X" 
+	const char overlong[] =
 		"YYYYYYYYYYYYYYYY"
 		"YYYYYYYYYYYYYYYY"
 		"YYYYYYYYYYYYYYYY"
 		"YYYYYYYYYYYYYYYY"
 		".de";
 	
-	char notOverlong[] = "X" 
+	const char notOverlong[] =
 		"YYYYYYYYYYYYYYYY"
 		"YYYYYYYYYYYYYYYY"
 		"YYYYYYYYYYYYYYYY"
 		"YYYYYYYYYYYYYYY"
 		".se";
 
-	char notOverlongResult[] = "\x3f" 
+	const char notOverlongResult[] = "\x3f" 
 		"YYYYYYYYYYYYYYYY"
 		"YYYYYYYYYYYYYYYY"
 		"YYYYYYYYYYYYYYYY"
 		"YYYYYYYYYYYYYYY"
 		"\x02se";
 
-	test(prepareQNAME(emptyString));
-	test(prepareQNAME(dotString));
-	test(prepareQNAME(reducedTwitter));
-	test(!prepareQNAME(twittercom));
-	test(!memcmp(twittercom, twittercomResult, strlen(twittercomResult) + 1));
-	test(!prepareQNAME(wwwalumniovgude));
-	test(!memcmp(wwwalumniovgude, wwwalumniovgudeResult, strlen(wwwalumniovgudeResult) + 1));
+	test(prepareQNAME(buffer, emptyString));
+	test(prepareQNAME(buffer, dotString));
+	test(prepareQNAME(buffer, reducedTwitter));
+	test(!prepareQNAME(buffer, twittercom));
+	test(!memcmp(buffer, twittercomResult, strlen(twittercomResult) + 1));
+	test(!prepareQNAME(buffer, wwwalumniovgude));
+	test(!memcmp(buffer, wwwalumniovgudeResult, strlen(wwwalumniovgudeResult) + 1));
 
-	test(prepareQNAME(overlong));
-	test(!prepareQNAME(notOverlong));
-	test(!memcmp(notOverlong, notOverlongResult, strlen(notOverlongResult) + 1));
+	test(prepareQNAME(buffer, overlong));
+	test(!prepareQNAME(buffer, notOverlong));
+	test(!memcmp(buffer, notOverlongResult, strlen(notOverlongResult) + 1));
 }
 
 void test_readDNS()

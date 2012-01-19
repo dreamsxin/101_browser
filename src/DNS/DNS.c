@@ -151,7 +151,7 @@ int prepareOrCheckHeader(Header *in_out_pHeader,
 	return DnsReturnValueOK;
 }
 
-int prepareQNAME(char *in_out_preQNAME)
+int prepareQNAME(char *in_out_preQNAME, const char *in_pLabel)
 {
 	/*
 	* Automaton for parsing QNAMEs (not including that each label must not
@@ -179,6 +179,16 @@ int prepareQNAME(char *in_out_preQNAME)
 	char *pCurrentCharacterInLabel = in_out_preQNAME + 1;
 	// bytesCount == 0 <=> state == 0
 	uint8_t bytesCount = 0;
+
+	assert(in_pLabel != NULL);
+
+	/*
+	* Explanation: 
+	* in_pBuffer + sizeof(Header) + 1, because byte at in_pBuffer + sizeof(Header) will
+	* be used for first length
+	* domainLen + 1, since we also want to copy the terminating 0x0 byte.
+	*/
+	strcpy(in_out_preQNAME + 1, in_pLabel);
 
 	while (*pCurrentCharacterInLabel)
 	{
@@ -331,15 +341,9 @@ int prepareOrCheckPackage(const char *in_cDomain, char *in_pBuffer, int *in_out_
 
 	if (!in_checkAnswerForCorrectness)
 	{
-		/*
-		* Explanation: 
-		* in_pBuffer + sizeof(Header) + 1, because byte at in_pBuffer + sizeof(Header) will
-		* be used for first length
-		* domainLen + 1, since we also want to copy the terminating 0x0 byte.
-		*/
-		memcpy(in_pBuffer + sizeof(Header) + 1, in_cDomain, domainLen + 1);
+		
 
-		if ((result = prepareQNAME(in_pBuffer + sizeof(Header))) != 0)
+		if ((result = prepareQNAME(in_pBuffer + sizeof(Header), in_cDomain)) != 0)
 			return result;
 	}
 	else
