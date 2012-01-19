@@ -92,29 +92,61 @@ const uint8_t cDnsConstantRD  = 1;
 #define DNS_CONSTANT_QCLASS  (ntohs(1))
 
 
-void fillHeader(Header *out_pHeader)
+int prepareOrCheckHeader(Header *in_out_pHeader, 
+	bool in_checkAnswerForCorrectness)
 {
-	memset(out_pHeader, 0, sizeof(Header));
+	if (!in_checkAnswerForCorrectness)
+		memset(in_out_pHeader, 0, sizeof(Header));
 
-	out_pHeader->ID = cDnsConstantID;
-	out_pHeader->QR = 0;     // Query
-	out_pHeader->OPCODE = 0; // 0 a standard query (QUERY)
-	                         // 1  an inverse query (IQUERY)
-	                         // 2  a server status request (STATUS)
-	/*
-	* RFC 1035 - 4.1.1. Header section format
-	* "Recursion Desired - this bit may be set in a query and
-	* is copied into the response.  If RD is set, it directs
-	* the name server to pursue the query recursively.
-	* Recursive query support is optional."
-	*/
-	out_pHeader->RD = cDnsConstantRD;
+	if (!in_checkAnswerForCorrectness)
+	{
+		in_out_pHeader->ID = cDnsConstantID;
+		in_out_pHeader->QR = 0;     // Query
+		in_out_pHeader->OPCODE = 0; // 0 a standard query (QUERY)
+		                            // 1  an inverse query (IQUERY)
+		                            // 2  a server status request (STATUS)
 
-	/*
-	* "QDCOUNT an unsigned 16 bit integer specifying the number of 
-	* entries in the question section."
-	*/
-	out_pHeader->QDCOUNT = DNS_CONSTANT_QDCOUNT;
+		/*
+		* RFC 1035 - 4.1.1. Header section format
+		* "Recursion Desired - this bit may be set in a query and
+		* is copied into the response.  If RD is set, it directs
+		* the name server to pursue the query recursively.
+		* Recursive query support is optional."
+		*/
+		in_out_pHeader->RD = cDnsConstantRD;
+
+		/*
+		* "QDCOUNT an unsigned 16 bit integer specifying the number of 
+		* entries in the question section."
+		*/
+		in_out_pHeader->QDCOUNT = DNS_CONSTANT_QDCOUNT;
+	}
+	else
+	{
+		if (in_out_pHeader->ID != cDnsConstantID)
+			return -2;
+		if (in_out_pHeader->QR != 1) // Response
+			return -2;
+		if (in_out_pHeader->OPCODE != 0)	// 0 a standard query (QUERY)
+			return -2;                      // 1  an inverse query (IQUERY)
+							                // 2  a server status request (STATUS)
+
+		// AA may be 0 or 1
+		// TC may be 0 or 1
+
+		if (in_out_pHeader->RD != cDnsConstantRD)
+			return -2;
+
+		// RA may be 0 or 1
+
+		if (((Header *) in_out_pHeader)->Z != 0)
+			return -2;
+
+		if (in_out_pHeader->QDCOUNT != DNS_CONSTANT_QDCOUNT)
+			return -2;
+	}
+
+	return 0;
 }
 
 int prepareQNAME(char *in_out_preQNAME)
@@ -263,6 +295,7 @@ int prepareOrCheckPackage(const char *in_cDomain, char *in_pBuffer, int *in_out_
 {
 	size_t domainLen = strlen(in_cDomain);
 	int bufferSize;
+	int result;
 	
 	if (domainLen > 512 - sizeof(Header) - 1 - domainLen - 2 - 2)
 		return -1;
@@ -285,8 +318,13 @@ int prepareOrCheckPackage(const char *in_cDomain, char *in_pBuffer, int *in_out_
 			return -2;
 	}
 
+	result = prepareOrCheckHeader((Header *) in_pBuffer, in_checkAnswerForCorrectness);
+
 	if (!in_checkAnswerForCorrectness)
-		fillHeader((Header *) in_pBuffer);
+		assert(0 == result);
+
+	if (result)
+		return result;
 
 	if (!in_checkAnswerForCorrectness)
 		memcpy(in_pBuffer + sizeof(Header) + 1, in_cDomain, domainLen + 1);
@@ -397,39 +435,17 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	
 	if (SOCKET_ERROR == buffer1Size)
 		longjmp(jmpBuf, -1);
-	
-	// CND:DNS_c_275
-	if (buffer1Size < buffer0Size)
-		longjmp(jmpBuf, -2);
-
-	if (((Header *) buffer1)->ID != cDnsConstantID)
-		longjmp(jmpBuf, -2);
-
-	if (((Header *) buffer1)->QR != 1)
-		longjmp(jmpBuf, -2);
-
-	if (((Header *) buffer1)->OPCODE != ((Header *) buffer0)->OPCODE)
-		longjmp(jmpBuf, -2);
 
 	// Check AA
 	printf("AA = %u\n", ((Header *) buffer1)->AA);
 	// Check TC
 	printf("TC = %u\n", ((Header *) buffer1)->TC);
 
-	if (((Header *) buffer1)->RD != cDnsConstantRD)
-		longjmp(jmpBuf, -2);
-
 	// Check RA
 	printf("RA = %u\n", ((Header *) buffer1)->RA);
 
-	if (((Header *) buffer1)->Z != 0)
-		longjmp(jmpBuf, -2);
-
 	// Check RCODE
 	printf("RCODE = %u\n", ((Header *) buffer1)->RCODE);
-
-	if (((Header *) buffer1)->QDCOUNT != DNS_CONSTANT_QDCOUNT)
-		longjmp(jmpBuf, -2);
 
 	((Header *) buffer1)->ANCOUNT = ntohs(((Header *) buffer1)->ANCOUNT);
 	((Header *) buffer1)->NSCOUNT = ntohs(((Header *) buffer1)->NSCOUNT);
@@ -448,6 +464,8 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 
 	if ((result = prepareOrCheckPackage(in_cDomain, buffer1, &buffer1Size, true)) != 0)
 		longjmp(jmpBuf, result);
+
+	assert(buffer1Size >= buffer0Size);
 
 	pointerTowardsBeginOfResponse = (uint8_t *) buffer1 + buffer0Size;
 	
