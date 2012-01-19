@@ -309,10 +309,11 @@ int prepareOrCheckPackage(const char *in_cDomain, char *in_pBuffer, int *in_out_
 		+ 2  // QTYPE
 		+ 2; // QNAME
 
+	assert(bufferSize <= 512);
+
 	if (!in_checkAnswerForCorrectness)
 	{
 		*in_out_pBufferSize = bufferSize;
-		assert(*in_out_pBufferSize <= 512);
 	}
 	else
 	{
@@ -329,6 +330,12 @@ int prepareOrCheckPackage(const char *in_cDomain, char *in_pBuffer, int *in_out_
 		return result;
 
 	if (!in_checkAnswerForCorrectness)
+		/*
+		* Explanation: 
+		* in_pBuffer + sizeof(Header) + 1, because byte at in_pBuffer + sizeof(Header) will
+		* be used for first length
+		* domainLen + 1, since we also want to copy the terminating 0x0 byte.
+		*/
 		memcpy(in_pBuffer + sizeof(Header) + 1, in_cDomain, domainLen + 1);
 
 	if (!in_checkAnswerForCorrectness)
