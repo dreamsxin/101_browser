@@ -59,16 +59,16 @@ void test_prepareQNAME()
 		"YYYYYYYYYYYYYYY"
 		"\x02se";
 
-	test(prepareQNAME(buffer, emptyString));
-	test(prepareQNAME(buffer, dotString));
-	test(prepareQNAME(buffer, reducedTwitter));
-	test(!prepareQNAME(buffer, twittercom));
+	test(prepareQNAME(buffer, emptyString, false));
+	test(prepareQNAME(buffer, dotString, false));
+	test(prepareQNAME(buffer, reducedTwitter, false));
+	test(!prepareQNAME(buffer, twittercom, false));
 	test(!memcmp(buffer, twittercomResult, strlen(twittercomResult) + 1));
-	test(!prepareQNAME(buffer, wwwalumniovgude));
+	test(!prepareQNAME(buffer, wwwalumniovgude, false));
 	test(!memcmp(buffer, wwwalumniovgudeResult, strlen(wwwalumniovgudeResult) + 1));
 
-	test(prepareQNAME(buffer, overlong));
-	test(!prepareQNAME(buffer, notOverlong));
+	test(prepareQNAME(buffer, overlong, false));
+	test(!prepareQNAME(buffer, notOverlong, false));
 	test(!memcmp(buffer, notOverlongResult, strlen(notOverlongResult) + 1));
 }
 

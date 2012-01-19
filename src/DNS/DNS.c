@@ -22,7 +22,6 @@
 #include <assert.h>
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstring.h"
-#include "MiniStdlib/cstdbool.h"
 #include "MiniStdlib/csetjmp.h"
 #include <stdio.h> // for printf - only for testing
 
@@ -151,7 +150,8 @@ int prepareOrCheckHeader(Header *in_out_pHeader,
 	return DnsReturnValueOK;
 }
 
-int prepareQNAME(char *in_out_preQNAME, const char *in_pLabel)
+int prepareQNAME(char *in_out_preQNAME, const char *in_pLabel, 
+	bool in_checkAnswerForCorrectness)
 {
 	/*
 	* Automaton for parsing QNAMEs (not including that each label must not
@@ -341,9 +341,8 @@ int prepareOrCheckPackage(const char *in_cDomain, char *in_pBuffer, int *in_out_
 
 	if (!in_checkAnswerForCorrectness)
 	{
-		
-
-		if ((result = prepareQNAME(in_pBuffer + sizeof(Header), in_cDomain)) != 0)
+		if ((result = prepareQNAME(in_pBuffer + sizeof(Header), in_cDomain, 
+			in_checkAnswerForCorrectness)) != 0)
 			return result;
 	}
 	else
