@@ -1,5 +1,5 @@
 /*
-* Copyright 2011 Wolfgang Keller
+* Copyright 2011-2012 Wolfgang Keller
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -22,6 +22,15 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+typedef enum
+{
+	DnsReturnValueOK = 0,
+	DnsReturnValueErrorInvalidInput = 1,
+	DnsReturnValueErrorNetworkError = 2,
+	DnsReturnValueErrorInvalidResponse = 3,
+	DnsReturnValueNotImplemented = 4
+} DnsReturnValue;
 
 /*!
 * Parameters:

@@ -124,29 +124,31 @@ int prepareOrCheckHeader(Header *in_out_pHeader,
 	else
 	{
 		if (in_out_pHeader->ID != cDnsConstantID)
-			return -2;
+			return DnsReturnValueErrorInvalidResponse;
 		if (in_out_pHeader->QR != 1) // Response
-			return -2;
-		if (in_out_pHeader->OPCODE != 0)	// 0 a standard query (QUERY)
-			return -2;                      // 1  an inverse query (IQUERY)
-							                // 2  a server status request (STATUS)
+			return DnsReturnValueErrorInvalidResponse;
+		if (in_out_pHeader->OPCODE != 0)  // 0 a standard query (QUERY)
+		                                  // 1  an inverse query (IQUERY)
+		                                  // 2  a server status request (STATUS)
+			return DnsReturnValueErrorInvalidResponse;
+							                
 
 		// AA may be 0 or 1
 		// TC may be 0 or 1
 
 		if (in_out_pHeader->RD != cDnsConstantRD)
-			return -2;
+			return DnsReturnValueErrorInvalidResponse;
 
 		// RA may be 0 or 1
 
 		if (((Header *) in_out_pHeader)->Z != 0)
-			return -2;
+			return DnsReturnValueErrorInvalidResponse;
 
 		if (in_out_pHeader->QDCOUNT != DNS_CONSTANT_QDCOUNT)
-			return -2;
+			return DnsReturnValueErrorInvalidResponse;
 	}
 
-	return 0;
+	return DnsReturnValueOK;
 }
 
 int prepareQNAME(char *in_out_preQNAME)
@@ -298,7 +300,7 @@ int prepareOrCheckPackage(const char *in_cDomain, char *in_pBuffer, int *in_out_
 	int result;
 	
 	if (domainLen > 512 - sizeof(Header) - 1 - domainLen - 2 - 2)
-		return -1;
+		return DnsReturnValueErrorInvalidInput;
 
 	bufferSize = sizeof(Header)
 		+ 1  // first length byte
@@ -315,7 +317,7 @@ int prepareOrCheckPackage(const char *in_cDomain, char *in_pBuffer, int *in_out_
 	else
 	{
 		if (bufferSize > *in_out_pBufferSize)
-			return -2;
+			return DnsReturnValueErrorInvalidResponse;
 	}
 
 	result = prepareOrCheckHeader((Header *) in_pBuffer, in_checkAnswerForCorrectness);
@@ -331,7 +333,7 @@ int prepareOrCheckPackage(const char *in_cDomain, char *in_pBuffer, int *in_out_
 
 	if (!in_checkAnswerForCorrectness)
 		if (prepareQNAME(in_pBuffer + sizeof(Header)))
-			return -1;
+			return DnsReturnValueErrorInvalidInput;
 
 	if (!in_checkAnswerForCorrectness)
 	{
@@ -341,12 +343,12 @@ int prepareOrCheckPackage(const char *in_cDomain, char *in_pBuffer, int *in_out_
 	else
 	{
 		if (*((uint16_t*) (in_pBuffer + sizeof(Header) + 1 + domainLen + 1))     != DNS_CONSTANT_QTYPE)
-			return -2;
+			return DnsReturnValueErrorInvalidResponse;
 		if (*((uint16_t*) (in_pBuffer + sizeof(Header) + 1 + domainLen + 1 + 2)) != DNS_CONSTANT_QCLASS)
-			return -2;
+			return DnsReturnValueErrorInvalidResponse;
 	}
 
-	return 0;
+	return DnsReturnValueOK;
 }
 
 
@@ -398,7 +400,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 		IPPROTO_UDP);
 
 	if (INVALID_SOCKET == udpSocket)
-		return -1;
+		return DnsReturnValueErrorNetworkError;
 
 	udpAddr.sin_family = AF_INET;
 	udpAddr.sin_port = htons(53);
@@ -427,14 +429,14 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	* by calling WSAGetLastError."
 	*/
 	if (SOCKET_ERROR == result)
-		longjmp(jmpBuf, -1);
+		longjmp(jmpBuf, DnsReturnValueErrorNetworkError);
 
 	assert(buffer0Size == result);
 
 	buffer1Size = recvfrom(udpSocket, buffer1, sizeof(buffer1), 0, (sockaddr_t *) &remoteAddr, &remoteAddrLen);
 	
 	if (SOCKET_ERROR == buffer1Size)
-		longjmp(jmpBuf, -1);
+		longjmp(jmpBuf, DnsReturnValueErrorNetworkError);
 
 	// Check AA
 	printf("AA = %u\n", ((Header *) buffer1)->AA);
@@ -460,7 +462,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 
 	// TODO: Remove
 	if (memcmp(buffer1+sizeof(Header), buffer0+sizeof(Header), buffer0Size-sizeof(Header)))
-		longjmp(jmpBuf, -2);
+		longjmp(jmpBuf, DnsReturnValueErrorInvalidResponse);
 
 	if ((result = prepareOrCheckPackage(in_cDomain, buffer1, &buffer1Size, true)) != 0)
 		longjmp(jmpBuf, result);
@@ -475,14 +477,14 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	if (0 == ((Header *) buffer1)->RCODE)
 	{
 		if (0 != ((Header *) buffer1)->ARCOUNT)
-			longjmp(jmpBuf, -3);
+			longjmp(jmpBuf, DnsReturnValueNotImplemented);
 
 		// Either ANCOUNT or NSCOUNT must be != 0 (but exactly one of them)
 		
 		if (0 != ((Header *) buffer1)->ANCOUNT)
 		{
 			if (0 != ((Header *) buffer1)->NSCOUNT)
-				longjmp(jmpBuf, -3);
+				longjmp(jmpBuf, DnsReturnValueNotImplemented);
 
 			assert(0 != ((Header *) buffer1)->ANCOUNT);
 			assert(0 == ((Header *) buffer1)->NSCOUNT);
@@ -495,7 +497,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 		else
 		{
 			if (0 == ((Header *) buffer1)->NSCOUNT)
-				longjmp(jmpBuf, -3);
+				longjmp(jmpBuf, DnsReturnValueNotImplemented);
 
 			assert(0 == ((Header *) buffer1)->ANCOUNT);
 			assert(0 != ((Header *) buffer1)->NSCOUNT);
@@ -509,13 +511,13 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	else if (3 == ((Header *) buffer1)->RCODE)
 	{
 		if (0 != ((Header *) buffer1)->ANCOUNT)
-			longjmp(jmpBuf, -3);
+			longjmp(jmpBuf, DnsReturnValueNotImplemented);
 
 		if (0 == ((Header *) buffer1)->NSCOUNT)
-			longjmp(jmpBuf, -3);
+			longjmp(jmpBuf, DnsReturnValueNotImplemented);
 
 		if (0 != ((Header *) buffer1)->ARCOUNT)
-			longjmp(jmpBuf, -3);
+			longjmp(jmpBuf, DnsReturnValueNotImplemented);
 
 		assert(0 == ((Header *) buffer1)->ANCOUNT);
 		assert(((Header *) buffer1)->NSCOUNT > 0);
@@ -526,8 +528,8 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 			longjmp(jmpBuf, result);
 	}
 	else
-		longjmp(jmpBuf, -3);
+		longjmp(jmpBuf, DnsReturnValueNotImplemented);
 
 	closesocket(udpSocket);
-	return 0;
+	return DnsReturnValueOK;
 }
