@@ -186,7 +186,7 @@ int prepareQNAME(char *in_out_preQNAME)
 		{
 			if (0 == bytesCount)
 				// Failure
-				return 1;
+				return DnsReturnValueErrorInvalidInput;
 			else
 			{
 				*pCurrentLength = (char) bytesCount;
@@ -198,7 +198,7 @@ int prepareQNAME(char *in_out_preQNAME)
 		{
 			if (63 == bytesCount)
 				// Failure
-				return 1;
+				return DnsReturnValueErrorInvalidInput;
 			bytesCount++;
 		}
 
@@ -207,12 +207,12 @@ int prepareQNAME(char *in_out_preQNAME)
 
 	if (0 == bytesCount)
 		// Failure
-		return 1;
+		return DnsReturnValueErrorInvalidInput;
 	else
 	{
 		*pCurrentLength = (char) bytesCount;
 		// Success
-		return 0;
+		return DnsReturnValueOK;
 	}
 }
 
@@ -330,6 +330,7 @@ int prepareOrCheckPackage(const char *in_cDomain, char *in_pBuffer, int *in_out_
 		return result;
 
 	if (!in_checkAnswerForCorrectness)
+	{
 		/*
 		* Explanation: 
 		* in_pBuffer + sizeof(Header) + 1, because byte at in_pBuffer + sizeof(Header) will
@@ -338,9 +339,13 @@ int prepareOrCheckPackage(const char *in_cDomain, char *in_pBuffer, int *in_out_
 		*/
 		memcpy(in_pBuffer + sizeof(Header) + 1, in_cDomain, domainLen + 1);
 
-	if (!in_checkAnswerForCorrectness)
-		if (prepareQNAME(in_pBuffer + sizeof(Header)))
-			return DnsReturnValueErrorInvalidInput;
+		if ((result = prepareQNAME(in_pBuffer + sizeof(Header))) != 0)
+			return result;
+	}
+	else
+	{
+		// TODO
+	}
 
 	if (!in_checkAnswerForCorrectness)
 	{
