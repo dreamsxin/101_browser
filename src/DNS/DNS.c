@@ -92,7 +92,6 @@ const uint8_t cDnsConstantRD  = 1;
 #define DNS_CONSTANT_QCLASS  (ntohs(1))
 
 
-
 void fillHeader(Header *out_pHeader)
 {
 	memset(out_pHeader, 0, sizeof(Header));
@@ -259,6 +258,60 @@ int handleRessourceRecords(size_t in_rrCount,
 }
 
 
+int prepareOrCheckPackage(const char *in_cDomain, char *in_pBuffer, int *in_out_pBufferSize, 
+	bool in_checkAnswerForCorrectness)
+{
+	size_t domainLen = strlen(in_cDomain);
+	int bufferSize;
+	
+	if (domainLen > 512 - sizeof(Header) - 1 - domainLen - 2 - 2)
+		return -1;
+
+	bufferSize = sizeof(Header)
+		+ 1  // first length byte
+		+ domainLen
+		+ 1  // zero byte terminating the string
+		+ 2  // QTYPE
+		+ 2; // QNAME
+
+	if (!in_checkAnswerForCorrectness)
+	{
+		*in_out_pBufferSize = bufferSize;
+		assert(*in_out_pBufferSize <= 512);
+	}
+	else
+	{
+		if (bufferSize > *in_out_pBufferSize)
+			return -2;
+	}
+
+	if (!in_checkAnswerForCorrectness)
+		fillHeader((Header *) in_pBuffer);
+
+	if (!in_checkAnswerForCorrectness)
+		memcpy(in_pBuffer + sizeof(Header) + 1, in_cDomain, domainLen + 1);
+
+	if (!in_checkAnswerForCorrectness)
+		if (prepareQNAME(in_pBuffer + sizeof(Header)))
+			return -1;
+
+	if (!in_checkAnswerForCorrectness)
+	{
+		*((uint16_t*) (in_pBuffer + sizeof(Header) + 1 + domainLen + 1))     = DNS_CONSTANT_QTYPE;
+		*((uint16_t*) (in_pBuffer + sizeof(Header) + 1 + domainLen + 1 + 2)) = DNS_CONSTANT_QCLASS;
+	}
+	else
+	{
+		if (*((uint16_t*) (in_pBuffer + sizeof(Header) + 1 + domainLen + 1))     != DNS_CONSTANT_QTYPE)
+			return -2;
+		if (*((uint16_t*) (in_pBuffer + sizeof(Header) + 1 + domainLen + 1 + 2)) != DNS_CONSTANT_QCLASS)
+			return -2;
+	}
+
+	return 0;
+}
+
+
 int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 {
 	socket_t udpSocket = 0;
@@ -270,7 +323,7 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	int buffer0Size;
 	char buffer1[512];
 	int buffer1Size;
-	size_t domainLen;
+	
 	uint8_t *pointerTowardsBeginOfResponse = NULL;
 	size_t remainingSize = 0;
 	jmp_buf jmpBuf;
@@ -321,31 +374,9 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 		*/
 		&udpAddr.sin_addr) != 1)
 		longjmp(jmpBuf, -1);
-	
-	domainLen = strlen(in_cDomain);
 
-	if (domainLen > 512 - sizeof(Header) - 1 - domainLen - 2 - 2)
-		longjmp(jmpBuf, -1);
+	prepareOrCheckPackage(in_cDomain, buffer0, &buffer0Size, false);
 
-	buffer0Size = sizeof(Header)
-		+ 1  // first length byte
-		+ domainLen
-		+ 1  // zero byte terminating the string
-		+ 2  // QTYPE
-		+ 2; // QNAME
-
-	assert(buffer0Size <= 512);
-
-	fillHeader((Header *) buffer0);
-
-	memcpy(buffer0 + sizeof(Header) + 1, in_cDomain, domainLen + 1);
-
-	if (prepareQNAME(buffer0 + sizeof(Header)))
-		longjmp(jmpBuf, -1);
-
-	*((uint16_t*) (buffer0 + sizeof(Header) + 1 + domainLen + 1))     = DNS_CONSTANT_QTYPE;
-	*((uint16_t*) (buffer0 + sizeof(Header) + 1 + domainLen + 1 + 2)) = DNS_CONSTANT_QCLASS;
-	
 	result = sendto(udpSocket, buffer0, buffer0Size, 0, (sockaddr_t *) &udpAddr, sizeof(udpAddr));
 
 	/*
@@ -415,10 +446,8 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	if (memcmp(buffer1+sizeof(Header), buffer0+sizeof(Header), buffer0Size-sizeof(Header)))
 		longjmp(jmpBuf, -2);
 
-	if (DNS_CONSTANT_QTYPE  != *((uint16_t*) (buffer1 + sizeof(Header) + 1 + domainLen + 1)))
-		longjmp(jmpBuf, -2);
-	if (DNS_CONSTANT_QCLASS != *((uint16_t*) (buffer1 + sizeof(Header) + 1 + domainLen + 1 + 2)))
-		longjmp(jmpBuf, -2);
+	if ((result = prepareOrCheckPackage(in_cDomain, buffer1, &buffer1Size, true)) != 0)
+		longjmp(jmpBuf, result);
 
 	pointerTowardsBeginOfResponse = (uint8_t *) buffer1 + buffer0Size;
 	
