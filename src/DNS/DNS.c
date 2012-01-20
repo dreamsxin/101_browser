@@ -150,7 +150,7 @@ int prepareOrCheckHeader(Header *in_out_pHeader,
 	return DnsReturnValueOK;
 }
 
-int prepareQNAME(char *in_out_preQNAME, const char *in_pLabel, 
+int prepareOrCheckQNAME(char *in_out_preQNAME, const char *in_pLabel, 
 	bool in_checkAnswerForCorrectness)
 {
 	/*
@@ -353,7 +353,7 @@ int prepareOrCheckPackage(const char *in_cDomain, char *in_pBuffer, int *in_out_
 	if (result)
 		return result;
 
-	if ((result = prepareQNAME(in_pBuffer + sizeof(Header), in_cDomain, 
+	if ((result = prepareOrCheckQNAME(in_pBuffer + sizeof(Header), in_cDomain, 
 		in_checkAnswerForCorrectness)) != 0)
 		return result;
 

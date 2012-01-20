@@ -49,7 +49,7 @@ typedef enum
 * You probably don't want to use this function directly. It is only marked as 
 * DLLEXPORT to enable testing.
 */
-DLLEXPORT int prepareQNAME(char *in_out_preQNAME, const char *in_pLabel, 
+DLLEXPORT int prepareOrCheckQNAME(char *in_out_preQNAME, const char *in_pLabel, 
 	bool in_checkAnswerForCorrectness);
 
 /*
