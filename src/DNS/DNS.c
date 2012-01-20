@@ -184,52 +184,82 @@ int prepareOrCheckQNAME(char *in_out_preQNAME, const char *in_pLabel,
 	assert(in_out_preQNAME != NULL);
 	assert(in_pLabel != NULL);
 
-	if (!in_checkAnswerForCorrectness)
+	while (*pCurrentCharacterInSource)
 	{
-		while (*pCurrentCharacterInSource)
+		if ('.' == *pCurrentCharacterInSource)
 		{
-			if ('.' == *pCurrentCharacterInSource)
+			if (0 == bytesCount)
 			{
-				if (0 == bytesCount)
-					// Failure
+				// Failure
+				if (!in_checkAnswerForCorrectness)
 					return DnsReturnValueErrorInvalidInput;
 				else
-				{
-					*pCurrentLength = (char) bytesCount;
-					bytesCount = 0;
-					pCurrentLength = pCurrentCharacterInDestination;
-				}
+					return DnsReturnValueErrorInvalidResponse;
 			}
 			else
 			{
-				if (63 == bytesCount)
-					// Failure
-					return DnsReturnValueErrorInvalidInput;
-				*pCurrentCharacterInDestination = *pCurrentCharacterInSource;
-				bytesCount++;
+				if (!in_checkAnswerForCorrectness)
+					*pCurrentLength = (char) bytesCount;
+				else
+				{
+					if (*(uint8_t*) pCurrentLength != bytesCount)
+						return DnsReturnValueErrorInvalidResponse;
+				}
+
+				bytesCount = 0;
+				pCurrentLength = pCurrentCharacterInDestination;
 			}
-
-			pCurrentCharacterInSource++;
-			pCurrentCharacterInDestination++;
 		}
-
-		if (0 == bytesCount)
-			// Failure
-			return DnsReturnValueErrorInvalidInput;
 		else
 		{
-			assert(0x0 == *pCurrentCharacterInSource);
-			*pCurrentCharacterInDestination = *pCurrentCharacterInSource;
-			*pCurrentLength = (char) bytesCount;
-			// Success
-			return DnsReturnValueOK;
+			if (63 == bytesCount)
+			{
+				// Failure
+				if (!in_checkAnswerForCorrectness)
+					return DnsReturnValueErrorInvalidInput;
+				else
+					return DnsReturnValueErrorInvalidResponse;
+			}
+
+			if (!in_checkAnswerForCorrectness)
+				*pCurrentCharacterInDestination = *pCurrentCharacterInSource;
+			else
+			{
+				if (*pCurrentCharacterInDestination != *pCurrentCharacterInSource)
+					return DnsReturnValueErrorInvalidResponse;
+			}
+			bytesCount++;
 		}
+
+		pCurrentCharacterInSource++;
+		pCurrentCharacterInDestination++;
+	}
+
+	if (0 == bytesCount)
+	{
+		// Failure
+		if (!in_checkAnswerForCorrectness)
+			return DnsReturnValueErrorInvalidInput;
+		else
+			return DnsReturnValueErrorInvalidResponse;
 	}
 	else
 	{
-		if (*(uint8_t *) pCurrentLength >= 64)
-			return DnsReturnValueErrorInvalidResponse;
+		assert(0x0 == *pCurrentCharacterInSource);
+		if (!in_checkAnswerForCorrectness)
+		{
+			*pCurrentCharacterInDestination = *pCurrentCharacterInSource;
+			*pCurrentLength = (char) bytesCount;
+		}
+		else
+		{
+			if (*pCurrentCharacterInDestination != *pCurrentCharacterInSource)
+				return DnsReturnValueErrorInvalidResponse;
+			if (*(uint8_t*) pCurrentLength != bytesCount)
+				return DnsReturnValueErrorInvalidResponse;
+		}
 
+		// Success
 		return DnsReturnValueOK;
 	}
 }
@@ -475,10 +505,6 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	printf("NSCOUNT = %u\n", ((Header *) buffer1)->NSCOUNT);
 	// Check ARCOUNT
 	printf("ARCOUNT = %u\n", ((Header *) buffer1)->ARCOUNT);
-
-	// TODO: Remove
-	if (memcmp(buffer1+sizeof(Header), buffer0+sizeof(Header), buffer0Size-sizeof(Header)))
-		longjmp(jmpBuf, DnsReturnValueErrorInvalidResponse);
 
 	if ((result = prepareOrCheckPackage(in_cDomain, buffer1, &buffer1Size, true)) != 0)
 		longjmp(jmpBuf, result);
