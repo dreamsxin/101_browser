@@ -450,8 +450,21 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 
 	udpAddr.sin_family = AF_INET;
 	udpAddr.sin_port = htons(53);
-	// TODO: Use inet_pton inet_addr (Reason: http://stackoverflow.com/a/2422653)
+	// TODO: Use
 	
+	/*
+	* Reason for inet_pton: inet_addr has a problem (see 
+	* http://www.manpagez.com/man/3/inet_addr/):
+	* "BUGS
+	*
+	* The value INADDR_NONE (0xffffffff) is a valid broadcast address, but
+	* inet_addr() cannot return that value without indicating failure.  The
+	* newer inet_aton() function does not share this problem."
+	* 
+	* Unluckily inet_addr is not supported on Windows. So we use
+	* inet_pton as given as answer on
+	* http://stackoverflow.com/a/2422653
+	*/
 	if (inet_pton(AF_INET, in_cDnsServer, 
 		/*
 		* http://msdn.microsoft.com/en-us/library/cc805844%28VS.85%29.aspx
