@@ -450,7 +450,6 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 
 	udpAddr.sin_family = AF_INET;
 	udpAddr.sin_port = htons(53);
-	// TODO: Use
 	
 	/*
 	* Reason for inet_pton: inet_addr has a problem (see 
