@@ -175,33 +175,20 @@ int prepareOrCheckQNAME(char *in_out_preQNAME, const char *in_pLabel,
 	*   ╚═════╝          ╚═════════╝
 	*/
 	
+	const char *pCurrentCharacterInSource = in_pLabel;
+	char *pCurrentCharacterInDestination = in_out_preQNAME + 1;
 	char *pCurrentLength = in_out_preQNAME;
-	char *pCurrentCharacterInLabel = in_out_preQNAME + 1;
 	// bytesCount == 0 <=> state == 0
 	uint8_t bytesCount = 0;
 
+	assert(in_out_preQNAME != NULL);
 	assert(in_pLabel != NULL);
 
 	if (!in_checkAnswerForCorrectness)
 	{
-		/*
-		* Explanation: 
-		* in_pBuffer + sizeof(Header) + 1, because byte at in_pBuffer + sizeof(Header) will
-		* be used for first length
-		* domainLen + 1, since we also want to copy the terminating 0x0 byte.
-		*/
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4996)
-#endif
-		strcpy(in_out_preQNAME + 1, in_pLabel);
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
-		while (*pCurrentCharacterInLabel)
+		while (*pCurrentCharacterInSource)
 		{
-			if ('.' == *pCurrentCharacterInLabel)
+			if ('.' == *pCurrentCharacterInSource)
 			{
 				if (0 == bytesCount)
 					// Failure
@@ -210,7 +197,7 @@ int prepareOrCheckQNAME(char *in_out_preQNAME, const char *in_pLabel,
 				{
 					*pCurrentLength = (char) bytesCount;
 					bytesCount = 0;
-					pCurrentLength = pCurrentCharacterInLabel;
+					pCurrentLength = pCurrentCharacterInDestination;
 				}
 			}
 			else
@@ -218,10 +205,12 @@ int prepareOrCheckQNAME(char *in_out_preQNAME, const char *in_pLabel,
 				if (63 == bytesCount)
 					// Failure
 					return DnsReturnValueErrorInvalidInput;
+				*pCurrentCharacterInDestination = *pCurrentCharacterInSource;
 				bytesCount++;
 			}
 
-			pCurrentCharacterInLabel++;
+			pCurrentCharacterInSource++;
+			pCurrentCharacterInDestination++;
 		}
 
 		if (0 == bytesCount)
@@ -229,6 +218,8 @@ int prepareOrCheckQNAME(char *in_out_preQNAME, const char *in_pLabel,
 			return DnsReturnValueErrorInvalidInput;
 		else
 		{
+			assert(0x0 == *pCurrentCharacterInSource);
+			*pCurrentCharacterInDestination = *pCurrentCharacterInSource;
 			*pCurrentLength = (char) bytesCount;
 			// Success
 			return DnsReturnValueOK;
@@ -236,6 +227,9 @@ int prepareOrCheckQNAME(char *in_out_preQNAME, const char *in_pLabel,
 	}
 	else
 	{
+		if (*(uint8_t *) pCurrentLength >= 64)
+			return DnsReturnValueErrorInvalidResponse;
+
 		return DnsReturnValueOK;
 	}
 }
