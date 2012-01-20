@@ -483,7 +483,12 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	
 	if (SOCKET_ERROR == buffer1Size)
 		longjmp(jmpBuf, DnsReturnValueErrorNetworkError);
+	
+	if ((result = prepareOrCheckPackage(in_cDomain, buffer1, &buffer1Size, true)) != 0)
+		longjmp(jmpBuf, result);
 
+	// Gets checked in prepareOrCheckPackage
+	assert(buffer1Size >= buffer0Size);
 	// Check AA
 	printf("AA = %u\n", ((Header *) buffer1)->AA);
 	// Check TC
@@ -505,11 +510,6 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	printf("NSCOUNT = %u\n", ((Header *) buffer1)->NSCOUNT);
 	// Check ARCOUNT
 	printf("ARCOUNT = %u\n", ((Header *) buffer1)->ARCOUNT);
-
-	if ((result = prepareOrCheckPackage(in_cDomain, buffer1, &buffer1Size, true)) != 0)
-		longjmp(jmpBuf, result);
-
-	assert(buffer1Size >= buffer0Size);
 
 	pointerTowardsBeginOfResponse = (uint8_t *) buffer1 + buffer0Size;
 	
