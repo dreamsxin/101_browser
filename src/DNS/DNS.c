@@ -405,9 +405,8 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 	sockaddr_in_t remoteAddr;
 	socklen_t remoteAddrLen = sizeof(remoteAddr);
 	int result;
-	char buffer0[512];
+	char buffer[512];
 	int buffer0Size;
-	char buffer1[512];
 	int buffer1Size;
 	
 	uint8_t *pointerTowardsBeginOfResponse = NULL;
@@ -473,9 +472,9 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 		&udpAddr.sin_addr) != 1)
 		longjmp(jmpBuf, -1);
 
-	prepareOrCheckPackage(in_cDomain, buffer0, &buffer0Size, false);
+	prepareOrCheckPackage(in_cDomain, buffer, &buffer0Size, false);
 
-	result = sendto(udpSocket, buffer0, buffer0Size, 0, (sockaddr_t *) &udpAddr, sizeof(udpAddr));
+	result = sendto(udpSocket, buffer, buffer0Size, 0, (sockaddr_t *) &udpAddr, sizeof(udpAddr));
 
 	/*
 	* To quote
@@ -491,93 +490,93 @@ int readDNS(const char *in_cDnsServer, const char *in_cDomain)
 
 	assert(buffer0Size == result);
 
-	buffer1Size = recvfrom(udpSocket, buffer1, sizeof(buffer1), 0, (sockaddr_t *) &remoteAddr, &remoteAddrLen);
+	buffer1Size = recvfrom(udpSocket, buffer, sizeof(buffer), 0, (sockaddr_t *) &remoteAddr, &remoteAddrLen);
 	
 	if (SOCKET_ERROR == buffer1Size)
 		longjmp(jmpBuf, DnsReturnValueErrorNetworkError);
 	
-	if ((result = prepareOrCheckPackage(in_cDomain, buffer1, &buffer1Size, true)) != 0)
+	if ((result = prepareOrCheckPackage(in_cDomain, buffer, &buffer1Size, true)) != 0)
 		longjmp(jmpBuf, result);
 
 	// Gets checked in prepareOrCheckPackage
 	assert(buffer1Size >= buffer0Size);
 	// Check AA
-	printf("AA = %u\n", ((Header *) buffer1)->AA);
+	printf("AA = %u\n", ((Header *) buffer)->AA);
 	// Check TC
-	printf("TC = %u\n", ((Header *) buffer1)->TC);
+	printf("TC = %u\n", ((Header *) buffer)->TC);
 
 	// Check RA
-	printf("RA = %u\n", ((Header *) buffer1)->RA);
+	printf("RA = %u\n", ((Header *) buffer)->RA);
 
 	// Check RCODE
-	printf("RCODE = %u\n", ((Header *) buffer1)->RCODE);
+	printf("RCODE = %u\n", ((Header *) buffer)->RCODE);
 
-	((Header *) buffer1)->ANCOUNT = ntohs(((Header *) buffer1)->ANCOUNT);
-	((Header *) buffer1)->NSCOUNT = ntohs(((Header *) buffer1)->NSCOUNT);
-	((Header *) buffer1)->ARCOUNT = ntohs(((Header *) buffer1)->ARCOUNT);
+	((Header *) buffer)->ANCOUNT = ntohs(((Header *) buffer)->ANCOUNT);
+	((Header *) buffer)->NSCOUNT = ntohs(((Header *) buffer)->NSCOUNT);
+	((Header *) buffer)->ARCOUNT = ntohs(((Header *) buffer)->ARCOUNT);
 
 	// Check ANCOUNT
-	printf("ANCOUNT = %u\n", ((Header *) buffer1)->ANCOUNT);
+	printf("ANCOUNT = %u\n", ((Header *) buffer)->ANCOUNT);
 	// Check NSCOUNT
-	printf("NSCOUNT = %u\n", ((Header *) buffer1)->NSCOUNT);
+	printf("NSCOUNT = %u\n", ((Header *) buffer)->NSCOUNT);
 	// Check ARCOUNT
-	printf("ARCOUNT = %u\n", ((Header *) buffer1)->ARCOUNT);
+	printf("ARCOUNT = %u\n", ((Header *) buffer)->ARCOUNT);
 
-	pointerTowardsBeginOfResponse = (uint8_t *) buffer1 + buffer0Size;
+	pointerTowardsBeginOfResponse = (uint8_t *) buffer + buffer0Size;
 	
 	// Is >= 0 because of CND:DNS_c_275
 	remainingSize = buffer1Size - buffer0Size;
 
-	if (0 == ((Header *) buffer1)->RCODE)
+	if (0 == ((Header *) buffer)->RCODE)
 	{
-		if (0 != ((Header *) buffer1)->ARCOUNT)
+		if (0 != ((Header *) buffer)->ARCOUNT)
 			longjmp(jmpBuf, DnsReturnValueNotImplemented);
 
 		// Either ANCOUNT or NSCOUNT must be != 0 (but exactly one of them)
 		
-		if (0 != ((Header *) buffer1)->ANCOUNT)
+		if (0 != ((Header *) buffer)->ANCOUNT)
 		{
-			if (0 != ((Header *) buffer1)->NSCOUNT)
+			if (0 != ((Header *) buffer)->NSCOUNT)
 				longjmp(jmpBuf, DnsReturnValueNotImplemented);
 
-			assert(0 != ((Header *) buffer1)->ANCOUNT);
-			assert(0 == ((Header *) buffer1)->NSCOUNT);
-			assert(0 == ((Header *) buffer1)->ARCOUNT);
+			assert(0 != ((Header *) buffer)->ANCOUNT);
+			assert(0 == ((Header *) buffer)->NSCOUNT);
+			assert(0 == ((Header *) buffer)->ARCOUNT);
 
-			if ((result = handleRessourceRecords(((Header *) buffer1)->ANCOUNT, 
+			if ((result = handleRessourceRecords(((Header *) buffer)->ANCOUNT, 
 				pointerTowardsBeginOfResponse, remainingSize)) != 0)
 				longjmp(jmpBuf, result);
 		}
 		else
 		{
-			if (0 == ((Header *) buffer1)->NSCOUNT)
+			if (0 == ((Header *) buffer)->NSCOUNT)
 				longjmp(jmpBuf, DnsReturnValueNotImplemented);
 
-			assert(0 == ((Header *) buffer1)->ANCOUNT);
-			assert(0 != ((Header *) buffer1)->NSCOUNT);
-			assert(0 == ((Header *) buffer1)->ARCOUNT);
+			assert(0 == ((Header *) buffer)->ANCOUNT);
+			assert(0 != ((Header *) buffer)->NSCOUNT);
+			assert(0 == ((Header *) buffer)->ARCOUNT);
 
-			if ((result = handleRessourceRecords(((Header *) buffer1)->NSCOUNT, 
+			if ((result = handleRessourceRecords(((Header *) buffer)->NSCOUNT, 
 				pointerTowardsBeginOfResponse, remainingSize)) != 0)
 				longjmp(jmpBuf, result);
 		}
 	}
-	else if (3 == ((Header *) buffer1)->RCODE)
+	else if (3 == ((Header *) buffer)->RCODE)
 	{
-		if (0 != ((Header *) buffer1)->ANCOUNT)
+		if (0 != ((Header *) buffer)->ANCOUNT)
 			longjmp(jmpBuf, DnsReturnValueNotImplemented);
 
-		if (0 == ((Header *) buffer1)->NSCOUNT)
+		if (0 == ((Header *) buffer)->NSCOUNT)
 			longjmp(jmpBuf, DnsReturnValueNotImplemented);
 
-		if (0 != ((Header *) buffer1)->ARCOUNT)
+		if (0 != ((Header *) buffer)->ARCOUNT)
 			longjmp(jmpBuf, DnsReturnValueNotImplemented);
 
-		assert(0 == ((Header *) buffer1)->ANCOUNT);
-		assert(((Header *) buffer1)->NSCOUNT > 0);
-		assert(0 == ((Header *) buffer1)->ARCOUNT);
+		assert(0 == ((Header *) buffer)->ANCOUNT);
+		assert(((Header *) buffer)->NSCOUNT > 0);
+		assert(0 == ((Header *) buffer)->ARCOUNT);
 		
-		if ((result = handleRessourceRecords(((Header *) buffer1)->NSCOUNT, 
+		if ((result = handleRessourceRecords(((Header *) buffer)->NSCOUNT, 
 			pointerTowardsBeginOfResponse, remainingSize)) != 0)
 			longjmp(jmpBuf, result);
 	}
