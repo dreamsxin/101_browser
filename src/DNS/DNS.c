@@ -67,7 +67,7 @@ typedef struct
 
 const uint16_t cDnsConstantID = 0; // TODO: Change
 const uint8_t cDnsConstantRD  = 1;
-#define DNS_CONSTANT_QDCOUNT (ntohs(1))
+#define DNS_CONSTANT_QDCOUNT (htons(1))
 
 // 
 /*
@@ -78,7 +78,7 @@ const uint8_t cDnsConstantRD  = 1;
 * Value: 1
 * Meaning: a host address
 */
-#define DNS_CONSTANT_QTYPE   (ntohs(1))
+#define DNS_CONSTANT_QTYPE   (htons(1))
 
 /*
 * QCLASS field
@@ -88,7 +88,7 @@ const uint8_t cDnsConstantRD  = 1;
 * Value: 1
 * Meaning: the Internet
 */
-#define DNS_CONSTANT_QCLASS  (ntohs(1))
+#define DNS_CONSTANT_QCLASS  (htons(1))
 
 
 int prepareOrCheckHeader(Header *in_out_pHeader, 
