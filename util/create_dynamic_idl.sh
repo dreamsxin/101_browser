@@ -2,7 +2,7 @@
 
 wget http://www.cl.cam.ac.uk/~mgk25/ucs/examples/UTF-8-test.txt -O ../testfiles/Unicode/UTF-8-test.txt
 
-wget http://unicode.org/Public/UNIDATA/PropList.txt -O ../data/Unicode/PropList.txt
+wget http://unicode.org/Public/UNIDATA/PropList.txt -O ../util/data/PropList.txt
 
 wget http://matroska.svn.sourceforge.net/viewvc/matroska/trunk/foundation_src/spectool/specdata.xml?revision=HEAD -O ../data/matroska/specdata.xml
 

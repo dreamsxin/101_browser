@@ -6,6 +6,7 @@ module fileapi
         readonly attribute unsigned long length;
       };
         
+      [Constructor, Constructor(any[] blobParts, optional BlobPropertyBag options)] 
       interface Blob {
         
         readonly attribute unsigned long long size;
@@ -17,6 +18,13 @@ module fileapi
                    optional long long end,
                    optional DOMString contentType); 
       
+      };
+  
+      dictionary BlobPropertyBag {
+  		
+        DOMString type;
+        DOMString endings = "transparent";
+  	
       };
         
   	  interface File : Blob {
