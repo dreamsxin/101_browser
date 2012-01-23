@@ -16,8 +16,8 @@
 
 #include "HTML5/2_5_1.h"
 #include "Algorithm/BinarySearch.h"
-#include "Unicode/PropList.h"
 #include "Util/Interval.hpp"
+#include "Unicode/Unicode.h"
 
 const Interval<UnicodeCodePoint> spaceCharacterIntervals[3] = 
 {
@@ -47,11 +47,9 @@ bool isAlphanumericASCIICharacter(UnicodeCodePoint in_p)
 		&compareElementIntervalVoid<UnicodeCodePoint>, NULL);
 }
 
-bool isWhite_SpaceCharacter(UnicodeCodePoint in_p, void* in_pWhitespaceIntervals, 
-						   size_t in_whitespaceIntervalsCount)
+bool isWhite_SpaceCharacter(UnicodeCodePoint in_p)
 {
-	return binarySearch(&in_p, in_pWhitespaceIntervals, in_whitespaceIntervalsCount, 
+	return binarySearch(&in_p, getWhite_SpaceIntervals(), getWhite_SpaceIntervalsCount(), 
 		sizeof(Interval<UnicodeCodePoint>), 
 		&compareElementIntervalVoid<UnicodeCodePoint>, NULL);
 }
-

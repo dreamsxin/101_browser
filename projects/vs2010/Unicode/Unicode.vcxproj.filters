@@ -18,16 +18,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\Unicode\PropListUtil.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\Unicode\generated\PropListParser.cpp">
-      <Filter>Source Files\generated</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\include\Unicode\PropList.h">
+    <ClInclude Include="..\..\..\include\Unicode\Unicode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\Unicode\generated\WhiteSpaceIntervals.cpp">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

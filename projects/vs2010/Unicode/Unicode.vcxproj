@@ -85,11 +85,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\Unicode\generated\PropListParser.cpp" />
-    <ClCompile Include="..\..\..\src\Unicode\PropListUtil.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\include\Unicode\PropList.h" />
+    <ClCompile Include="..\..\..\src\Unicode\generated\WhiteSpaceIntervals.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Algorithm\Algorithm.vcxproj">
@@ -98,6 +94,9 @@
     <ProjectReference Include="..\MiniStdlib\MiniStdlib.vcxproj">
       <Project>{6c7c9fbb-39b4-42cc-a000-c0ff2f61388e}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\Unicode\Unicode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -20,7 +20,7 @@
 #include "MiniStdlib/declspec.h"
 #include "MiniStdlib/cstdbool.h"
 #include "Util/Iterator.h"
-#include "Util/Unicode.h"
+#include "Unicode/Unicode.h"
 
 /*
  * 2.3 Case-sensitivity and string comparison

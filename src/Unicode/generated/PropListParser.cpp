@@ -8,8 +8,8 @@ using namespace std;
 
 enum PropListParserState
 {
-	PropListParserStateFirstNumber,
 	PropListParserStateBeginOfLine,
+	PropListParserStateFirstNumber,
 	PropListParserStateProperlyTerminated,
 	PropListParserStateInSeparator,
 	PropListParserStateComment,

@@ -1,5 +1,5 @@
 /*
-* Copyright 2008-2011 Wolfgang Keller
+* Copyright 2012 Wolfgang Keller
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,24 +14,30 @@
 * limitations under the License.
 */
 
-#ifndef _MTAx_MiniStdlib_HexDigit_h
-#define _MTAx_MiniStdlib_HexDigit_h
-
+#include "Util/Interval.hpp"
 #include "Unicode/Unicode.h"
-#include "MiniStdlib/cstdbool.h"
-#include "MiniStdlib/cstdint.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+const Interval<UnicodeCodePoint> White_SpaceIntervals[] = {
+	{0x0009, 0x000D}, 
+	{0x0020, 0x0020}, 
+	{0x0085, 0x0085}, 
+	{0x00A0, 0x00A0}, 
+	{0x1680, 0x1680}, 
+	{0x180E, 0x180E}, 
+	{0x2000, 0x200A}, 
+	{0x2028, 0x2028}, 
+	{0x2029, 0x2029}, 
+	{0x202F, 0x202F}, 
+	{0x205F, 0x205F}, 
+	{0x3000, 0x3000}
+};
 
-bool convertHexDigitToNumber(UnicodeCodePoint token, uint8_t *out_pNumber, 
-	bool in_acceptUppercase, bool in_acceptLowercase);
-
-void convertNumberToHexDigits(uint8_t in_number, bool in_lowercase, char out_characters[2]);
-
-#ifdef __cplusplus
+const void* getWhite_SpaceIntervals()
+{
+	return White_SpaceIntervals;
 }
-#endif
 
-#endif
+size_t getWhite_SpaceIntervalsCount()
+{
+	return sizeof(White_SpaceIntervals) / sizeof(Interval<UnicodeCodePoint>);
+}

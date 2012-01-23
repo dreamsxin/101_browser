@@ -241,232 +241,218 @@ void test_2_5_1()
 	}
 
 	{
-		FILE* propListFile = MTAx_fopen("data/Unicode/PropList.txt", "rb");
-		test(propListFile != NULL);
 
-		if (propListFile != NULL)
 		{
-			void* intervals;
-			size_t whiteSpaceIntervalsCount;
+			test(!isWhite_SpaceCharacter(0x8));
+			assert('\t' == 0x9);
+			test(isWhite_SpaceCharacter('\t'));
+			assert('\r' == 0xD);
+			test(isWhite_SpaceCharacter('\r'));
 
-			bool result = allocWhite_SpaceCharacterIntervals(propListFile, &intervals, &whiteSpaceIntervalsCount);
-			test(result);
-			test(whiteSpaceIntervalsCount > 0);
-			MTAx_fclose(&propListFile);
+			test(!isWhite_SpaceCharacter(0x1F));
+			test(isWhite_SpaceCharacter(' '));
+			assert('!' == 0x21);
+			test(!isWhite_SpaceCharacter('!'));
 
-			{
-				test(!isWhite_SpaceCharacter(0x8, intervals, whiteSpaceIntervalsCount));
-				assert('\t' == 0x9);
-				test(isWhite_SpaceCharacter('\t', intervals, whiteSpaceIntervalsCount));
-				assert('\r' == 0xD);
-				test(isWhite_SpaceCharacter('\r', intervals, whiteSpaceIntervalsCount));
+			test(!isWhite_SpaceCharacter('a'));
 
-				test(!isWhite_SpaceCharacter(0x1F, intervals, whiteSpaceIntervalsCount));
-				test(isWhite_SpaceCharacter(' ', intervals, whiteSpaceIntervalsCount));
-				assert('!' == 0x21);
-				test(!isWhite_SpaceCharacter('!', intervals, whiteSpaceIntervalsCount));
+			test( isWhite_SpaceCharacter(0x85));
 
-				test(!isWhite_SpaceCharacter('a', intervals, whiteSpaceIntervalsCount));
+			test(!isWhite_SpaceCharacter(0x9F));
+			test( isWhite_SpaceCharacter(0xA0));
+			test(!isWhite_SpaceCharacter(0xA1));
 
-				test( isWhite_SpaceCharacter(0x85, intervals, whiteSpaceIntervalsCount));
+			test(!isWhite_SpaceCharacter(0x167F));
+			test( isWhite_SpaceCharacter(0x1680));
+			test(!isWhite_SpaceCharacter(0x1681));
 
-				test(!isWhite_SpaceCharacter(0x9F, intervals, whiteSpaceIntervalsCount));
-				test( isWhite_SpaceCharacter(0xA0, intervals, whiteSpaceIntervalsCount));
-				test(!isWhite_SpaceCharacter(0xA1, intervals, whiteSpaceIntervalsCount));
+			test(!isWhite_SpaceCharacter(0x180D));
+			test( isWhite_SpaceCharacter(0x180E));
+			test(!isWhite_SpaceCharacter(0x180F));
 
-				test(!isWhite_SpaceCharacter(0x167F, intervals, whiteSpaceIntervalsCount));
-				test( isWhite_SpaceCharacter(0x1680, intervals, whiteSpaceIntervalsCount));
-				test(!isWhite_SpaceCharacter(0x1681, intervals, whiteSpaceIntervalsCount));
+			test(!isWhite_SpaceCharacter(0x1FFF));
+			test( isWhite_SpaceCharacter(0x2000));
+			test( isWhite_SpaceCharacter(0x2005));
+			test( isWhite_SpaceCharacter(0x200A));
+			test(!isWhite_SpaceCharacter(0x200B));
 
-				test(!isWhite_SpaceCharacter(0x180D, intervals, whiteSpaceIntervalsCount));
-				test( isWhite_SpaceCharacter(0x180E, intervals, whiteSpaceIntervalsCount));
-				test(!isWhite_SpaceCharacter(0x180F, intervals, whiteSpaceIntervalsCount));
+			test(!isWhite_SpaceCharacter(0x2027));
+			test( isWhite_SpaceCharacter(0x2028));
+			test( isWhite_SpaceCharacter(0x2029));
+			test(!isWhite_SpaceCharacter(0x202A));
 
-				test(!isWhite_SpaceCharacter(0x1FFF, intervals, whiteSpaceIntervalsCount));
-				test( isWhite_SpaceCharacter(0x2000, intervals, whiteSpaceIntervalsCount));
-				test( isWhite_SpaceCharacter(0x2005, intervals, whiteSpaceIntervalsCount));
-				test( isWhite_SpaceCharacter(0x200A, intervals, whiteSpaceIntervalsCount));
-				test(!isWhite_SpaceCharacter(0x200B, intervals, whiteSpaceIntervalsCount));
+			test(!isWhite_SpaceCharacter(0x202E));
+			test( isWhite_SpaceCharacter(0x202F));
+			test(!isWhite_SpaceCharacter(0x2030));
 
-				test(!isWhite_SpaceCharacter(0x2027, intervals, whiteSpaceIntervalsCount));
-				test( isWhite_SpaceCharacter(0x2028, intervals, whiteSpaceIntervalsCount));
-				test( isWhite_SpaceCharacter(0x2029, intervals, whiteSpaceIntervalsCount));
-				test(!isWhite_SpaceCharacter(0x202A, intervals, whiteSpaceIntervalsCount));
+			test(!isWhite_SpaceCharacter(0x205E));
+			test( isWhite_SpaceCharacter(0x205F));
+			test(!isWhite_SpaceCharacter(0x2060));
 
-				test(!isWhite_SpaceCharacter(0x202E, intervals, whiteSpaceIntervalsCount));
-				test( isWhite_SpaceCharacter(0x202F, intervals, whiteSpaceIntervalsCount));
-				test(!isWhite_SpaceCharacter(0x2030, intervals, whiteSpaceIntervalsCount));
-
-				test(!isWhite_SpaceCharacter(0x205E, intervals, whiteSpaceIntervalsCount));
-				test( isWhite_SpaceCharacter(0x205F, intervals, whiteSpaceIntervalsCount));
-				test(!isWhite_SpaceCharacter(0x2060, intervals, whiteSpaceIntervalsCount));
-
-				test(!isWhite_SpaceCharacter(0x2FFF, intervals, whiteSpaceIntervalsCount));
-				test( isWhite_SpaceCharacter(0x3000, intervals, whiteSpaceIntervalsCount));
-				test(!isWhite_SpaceCharacter(0x3001, intervals, whiteSpaceIntervalsCount));
-			}
-
-			{
-				char empty[]     = ""     ;
-				char space[]     = " "    ;
-				char A[]         = "A"    ;
-				char spaceA[]    = " A"   ;
-				char tabSpace[]  = "\t "  ;
-				char tabSpaceA[] = "\t A" ;
-				char tabVert[]   = "\t\v" ;
-				char tabVertA[]  = "\t\vA";
-				char vertTab[]   = "\v\t" ;
-				char vertTabA[]  = "\v\tA";
-				void* pCurrentDatum;
-
-				SingleIterator it = asciiStringUnicodeIterator_create();
-				ASCIIStringUnicodeIteratorState s;
-				ASCIIStringUnicodeIteratorState s0;
-				ASCIIStringUnicodeIteratorState s1;
-
-				s = asciiStringUnicodeIteratorState_create(empty);
-				s0 = s;
-				s1 = s;
-				test(!skipWhitespace(it, &s0));
-				test((*it.mpfGet)(&s0) == NULL);
-				test(!skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
-				test((*it.mpfGet)(&s1) == NULL);
-
-				s = asciiStringUnicodeIteratorState_create(space);
-				s0 = s;
-				s1 = s;
-				test(!skipWhitespace(it, &s0));
-				test((*it.mpfGet)(&s0) == NULL);
-				test(!skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
-				test((*it.mpfGet)(&s1) == NULL);
-
-				s = asciiStringUnicodeIteratorState_create(A);
-				s0 = s;
-				s1 = s;
-				test(skipWhitespace(it, &s0));
-				pCurrentDatum = (*it.mpfGet)(&s0);
-				test(pCurrentDatum != NULL);
-				if (pCurrentDatum != NULL)
-				{
-					test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
-				}
-				test(skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
-				pCurrentDatum = (*it.mpfGet)(&s1);
-				test(pCurrentDatum != NULL);
-				if (pCurrentDatum != NULL)
-				{
-					test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
-				}
-
-				s = asciiStringUnicodeIteratorState_create(spaceA);
-				s0 = s;
-				s1 = s;
-				test(skipWhitespace(it, &s0));
-				pCurrentDatum = (*it.mpfGet)(&s0);
-				test(pCurrentDatum != NULL);
-				if (pCurrentDatum != NULL)
-				{
-					test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
-				}
-				test(skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
-				pCurrentDatum = (*it.mpfGet)(&s1);
-				test(pCurrentDatum != NULL);
-				if (pCurrentDatum != NULL)
-				{
-					test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
-				}
-
-				s = asciiStringUnicodeIteratorState_create(tabSpace);
-				s0 = s;
-				s1 = s;
-				test(!skipWhitespace(it, &s0));
-				test((*it.mpfGet)(&s0) == NULL);
-				test(!skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
-				test((*it.mpfGet)(&s1) == NULL);
-
-				s = asciiStringUnicodeIteratorState_create(tabSpaceA);
-				s0 = s;
-				s1 = s;
-				test(skipWhitespace(it, &s0));
-				pCurrentDatum = (*it.mpfGet)(&s0);
-				test(pCurrentDatum != NULL);
-				if (pCurrentDatum != NULL)
-				{
-					test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
-				}
-				test(skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
-				pCurrentDatum = (*it.mpfGet)(&s1);
-				test(pCurrentDatum != NULL);
-				if (pCurrentDatum != NULL)
-				{
-					test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
-				}
-
-				s = asciiStringUnicodeIteratorState_create(tabVert);
-				s0 = s;
-				s1 = s;
-				test(skipWhitespace(it, &s0));
-				pCurrentDatum = (*it.mpfGet)(&s0);
-				test(pCurrentDatum != NULL);
-				if (pCurrentDatum != NULL)
-				{
-					test(*((UnicodeCodePoint*) pCurrentDatum) == '\v');
-				}
-				test(!skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
-				test((*it.mpfGet)(&s1) == NULL);
-
-				s = asciiStringUnicodeIteratorState_create(tabVertA);
-				s0 = s;
-				s1 = s;
-				test(skipWhitespace(it, &s0));
-				pCurrentDatum = (*it.mpfGet)(&s0);
-				test(pCurrentDatum != NULL);
-				if (pCurrentDatum != NULL)
-				{
-					test(*((UnicodeCodePoint*) pCurrentDatum) == '\v');
-				}
-				test(skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
-				pCurrentDatum = (*it.mpfGet)(&s1);
-				test(pCurrentDatum != NULL);
-				if (pCurrentDatum != NULL)
-				{
-					test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
-				}
-
-				s = asciiStringUnicodeIteratorState_create(vertTab);
-				s0 = s;
-				s1 = s;
-				test(skipWhitespace(it, &s0));
-				pCurrentDatum = (*it.mpfGet)(&s0);
-				test(pCurrentDatum != NULL);
-				if (pCurrentDatum != NULL)
-				{
-					test(*((UnicodeCodePoint*) pCurrentDatum) == '\v');
-				}
-				test(!skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
-				test((*it.mpfGet)(&s1) == NULL);
-
-				s = asciiStringUnicodeIteratorState_create(vertTabA);
-				s0 = s;
-				s1 = s;
-				test(skipWhitespace(it, &s0));
-				pCurrentDatum = (*it.mpfGet)(&s0);
-				test(pCurrentDatum != NULL);
-				if (pCurrentDatum != NULL)
-				{
-					test(*((UnicodeCodePoint*) pCurrentDatum) == '\v');
-				}
-				test(skipWhite_SpaceCharacters(it, &s1, intervals, whiteSpaceIntervalsCount));
-				pCurrentDatum = (*it.mpfGet)(&s1);
-				test(pCurrentDatum != NULL);
-				if (pCurrentDatum != NULL)
-				{
-					test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
-				}
-			}
-
-			freeWhite_SpaceCharacterIntervals(&intervals);
+			test(!isWhite_SpaceCharacter(0x2FFF));
+			test( isWhite_SpaceCharacter(0x3000));
+			test(!isWhite_SpaceCharacter(0x3001));
 		}
+
+		{
+			char empty[]     = ""     ;
+			char space[]     = " "    ;
+			char A[]         = "A"    ;
+			char spaceA[]    = " A"   ;
+			char tabSpace[]  = "\t "  ;
+			char tabSpaceA[] = "\t A" ;
+			char tabVert[]   = "\t\v" ;
+			char tabVertA[]  = "\t\vA";
+			char vertTab[]   = "\v\t" ;
+			char vertTabA[]  = "\v\tA";
+			void* pCurrentDatum;
+
+			SingleIterator it = asciiStringUnicodeIterator_create();
+			ASCIIStringUnicodeIteratorState s;
+			ASCIIStringUnicodeIteratorState s0;
+			ASCIIStringUnicodeIteratorState s1;
+
+			s = asciiStringUnicodeIteratorState_create(empty);
+			s0 = s;
+			s1 = s;
+			test(!skipWhitespace(it, &s0));
+			test((*it.mpfGet)(&s0) == NULL);
+			test(!skipWhite_SpaceCharacters(it, &s1));
+			test((*it.mpfGet)(&s1) == NULL);
+
+			s = asciiStringUnicodeIteratorState_create(space);
+			s0 = s;
+			s1 = s;
+			test(!skipWhitespace(it, &s0));
+			test((*it.mpfGet)(&s0) == NULL);
+			test(!skipWhite_SpaceCharacters(it, &s1));
+			test((*it.mpfGet)(&s1) == NULL);
+
+			s = asciiStringUnicodeIteratorState_create(A);
+			s0 = s;
+			s1 = s;
+			test(skipWhitespace(it, &s0));
+			pCurrentDatum = (*it.mpfGet)(&s0);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
+			}
+			test(skipWhite_SpaceCharacters(it, &s1));
+			pCurrentDatum = (*it.mpfGet)(&s1);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
+			}
+
+			s = asciiStringUnicodeIteratorState_create(spaceA);
+			s0 = s;
+			s1 = s;
+			test(skipWhitespace(it, &s0));
+			pCurrentDatum = (*it.mpfGet)(&s0);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
+			}
+			test(skipWhite_SpaceCharacters(it, &s1));
+			pCurrentDatum = (*it.mpfGet)(&s1);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
+			}
+
+			s = asciiStringUnicodeIteratorState_create(tabSpace);
+			s0 = s;
+			s1 = s;
+			test(!skipWhitespace(it, &s0));
+			test((*it.mpfGet)(&s0) == NULL);
+			test(!skipWhite_SpaceCharacters(it, &s1));
+			test((*it.mpfGet)(&s1) == NULL);
+
+			s = asciiStringUnicodeIteratorState_create(tabSpaceA);
+			s0 = s;
+			s1 = s;
+			test(skipWhitespace(it, &s0));
+			pCurrentDatum = (*it.mpfGet)(&s0);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
+			}
+			test(skipWhite_SpaceCharacters(it, &s1));
+			pCurrentDatum = (*it.mpfGet)(&s1);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
+			}
+
+			s = asciiStringUnicodeIteratorState_create(tabVert);
+			s0 = s;
+			s1 = s;
+			test(skipWhitespace(it, &s0));
+			pCurrentDatum = (*it.mpfGet)(&s0);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == '\v');
+			}
+			test(!skipWhite_SpaceCharacters(it, &s1));
+			test((*it.mpfGet)(&s1) == NULL);
+
+			s = asciiStringUnicodeIteratorState_create(tabVertA);
+			s0 = s;
+			s1 = s;
+			test(skipWhitespace(it, &s0));
+			pCurrentDatum = (*it.mpfGet)(&s0);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == '\v');
+			}
+			test(skipWhite_SpaceCharacters(it, &s1));
+			pCurrentDatum = (*it.mpfGet)(&s1);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
+			}
+
+			s = asciiStringUnicodeIteratorState_create(vertTab);
+			s0 = s;
+			s1 = s;
+			test(skipWhitespace(it, &s0));
+			pCurrentDatum = (*it.mpfGet)(&s0);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == '\v');
+			}
+			test(!skipWhite_SpaceCharacters(it, &s1));
+			test((*it.mpfGet)(&s1) == NULL);
+
+			s = asciiStringUnicodeIteratorState_create(vertTabA);
+			s0 = s;
+			s1 = s;
+			test(skipWhitespace(it, &s0));
+			pCurrentDatum = (*it.mpfGet)(&s0);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == '\v');
+			}
+			test(skipWhite_SpaceCharacters(it, &s1));
+			pCurrentDatum = (*it.mpfGet)(&s1);
+			test(pCurrentDatum != NULL);
+			if (pCurrentDatum != NULL)
+			{
+				test(*((UnicodeCodePoint*) pCurrentDatum) == 'A');
+			}
+		}
+
 	}
 }
 

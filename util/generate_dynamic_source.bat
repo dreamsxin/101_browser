@@ -1,1 +1,1 @@
-java -cp out XsltTransform ..\src_xmi\101_browser.xmi generate_proplist_parser.xslt ..\src\Unicode\generated\PropListParser.cpp
+java -cp out PropListParser data/PropList.txt ..\src\Unicode\generated\WhiteSpaceIntervals.cpp White_Space

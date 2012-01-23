@@ -18,7 +18,7 @@
 
 #include <assert.h>
 #include "HTML5/2_5_1.h"
-#include "Util/Unicode.h"
+#include "Unicode/Unicode.h"
 
 ReadResult parseNonNegativeInteger(SingleIterator in_iterator, void* in_iteratorState, 
 							   UnsignedBigInteger* in_pUnsignedInteger)

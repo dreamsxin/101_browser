@@ -1,10 +1,9 @@
 rfc*/*.txt -crlf
 swf/*.txt -crlf
-Unicode/*.txt -crlf
 web_grammar/*.txt -crlf
 web_grammar/generated/*.txt -crlf
-xml10/*.txt
-xml11/*.txt
+xml10/*.txt -crlf
+xml11/*.txt -crlf
 *.idl -crlf
 matroska/specdata.xml -crlf
 dtd/*.dtd -crlf

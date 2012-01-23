@@ -1,5 +1,5 @@
 /*
-* Copyright 2008-2011 Wolfgang Keller
+* Copyright 2012 Wolfgang Keller
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,24 +14,19 @@
 * limitations under the License.
 */
 
-#ifndef _MTAx_MiniStdlib_HexDigit_h
-#define _MTAx_MiniStdlib_HexDigit_h
-
-#include "Unicode/Unicode.h"
-#include "MiniStdlib/cstdbool.h"
+#include "MiniStdlib/declspec.h"
+#include "MiniStdlib/cstddef.h"
 #include "MiniStdlib/cstdint.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-bool convertHexDigitToNumber(UnicodeCodePoint token, uint8_t *out_pNumber, 
-	bool in_acceptUppercase, bool in_acceptLowercase);
+typedef uint32_t UnicodeCodePoint;
 
-void convertNumberToHexDigits(uint8_t in_number, bool in_lowercase, char out_characters[2]);
+DLLEXPORT const void* getWhite_SpaceIntervals();
+DLLEXPORT size_t getWhite_SpaceIntervalsCount();
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

@@ -30,7 +30,7 @@
 #endif
 
 #include "Util/Iterator.h"
-#include "Util/Unicode.h"
+#include "Unicode/Unicode.h"
 #include "MiniStdlib/declspec.h"
 #include "MiniStdlib/cstdbool.h"
 #include "MiniStdlib/cstdint.h"
@@ -41,12 +41,7 @@ extern "C" {
 
 DLLEXPORT bool isSpaceCharacter(UnicodeCodePoint in_p);
 
-DLLEXPORT bool allocWhite_SpaceCharacterIntervals(FILE* in_propListFile, void** in_pWhitespaceIntervals, 
-                              size_t* in_pWhitespaceIntervalsCount);
-DLLEXPORT void freeWhite_SpaceCharacterIntervals(void** in_pWhitespaceIntervals);
-
-DLLEXPORT extern bool isWhite_SpaceCharacter(UnicodeCodePoint in_p, void* in_pWhitespaceIntervals, 
-						   size_t in_whitespaceIntervalsCount);
+DLLEXPORT bool isWhite_SpaceCharacter(UnicodeCodePoint in_p);
 
 DLLEXPORT bool isAlphanumericASCIICharacter(UnicodeCodePoint in_p);
 
@@ -61,8 +56,7 @@ DLLEXPORT bool skipWhitespace(SingleIterator in_iterator, void* in_iteratorState
 /*!
  * Return value: same as iterateWhile
  */
-DLLEXPORT bool skipWhite_SpaceCharacters(SingleIterator in_iterator, void* in_iteratorState, 
-							   void* in_pWhitespaceIntervals, size_t in_whitespaceIntervalsCount);
+DLLEXPORT bool skipWhite_SpaceCharacters(SingleIterator in_iterator, void* in_iteratorState);
 
 #ifdef __cplusplus
 }

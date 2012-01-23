@@ -27,7 +27,7 @@
 #include "MiniStdlib/cstdbool.h"
 #include "MiniStdlib/declspec.h"
 #include "BigNumber/BigInteger.h"
-#include "Util/Unicode.h"
+#include "Unicode/Unicode.h"
 
 #ifdef __cplusplus
 extern "C" {

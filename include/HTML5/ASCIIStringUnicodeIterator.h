@@ -19,7 +19,7 @@
 
 #include "MiniStdlib/declspec.h"
 #include "Util/Iterator.h"
-#include "Util/Unicode.h"
+#include "Unicode/Unicode.h"
 
 #ifdef __cplusplus
 extern "C" {
