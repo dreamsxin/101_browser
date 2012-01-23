@@ -1,1 +1,1 @@
-data/*.txt binary
+data/*.txt -crlf
