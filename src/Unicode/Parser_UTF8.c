@@ -232,7 +232,7 @@ bool instr_action_of_Start(ByteStreamInterface in_writeInterface, void *in_pWrit
 }
 
 
-ReadResult convertUTF8toCodepoints(
+ReadResult parse_UTF8(
 	ByteStreamInterface in_readInterface, 
 	void *in_pReadState,
 	ByteStreamInterface in_writeInterface,

@@ -19,6 +19,7 @@
 
 #include "Unicode/Unicode.h"
 #include "MiniStdlib/declspec.h"
+#include "MiniStdlib/cstdbool.h"
 #include "IO/ByteStream.h"
 #include "Util/ReadResult.h"
 
@@ -26,11 +27,25 @@
 extern "C" {
 #endif
 
-DLLEXPORT ReadResult convertUTF8toCodepoints(
+DLLEXPORT ReadResult parse_UTF8(
 	ByteStreamInterface in_readInterface, 
 	void *in_pReadState,
 	ByteStreamInterface in_writeInterface,
 	void *in_pWriteState);
+
+DLLEXPORT ReadResult parse_UTF16(
+	ByteStreamInterface in_readInterface, 
+	void *in_pReadState,
+	ByteStreamInterface in_writeInterface,
+	void *in_pWriteState, 
+	bool in_bigEndian);
+
+DLLEXPORT ReadResult parse_UTF32(
+	ByteStreamInterface in_readInterface, 
+	void *in_pReadState,
+	ByteStreamInterface in_writeInterface,
+	void *in_pWriteState, 
+	bool in_bigEndian);
 
 #ifdef __cplusplus
 }

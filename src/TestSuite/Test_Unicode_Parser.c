@@ -35,7 +35,7 @@ void test_UTF8_Coroutine(ByteStreamReference in_byteStreamReference, void *in_pU
 
 	assert(in_byteStreamReference.mByteStreamInterface.mpfWrite != NULL);
 
-	readResult = convertUTF8toCodepoints(getMemoryByteStreamReadInterface(), 
+	readResult = parse_UTF8(getMemoryByteStreamReadInterface(), 
 		pUserData->pReadState, in_byteStreamReference.mByteStreamInterface, 
 		in_byteStreamReference.mpByteStreamState);
 
