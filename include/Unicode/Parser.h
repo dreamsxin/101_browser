@@ -1,5 +1,5 @@
 /*
-* Copyright 2012 Wolfgang Keller
+* Copyright 2008-2012 Wolfgang Keller
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,21 +14,23 @@
 * limitations under the License.
 */
 
-#ifndef _Unicode_Unicode_h
-#define _Unicode_Unicode_h
+#ifndef _Unicode_Parser_h
+#define _Unicode_Parser_h
 
+#include "Unicode/Unicode.h"
 #include "MiniStdlib/declspec.h"
-#include "MiniStdlib/cstddef.h"
-#include "MiniStdlib/cstdint.h"
+#include "IO/ByteStream.h"
+#include "Util/ReadResult.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef uint32_t UnicodeCodePoint;
-
-DLLEXPORT const void* getWhite_SpaceIntervals();
-DLLEXPORT size_t getWhite_SpaceIntervalsCount();
+DLLEXPORT ReadResult convertUTF8toCodepoints(
+	ByteStreamInterface in_readInterface, 
+	void *in_pReadState,
+	ByteStreamInterface in_writeInterface,
+	void *in_pWriteState);
 
 #ifdef __cplusplus
 }

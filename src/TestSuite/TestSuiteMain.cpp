@@ -45,7 +45,7 @@ int main()
 	printf("Testing ASCIIStringUnicodeIterator\n");
 	testASCIIStringUnicodeIterator();
 	printf("Testing Unicode\n");
-	testUnicode();
+	test_Unicode();
 	printf("Testing IO\n");
 	test_IO();
 	printf("Testing HTML5\n");

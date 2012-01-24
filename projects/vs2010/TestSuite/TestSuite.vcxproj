@@ -114,6 +114,7 @@
     <ClCompile Include="..\..\..\src\TestSuite\Test_SetjmpUtil.c" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_TriangleStripBorderIterator.cpp" />
     <ClCompile Include="..\..\..\src\TestSuite\Test_Unicode.cpp" />
+    <ClCompile Include="..\..\..\src\TestSuite\Test_Unicode_Parser.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\TestSuite\IteratorTestUtil.h" />

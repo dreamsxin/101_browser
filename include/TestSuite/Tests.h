@@ -52,10 +52,12 @@ void test_IO();
 void test_Ogg();
 void test_DNS();
 
+void test_Unicode();
+void test_Unicode_Parser();
+
 #ifdef __cplusplus
 }
 #endif
 
-void testUnicode();
 
 #endif

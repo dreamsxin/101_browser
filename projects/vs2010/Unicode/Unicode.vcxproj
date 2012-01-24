@@ -86,6 +86,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Unicode\generated\WhiteSpaceIntervals.cpp" />
+    <ClCompile Include="..\..\..\src\Unicode\Parser_UTF8.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Algorithm\Algorithm.vcxproj">
@@ -96,6 +97,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\Unicode\Parser.h" />
     <ClInclude Include="..\..\..\include\Unicode\Unicode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

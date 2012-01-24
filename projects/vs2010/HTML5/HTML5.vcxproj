@@ -87,7 +87,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\HTML5\2_3.c" />
-    <ClCompile Include="..\..\..\src\HTML5\2_4.c" />
     <ClCompile Include="..\..\..\src\HTML5\2_5_1_c.c" />
     <ClCompile Include="..\..\..\src\HTML5\2_5_1_cpp.cpp" />
     <ClCompile Include="..\..\..\src\HTML5\2_5_4_1.c" />
@@ -98,7 +97,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\HTML5\2_3.h" />
-    <ClInclude Include="..\..\..\include\HTML5\2_4.h" />
     <ClInclude Include="..\..\..\include\HTML5\2_5_1.h" />
     <ClInclude Include="..\..\..\include\HTML5\2_5_4_1.h" />
     <ClInclude Include="..\..\..\include\HTML5\2_5_5.h" />

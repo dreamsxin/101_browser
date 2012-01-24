@@ -18,7 +18,6 @@
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
 #include "HTML5/2_3.h"
-#include "HTML5/2_4.h"
 #include "HTML5/2_5_1.h"
 #include "HTML5/2_5_4_1.h"
 #include "HTML5/2_5_5.h"
@@ -28,7 +27,6 @@
 #include "MiniStdlib/MTAx_cstdio.h"
 #include "BigNumber/BigInteger.h"
 #include "IO/MemoryByteStream.h"
-#include "IO/PipeStream.h"
 
 void test_2_3()
 {
@@ -115,87 +113,6 @@ void test_2_3()
 	cs0 = asciiStringUnicodeCyclicIteratorState_create(a);
 	cs1 = asciiStringUnicodeCyclicIteratorState_create(a);
 	test(prefixMatch(itc, &cs0, &cs1));
-}
-
-typedef struct
-{
-	uint8_t *pInputBytes;
-	MemoryByteStreamReadState *pReadState;
-} Test_2_4_Userdata;
-
-void test_2_4_Coroutine(ByteStreamReference in_byteStreamReference, void *in_pUserData)
-{
-	Test_2_4_Userdata *pUserData = (Test_2_4_Userdata *) in_pUserData;
-	ReadResult readResult;
-
-	assert(in_byteStreamReference.mByteStreamInterface.mpfWrite != NULL);
-
-	readResult = convertUTF8toCodepoints(getMemoryByteStreamReadInterface(), 
-		pUserData->pReadState, in_byteStreamReference.mByteStreamInterface, 
-		in_byteStreamReference.mpByteStreamState);
-
-	test(ReadResultOK == readResult);
-}
-
-void test_2_4()
-{
-	Test_2_4_Userdata test_2_4_userdata;
-	bool result;
-	MemoryByteStreamReadState readState;
-	PipeStreamState pipeStreamState;
-	ByteStreamInterface pipeStreamInterface;
-	CoroutineDescriptor thisCoroutine;
-	CoroutineDescriptor otherCoroutine;
-	size_t idx;
-	UnicodeCodePoint currentCodePoint;
-	size_t readCount;
-
-	result = convertThreadToCoroutine(&thisCoroutine);
-
-	test(result);
-	if (!result)
-		return;
-
-	{
-		/*
-		* the test string from
-		* http://www.whatwg.org/specs/web-apps/current-work/multipage/infrastructure.html#utf-8
-		* (12 February 2011)
-		*/
-		uint8_t inputBytes[] = { 0x41, 0x98, 0xBA, 0x42, 0xE2, 0x98, 0x43, 0xE2, 0x98, 0xBA, 0xE2, 0x98 };
-		UnicodeCodePoint outputCodepoints[] = { 'A', 0xFFFD, 0xFFFD, 'B', 0xFFFD, 'C', 0x263A, 0xFFFD };
-
-		memoryByteStreamReadStateInit(&readState, inputBytes, sizeof(inputBytes));
-
-		test_2_4_userdata.pInputBytes = inputBytes;
-		test_2_4_userdata.pReadState = &readState;
-
-		result = pipeStreamInit(&pipeStreamState, &pipeStreamInterface,
-			false, &thisCoroutine, &otherCoroutine,
-			&test_2_4_Coroutine, &test_2_4_userdata);
-
-		test(result);
-		if (!result)
-			return;
-
-		test(pipeStreamInterface.mpfRead != NULL);
-		if (NULL == pipeStreamInterface.mpfRead)
-			return;
-
-		for (idx = 0; idx < sizeof(outputCodepoints) / sizeof(UnicodeCodePoint); idx++)
-		{
-			readCount = (*pipeStreamInterface.mpfRead)
-				(&pipeStreamState, &currentCodePoint, sizeof(UnicodeCodePoint));
-
-			test(readCount == sizeof(UnicodeCodePoint));
-			test(currentCodePoint == outputCodepoints[idx]);
-		}
-
-		readCount = pipeStreamRead(&pipeStreamState, &currentCodePoint, sizeof(UnicodeCodePoint));
-		test(0 == readCount);
-
-		pipeStreamStateDestroy(&pipeStreamState);
-	}
 }
 
 void test_2_5_1()
@@ -628,8 +545,7 @@ void testHTML5()
 {
 	printf("Testing 2.3\n");
 	test_2_3();
-	printf("Testing 2.4\n");
-	test_2_4();
+	// Testing of section 2.4 has moved to Unicode
 	printf("Testing 2.5.1\n");
 	test_2_5_1();
 	printf("Testing 2.5.4.1\n");

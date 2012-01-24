@@ -18,8 +18,9 @@
 #include "TestSuite/TestSuite.h"
 #include "Unicode/Unicode.h"
 
-void testUnicode()
+void test_Unicode()
 {
+	test_Unicode_Parser();
 #if 0
 	test(readPropList(propListFile, "White_Space", &pIntervals, &intervalsCount));
 	test(intervalsCount == 12);

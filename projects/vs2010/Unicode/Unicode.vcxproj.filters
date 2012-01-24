@@ -21,10 +21,16 @@
     <ClInclude Include="..\..\..\include\Unicode\Unicode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\Unicode\Parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Unicode\generated\WhiteSpaceIntervals.cpp">
       <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Unicode\Parser_UTF8.c">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
