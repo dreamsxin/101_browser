@@ -32,5 +32,11 @@
     <ClCompile Include="..\..\..\src\Unicode\Parser_UTF8.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\Unicode\Parser_UTF16.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Unicode\Parser_UTF32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

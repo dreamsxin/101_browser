@@ -86,6 +86,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Unicode\generated\WhiteSpaceIntervals.cpp" />
+    <ClCompile Include="..\..\..\src\Unicode\Parser_UTF16.c" />
+    <ClCompile Include="..\..\..\src\Unicode\Parser_UTF32.c" />
     <ClCompile Include="..\..\..\src\Unicode\Parser_UTF8.c" />
   </ItemGroup>
   <ItemGroup>
