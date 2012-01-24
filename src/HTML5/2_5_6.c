@@ -1,5 +1,5 @@
 /*
-* Copyright 2011 Wolfgang Keller
+* Copyright 2011-2012 Wolfgang Keller
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/MTAx_cstdlib.h"
 #include "MiniStdlib/HexDigit.h"
-#include "Util/Unicode.h"
+#include "Unicode/Unicode.h"
 
 ReadResult parseSimpleColor(SingleIterator in_iterator, void* in_iteratorState, 
 SimpleColor* in_pSimpleColor)

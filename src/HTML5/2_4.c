@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 Wolfgang Keller
+ * Copyright 2008-2012 Wolfgang Keller
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 #include "HTML5/2_4.h"
 #include "Algorithm/Bitmask.h"
-#include "Util/Unicode.h"
+#include "Unicode/Unicode.h"
 #include "MiniStdlib/cstdint.h"
 #include <assert.h>
 
