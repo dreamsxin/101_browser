@@ -18,3 +18,12 @@
 #include "MiniStdlib/cstdint.h"
 #include <assert.h>
 
+ReadResult parse_UTF32(
+	ByteStreamInterface in_readInterface, 
+	void *in_pReadState,
+	ByteStreamInterface in_writeInterface,
+	void *in_pWriteState, 
+	bool in_bigEndian)
+{
+	return ReadResultOK;
+}
