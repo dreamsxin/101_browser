@@ -82,7 +82,7 @@ module fileapi
   	  
   	partial interface URL {
   
-  	    static DOMString createObjectURL(Blob blob);
+  	    static DOMString createObjectURL(Blob blob, optional boolean oneTimeOnly);
   	    static void revokeObjectURL(DOMString url);
   	};
   	
