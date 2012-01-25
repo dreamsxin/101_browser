@@ -16,6 +16,7 @@
 
 #include "Unicode/Parser.h"
 #include "MiniStdlib/cstdint.h"
+#include "MiniStdlib/MTAx_cstdlib.h" // for the conversation functions for endianness
 #include <assert.h>
 
 ReadResult parse_UTF16(
@@ -25,8 +26,15 @@ ReadResult parse_UTF16(
 	void *in_pWriteState, 
 	bool in_bigEndian)
 {
+	UnicodeCodePoint currentCodePoint;
+	
 	assert(in_readInterface.mpfRead != NULL);
 	assert(in_writeInterface.mpfWrite != NULL);
+
+	while (1)
+	{
+
+	}
 
 	return ReadResultOK;
 }

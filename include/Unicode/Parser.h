@@ -47,6 +47,8 @@ DLLEXPORT ReadResult parse_UTF32(
 	void *in_pWriteState, 
 	bool in_bigEndian);
 
+#define REPLACEMENT_CHARACTER 0xFFFD
+
 #ifdef __cplusplus
 }
 #endif

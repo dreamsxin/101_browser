@@ -138,11 +138,11 @@ bool instr_append_emit(ByteStreamInterface in_writeInterface, void *in_pWriteSta
 bool instr_error(ByteStreamInterface in_writeInterface, void *in_pWriteState, 
 	UTF8ParseState *out_pParserState, uint8_t *out_pReadBytesCount)
 {
-	UnicodeCodePoint replacementCharacter = 0xFFFD;
-
-	size_t bytesWritten = (*in_writeInterface.mpfWrite)(in_pWriteState, &replacementCharacter, sizeof(UnicodeCodePoint));
+	UnicodeCodePoint replacementCharacter = REPLACEMENT_CHARACTER;
+	size_t bytesWritten;
 	
 	assert(in_writeInterface.mpfWrite != NULL);
+	bytesWritten = (*in_writeInterface.mpfWrite)(in_pWriteState, &replacementCharacter, sizeof(UnicodeCodePoint));
 
 	*out_pParserState = UTF8ParseState_Start;
 	*out_pReadBytesCount = 0;

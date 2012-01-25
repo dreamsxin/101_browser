@@ -16,6 +16,7 @@
 
 #include "Unicode/Parser.h"
 #include "MiniStdlib/cstdint.h"
+#include "MiniStdlib/MTAx_cstdlib.h" // for the conversation functions for endianness
 #include <assert.h>
 
 ReadResult parse_UTF32(
@@ -25,8 +26,42 @@ ReadResult parse_UTF32(
 	void *in_pWriteState, 
 	bool in_bigEndian)
 {
+	UnicodeCodePoint currentCodePoint;
+	
 	assert(in_readInterface.mpfRead != NULL);
 	assert(in_writeInterface.mpfWrite != NULL);
 
-	return ReadResultOK;
+	while (1)
+	{
+		size_t rwCount;
+
+		rwCount = in_readInterface.mpfRead(in_pReadState, &currentCodePoint, 4);
+
+		if (0 == rwCount)
+		{
+			// Is there a need to write 0 bytes?
+			return ReadResultOK;
+		}
+		else if (4 != rwCount)
+		{
+			assert(rwCount > 0);
+			assert(rwCount < 4);
+
+			return ReadResultPrematureEndOfStream;
+		}
+
+		if (in_bigEndian)
+			currentCodePoint = _byteswap_ulong(currentCodePoint);
+
+		if ((currentCodePoint >= 0xD800 && currentCodePoint <= 0xDFFF) ||
+			currentCodePoint >= 0x110000)
+		{
+			currentCodePoint = REPLACEMENT_CHARACTER;
+		}
+
+		rwCount = (*in_writeInterface.mpfWrite)(in_pWriteState, &currentCodePoint, sizeof(UnicodeCodePoint));
+
+		if (rwCount != sizeof(UnicodeCodePoint))
+			return ReadResultWriteError;
+	}
 }

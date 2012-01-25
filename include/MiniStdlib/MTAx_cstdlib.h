@@ -28,6 +28,7 @@ extern "C" {
 #endif
 
 #ifdef __GNUC__
+#define _byteswap_ushort __builtin_bswap16
 #define _byteswap_ulong __builtin_bswap32
 #define _byteswap_uint64 __builtin_bswap64
 #endif
