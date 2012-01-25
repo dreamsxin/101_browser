@@ -25,5 +25,8 @@ ReadResult parse_UTF16(
 	void *in_pWriteState, 
 	bool in_bigEndian)
 {
+	assert(in_readInterface.mpfRead != NULL);
+	assert(in_writeInterface.mpfWrite != NULL);
+
 	return ReadResultOK;
 }
