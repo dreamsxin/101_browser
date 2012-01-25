@@ -65,7 +65,7 @@ typedef struct
 
 #pragma pack(pop)
 
-const uint16_t cDnsConstantID = 0; // TODO: Change
+const uint16_t cDnsConstantID = 0x42; // TODO: Change
 const uint8_t cDnsConstantRD  = 1;
 #define DNS_CONSTANT_QDCOUNT (htons(1))
 
@@ -129,8 +129,7 @@ int prepareOrCheckHeader(Header *in_out_pHeader,
 		if (in_out_pHeader->OPCODE != 0)  // 0 a standard query (QUERY)
 		                                  // 1  an inverse query (IQUERY)
 		                                  // 2  a server status request (STATUS)
-			return DnsReturnValueErrorInvalidResponse;
-							                
+			return DnsReturnValueErrorInvalidResponse;					                
 
 		// AA may be 0 or 1
 		// TC may be 0 or 1
