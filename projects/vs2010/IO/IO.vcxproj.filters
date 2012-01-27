@@ -45,6 +45,9 @@
     <ClInclude Include="..\..\..\include\IO\ByteStream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\IO\ByteStream_v2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\IO\fread.c">

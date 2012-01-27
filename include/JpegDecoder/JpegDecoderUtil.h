@@ -19,6 +19,7 @@
 
 #include "MiniStdlib/MTAx_cstdio.h"
 #include "MiniStdlib/cstdint.h"
+#include "MiniStdlib/cstdbool.h"
 #include "IO/SetjmpStream.h"
 
 #ifdef __cplusplus
