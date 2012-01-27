@@ -27,13 +27,39 @@ ReadResult parse_UTF16(
 	bool in_bigEndian)
 {
 	UnicodeCodePoint currentCodePoint;
-	
+	/*
+	* This variable is set to true, if we shall parse a second
+	* byte of a surrogate.
+	*/
+	bool lStateIsSecondByte = false;
+
 	assert(in_readInterface.mpfRead != NULL);
 	assert(in_writeInterface.mpfWrite != NULL);
 
+
 	while (1)
 	{
+		size_t rwCount;
+		UnicodeCodePoint currentCodePoint;
+		uint16_t currentWord;
 
+		rwCount = in_readInterface.mpfRead(in_pReadState, &currentWord, 2);
+
+		assert(rwCount <= 2);
+
+		if (!lStateIsSecondByte)
+		{
+			if (0 == rwCount)
+			{
+				// Is there a need to write 0 bytes?
+				return ReadResultOK;
+			}
+			//else if 
+		}
+		else
+		{
+
+		}
 	}
 
 	return ReadResultOK;

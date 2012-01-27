@@ -26,28 +26,26 @@ ReadResult parse_UTF32(
 	void *in_pWriteState, 
 	bool in_bigEndian)
 {
-	UnicodeCodePoint currentCodePoint;
-	
 	assert(in_readInterface.mpfRead != NULL);
 	assert(in_writeInterface.mpfWrite != NULL);
 
 	while (1)
 	{
 		size_t rwCount;
+		UnicodeCodePoint currentCodePoint;
 
 		rwCount = in_readInterface.mpfRead(in_pReadState, &currentCodePoint, 4);
 
 		if (0 == rwCount)
 		{
-			// Is there a need to write 0 bytes?
-			return ReadResultOK;
+			return terminateStream(in_writeInterface, in_pWriteState);
 		}
 		else if (4 != rwCount)
 		{
 			assert(rwCount > 0);
 			assert(rwCount < 4);
 
-			return ReadResultPrematureEndOfStream;
+			return writeTerminalReplacementCharacter(in_writeInterface, in_pWriteState);
 		}
 
 		if (in_bigEndian)

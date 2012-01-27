@@ -26,11 +26,11 @@ typedef struct
 {
 	uint8_t *pInputBytes;
 	MemoryByteStreamReadState *pReadState;
-} Test_UTF8_Userdata;
+} Test_Parser_Userdata;
 
 void test_UTF8_Coroutine(ByteStreamReference in_byteStreamReference, void *in_pUserData)
 {
-	Test_UTF8_Userdata *pUserData = (Test_UTF8_Userdata *) in_pUserData;
+	Test_Parser_Userdata *pUserData = (Test_Parser_Userdata *) in_pUserData;
 	ReadResult readResult;
 
 	assert(in_byteStreamReference.mByteStreamInterface.mpfWrite != NULL);
@@ -44,7 +44,7 @@ void test_UTF8_Coroutine(ByteStreamReference in_byteStreamReference, void *in_pU
 
 void test_Unicode_Parser_UTF8()
 {
-	Test_UTF8_Userdata test_UTF8_userdata;
+	Test_Parser_Userdata test_UTF8_userdata;
 	bool result;
 	MemoryByteStreamReadState readState;
 	PipeStreamState pipeStreamState;

@@ -49,6 +49,15 @@ DLLEXPORT ReadResult parse_UTF32(
 
 #define REPLACEMENT_CHARACTER 0xFFFD
 
+// Helper functions
+ReadResult terminateStream(
+	ByteStreamInterface in_writeInterface,
+	void *in_pWriteState);
+
+ReadResult writeTerminalReplacementCharacter(
+	ByteStreamInterface in_writeInterface,
+	void *in_pWriteState);
+
 #ifdef __cplusplus
 }
 #endif
