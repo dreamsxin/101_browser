@@ -35,9 +35,9 @@ DLLEXPORT ReadResult parse_UTF8(
 	void *in_pWriteState);
 
 DLLEXPORT ReadResult parse_UTF16(
-	ByteStreamInterface in_readInterface, 
+	ByteStreamInterface_v2 in_readInterface, 
 	void *in_pReadState,
-	ByteStreamInterface in_writeInterface,
+	ByteStreamInterface_v2 in_writeInterface,
 	void *in_pWriteState, 
 	bool in_bigEndian);
 

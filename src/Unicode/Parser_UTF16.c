@@ -20,13 +20,16 @@
 #include <assert.h>
 
 ReadResult parse_UTF16(
-	ByteStreamInterface in_readInterface, 
+	ByteStreamInterface_v2 in_readInterface, 
 	void *in_pReadState,
-	ByteStreamInterface in_writeInterface,
+	ByteStreamInterface_v2 in_writeInterface,
 	void *in_pWriteState, 
 	bool in_bigEndian)
 {
 	UnicodeCodePoint currentCodePoint;
+	size_t rwCount;
+	bool terminated;
+	extern const UnicodeCodePoint cReplacementCharacter;
 	/*
 	* This variable is set to true, if we shall parse a second
 	* byte of a surrogate.
@@ -39,11 +42,11 @@ ReadResult parse_UTF16(
 
 	while (1)
 	{
-		size_t rwCount;
 		UnicodeCodePoint currentCodePoint;
 		uint16_t currentWord;
 
-		rwCount = in_readInterface.mpfRead(in_pReadState, &currentWord, 2);
+		in_readInterface.mpfRead(in_pReadState, &currentWord, 2, 
+			&rwCount, &terminated);
 
 		assert(rwCount <= 2);
 
