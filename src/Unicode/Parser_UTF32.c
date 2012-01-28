@@ -41,7 +41,7 @@ ReadResult parse_UTF32(
 		{
 			assert(terminated);
 
-			goto terminate_utf32;
+			goto terminate;
 		}
 		else if (4 != rwCount)
 		{
@@ -78,7 +78,7 @@ write_terminal_character:
 	else
 		return ReadResultOK;
 
-terminate_utf32:
+terminate:
 	in_writeInterface.mpfWrite(in_pWriteState, NULL, 0, NULL, true);
 	return ReadResultOK;
 }
