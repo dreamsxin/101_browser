@@ -21,6 +21,7 @@
 #include "MiniStdlib/declspec.h"
 #include "MiniStdlib/cstdbool.h"
 #include "IO/ByteStream.h"
+#include "IO/ByteStream_v2.h"
 #include "Util/ReadResult.h"
 
 #ifdef __cplusplus
@@ -41,22 +42,11 @@ DLLEXPORT ReadResult parse_UTF16(
 	bool in_bigEndian);
 
 DLLEXPORT ReadResult parse_UTF32(
-	ByteStreamInterface in_readInterface, 
+	ByteStreamInterface_v2 in_readInterface, 
 	void *in_pReadState,
-	ByteStreamInterface in_writeInterface,
+	ByteStreamInterface_v2 in_writeInterface,
 	void *in_pWriteState, 
 	bool in_bigEndian);
-
-#define REPLACEMENT_CHARACTER 0xFFFD
-
-// Helper functions
-ReadResult terminateStream(
-	ByteStreamInterface in_writeInterface,
-	void *in_pWriteState);
-
-ReadResult writeTerminalReplacementCharacter(
-	ByteStreamInterface in_writeInterface,
-	void *in_pWriteState);
 
 #ifdef __cplusplus
 }

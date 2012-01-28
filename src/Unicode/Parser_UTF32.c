@@ -15,37 +15,42 @@
 */
 
 #include "Unicode/Parser.h"
-#include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/MTAx_cstdlib.h" // for the conversation functions for endianness
 #include <assert.h>
 
 ReadResult parse_UTF32(
-	ByteStreamInterface in_readInterface, 
+	ByteStreamInterface_v2 in_readInterface, 
 	void *in_pReadState,
-	ByteStreamInterface in_writeInterface,
+	ByteStreamInterface_v2 in_writeInterface,
 	void *in_pWriteState, 
 	bool in_bigEndian)
 {
+	UnicodeCodePoint currentCodePoint;
+	size_t rwCount;
+	bool terminated;
+	extern const UnicodeCodePoint cReplacementCharacter;
+
 	assert(in_readInterface.mpfRead != NULL);
 	assert(in_writeInterface.mpfWrite != NULL);
 
 	while (1)
 	{
-		size_t rwCount;
-		UnicodeCodePoint currentCodePoint;
-
-		rwCount = in_readInterface.mpfRead(in_pReadState, &currentCodePoint, 4);
+		in_readInterface.mpfRead(in_pReadState, &currentCodePoint, 4, &rwCount, &terminated);
 
 		if (0 == rwCount)
 		{
-			return terminateStream(in_writeInterface, in_pWriteState);
+			assert(terminated);
+
+			goto terminate_utf32;
 		}
 		else if (4 != rwCount)
 		{
 			assert(rwCount > 0);
 			assert(rwCount < 4);
+			assert(terminated);
 
-			return writeTerminalReplacementCharacter(in_writeInterface, in_pWriteState);
+			currentCodePoint = cReplacementCharacter;
+			goto write_terminal_character;
 		}
 
 		if (in_bigEndian)
@@ -53,13 +58,27 @@ ReadResult parse_UTF32(
 
 		if ((currentCodePoint >= 0xD800 && currentCodePoint <= 0xDFFF) ||
 			currentCodePoint >= 0x110000)
-		{
-			currentCodePoint = REPLACEMENT_CHARACTER;
-		}
+			currentCodePoint = cReplacementCharacter;
 
-		rwCount = (*in_writeInterface.mpfWrite)(in_pWriteState, &currentCodePoint, sizeof(UnicodeCodePoint));
+		if (terminated)
+			goto write_terminal_character;
+
+		in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, sizeof(UnicodeCodePoint), 
+			&rwCount, false);
 
 		if (rwCount != sizeof(UnicodeCodePoint))
 			return ReadResultWriteError;
 	}
+
+write_terminal_character:
+	in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, sizeof(UnicodeCodePoint), 
+		&rwCount, true);
+	if (rwCount == sizeof(UnicodeCodePoint))
+		return ReadResultWriteError;
+	else
+		return ReadResultOK;
+
+terminate_utf32:
+	in_writeInterface.mpfWrite(in_pWriteState, NULL, 0, NULL, true);
+	return ReadResultOK;
 }

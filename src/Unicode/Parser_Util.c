@@ -16,25 +16,4 @@
 
 #include "Unicode/Parser.h"
 
-ReadResult terminateStream(
-	ByteStreamInterface in_writeInterface,
-	void *in_pWriteState)
-{
-	(*in_writeInterface.mpfWrite)(in_pWriteState, NULL, 0);
-
-	return ReadResultOK;
-}
-
-ReadResult writeTerminalReplacementCharacter(
-	ByteStreamInterface in_writeInterface,
-	void *in_pWriteState)
-{
-	UnicodeCodePoint currentCodePoint = REPLACEMENT_CHARACTER;
-	size_t rwCount = (*in_writeInterface.mpfWrite)(in_pWriteState, &currentCodePoint, sizeof(UnicodeCodePoint));
-
-	if (rwCount != sizeof(UnicodeCodePoint))
-		return ReadResultWriteError;
-
-	terminateStream(in_writeInterface, in_pWriteState);
-	return ReadResultOK;
-}
+const UnicodeCodePoint cReplacementCharacter = 0xFFFD;
