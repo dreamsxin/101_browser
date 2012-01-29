@@ -39,7 +39,6 @@ module fileapi
   
   	  // async read methods
   	  void readAsArrayBuffer(Blob blob);
-  	  void readAsBinaryString(Blob blob);
   	  void readAsText(Blob blob, optional DOMString encoding);
   	  void readAsDataURL(Blob blob);
   
@@ -74,8 +73,7 @@ module fileapi
   
   	  // Synchronously return strings
   
-  	  ArrayBuffer readAsArrayBuffer(Blob blob);
-  	  DOMString readAsBinaryString(Blob blob); 
+  	  ArrayBuffer readAsArrayBuffer(Blob blob); 
   	  DOMString readAsText(Blob blob, optional DOMString encoding);
   	  DOMString readAsDataURL(Blob blob);
   	};

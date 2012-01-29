@@ -73,8 +73,8 @@ module domcore
   };
 
   interface EventTarget {
-    void addEventListener(DOMString type, EventListener? listener, optional boolean capture);
-    void removeEventListener(DOMString type, EventListener? listener, optional boolean capture);
+    void addEventListener(DOMString type, EventListener? listener, optional boolean capture = false);
+    void removeEventListener(DOMString type, EventListener? listener, optional boolean capture = false);
     boolean dispatchEvent(Event event);
   };
   
@@ -191,7 +191,7 @@ module domcore
     Node removeChild(Node child);
     void normalize();
   
-    Node cloneNode(optional boolean deep);
+    Node cloneNode(optional boolean deep = true);
     boolean isEqualNode(Node? node);
   
     DOMString lookupPrefix(DOMString? namespace);
@@ -221,15 +221,15 @@ module domcore
     Comment createComment(DOMString data);
     ProcessingInstruction createProcessingInstruction(DOMString target, DOMString data);
   
-    Node importNode(Node node, optional boolean deep);
+    Node importNode(Node node, optional boolean deep = true);
     Node adoptNode(Node node);
   
     Event createEvent(DOMString eventInterfaceName);
   
     Range createRange();
   
-    NodeIterator createNodeIterator(Node root, optional unsigned long whatToShow, optional NodeFilter? filter);
-    TreeWalker createTreeWalker(Node root, optional unsigned long whatToShow, optional NodeFilter? filter);
+    NodeIterator createNodeIterator(Node root, optional unsigned long whatToShow = SHOW_ALL, optional NodeFilter? filter = null);
+    TreeWalker createTreeWalker(Node root, optional unsigned long whatToShow = SHOW_ALL, optional NodeFilter? filter = null);
   
     // NEW
     void prepend((Node or DOMString)... nodes);

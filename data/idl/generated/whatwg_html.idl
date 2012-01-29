@@ -444,6 +444,7 @@ module html
              attribute DOMString type;
              attribute DOMString width;
              attribute DOMString height;
+    legacycaller any (any... arguments);
   };
 
   interface HTMLObjectElement : HTMLElement {
@@ -463,6 +464,8 @@ module html
     readonly attribute DOMString validationMessage;
     boolean checkValidity();
     void setCustomValidity(DOMString error);
+  
+    legacycaller any (any... arguments);
   };
 
   interface HTMLParamElement : HTMLElement {
