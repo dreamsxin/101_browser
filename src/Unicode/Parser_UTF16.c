@@ -127,6 +127,8 @@ begin_of_S:
 			}
 			else
 			{
+				lStateIsSecondByte = false;
+
 				if (currentWord < 0xDC00 || 0xDFFF < currentWord)
 				{
 					currentCodePoint = cReplacementCharacter;
@@ -136,8 +138,6 @@ begin_of_S:
 
 					if (sizeof(UnicodeCodePoint) != rwCount)
 						return ReadResultWriteError;
-
-					lStateIsSecondByte = false;
 
 					goto begin_of_S;
 				}
@@ -154,8 +154,6 @@ begin_of_S:
 
 				if (sizeof(UnicodeCodePoint) != rwCount)
 					return ReadResultWriteError;
-
-				// TODO
 			}
 		}
 	}
