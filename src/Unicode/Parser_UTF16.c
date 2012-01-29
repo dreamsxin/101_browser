@@ -39,10 +39,8 @@ ReadResult parse_UTF16(
 	assert(in_readInterface.mpfRead != NULL);
 	assert(in_writeInterface.mpfWrite != NULL);
 
-
 	while (1)
 	{
-		UnicodeCodePoint currentCodePoint;
 		uint16_t currentWord;
 
 		in_readInterface.mpfRead(in_pReadState, &currentWord, 2, 
@@ -50,20 +48,130 @@ ReadResult parse_UTF16(
 
 		assert(rwCount <= 2);
 
-		if (!lStateIsSecondByte)
+		if (0 == rwCount)
 		{
-			if (0 == rwCount)
+			assert(terminated);
+
+			goto terminate;
+		}
+		else if (1 == rwCount)
+		{
+			assert(terminated);
+
+			if (!lStateIsSecondByte)
 			{
-				// Is there a need to write 0 bytes?
-				return ReadResultOK;
+				currentCodePoint = cReplacementCharacter;
+				goto write_terminal_character;
 			}
-			//else if 
+			else
+			{
+				uint8_t currentByte = (uint8_t) currentWord;
+
+				// TODO
+			}
 		}
 		else
 		{
+			assert(2 == rwCount);
 
+			if (in_bigEndian)
+				currentWord = _byteswap_ushort(currentWord);
+
+			if (!lStateIsSecondByte)
+			{
+begin_of_S:
+				if (currentWord < 0xD800 || currentWord >= 0xDC00)
+				{
+					// 0xDC00 <= currentWord < 0xE000: low surrogate
+					if (currentWord < 0xE000)
+					{
+						assert(currentWord >= 0xDC00);
+						currentCodePoint = cReplacementCharacter;
+					}
+					else
+						currentCodePoint = currentWord;
+
+					if (terminated)
+						goto write_terminal_character;
+
+					in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, sizeof(UnicodeCodePoint), 
+						&rwCount, false);
+
+					if (sizeof(UnicodeCodePoint) != rwCount)
+						return ReadResultWriteError;
+				}
+				else if (currentWord < 0xDC00)
+				{
+					assert(currentWord >= 0xD800);
+					assert(currentWord <= 0xDBFF);
+
+					if (terminated)
+					{
+						currentCodePoint = cReplacementCharacter;
+						goto write_terminal_character;
+					}
+
+					currentCodePoint = (currentWord & 0x3FFu) << 10u;
+					lStateIsSecondByte = true;
+				}
+			}
+			else
+			{
+				if (currentWord < 0xDC00 || 0xDFFF < currentWord)
+				{
+					currentCodePoint = cReplacementCharacter;
+
+					in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, sizeof(UnicodeCodePoint), 
+						&rwCount, false);
+
+					if (sizeof(UnicodeCodePoint) != rwCount)
+						return ReadResultWriteError;
+
+					lStateIsSecondByte = false;
+
+					goto begin_of_S;
+				}
+				else
+				{
+					currentCodePoint |= (currentWord & 0x3FFu);
+				}
+
+				if (terminated)
+					goto write_terminal_character;
+
+				in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, sizeof(UnicodeCodePoint), 
+					&rwCount, false);
+
+				if (sizeof(UnicodeCodePoint) != rwCount)
+					return ReadResultWriteError;
+
+				// TODO
+			}
 		}
 	}
 
+write_two_replacement_characters:
+	{
+		UnicodeCodePoint codepoints[2] = { cReplacementCharacter, 
+			cReplacementCharacter };
+
+		in_writeInterface.mpfWrite(in_pWriteState, codepoints, sizeof(codepoints), 
+			&rwCount, true);
+		if (sizeof(codepoints) == rwCount)
+			return ReadResultWriteError;
+		else
+			return ReadResultOK;
+	}
+
+write_terminal_character:
+	in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, sizeof(UnicodeCodePoint), 
+		&rwCount, true);
+	if (sizeof(UnicodeCodePoint) == rwCount)
+		return ReadResultOK;
+	else
+		return ReadResultWriteError;
+
+terminate:
+	in_writeInterface.mpfWrite(in_pWriteState, NULL, 0, NULL, true);
 	return ReadResultOK;
 }

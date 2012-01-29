@@ -37,6 +37,8 @@ ReadResult parse_UTF32(
 	{
 		in_readInterface.mpfRead(in_pReadState, &currentCodePoint, 4, &rwCount, &terminated);
 
+		assert(rwCount <= 4);
+
 		if (0 == rwCount)
 		{
 			assert(terminated);
@@ -73,10 +75,10 @@ ReadResult parse_UTF32(
 write_terminal_character:
 	in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, sizeof(UnicodeCodePoint), 
 		&rwCount, true);
-	if (rwCount == sizeof(UnicodeCodePoint))
-		return ReadResultWriteError;
-	else
+	if (sizeof(UnicodeCodePoint) == rwCount)
 		return ReadResultOK;
+	else
+		return ReadResultWriteError;
 
 terminate:
 	in_writeInterface.mpfWrite(in_pWriteState, NULL, 0, NULL, true);
