@@ -52,7 +52,10 @@ ReadResult parse_UTF16(
 		{
 			assert(terminated);
 
-			goto terminate;
+			if (!lStateIsSecondByte)
+				goto terminate;
+			else
+				goto write_terminal_replacement_character;
 		}
 		else if (1 == rwCount)
 		{
@@ -60,14 +63,24 @@ ReadResult parse_UTF16(
 
 			if (!lStateIsSecondByte)
 			{
-				currentCodePoint = cReplacementCharacter;
-				goto write_terminal_character;
+				goto write_terminal_replacement_character;
 			}
 			else
 			{
-				uint8_t currentByte = (uint8_t) currentWord;
+				if (currentWord >= 0xDC && currentWord <= 0xDF)
+					goto write_terminal_replacement_character;
+				else
+				{
+					UnicodeCodePoint codepoints[2] = { cReplacementCharacter, 
+						cReplacementCharacter };
 
-				// TODO
+					in_writeInterface.mpfWrite(in_pWriteState, codepoints, sizeof(codepoints), 
+						&rwCount, true);
+					if (sizeof(codepoints) == rwCount)
+						return ReadResultWriteError;
+					else
+						return ReadResultOK;
+				}
 			}
 		}
 		else
@@ -106,10 +119,7 @@ begin_of_S:
 					assert(currentWord <= 0xDBFF);
 
 					if (terminated)
-					{
-						currentCodePoint = cReplacementCharacter;
-						goto write_terminal_character;
-					}
+						goto write_terminal_replacement_character;
 
 					currentCodePoint = (currentWord & 0x3FFu) << 10u;
 					lStateIsSecondByte = true;
@@ -150,19 +160,8 @@ begin_of_S:
 		}
 	}
 
-write_two_replacement_characters:
-	{
-		UnicodeCodePoint codepoints[2] = { cReplacementCharacter, 
-			cReplacementCharacter };
-
-		in_writeInterface.mpfWrite(in_pWriteState, codepoints, sizeof(codepoints), 
-			&rwCount, true);
-		if (sizeof(codepoints) == rwCount)
-			return ReadResultWriteError;
-		else
-			return ReadResultOK;
-	}
-
+write_terminal_replacement_character:
+	currentCodePoint = cReplacementCharacter;
 write_terminal_character:
 	in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, sizeof(UnicodeCodePoint), 
 		&rwCount, true);
