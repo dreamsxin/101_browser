@@ -7,9 +7,6 @@ wget http://unicode.org/Public/UNIDATA/PropList.txt -O ../util/data/PropList.txt
 
 wget http://matroska.svn.sourceforge.net/viewvc/matroska/trunk/foundation_src/spectool/specdata.xml?revision=HEAD -O ../data/matroska/specdata.xml
 
-
-CALL create_single_dynamic_idl.bat http://www.whatwg.org/specs/web-apps/current-work/complete.html webapps ../data/idl/generated/whatwg_webapps.idl
-
 CALL create_single_dynamic_idl.bat http://www.whatwg.org/specs/web-apps/current-work/ html ../data/idl/generated/whatwg_html.idl
 
 CALL create_single_dynamic_idl.bat http://dev.w3.org/html5/spec/Overview.html html5 ../data/idl/generated/w3c_html5.idl

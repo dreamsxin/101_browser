@@ -576,7 +576,7 @@ module html
     readonly attribute unsigned short code;
   };
 
-  interface AudioTrackList {
+  interface AudioTrackList : EventTarget {
     readonly attribute unsigned long length;
     getter AudioTrack (unsigned long index);
     AudioTrack? getTrackById(DOMString id);
@@ -593,7 +593,7 @@ module html
              attribute boolean enabled;
   };
   
-  interface VideoTrackList {
+  interface VideoTrackList : EventTarget {
     readonly attribute unsigned long length;
     getter VideoTrack (unsigned long index);
     VideoTrack? getTrackById(DOMString id);
@@ -646,7 +646,7 @@ module html
     [TreatNonCallableAsNull] attribute Function? onvolumechange;
   };
 
-  interface TextTrackList {
+  interface TextTrackList : EventTarget {
     readonly attribute unsigned long length;
     getter TextTrack (unsigned long index);
   
@@ -711,7 +711,7 @@ module html
   };
   
   dictionary TrackEventInit : EventInit {
-    object? Track;
+    object? track;
   };
 
   interface HTMLCanvasElement : HTMLElement {
