@@ -19,64 +19,86 @@
 #include <assert.h>
 #include <string.h> // for memcpy
 
+void memoryByteStream_v2StateInit(
+	MemoryByteStream_v2State *in_pMemoryByteStream_v2State,
+	size_t in_bufferSize)
+{
+	in_pMemoryByteStream_v2State->bufferSize = in_bufferSize;
+	in_pMemoryByteStream_v2State->bufferPos = 0;
+	in_pMemoryByteStream_v2State->isTerminated = false;
+}
+
 void memoryByteStream_v2ReadStateInit(
-	MemoryByteStream_v2ReadState *in_pMemoryByteStream_v2ReadState,
+	MemoryByteStream_v2State *in_pMemoryByteStream_v2ReadState,
 	const void *in_pBuffer, size_t in_bufferSize)
 {
-	in_pMemoryByteStream_v2ReadState->buffer = in_pBuffer;
-	in_pMemoryByteStream_v2ReadState->bufferSize = in_bufferSize;
-	in_pMemoryByteStream_v2ReadState->bufferPos = 0;
+	in_pMemoryByteStream_v2ReadState->rwBuffer.readBuffer = in_pBuffer;
+	memoryByteStream_v2StateInit(in_pMemoryByteStream_v2ReadState, in_bufferSize);
 }
 
 void memoryByteStream_v2WriteStateInit(
-	MemoryByteStream_v2WriteState *in_pMemoryByteStream_v2WriteState,
+	MemoryByteStream_v2State *in_pMemoryByteStream_v2WriteState,
 	void *in_pBuffer, size_t in_bufferSize)
 {
-	in_pMemoryByteStream_v2WriteState->buffer = in_pBuffer;
-	in_pMemoryByteStream_v2WriteState->bufferSize = in_bufferSize;
-	in_pMemoryByteStream_v2WriteState->bufferPos = 0;
+	in_pMemoryByteStream_v2WriteState->rwBuffer.writeBuffer = in_pBuffer;
+	memoryByteStream_v2StateInit(in_pMemoryByteStream_v2WriteState, in_bufferSize);
 }
 
-void memoryByteStream_v2ReadStateReset(MemoryByteStream_v2ReadState *in_pMemoryByteStream_v2ReadState)
+void memoryByteStream_v2StateReset(MemoryByteStream_v2State *in_pMemoryByteStream_v2State)
 {
-	in_pMemoryByteStream_v2ReadState->bufferPos = 0;
+	in_pMemoryByteStream_v2State->bufferPos = 0;
+	in_pMemoryByteStream_v2State->isTerminated = false;
 }
 
-void memoryByteStream_v2WriteStateReset(MemoryByteStream_v2WriteState *in_pMemoryByteStream_v2WriteState)
+void memoryByteStream_v2Copy(MemoryByteStream_v2State *in_out_pMemoryByteStream_v2State, 
+	const void *in_pBuffer, void *out_pBuffer, size_t in_count, bool in_isTerminal, 
+		size_t *out_pCount, bool *out_pIsTerminal)
 {
-	in_pMemoryByteStream_v2WriteState->bufferPos = 0;
-}
+	assert(!in_out_pMemoryByteStream_v2State->isTerminated);
+	assert(in_out_pMemoryByteStream_v2State->bufferPos <= in_out_pMemoryByteStream_v2State->bufferSize);
 
-void memoryByteReadStream_v2Read(void *in_out_pMemoryByteStream_v2ReadState, 
-	void *out_pBuffer, size_t in_count, size_t *out_pCount, bool *out_pIsTerminal)
-{
-	MemoryByteStream_v2ReadState *pMemoryByteStream_v2ReadState = 
-		(MemoryByteStream_v2ReadState*) in_out_pMemoryByteStream_v2ReadState;
+	in_count = MIN(in_count, in_out_pMemoryByteStream_v2State->bufferSize 
+		- in_out_pMemoryByteStream_v2State->bufferPos);
+	memcpy(out_pBuffer, in_pBuffer, in_count);
+	in_out_pMemoryByteStream_v2State->bufferPos += in_count;
 
-	in_count = MIN(in_count, pMemoryByteStream_v2ReadState->bufferSize - pMemoryByteStream_v2ReadState->bufferPos);
-	memcpy(out_pBuffer, (uint8_t*) pMemoryByteStream_v2ReadState->buffer+pMemoryByteStream_v2ReadState->bufferPos, in_count);
-	pMemoryByteStream_v2ReadState->bufferPos += in_count;
+	assert(in_out_pMemoryByteStream_v2State->bufferPos <= in_out_pMemoryByteStream_v2State->bufferSize);
 
-	assert(pMemoryByteStream_v2ReadState->bufferPos <= pMemoryByteStream_v2ReadState->bufferSize);
-
+	assert(out_pCount != NULL);
 	*out_pCount = in_count;
-	*out_pIsTerminal = (pMemoryByteStream_v2ReadState->bufferSize == 
-		pMemoryByteStream_v2ReadState->bufferPos);
+
+	if (out_pIsTerminal)
+		*out_pIsTerminal = (in_out_pMemoryByteStream_v2State->bufferSize == in_out_pMemoryByteStream_v2State->bufferPos);
+
+	if (in_isTerminal && in_count, in_out_pMemoryByteStream_v2State->bufferSize == 
+		in_count, in_out_pMemoryByteStream_v2State->bufferPos)
+		in_out_pMemoryByteStream_v2State->isTerminated = true;
 }
 
-void memoryByteReadStream_v2Write(void *in_out_pMemoryByteStream_v2ReadState, 
-	const void *out_pBuffer, size_t in_count, size_t *out_pCount, bool in_isTerminal)
+void memoryByteReadStream_v2Read(void *in_out_pMemoryByteStream_v2State, 
+	void *out_pBuffer, size_t in_count, bool in_isTerminal, 
+	size_t *out_pCount, bool *out_pIsTerminal)
 {
-	MemoryByteStream_v2WriteState *pMemoryByteStream_v2WriteState = 
-		(MemoryByteStream_v2WriteState*) in_out_pMemoryByteStream_v2ReadState;
+	MemoryByteStream_v2State *pMemoryByteStream_v2State = 
+		(MemoryByteStream_v2State*) in_out_pMemoryByteStream_v2State;
 
-	in_count = MIN(in_count, pMemoryByteStream_v2WriteState->bufferSize - pMemoryByteStream_v2WriteState->bufferPos);
-	memcpy((uint8_t*) pMemoryByteStream_v2WriteState->buffer+pMemoryByteStream_v2WriteState->bufferPos, out_pBuffer, in_count);
-	pMemoryByteStream_v2WriteState->bufferPos += in_count;
+	memoryByteStream_v2Copy(pMemoryByteStream_v2State, 
+		(uint8_t*) pMemoryByteStream_v2State->rwBuffer.readBuffer
+		+ pMemoryByteStream_v2State->bufferPos, out_pBuffer, 
+		in_count, in_isTerminal, out_pCount, out_pIsTerminal);
+}
 
-	assert(pMemoryByteStream_v2WriteState->bufferPos <= pMemoryByteStream_v2WriteState->bufferSize);
+void memoryByteReadStream_v2Write(void *in_out_pMemoryByteStream_v2State, 
+	const void *in_pBuffer, size_t in_count, bool in_isTerminal, 
+	size_t *out_pCount, bool *out_pIsTerminal)
+{
+	MemoryByteStream_v2State *pMemoryByteStream_v2State = 
+		(MemoryByteStream_v2State*) in_out_pMemoryByteStream_v2State;
 
-	*out_pCount = in_count;
+	memoryByteStream_v2Copy(pMemoryByteStream_v2State, 
+		in_pBuffer, (uint8_t*) pMemoryByteStream_v2State->rwBuffer.writeBuffer
+		+ pMemoryByteStream_v2State->bufferPos, 
+		in_count, in_isTerminal, out_pCount, out_pIsTerminal);
 }
 
 ByteStreamInterface_v2 getMemoryByteStreamReadInterface_v2()

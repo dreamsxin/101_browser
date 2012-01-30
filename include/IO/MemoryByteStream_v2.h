@@ -27,32 +27,30 @@ extern "C" {
 
 typedef struct
 {
-	const void *buffer;
+	union {
+		const void *readBuffer;
+		void *writeBuffer;
+	} rwBuffer;
 	size_t bufferSize;
 	size_t bufferPos;
-} MemoryByteStream_v2ReadState;
-
-typedef struct
-{
-	void *buffer;
-	size_t bufferSize;
-	size_t bufferPos;
-} MemoryByteStream_v2WriteState;
+	bool isTerminated;
+} MemoryByteStream_v2State;
 
 DLLEXPORT void memoryByteStream_v2ReadStateInit(
-	MemoryByteStream_v2ReadState *in_pMemoryByteStream_v2ReadState,
+	MemoryByteStream_v2State *in_pMemoryByteStream_v2ReadState,
 	const void *in_pBuffer, size_t in_bufferSize);
 DLLEXPORT void memoryByteStream_v2WriteStateInit(
-	MemoryByteStream_v2WriteState *in_pMemoryByteStream_v2WriteState,
+	MemoryByteStream_v2State *in_pMemoryByteStream_v2WriteState,
 	void *in_pBuffer, size_t in_bufferSize);
 
-DLLEXPORT void memoryByteStream_v2ReadStateReset(MemoryByteStream_v2ReadState *in_pMemoryByteStream_v2ReadState);
-DLLEXPORT void memoryByteStream_v2WriteStateReset(MemoryByteStream_v2WriteState *in_pMemoryByteStream_v2WriteState);
+DLLEXPORT void memoryByteStream_v2StateReset(MemoryByteStream_v2State *in_pMemoryByteStream_v2State);
 
 DLLEXPORT void memoryByteReadStream_v2Read(void *in_out_pMemoryByteStream_v2ReadState, 
-	void *out_pBuffer, size_t in_count, size_t *out_pCount, bool *out_pIsTerminal);
+	void *out_pBuffer, size_t in_count, bool in_isTerminal, 
+	size_t *out_pCount, bool *out_pIsTerminal);
 DLLEXPORT void memoryByteReadStream_v2Write(void *in_out_pMemoryByteStream_v2ReadState, 
-	const void *out_pBuffer, size_t in_count, size_t *out_pCount, bool in_isTerminal);
+	const void *in_pBuffer, size_t in_count, bool in_isTerminal, 
+	size_t *out_pCount, bool *out_pIsTerminal);
 
 DLLEXPORT ByteStreamInterface_v2 getMemoryByteStreamReadInterface_v2();
 DLLEXPORT ByteStreamInterface_v2 getMemoryByteStreamWriteInterface_v2();

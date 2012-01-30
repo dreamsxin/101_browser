@@ -27,11 +27,11 @@ extern "C" {
 typedef struct
 {
 	void (*mpfRead)(void *in_out_pByteStreamInterface, 
-		void *out_pBuffer, size_t in_count, 
+		void *out_pBuffer, size_t in_count, bool in_isTerminal, 
 		size_t *out_pCount, bool *out_pIsTerminal);
 	void (*mpfWrite)(void *in_out_pByteStreamInterface, 
-		const void *in_pBuffer, size_t in_count, 
-		size_t *out_pCount, bool in_isTerminal);
+		const void *in_pBuffer, size_t in_count, bool in_isTerminal, 
+		size_t *out_pCount, bool *out_pIsTerminal);
 } ByteStreamInterface_v2;
 
 #ifdef __cplusplus

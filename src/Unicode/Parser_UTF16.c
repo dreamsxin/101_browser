@@ -43,7 +43,7 @@ ReadResult parse_UTF16(
 	{
 		uint16_t currentWord;
 
-		in_readInterface.mpfRead(in_pReadState, &currentWord, 2, 
+		in_readInterface.mpfRead(in_pReadState, &currentWord, 2, false, 
 			&rwCount, &terminated);
 
 		assert(rwCount <= 2);
@@ -74,8 +74,9 @@ ReadResult parse_UTF16(
 					UnicodeCodePoint codepoints[2] = { cReplacementCharacter, 
 						cReplacementCharacter };
 
-					in_writeInterface.mpfWrite(in_pWriteState, codepoints, sizeof(codepoints), 
-						&rwCount, true);
+					in_writeInterface.mpfWrite(in_pWriteState, codepoints, 
+						sizeof(codepoints), true, 
+						&rwCount, NULL);
 					if (sizeof(codepoints) == rwCount)
 						return ReadResultWriteError;
 					else
@@ -107,8 +108,8 @@ begin_of_S:
 					if (terminated)
 						goto write_terminal_character;
 
-					in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, sizeof(UnicodeCodePoint), 
-						&rwCount, false);
+					in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, 
+						sizeof(UnicodeCodePoint), false, &rwCount, NULL);
 
 					if (sizeof(UnicodeCodePoint) != rwCount)
 						return ReadResultWriteError;
@@ -133,8 +134,8 @@ begin_of_S:
 				{
 					currentCodePoint = cReplacementCharacter;
 
-					in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, sizeof(UnicodeCodePoint), 
-						&rwCount, false);
+					in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, 
+						sizeof(UnicodeCodePoint), false, &rwCount, NULL);
 
 					if (sizeof(UnicodeCodePoint) != rwCount)
 						return ReadResultWriteError;
@@ -149,8 +150,8 @@ begin_of_S:
 				if (terminated)
 					goto write_terminal_character;
 
-				in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, sizeof(UnicodeCodePoint), 
-					&rwCount, false);
+				in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, 
+					sizeof(UnicodeCodePoint), false, &rwCount, NULL);
 
 				if (sizeof(UnicodeCodePoint) != rwCount)
 					return ReadResultWriteError;
@@ -161,14 +162,14 @@ begin_of_S:
 write_terminal_replacement_character:
 	currentCodePoint = cReplacementCharacter;
 write_terminal_character:
-	in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, sizeof(UnicodeCodePoint), 
-		&rwCount, true);
+	in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, 
+		sizeof(UnicodeCodePoint), true, &rwCount, NULL);
 	if (sizeof(UnicodeCodePoint) == rwCount)
 		return ReadResultOK;
 	else
 		return ReadResultWriteError;
 
 terminate:
-	in_writeInterface.mpfWrite(in_pWriteState, NULL, 0, NULL, true);
+	in_writeInterface.mpfWrite(in_pWriteState, NULL, 0, true, NULL, false);
 	return ReadResultOK;
 }
