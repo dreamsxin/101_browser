@@ -19,7 +19,6 @@
 #include <assert.h>
 #include <string.h> // for memcpy
 
-
 void memoryByteStreamReadStateInit(
 	MemoryByteStreamReadState *in_pMemoryByteStreamReadState,
 	const void *in_pBuffer, size_t in_bufferSize)
