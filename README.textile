@@ -4,7 +4,7 @@ h2. 1. Basic information
 
 |_. Property|_. Value|
 |Name|101_browser|
-|Copyright|Copyright (c) 2008-2011 Wolfgang Keller|
+|Copyright|Copyright (c) 2008-2012 Wolfgang Keller|
 |License|Apache 2.0 license|
 |Version|current head revision ;-)|
 |Author|Wolfgang Keller|
@@ -20,7 +20,9 @@ h3. 2.1 Operation System
 
 h4. 2.1.1 Windows
 
-Windows Vista/Server 2008/7 (currently only tested under Windows 7, but the other ones should work). Note that not all parts of 101_browser will work under Windows XP or older, because some parts are using APIs that were introduced with Vista to simplify the code or add features.
+Windows Vista/Server 2008/7/Server 2008 R2 (currently only tested under Windows 7, but the other ones should work). 
+
+Note that not all parts of 101_browser will work under Windows XP or older, because some parts are using APIs that were introduced with Vista to simplify the code or add features.
 
 In other words: better don't attempt to get 101_browser to tun on Windows XP or older. It will save you frustration.
 
