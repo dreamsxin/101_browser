@@ -80,8 +80,15 @@ module fileapi
   	  
   	partial interface URL {
   
-  	    static DOMString createObjectURL(Blob blob, optional boolean oneTimeOnly);
+  	    static DOMString createObjectURL(Blob blob, optional objectURLOptions options);
   	    static void revokeObjectURL(DOMString url);
   	};
+  	
+  	dictionary objectURLOptions
+  	{
+  		boolean oneTimeOnly = false;
+  
+  	};
+  	
   	
 };

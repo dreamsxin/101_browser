@@ -1250,7 +1250,7 @@ module html
     [Replaceable] readonly attribute WindowProxy frames;
     [Replaceable] readonly attribute unsigned long length;
     [Unforgeable] readonly attribute WindowProxy top;
-             attribute WindowProxy opener;
+             attribute WindowProxy? opener;
     readonly attribute WindowProxy parent;
     readonly attribute Element? frameElement;
     WindowProxy open(optional DOMString url, optional DOMString target, optional DOMString features, optional boolean replace);
