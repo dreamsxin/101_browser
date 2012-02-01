@@ -103,8 +103,24 @@ void test_Unicode_Parser_UTF8()
 	}
 }
 
+void test_Unicode_Parser_UTF16()
+{
+
+}
+
+void test_Unicode_Parser_UTF32()
+{
+
+}
+
 void test_Unicode_Parser()
 {
 	printf("Testing Unicode Parser UTF8\n");
 	test_Unicode_Parser_UTF8();
+
+	printf("Testing Unicode Parser UTF16\n");
+	test_Unicode_Parser_UTF16();
+
+	printf("Testing Unicode Parser UTF16\n");
+	test_Unicode_Parser_UTF32();
 }
