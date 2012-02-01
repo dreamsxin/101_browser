@@ -105,12 +105,12 @@ void test_Unicode_Parser_UTF8()
 
 void test_Unicode_Parser_UTF16()
 {
-
+	// TODO
 }
 
 void test_Unicode_Parser_UTF32()
 {
-
+	// TODO
 }
 
 void test_Unicode_Parser()
@@ -121,6 +121,6 @@ void test_Unicode_Parser()
 	printf("Testing Unicode Parser UTF16\n");
 	test_Unicode_Parser_UTF16();
 
-	printf("Testing Unicode Parser UTF16\n");
+	printf("Testing Unicode Parser UTF32\n");
 	test_Unicode_Parser_UTF32();
 }
