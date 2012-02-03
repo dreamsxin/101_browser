@@ -67,15 +67,14 @@ void memoryByteStream_v2Copy(MemoryByteStream_v2State *in_out_pMemoryByteStream_
 	assert(out_pCount != NULL);
 	*out_pCount = in_count;
 
+	if (out_pIsTerminal)
+		*out_pIsTerminal = (in_isTerminal || 
+		in_out_pMemoryByteStream_v2State->bufferSize == 
+		in_out_pMemoryByteStream_v2State->bufferPos);
+
 	if (in_isTerminal || in_out_pMemoryByteStream_v2State->bufferSize == 
 		in_out_pMemoryByteStream_v2State->bufferPos)
-	{
 		in_out_pMemoryByteStream_v2State->isTerminated = true;
-		
-		if (out_pIsTerminal)
-			*out_pIsTerminal = (in_out_pMemoryByteStream_v2State->bufferSize == 
-			in_out_pMemoryByteStream_v2State->bufferPos);
-	}
 }
 
 void memoryByteReadStream_v2Read(void *in_out_pMemoryByteStream_v2State, 

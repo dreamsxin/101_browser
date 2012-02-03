@@ -119,6 +119,9 @@ void test_Unicode_Parser_UTF16()
 
 		parse_UTF16(memoryByteStreamReadInterface_v2_get(), &read_state,
 			memoryByteStreamWriteInterface_v2_get(), &write_state, true);
+
+		test(read_state.bufferPos == read_state.bufferSize);
+		test(read_state.isTerminated);
 	}
 
 }
