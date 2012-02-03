@@ -52,8 +52,8 @@ DLLEXPORT void memoryByteReadStream_v2Write(void *in_out_pMemoryByteStream_v2Rea
 	const void *in_pBuffer, size_t in_count, bool in_isTerminal, 
 	size_t *out_pCount, bool *out_pIsTerminal);
 
-DLLEXPORT ByteStreamInterface_v2 getMemoryByteStreamReadInterface_v2();
-DLLEXPORT ByteStreamInterface_v2 getMemoryByteStreamWriteInterface_v2();
+DLLEXPORT ByteStreamInterface_v2 memoryByteStreamReadInterface_v2_get();
+DLLEXPORT ByteStreamInterface_v2 memoryByteStreamWriteInterface_v2_get();
 
 #ifdef __cplusplus
 }

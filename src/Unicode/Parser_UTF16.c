@@ -97,7 +97,7 @@ begin_of_S:
 				if (currentWord < 0xD800 || currentWord >= 0xDC00)
 				{
 					// 0xDC00 <= currentWord < 0xE000: low surrogate
-					if (currentWord < 0xE000)
+					if (0xDC00 <= currentWord  && currentWord < 0xE000)
 					{
 						assert(currentWord >= 0xDC00);
 						currentCodePoint = cReplacementCharacter;

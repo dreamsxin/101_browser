@@ -67,12 +67,15 @@ void memoryByteStream_v2Copy(MemoryByteStream_v2State *in_out_pMemoryByteStream_
 	assert(out_pCount != NULL);
 	*out_pCount = in_count;
 
-	if (out_pIsTerminal)
-		*out_pIsTerminal = (in_out_pMemoryByteStream_v2State->bufferSize == in_out_pMemoryByteStream_v2State->bufferPos);
-
-	if (in_isTerminal && in_count, in_out_pMemoryByteStream_v2State->bufferSize == 
-		in_count, in_out_pMemoryByteStream_v2State->bufferPos)
+	if (in_isTerminal || in_out_pMemoryByteStream_v2State->bufferSize == 
+		in_out_pMemoryByteStream_v2State->bufferPos)
+	{
 		in_out_pMemoryByteStream_v2State->isTerminated = true;
+		
+		if (out_pIsTerminal)
+			*out_pIsTerminal = (in_out_pMemoryByteStream_v2State->bufferSize == 
+			in_out_pMemoryByteStream_v2State->bufferPos);
+	}
 }
 
 void memoryByteReadStream_v2Read(void *in_out_pMemoryByteStream_v2State, 
@@ -101,7 +104,7 @@ void memoryByteReadStream_v2Write(void *in_out_pMemoryByteStream_v2State,
 		in_count, in_isTerminal, out_pCount, out_pIsTerminal);
 }
 
-ByteStreamInterface_v2 getMemoryByteStreamReadInterface_v2()
+ByteStreamInterface_v2 memoryByteStreamReadInterface_v2_get()
 {
 	ByteStreamInterface_v2 out_byteStreamInterface;
 	memset(&out_byteStreamInterface, 0, sizeof(out_byteStreamInterface));
@@ -109,7 +112,7 @@ ByteStreamInterface_v2 getMemoryByteStreamReadInterface_v2()
 	return out_byteStreamInterface;
 }
 
-ByteStreamInterface_v2 getMemoryByteStreamWriteInterface_v2()
+ByteStreamInterface_v2 memoryByteStreamWriteInterface_v2_get()
 {
 	ByteStreamInterface_v2 out_byteStreamInterface;
 	memset(&out_byteStreamInterface, 0, sizeof(out_byteStreamInterface));

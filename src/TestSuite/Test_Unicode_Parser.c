@@ -15,6 +15,7 @@
  */
 
 #include "IO/MemoryByteStream.h"
+#include "IO/MemoryByteStream_v2.h"
 #include "IO/PipeStream.h"
 #include "Unicode/Parser.h"
 #include "TestSuite/Tests.h"
@@ -105,12 +106,43 @@ void test_Unicode_Parser_UTF8()
 
 void test_Unicode_Parser_UTF16()
 {
-	// TODO
+	UnicodeCodePoint out_buffer[32];
+	MemoryByteStream_v2State read_state;
+	MemoryByteStream_v2State write_state;
+	
+	memoryByteStream_v2WriteStateInit(&write_state, out_buffer, sizeof(out_buffer));
+
+	// Big Endian
+	{
+		const uint8_t in_buffer[] = { 0x00,  0xFF, 0x20, 0x20, 0xD7, 0xFF};
+		memoryByteStream_v2ReadStateInit(&read_state, in_buffer, sizeof(in_buffer));
+
+		parse_UTF16(memoryByteStreamReadInterface_v2_get(), &read_state,
+			memoryByteStreamWriteInterface_v2_get(), &write_state, true);
+	}
+
 }
 
 void test_Unicode_Parser_UTF32()
 {
-	// TODO
+	
+	
+	// Little Endian
+
+	
+	const uint8_t in_buffer[] = { 0x00 };
+	UnicodeCodePoint out_buffer[32];
+	MemoryByteStream_v2State read_state;
+	MemoryByteStream_v2State write_state;
+
+	memoryByteStream_v2ReadStateInit(&read_state, in_buffer, sizeof(in_buffer));
+	memoryByteStream_v2WriteStateInit(&write_state, out_buffer, sizeof(out_buffer));
+	
+	// Big Endian
+
+
+	// Little Endian
+
 }
 
 void test_Unicode_Parser()
