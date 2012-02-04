@@ -7,6 +7,8 @@ vsinstr out\vs2010\Debug\DNS.dll /COVERAGE
 vsinstr out\vs2010\Debug\GIF.dll /COVERAGE
 vsinstr out\vs2010\Debug\HTML5.dll /COVERAGE
 vsinstr out\vs2010\Debug\IO.dll /COVERAGE
+vsinstr out\vs2010\Debug\Unicode.dll /COVERAGE
+
 
 
 Start VSPerfMon.exe /COVERAGE /OUTPUT:testsuite
