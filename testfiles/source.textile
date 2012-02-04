@@ -70,6 +70,11 @@ h4. tc217.gif:
 http://phil.ipal.org/tc217.gif (linked from http://phil.ipal.org/tc.html)
 Referenced in http://en.wikipedia.org/w/index.php?title=Graphics_Interchange_Format&oldid=394783182#cite_ref-8
 
+h4. tumblr_lytmpoEsiT1qz4ssl.gif
+
+http://media.tumblr.com/tumblr_lytmpoEsiT1qz4ssl.gif
+Referenced in http://enthusiasms.org/post/16976438906
+
 h2. Subfolder "imagetestsuite"
 
 http://code.google.com/p/imagetestsuite/
