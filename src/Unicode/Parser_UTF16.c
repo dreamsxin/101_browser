@@ -145,6 +145,7 @@ begin_of_S:
 				else
 				{
 					currentCodePoint |= (currentWord & 0x3FFu);
+					currentCodePoint += 0x10000;
 				}
 
 				if (terminated)

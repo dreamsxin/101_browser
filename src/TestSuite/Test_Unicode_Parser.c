@@ -109,16 +109,36 @@ void test_Unicode_Parser_UTF16()
 	UnicodeCodePoint out_buffer[32];
 	MemoryByteStream_v2State readState;
 	MemoryByteStream_v2State writeState;
+	size_t idx;
+
+	const UnicodeCodePoint result[] = {
+		0x00FF, 0x2020, 0xD7FF, 
+
+		// Taken from http://en.wikipedia.org/w/index.php?title=UTF-16&oldid=474632903#Examples
+		0x007A, 0x6C34, 0x10000, 0x1D11E, 0x10FFFD
+
+	};
 	
 	memoryByteStream_v2WriteStateInit(&writeState, out_buffer, sizeof(out_buffer));
 
 	// Big Endian
 	{
 		const uint8_t in_buffer[] = {
-			0x00, 0xFF,
-			0x20, 0x20,
-			0xD7, 0xFF
+			0x00, 0xFF, 
+			0x20, 0x20, 
+			0xD7, 0xFF, 
+
+			// Taken from http://en.wikipedia.org/w/index.php?title=UTF-16&oldid=474632903#Examples
+			0x00, 0x7A, 
+			0x6C, 0x34, 
+			0xD8, 0x00, 0xDC, 0x00, 
+			0xD8, 0x34, 0xDD, 0x1E, 
+			0xDB, 0xFF, 0xDF, 0xFD
 		};
+
+		// Not really necessary, but won't mind
+		memoryByteStream_v2StateReset(&writeState);
+
 		memoryByteStream_v2ReadStateInit(&readState, in_buffer, sizeof(in_buffer));
 
 		parse_UTF16(memoryByteStreamReadInterface_v2_get(), &readState,
@@ -127,12 +147,46 @@ void test_Unicode_Parser_UTF16()
 		test(readState.bufferPos == readState.bufferSize);
 		test(readState.isTerminated);
 
-		test(3 * sizeof(UnicodeCodePoint) == writeState.bufferPos);
-		test(0x00FF == out_buffer[0]);
-		test(0x2020 == out_buffer[1]);
-		test(0xD7FF == out_buffer[2]);
+		test(sizeof(result) == writeState.bufferPos);
+
+		for (idx = 0; idx < sizeof(result)/sizeof(UnicodeCodePoint); idx++)
+		{
+			test(result[idx] == out_buffer[idx]);
+		}
 	}
 
+	// Little Endian
+	{
+		const uint8_t in_buffer[] = {
+			0xFF, 0x00, 
+			0x20, 0x20, 
+			0xFF, 0xD7, 
+
+			// Taken from http://en.wikipedia.org/w/index.php?title=UTF-16&oldid=474632903#Examples
+			0x7A, 0x00, 
+			0x34, 0x6C, 
+			0x00, 0xD8, 0x00, 0xDC, 
+			0x34, 0xD8, 0x1E, 0xDD, 
+			0xFF, 0xDB, 0xFD, 0xDF
+		};
+
+		memoryByteStream_v2StateReset(&writeState);
+
+		memoryByteStream_v2ReadStateInit(&readState, in_buffer, sizeof(in_buffer));
+
+		parse_UTF16(memoryByteStreamReadInterface_v2_get(), &readState,
+			memoryByteStreamWriteInterface_v2_get(), &writeState, false);
+
+		test(readState.bufferPos == readState.bufferSize);
+		test(readState.isTerminated);
+
+		test(sizeof(result) == writeState.bufferPos);
+
+		for (idx = 0; idx < sizeof(result)/sizeof(UnicodeCodePoint); idx++)
+		{
+			test(result[idx] == out_buffer[idx]);
+		}
+	}
 }
 
 void test_Unicode_Parser_UTF32()
