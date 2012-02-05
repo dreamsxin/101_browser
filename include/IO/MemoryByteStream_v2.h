@@ -34,14 +34,17 @@ typedef struct
 	size_t bufferSize;
 	size_t bufferPos;
 	bool isTerminated;
+	bool reportTerminationLate;
 } MemoryByteStream_v2State;
 
 DLLEXPORT void memoryByteStream_v2ReadStateInit(
 	MemoryByteStream_v2State *in_pMemoryByteStream_v2ReadState,
-	const void *in_pBuffer, size_t in_bufferSize);
+	const void *in_pBuffer, size_t in_bufferSize, 
+	bool in_reportTerminationLate);
 DLLEXPORT void memoryByteStream_v2WriteStateInit(
 	MemoryByteStream_v2State *in_pMemoryByteStream_v2WriteState,
-	void *in_pBuffer, size_t in_bufferSize);
+	void *in_pBuffer, size_t in_bufferSize, 
+	bool in_reportTerminationLate);
 
 DLLEXPORT void memoryByteStream_v2StateReset(MemoryByteStream_v2State *in_pMemoryByteStream_v2State);
 
