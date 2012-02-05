@@ -83,19 +83,14 @@ void memoryByteStream_v2Copy(MemoryByteStream_v2State *in_out_pMemoryByteStream_
 	{
 		in_out_pMemoryByteStream_v2State->isTerminated = (in_isTerminal || 
 			in_out_pMemoryByteStream_v2State->bufferSize == in_out_pMemoryByteStream_v2State->bufferPos);
-		
-		if (out_pIsTerminal)
-			*out_pIsTerminal = (in_isTerminal || 
-				in_out_pMemoryByteStream_v2State->bufferSize == 
-				in_out_pMemoryByteStream_v2State->bufferPos);
 	}
 	else
 	{
 		in_out_pMemoryByteStream_v2State->isTerminated = (in_isTerminal || readCount < in_count);
-
-		if (out_pIsTerminal)
-			*out_pIsTerminal = (in_isTerminal || readCount < in_count);
 	}
+
+	if (out_pIsTerminal)
+		*out_pIsTerminal = in_out_pMemoryByteStream_v2State->isTerminated;
 }
 
 void memoryByteReadStream_v2Read(void *in_out_pMemoryByteStream_v2State, 
