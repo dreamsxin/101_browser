@@ -153,6 +153,7 @@ module html5
     // metadata attributes
              attribute DOMString title;
              attribute DOMString lang;
+             attribute boolean translate;
              attribute DOMString dir;
              attribute DOMString className;
     readonly attribute DOMTokenList classList;
