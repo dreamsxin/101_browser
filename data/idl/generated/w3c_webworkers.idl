@@ -1,6 +1,5 @@
 module webworkers
 {
-  [NoInterfaceObject]
   interface WorkerGlobalScope : EventTarget {
     readonly attribute WorkerGlobalScope self;
     readonly attribute WorkerLocation location;
@@ -12,18 +11,16 @@ module webworkers
   };
   WorkerGlobalScope implements WorkerUtils;
 
-  interface DedicatedWorkerGlobalScope {
+  interface DedicatedWorkerGlobalScope : WorkerGlobalScope {
     void postMessage(any message, optional sequence<Transferable> transfer);
     [TreatNonCallableAsNull] attribute Function? onmessage;
   };
-  DedicatedWorkerGlobalScope implements WorkerGlobalScope;
 
   interface SharedWorkerGlobalScope : WorkerGlobalScope {
     readonly attribute DOMString name;
     readonly attribute ApplicationCache applicationCache;
     [TreatNonCallableAsNull] attribute Function? onconnect;
   };
-  SharedWorkerGlobalScope implements WorkerGlobalScope;
 
   [Constructor(DOMString type, optional ErrorEventInit eventInitDict)]
   interface ErrorEvent : Event {
