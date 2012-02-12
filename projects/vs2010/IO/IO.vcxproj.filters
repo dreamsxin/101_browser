@@ -51,6 +51,12 @@
     <ClInclude Include="..\..\..\include\IO\MemoryByteStream_v2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\IO\ByteStream_v3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\IO\MemoryByteStream_v3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\IO\fread.c">
@@ -81,6 +87,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\IO\MemoryByteStream_v2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\IO\MemoryByteStream_v3.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
