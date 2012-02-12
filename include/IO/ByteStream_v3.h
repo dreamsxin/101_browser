@@ -14,8 +14,8 @@
 * limitations under the License.
 */
 
-#ifndef _MTAx_IO_ByteStream_v2_h
-#define _MTAx_IO_ByteStream_v2_h
+#ifndef _MTAx_IO_ByteStream_v3_h
+#define _MTAx_IO_ByteStream_v3_h
 
 #include "MiniStdlib/cstddef.h"
 #include "MiniStdlib/cstdbool.h"
