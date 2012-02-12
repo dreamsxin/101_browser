@@ -55,13 +55,13 @@ module xhr
     // response
     readonly attribute unsigned short status;
     readonly attribute DOMString statusText;
-    DOMString getResponseHeader(DOMString header);
+    DOMString? getResponseHeader(DOMString header);
     DOMString getAllResponseHeaders();
     void overrideMimeType(DOMString mime);
              attribute XMLHttpRequestResponseType responseType;
     readonly attribute any response;
     readonly attribute DOMString responseText;
-    readonly attribute Document responseXML;
+    readonly attribute Document? responseXML;
   };
   
   [Constructor]
