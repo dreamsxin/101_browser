@@ -20,15 +20,14 @@
 #include <assert.h>
 
 ReadResult parse_UTF16(
-	ByteStreamInterface_v2 in_readInterface, 
+	ByteStreamReadInterface_v3 in_readInterface, 
 	void *in_pReadState,
-	ByteStreamInterface_v2 in_writeInterface,
+	ByteStreamWriteInterface_v3 in_writeInterface,
 	void *in_pWriteState, 
 	bool in_bigEndian)
 {
 	UnicodeCodePoint currentCodePoint;
 	size_t rwCount;
-	bool terminated;
 	extern const UnicodeCodePoint cReplacementCharacter;
 	/*
 	* This variable is set to true, if we shall parse a second
@@ -39,18 +38,20 @@ ReadResult parse_UTF16(
 	assert(in_readInterface.mpfRead != NULL);
 	assert(in_writeInterface.mpfWrite != NULL);
 
+	if (in_readInterface.commonByteStreamInterface.mpfIsTerminated(in_pReadState))
+		goto terminate;
+
 	while (1)
 	{
 		uint16_t currentWord;
 
-		in_readInterface.mpfRead(in_pReadState, &currentWord, 2, false, 
-			&rwCount, &terminated);
+		rwCount = in_readInterface.mpfRead(in_pReadState, &currentWord, 2);
 
 		assert(rwCount <= 2);
 
 		if (0 == rwCount)
 		{
-			assert(terminated);
+			assert(in_readInterface.commonByteStreamInterface.mpfIsTerminated(in_pReadState));
 
 			if (!lStateIsSecondByte)
 				goto terminate;
@@ -59,7 +60,7 @@ ReadResult parse_UTF16(
 		}
 		else if (1 == rwCount)
 		{
-			assert(terminated);
+			assert(in_readInterface.commonByteStreamInterface.mpfIsTerminated(in_pReadState));
 
 			if (!lStateIsSecondByte)
 			{
@@ -74,13 +75,19 @@ ReadResult parse_UTF16(
 					UnicodeCodePoint codepoints[2] = { cReplacementCharacter, 
 						cReplacementCharacter };
 
-					in_writeInterface.mpfWrite(in_pWriteState, codepoints, 
-						sizeof(codepoints), true, 
-						&rwCount, NULL);
-					if (sizeof(codepoints) == rwCount)
+					rwCount = in_writeInterface.mpfWrite(in_pWriteState, codepoints, 
+						sizeof(codepoints));
+
+					if (sizeof(codepoints) != rwCount)
+					{
+						assert(in_writeInterface.commonByteStreamInterface.mpfIsTerminated(in_pWriteState));
 						return ReadResultWriteError;
+					}
 					else
+					{
+						in_writeInterface.commonByteStreamInterface.mpfTerminate(in_pWriteState);
 						return ReadResultOK;
+					}
 				}
 			}
 		}
@@ -105,11 +112,11 @@ begin_of_S:
 					else
 						currentCodePoint = currentWord;
 
-					if (terminated)
+					if (in_readInterface.commonByteStreamInterface.mpfIsTerminated(in_pReadState))
 						goto write_terminal_character;
 
-					in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, 
-						sizeof(UnicodeCodePoint), false, &rwCount, NULL);
+					rwCount = in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, 
+						sizeof(UnicodeCodePoint));
 
 					if (sizeof(UnicodeCodePoint) != rwCount)
 						return ReadResultWriteError;
@@ -119,7 +126,7 @@ begin_of_S:
 					assert(currentWord >= 0xD800);
 					assert(currentWord <= 0xDBFF);
 
-					if (terminated)
+					if (in_readInterface.commonByteStreamInterface.mpfIsTerminated(in_pReadState))
 						goto write_terminal_replacement_character;
 
 					currentCodePoint = (currentWord & 0x3FFu) << 10u;
@@ -134,8 +141,8 @@ begin_of_S:
 				{
 					currentCodePoint = cReplacementCharacter;
 
-					in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, 
-						sizeof(UnicodeCodePoint), false, &rwCount, NULL);
+					rwCount = in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, 
+						sizeof(UnicodeCodePoint));
 
 					if (sizeof(UnicodeCodePoint) != rwCount)
 						return ReadResultWriteError;
@@ -148,11 +155,11 @@ begin_of_S:
 					currentCodePoint += 0x10000;
 				}
 
-				if (terminated)
+				if (in_readInterface.commonByteStreamInterface.mpfIsTerminated(in_pReadState))
 					goto write_terminal_character;
 
-				in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, 
-					sizeof(UnicodeCodePoint), false, &rwCount, NULL);
+				rwCount = in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, 
+					sizeof(UnicodeCodePoint));
 
 				if (sizeof(UnicodeCodePoint) != rwCount)
 					return ReadResultWriteError;
@@ -163,14 +170,18 @@ begin_of_S:
 write_terminal_replacement_character:
 	currentCodePoint = cReplacementCharacter;
 write_terminal_character:
-	in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, 
-		sizeof(UnicodeCodePoint), true, &rwCount, NULL);
-	if (sizeof(UnicodeCodePoint) == rwCount)
-		return ReadResultOK;
-	else
+	rwCount = in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, 
+		sizeof(UnicodeCodePoint));
+
+	if (sizeof(UnicodeCodePoint) != rwCount)
 		return ReadResultWriteError;
+	else
+	{
+		in_writeInterface.commonByteStreamInterface.mpfTerminate(in_pWriteState);
+		return ReadResultOK;
+	}
 
 terminate:
-	in_writeInterface.mpfWrite(in_pWriteState, NULL, 0, true, NULL, false);
+	in_writeInterface.commonByteStreamInterface.mpfTerminate(in_pWriteState);
 	return ReadResultOK;
 }

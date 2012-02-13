@@ -21,7 +21,7 @@
 #include "MiniStdlib/declspec.h"
 #include "MiniStdlib/cstdbool.h"
 #include "IO/ByteStream.h"
-#include "IO/ByteStream_v2.h"
+#include "IO/ByteStream_v3.h"
 #include "Util/ReadResult.h"
 
 #ifdef __cplusplus
@@ -35,16 +35,16 @@ DLLEXPORT ReadResult parse_UTF8(
 	void *in_pWriteState);
 
 DLLEXPORT ReadResult parse_UTF16(
-	ByteStreamInterface_v2 in_readInterface, 
+	ByteStreamReadInterface_v3 in_readInterface, 
 	void *in_pReadState,
-	ByteStreamInterface_v2 in_writeInterface,
+	ByteStreamWriteInterface_v3 in_writeInterface,
 	void *in_pWriteState, 
 	bool in_bigEndian);
 
 DLLEXPORT ReadResult parse_UTF32(
-	ByteStreamInterface_v2 in_readInterface, 
+	ByteStreamReadInterface_v3 in_readInterface, 
 	void *in_pReadState,
-	ByteStreamInterface_v2 in_writeInterface,
+	ByteStreamWriteInterface_v3 in_writeInterface,
 	void *in_pWriteState, 
 	bool in_bigEndian);
 

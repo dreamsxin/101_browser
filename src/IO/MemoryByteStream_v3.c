@@ -25,11 +25,9 @@ void memoryByteStream_v3StateInit(
 	size_t in_bufferSize, bool in_terminateAfterLastOperation)
 {
 	out_pMemoryByteStream_v3State->bufferSize = in_bufferSize;
-	out_pMemoryByteStream_v3State->bufferPos = 0;
-
-	out_pMemoryByteStream_v3State->isTerminated = 
-		(in_terminateAfterLastOperation && 0 == in_bufferSize);
 	out_pMemoryByteStream_v3State->terminateAfterLastOperation = in_terminateAfterLastOperation;
+
+	memoryByteStream_v3StateReset(out_pMemoryByteStream_v3State);
 }
 
 void memoryByteStream_v3ReadStateInit(
@@ -74,7 +72,8 @@ void memoryByteStream_v3Terminate(void *out_pByteStreamState)
 void memoryByteStream_v3StateReset(MemoryByteStream_v3State *in_pMemoryByteStream_v3State)
 {
 	in_pMemoryByteStream_v3State->bufferPos = 0;
-	in_pMemoryByteStream_v3State->isTerminated = false;
+	in_pMemoryByteStream_v3State->isTerminated = (in_pMemoryByteStream_v3State->terminateAfterLastOperation && 
+		0 == in_pMemoryByteStream_v3State->bufferSize);
 }
 
 size_t memoryByteStream_v3Copy(MemoryByteStream_v3State *in_out_pMemoryByteStream_v3State, 

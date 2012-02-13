@@ -40,7 +40,7 @@ DLLEXPORT void memoryByteStream_v3ReadStateInit(
 	MemoryByteStream_v3State *out_pMemoryByteStream_v3ReadState,
 	const void *in_pBuffer, size_t in_bufferSize, 
 	bool in_terminateAfterLastOperation);
-DLLEXPORT void memoryByteStream_v2WriteStateInit(
+DLLEXPORT void memoryByteStream_v3WriteStateInit(
 	MemoryByteStream_v3State *out_pMemoryByteStream_v3WriteState,
 	void *in_pBuffer, size_t in_bufferSize, 
 	bool in_terminateAfterLastOperation);

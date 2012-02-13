@@ -89,7 +89,6 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\include\IO\BidirectionalStream.h" />
     <ClInclude Include="..\..\..\include\IO\BitRead.h" />
-    <ClInclude Include="..\..\..\include\IO\ByteStream_v2.h" />
     <ClInclude Include="..\..\..\include\IO\ByteStream_v3.h" />
     <ClInclude Include="..\..\..\include\IO\CoroutineStream.h" />
     <ClInclude Include="..\..\..\include\IO\ExtendedBidirectionalStream.h" />
@@ -97,7 +96,6 @@
     <ClInclude Include="..\..\..\include\IO\fread.h" />
     <ClInclude Include="..\..\..\include\IO\ByteStream.h" />
     <ClInclude Include="..\..\..\include\IO\MemoryByteStream.h" />
-    <ClInclude Include="..\..\..\include\IO\MemoryByteStream_v2.h" />
     <ClInclude Include="..\..\..\include\IO\MemoryByteStream_v3.h" />
     <ClInclude Include="..\..\..\include\IO\PipeStream.h" />
     <ClInclude Include="..\..\..\include\IO\SetjmpStream.h" />
@@ -110,7 +108,6 @@
     <ClCompile Include="..\..\..\src\IO\FileByteStream.c" />
     <ClCompile Include="..\..\..\src\IO\fread.c" />
     <ClCompile Include="..\..\..\src\IO\MemoryByteStream.c" />
-    <ClCompile Include="..\..\..\src\IO\MemoryByteStream_v2.c" />
     <ClCompile Include="..\..\..\src\IO\MemoryByteStream_v3.c" />
     <ClCompile Include="..\..\..\src\IO\PipeStream.c" />
     <ClCompile Include="..\..\..\src\IO\SetjmpStream.c" />
