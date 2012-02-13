@@ -24,15 +24,9 @@
 extern "C" {
 #endif
 
-typedef enum
-{
-	ByteStreamType_TerminateAfterLastRead = 0,
-	ByteStreamType_TerminateAfterFailedRead = 1
-} ByteStreamType_v3;
-
 typedef struct
 {
-	ByteStreamType_v3 (*mpfGetType)(const void *in_pByteStreamState);
+	bool (*mpfGetTerminateAfterLastOperation)(const void *in_pByteStreamState);
 	bool (*mpfIsTerminated)(const void *in_pByteStreamState);
 	void (*mpfTerminate)(void *out_pByteStreamState);
 } CommonByteStreamInterface_v3;

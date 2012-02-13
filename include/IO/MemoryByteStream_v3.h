@@ -26,24 +26,24 @@ extern "C" {
 
 typedef struct
 {
-	ByteStreamType_v3 type;
 	union {
 		const void *readBuffer;
 		void *writeBuffer;
 	} rwBuffer;
 	size_t bufferSize;
 	size_t bufferPos;
+	bool terminateAfterLastOperation;
 	bool isTerminated;
 } MemoryByteStream_v3State;
 
 DLLEXPORT void memoryByteStream_v3ReadStateInit(
 	MemoryByteStream_v3State *out_pMemoryByteStream_v3ReadState,
 	const void *in_pBuffer, size_t in_bufferSize, 
-	ByteStreamType_v3 in_type);
+	bool in_terminateAfterLastOperation);
 DLLEXPORT void memoryByteStream_v2WriteStateInit(
 	MemoryByteStream_v3State *out_pMemoryByteStream_v3WriteState,
 	void *in_pBuffer, size_t in_bufferSize, 
-	ByteStreamType_v3 in_type);
+	bool in_terminateAfterLastOperation);
 
 DLLEXPORT void memoryByteStream_v3StateReset(MemoryByteStream_v3State *in_pMemoryByteStream_v3State);
 
@@ -52,7 +52,7 @@ size_t memoryByteStream_v3Read(void *in_out_pByteStreamState,
 size_t memoryByteStream_v3Write(void *in_out_pByteStreamState, 
 	const void *in_pBuffer, size_t in_count);
 
-ByteStreamType_v3 memoryByteStream_v3GetType(const void *in_pByteStreamState);
+bool memoryByteStream_v3GetTerminateAfterLastOperation(const void *in_pByteStreamState);
 bool memoryByteStream_v3IsTerminated(const void *in_pByteStreamState);
 void memoryByteStream_v3Terminate(void *out_pByteStreamState);
 

@@ -22,41 +22,41 @@
 
 void memoryByteStream_v3StateInit(
 	MemoryByteStream_v3State *out_pMemoryByteStream_v3State,
-	size_t in_bufferSize, ByteStreamType_v3 in_type)
+	size_t in_bufferSize, bool in_terminateAfterLastOperation)
 {
-	assert(ByteStreamType_TerminateAfterLastRead == in_type ||
-		ByteStreamType_TerminateAfterFailedRead == in_type);
-	
 	out_pMemoryByteStream_v3State->bufferSize = in_bufferSize;
 	out_pMemoryByteStream_v3State->bufferPos = 0;
 
 	out_pMemoryByteStream_v3State->isTerminated = 
-		(ByteStreamType_TerminateAfterLastRead == in_type && 0 == in_bufferSize);
-	out_pMemoryByteStream_v3State->type = in_type;
+		(in_terminateAfterLastOperation && 0 == in_bufferSize);
+	out_pMemoryByteStream_v3State->terminateAfterLastOperation = in_terminateAfterLastOperation;
 }
 
 void memoryByteStream_v3ReadStateInit(
 	MemoryByteStream_v3State *out_pMemoryByteStream_v3ReadState,
 	const void *in_pBuffer, size_t in_bufferSize, 
-	ByteStreamType_v3 in_type)
+	bool in_terminateAfterLastOperation)
 {
 	memoryByteStream_v3StateInit(out_pMemoryByteStream_v3ReadState, 
-		in_bufferSize, in_type);
+		in_bufferSize, in_terminateAfterLastOperation);
 
+	out_pMemoryByteStream_v3ReadState->rwBuffer.readBuffer = in_pBuffer;
 }
 
 void memoryByteStream_v3WriteStateInit(
 	MemoryByteStream_v3State *out_pMemoryByteStream_v3WriteState,
 	void *in_pBuffer, size_t in_bufferSize, 
-	ByteStreamType_v3 in_type)
+	bool in_terminateAfterLastOperation)
 {
 	memoryByteStream_v3StateInit(out_pMemoryByteStream_v3WriteState, 
-		in_bufferSize, in_type);
+		in_bufferSize, in_terminateAfterLastOperation);
+	
+	out_pMemoryByteStream_v3WriteState->rwBuffer.writeBuffer = in_pBuffer;
 }
 
-ByteStreamType_v3 memoryByteStream_v3GetType(const void *in_pByteStreamState)
+bool memoryByteStream_v3GetTerminateAfterLastOperation(const void *in_pByteStreamState)
 {
-	return ((const MemoryByteStream_v3State *) in_pByteStreamState)->type;
+	return ((const MemoryByteStream_v3State *) in_pByteStreamState)->terminateAfterLastOperation;;
 }
 
 bool memoryByteStream_v3IsTerminated(const void *in_pByteStreamState)
@@ -94,14 +94,14 @@ size_t memoryByteStream_v3Copy(MemoryByteStream_v3State *in_out_pMemoryByteStrea
 
 	assert(in_out_pMemoryByteStream_v3State->bufferPos <= in_out_pMemoryByteStream_v3State->bufferSize);
 
-	if (ByteStreamType_TerminateAfterLastRead == memoryByteStream_v3GetType(in_out_pMemoryByteStream_v3State))
+	if (memoryByteStream_v3GetTerminateAfterLastOperation(in_out_pMemoryByteStream_v3State))
 	{
 		in_out_pMemoryByteStream_v3State->isTerminated = 
 			(in_out_pMemoryByteStream_v3State->bufferSize == in_out_pMemoryByteStream_v3State->bufferPos);
 	}
 	else
 	{
-		assert(ByteStreamType_TerminateAfterFailedRead == memoryByteStream_v3GetType(in_out_pMemoryByteStream_v3State));
+		assert(!memoryByteStream_v3GetTerminateAfterLastOperation(in_out_pMemoryByteStream_v3State));
 		in_out_pMemoryByteStream_v3State->isTerminated = (copyCount < in_count);
 	}
 
@@ -132,7 +132,7 @@ size_t memoryByteStream_v3Write(void *in_out_pByteStreamState,
 
 void initCommonInterface(CommonByteStreamInterface_v3 *out_pCommon)
 {
-	out_pCommon->mpfGetType = memoryByteStream_v3GetType;
+	out_pCommon->mpfGetTerminateAfterLastOperation = memoryByteStream_v3GetTerminateAfterLastOperation;
 	out_pCommon->mpfIsTerminated = memoryByteStream_v3IsTerminated;
 	out_pCommon->mpfTerminate = memoryByteStream_v3Terminate;
 }
