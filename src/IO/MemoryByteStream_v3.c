@@ -131,7 +131,6 @@ size_t memoryByteStream_v3Write(void *in_out_pByteStreamState,
 
 void initCommonInterface(CommonByteStreamInterface_v3 *out_pCommon)
 {
-	out_pCommon->mpfGetTerminateAfterLastOperation = memoryByteStream_v3GetTerminateAfterLastOperation;
 	out_pCommon->mpfIsTerminated = memoryByteStream_v3IsTerminated;
 	out_pCommon->mpfTerminate = memoryByteStream_v3Terminate;
 }
