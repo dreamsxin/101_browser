@@ -76,8 +76,24 @@ void test_readDNS()
 {
 	char server[] = 
 #if 1
+		/*
+		* Google DNS
+		* has adresses
+		* 8.8.8.8 and
+		* 8.8.4.4
+		* according to
+		* http://code.google.com/intl/de/speed/public-dns/
+		*/
 		"8.8.8.8";
 #endif
+		/*
+		* Google DNS' IPv6 adresses are
+		* 2001:4860:4860::8888
+		* 2001:4860:4860::8844
+		* according to
+		* https://groups.google.com/group/public-dns-announce/msg/938acdc14aeb96d0
+		*/
+
 #if 0
 		"217.237.149.205";
 #endif
