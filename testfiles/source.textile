@@ -123,6 +123,14 @@ http://www.reddit.com/r/programming/comments/9szpc/jsonlint_a_handy_json_validat
 
 Given as an example in the FAQ of http://jsonlint.com
 
+h4. jsonlint_utf8.json
+
+A simple copy of jsonlint_a_handy_json_validator_and_reformatter.json
+
+h4. jsonlint_utf[16|32][b|l]e.json
+
+jsonlint_utf8.json converted to these Unicode representations - without BOM, as the JSON standard requires. Created by create_json_files.bat in util folder.
+
 h4. sample.json
 
 From sample.zip of the project json-test-suite (http://code.google.com/p/json-test-suite/)
