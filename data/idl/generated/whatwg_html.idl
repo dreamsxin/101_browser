@@ -1216,6 +1216,7 @@ module html
              attribute boolean disabled;
              attribute boolean checked;
              attribute DOMString radiogroup;
+    readonly attribute HTMLElement? command;
   };
 
   interface HTMLMenuElement : HTMLElement {
