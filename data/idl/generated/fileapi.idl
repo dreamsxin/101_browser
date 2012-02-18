@@ -6,7 +6,7 @@ module fileapi
         readonly attribute unsigned long length;
       };
         
-      [Constructor, Constructor(any[] blobParts, optional BlobPropertyBag options)] 
+      [Constructor, Constructor((ArrayBuffer or Blob or DOMString)[] blobParts, optional BlobPropertyBag options)] 
       interface Blob {
         
         readonly attribute unsigned long long size;
@@ -27,11 +27,12 @@ module fileapi
   	
       };
         
-  	  interface File : Blob {
+  interface File : Blob {
   
-  	      readonly attribute DOMString name;
-  	      readonly attribute Date lastModifiedDate;
-  	};
+    readonly attribute DOMString name;
+    readonly attribute Date? lastModifiedDate;
+  
+  };
   	    
   
   	[Constructor]
@@ -53,7 +54,7 @@ module fileapi
   	  readonly attribute unsigned short readyState;
   
   	  // File or Blob data
-  	  readonly attribute any result;
+  	  readonly attribute (DOMString or ArrayBuffer)? result;
   
   	  readonly attribute DOMError error;
   
