@@ -106,7 +106,7 @@ void test_Unicode_Parser_UTF8()
 
 void test_Unicode_Parser_UTF16()
 {
-	UnicodeCodePoint out_buffer[32];
+	UnicodeCodePoint bufferOut[32];
 	MemoryByteStream_v3State readState;
 	MemoryByteStream_v3State writeState;
 	size_t idx;
@@ -123,11 +123,11 @@ void test_Unicode_Parser_UTF16()
 	
 	for (terminateAfterLastOperation = 0; terminateAfterLastOperation < 2; terminateAfterLastOperation++)
 	{
-		memoryByteStream_v3WriteStateInit(&writeState, out_buffer, sizeof(out_buffer), false);
+		memoryByteStream_v3WriteStateInit(&writeState, bufferOut, sizeof(bufferOut), false);
 
 		// Big Endian
 		{
-			const uint8_t in_buffer[] = {
+			const uint8_t bufferIn[] = {
 				0x00, 0xFF, 
 				0x20, 0x20, 
 				0xD7, 0xFF, 
@@ -142,7 +142,7 @@ void test_Unicode_Parser_UTF16()
 
 			memoryByteStream_v3StateReset(&writeState);
 
-			memoryByteStream_v3ReadStateInit(&readState, in_buffer, sizeof(in_buffer), 
+			memoryByteStream_v3ReadStateInit(&readState, bufferIn, sizeof(bufferIn), 
 				(bool) terminateAfterLastOperation);
 
 			readResult = parse_UTF16(memoryByteStreamReadInterface_v3_get(), &readState,
@@ -156,13 +156,13 @@ void test_Unicode_Parser_UTF16()
 
 			for (idx = 0; idx < sizeof(result)/sizeof(UnicodeCodePoint); idx++)
 			{
-				test(result[idx] == out_buffer[idx]);
+				test(result[idx] == bufferOut[idx]);
 			}
 		}
 
 		// Little Endian
 		{
-			const uint8_t in_buffer[] = {
+			const uint8_t bufferIn[] = {
 				0xFF, 0x00, 
 				0x20, 0x20, 
 				0xFF, 0xD7, 
@@ -177,7 +177,7 @@ void test_Unicode_Parser_UTF16()
 
 			memoryByteStream_v3StateReset(&writeState);
 
-			memoryByteStream_v3ReadStateInit(&readState, in_buffer, sizeof(in_buffer), 
+			memoryByteStream_v3ReadStateInit(&readState, bufferIn, sizeof(bufferIn), 
 				(bool) terminateAfterLastOperation);
 
 			readResult = parse_UTF16(memoryByteStreamReadInterface_v3_get(), &readState,
@@ -191,7 +191,7 @@ void test_Unicode_Parser_UTF16()
 
 			for (idx = 0; idx < sizeof(result)/sizeof(UnicodeCodePoint); idx++)
 			{
-				test(result[idx] == out_buffer[idx]);
+				test(result[idx] == bufferOut[idx]);
 			}
 		}
 	}
@@ -199,24 +199,97 @@ void test_Unicode_Parser_UTF16()
 
 void test_Unicode_Parser_UTF32()
 {
-	
-	
-	// Little Endian
+	UnicodeCodePoint bufferOut[32];
+	MemoryByteStream_v3State readState;
+	MemoryByteStream_v3State writeState;
+	size_t idx;
+	uint8_t terminateAfterLastOperation;
+	ReadResult readResult;
 
-	
-	const uint8_t in_buffer[] = { 0x00 };
-	UnicodeCodePoint out_buffer[32];
-	MemoryByteStream_v3State read_state;
-	MemoryByteStream_v3State write_state;
+	const UnicodeCodePoint result[] = {
+		0x00, 
+		0xD7FF, 
+		0xFFFD, // replacement character
+		0xFFFD, // replacement character
+		0xE000, 
+		0x10FFFF, 
+		0xFFFD, // replacement character
+		0xFFFD, // replacement character
+		0xFFFD  // replacement character
+	};
 
-	memoryByteStream_v3ReadStateInit(&read_state, in_buffer, sizeof(in_buffer), false);
-	memoryByteStream_v3WriteStateInit(&write_state, out_buffer, sizeof(out_buffer), false);
-	
-	// Big Endian
+	for (terminateAfterLastOperation = 0; terminateAfterLastOperation < 2; terminateAfterLastOperation++)
+	{
+		memoryByteStream_v3WriteStateInit(&writeState, bufferOut, sizeof(bufferOut), false);
 
+		// Big Endian
+		{
+			const uint8_t bufferIn[] = {
+				0x00, 0x00, 0x00, 0x00, 
+				0x00, 0x00, 0xD7, 0xFF, 
+				0x00, 0x00, 0xD8, 0x00, 
+				0x00, 0x00, 0xDF, 0xFF, 
+				0x00, 0x00, 0xE0, 0x00, 
+				0x00, 0x10, 0xFF, 0xFF, 
+				0x00, 0x11, 0x00, 0x00, 
+				0xFF, 0xFF, 0xFF, 0xFF, 
+				0x00, 0x00, 0x00
+			};
 
-	// Little Endian
+			memoryByteStream_v3StateReset(&writeState);
 
+			memoryByteStream_v3ReadStateInit(&readState, bufferIn, sizeof(bufferIn), 
+				(bool) terminateAfterLastOperation);
+
+			readResult = parse_UTF32(memoryByteStreamReadInterface_v3_get(), &readState,
+				memoryByteStreamWriteInterface_v3_get(), &writeState, true);
+			
+			test(ReadResultOK == readResult);
+			test(readState.bufferPos == readState.bufferSize);
+			test(readState.isTerminated);
+
+			test(sizeof(result) == writeState.bufferPos);
+
+			for (idx = 0; idx < sizeof(result)/sizeof(UnicodeCodePoint); idx++)
+			{
+				test(result[idx] == bufferOut[idx]);
+			}
+		}
+
+		// Little Endian
+		{
+			const uint8_t bufferIn[] = {
+				0x00, 0x00, 0x00, 0x00, 
+				0xFF, 0xD7, 0x00, 0x00, 
+				0x00, 0xD8, 0x00, 0x00, 
+				0xFF, 0xDF, 0x00, 0x00, 
+				0x00, 0xE0, 0x00, 0x00, 
+				0xFF, 0xFF, 0x10, 0x00, 
+				0x00, 0x00, 0x11, 0x00, 
+				0xFF, 0xFF, 0xFF, 0xFF, 
+				0x20, 0x00, 0x00
+			};
+
+			memoryByteStream_v3StateReset(&writeState);
+
+			memoryByteStream_v3ReadStateInit(&readState, bufferIn, sizeof(bufferIn), 
+				(bool) terminateAfterLastOperation);
+
+			readResult = parse_UTF32(memoryByteStreamReadInterface_v3_get(), &readState,
+				memoryByteStreamWriteInterface_v3_get(), &writeState, false);
+			
+			test(ReadResultOK == readResult);
+			test(readState.bufferPos == readState.bufferSize);
+			test(readState.isTerminated);
+
+			test(sizeof(result) == writeState.bufferPos);
+
+			for (idx = 0; idx < sizeof(result)/sizeof(UnicodeCodePoint); idx++)
+			{
+				test(result[idx] == bufferOut[idx]);
+			}
+		}
+	}
 }
 
 void test_Unicode_Parser()

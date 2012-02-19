@@ -175,11 +175,7 @@ write_terminal_character:
 
 	if (sizeof(UnicodeCodePoint) != rwCount)
 		return ReadResultWriteError;
-	else
-	{
-		in_writeInterface.commonByteStreamInterface.mpfTerminate(in_pWriteState);
-		return ReadResultOK;
-	}
+	// Otherwise continue and terminate
 
 terminate:
 	in_writeInterface.commonByteStreamInterface.mpfTerminate(in_pWriteState);
