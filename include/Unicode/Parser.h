@@ -28,6 +28,37 @@
 extern "C" {
 #endif
 
+typedef struct
+{
+	ByteStreamInterface in_readInterface;
+	void *in_pReadState;
+} ParserState;
+
+typedef struct
+{
+	// Permanent settings
+	ParserState parserState;
+	bool bigEndian;
+
+	// Temporary variables
+	UnicodeCodePoint currentCodePoint;
+	size_t rwCount;
+	bool isSecondByte;
+	// TODO: Try to remove necessity
+	uint16_t currentWord;
+} UTF16_State;
+
+typedef struct
+{
+	// Permanent settings
+	ParserState parserState;
+	bool bigEndian;
+
+	// Temporary variables
+	UnicodeCodePoint currentCodePoint;
+	size_t rwCount;
+} UTF32_State;
+
 DLLEXPORT ReadResult parse_UTF8(
 	ByteStreamInterface in_readInterface, 
 	void *in_pReadState,
