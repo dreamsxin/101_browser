@@ -44,7 +44,6 @@ typedef struct
 	UnicodeCodePoint currentCodePoint;
 	size_t rwCount;
 	bool isSecondByte;
-	// TODO: Try to remove necessity
 	uint16_t currentWord;
 } UTF16_State;
 

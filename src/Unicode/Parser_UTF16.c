@@ -34,6 +34,7 @@ ReadResult parse_UTF16(
 	* byte of a surrogate.
 	*/
 	bool lStateIsSecondByte = false;
+	uint16_t currentWord;
 
 	assert(in_readInterface.mpfRead != NULL);
 	assert(in_writeInterface.mpfWrite != NULL);
@@ -43,8 +44,6 @@ ReadResult parse_UTF16(
 
 	while (1)
 	{
-		uint16_t currentWord;
-
 		rwCount = in_readInterface.mpfRead(in_pReadState, &currentWord, 2);
 
 		assert(rwCount <= 2);
@@ -68,6 +67,14 @@ ReadResult parse_UTF16(
 			}
 			else
 			{
+				/*
+				* Q: Why this line?
+				* A: Because we read only one byte (the lower one), we don't 
+				*    know what the value of the higher byte is. It can be
+				*    anything.
+				*/
+				currentWord = currentWord & 0xFF;
+
 				if (currentWord >= 0xDC && currentWord <= 0xDF)
 					goto write_terminal_replacement_character;
 				else
