@@ -73,8 +73,8 @@ module domcore
   };
 
   interface EventTarget {
-    void addEventListener(DOMString type, EventListener? listener, optional boolean capture = false);
-    void removeEventListener(DOMString type, EventListener? listener, optional boolean capture = false);
+    void addEventListener(DOMString type, EventListener? callback, optional boolean capture = false);
+    void removeEventListener(DOMString type, EventListener? callback, optional boolean capture = false);
     boolean dispatchEvent(Event event);
   };
   
@@ -157,6 +157,7 @@ module domcore
     Node removeChild(Node child);
     void normalize();
   
+    
     Node cloneNode(optional boolean deep = true);
     boolean isEqualNode(Node? node);
   
