@@ -21,10 +21,7 @@ module html
              attribute unsigned long length; // overrides inherited length
     legacycaller getter object? namedItem(DOMString name); // overrides inherited namedItem()
     setter creator void (unsigned long index, HTMLOptionElement option);
-    void add(HTMLOptionElement element, optional HTMLElement? before);
-    void add(HTMLOptGroupElement element, optional HTMLElement? before);
-    void add(HTMLOptionElement element, long before);
-    void add(HTMLOptGroupElement element, long before);
+    void add((HTMLOptionElement or HTMLOptGroupElement) element, optional (HTMLElement or long)? before = null);
     void remove(long index);
              attribute long selectedIndex;
   };
@@ -687,12 +684,12 @@ module html
              attribute double startTime;
              attribute double endTime;
              attribute boolean pauseOnExit;
-             attribute DOMString direction;
+             attribute DOMString vertical;
              attribute boolean snapToLines;
-             attribute long linePosition;
-             attribute long textPosition;
+             attribute long line;
+             attribute long position;
              attribute long size;
-             attribute DOMString alignment;
+             attribute DOMString align;
              attribute DOMString text;
     DocumentFragment getCueAsHTML();
   
@@ -720,7 +717,7 @@ module html
              attribute unsigned long height;
   
     DOMString toDataURL(optional DOMString type, any... args);
-    void toBlob(FileCallback? callback, optional DOMString type, any... args);
+    void toBlob(FileCallback? _callback, optional DOMString type, any... args);
   
     object? getContext(DOMString contextId, any... args);
   };
@@ -750,9 +747,7 @@ module html
              attribute any fillStyle; // (default black)
     CanvasGradient createLinearGradient(double x0, double y0, double x1, double y1);
     CanvasGradient createRadialGradient(double x0, double y0, double r0, double x1, double y1, double r1);
-    CanvasPattern createPattern(HTMLImageElement image, DOMString repetition);
-    CanvasPattern createPattern(HTMLCanvasElement image, DOMString repetition);
-    CanvasPattern createPattern(HTMLVideoElement image, DOMString repetition);
+    CanvasPattern createPattern((HTMLImageElement or HTMLCanvasElement or HTMLVideoElement) image, DOMString repetition);
   
     // line caps/joins
              attribute double lineWidth; // (default 1)
@@ -798,15 +793,9 @@ module html
     TextMetrics measureText(DOMString text);
   
     // drawing images
-    void drawImage(HTMLImageElement image, double dx, double dy);
-    void drawImage(HTMLImageElement image, double dx, double dy, double dw, double dh);
-    void drawImage(HTMLImageElement image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh);
-    void drawImage(HTMLCanvasElement image, double dx, double dy);
-    void drawImage(HTMLCanvasElement image, double dx, double dy, double dw, double dh);
-    void drawImage(HTMLCanvasElement image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh);
-    void drawImage(HTMLVideoElement image, double dx, double dy);
-    void drawImage(HTMLVideoElement image, double dx, double dy, double dw, double dh);
-    void drawImage(HTMLVideoElement image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh);
+    void drawImage((HTMLImageElement or HTMLCanvasElement or HTMLVideoElement) image, double dx, double dy);
+    void drawImage((HTMLImageElement or HTMLCanvasElement or HTMLVideoElement) image, double dx, double dy, double dw, double dh);
+    void drawImage((HTMLImageElement or HTMLCanvasElement or HTMLVideoElement) image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh);
   
     // pixel manipulation
     ImageData createImageData(double sw, double sh);
@@ -1059,10 +1048,7 @@ module html
              attribute unsigned long length;
     getter Element item(unsigned long index);
     object namedItem(DOMString name);
-    void add(HTMLOptionElement element, optional HTMLElement? before);
-    void add(HTMLOptGroupElement element, optional HTMLElement? before);
-    void add(HTMLOptionElement element, long before);
-    void add(HTMLOptGroupElement element, long before);
+    void add((HTMLOptionElement or HTMLOptGroupElement) element, optional (HTMLElement or long)? before = null);
     void remove(long index);
     setter creator void (unsigned long index, HTMLOptionElement option);
   
@@ -1533,7 +1519,7 @@ module html
   interface DataTransferItem {
     readonly attribute DOMString kind;
     readonly attribute DOMString type;
-    void getAsString(FunctionStringCallback? callback);
+    void getAsString(FunctionStringCallback? _callback);
     File? getAsFile();
   };
   
@@ -1670,8 +1656,7 @@ module html
     boolean withCredentials = false;
   };
 
-  [Constructor(DOMString url, optional DOMString protocols),
-   Constructor(DOMString url, optional DOMString[] protocols)]
+  [Constructor(DOMString url, optional (DOMString or DOMString[]) protocols)]
   interface WebSocket : EventTarget {
     readonly attribute DOMString url;
   

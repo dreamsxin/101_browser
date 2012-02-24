@@ -21,10 +21,7 @@ module html5
              attribute unsigned long length; // overrides inherited length
     legacycaller getter object? namedItem(DOMString name); // overrides inherited namedItem()
     setter creator void (unsigned long index, HTMLOptionElement option);
-    void add(HTMLOptionElement element, optional HTMLElement? before);
-    void add(HTMLOptGroupElement element, optional HTMLElement? before);
-    void add(HTMLOptionElement element, long before);
-    void add(HTMLOptGroupElement element, long before);
+    void add((HTMLOptionElement or HTMLOptGroupElement) element, optional (HTMLElement or long)? before = null);
     void remove(long index);
              attribute long selectedIndex;
   };
@@ -649,12 +646,12 @@ module html5
              attribute double startTime;
              attribute double endTime;
              attribute boolean pauseOnExit;
-             attribute DOMString direction;
+             attribute DOMString vertical;
              attribute boolean snapToLines;
-             attribute long linePosition;
-             attribute long textPosition;
+             attribute long line;
+             attribute long position;
              attribute long size;
-             attribute DOMString alignment;
+             attribute DOMString align;
              attribute DOMString text;
     DocumentFragment getCueAsHTML();
   
@@ -682,7 +679,7 @@ module html5
              attribute unsigned long height;
   
     DOMString toDataURL(optional DOMString type, any... args);
-    void toBlob(FileCallback? callback, optional DOMString type, any... args);
+    void toBlob(FileCallback? _callback, optional DOMString type, any... args);
   
     object? getContext(DOMString contextId, any... args);
   };
@@ -907,10 +904,7 @@ module html5
              attribute unsigned long length;
     getter Element item(unsigned long index);
     object namedItem(DOMString name);
-    void add(HTMLOptionElement element, optional HTMLElement? before);
-    void add(HTMLOptGroupElement element, optional HTMLElement? before);
-    void add(HTMLOptionElement element, long before);
-    void add(HTMLOptGroupElement element, long before);
+    void add((HTMLOptionElement or HTMLOptGroupElement) element, optional (HTMLElement or long)? before = null);
     void remove(long index);
     setter creator void (unsigned long index, HTMLOptionElement option);
   
@@ -1375,7 +1369,7 @@ module html5
   interface DataTransferItem {
     readonly attribute DOMString kind;
     readonly attribute DOMString type;
-    void getAsString(FunctionStringCallback? callback);
+    void getAsString(FunctionStringCallback? _callback);
     File? getAsFile();
   };
   

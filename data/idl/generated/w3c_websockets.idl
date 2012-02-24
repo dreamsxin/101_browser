@@ -1,7 +1,6 @@
 module websockets
 {
-  [Constructor(DOMString url, optional DOMString protocols),
-   Constructor(DOMString url, optional DOMString[] protocols)]
+  [Constructor(DOMString url, optional (DOMString or DOMString[]) protocols)]
   interface WebSocket : EventTarget {
     readonly attribute DOMString url;
   
