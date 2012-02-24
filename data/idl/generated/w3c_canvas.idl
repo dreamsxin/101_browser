@@ -25,9 +25,7 @@ module canvas
              attribute any fillStyle; // (default black)
     CanvasGradient createLinearGradient(double x0, double y0, double x1, double y1);
     CanvasGradient createRadialGradient(double x0, double y0, double r0, double x1, double y1, double r1);
-    CanvasPattern createPattern(HTMLImageElement image, DOMString repetition);
-    CanvasPattern createPattern(HTMLCanvasElement image, DOMString repetition);
-    CanvasPattern createPattern(HTMLVideoElement image, DOMString repetition);
+    CanvasPattern createPattern((HTMLImageElement or HTMLCanvasElement or HTMLVideoElement) image, DOMString repetition);
   
     // line caps/joins
              attribute double lineWidth; // (default 1)
@@ -73,15 +71,9 @@ module canvas
     TextMetrics measureText(DOMString text);
   
     // drawing images
-    void drawImage(HTMLImageElement image, double dx, double dy);
-    void drawImage(HTMLImageElement image, double dx, double dy, double dw, double dh);
-    void drawImage(HTMLImageElement image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh);
-    void drawImage(HTMLCanvasElement image, double dx, double dy);
-    void drawImage(HTMLCanvasElement image, double dx, double dy, double dw, double dh);
-    void drawImage(HTMLCanvasElement image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh);
-    void drawImage(HTMLVideoElement image, double dx, double dy);
-    void drawImage(HTMLVideoElement image, double dx, double dy, double dw, double dh);
-    void drawImage(HTMLVideoElement image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh);
+    void drawImage((HTMLImageElement or HTMLCanvasElement or HTMLVideoElement) image, double dx, double dy);
+    void drawImage((HTMLImageElement or HTMLCanvasElement or HTMLVideoElement) image, double dx, double dy, double dw, double dh);
+    void drawImage((HTMLImageElement or HTMLCanvasElement or HTMLVideoElement) image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh);
   
     // pixel manipulation
     ImageData createImageData(double sw, double sh);
