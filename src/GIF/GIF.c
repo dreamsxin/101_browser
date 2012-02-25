@@ -870,12 +870,12 @@ void skipBlock(SetjmpStreamState *in_out_pSetjmpStreamState,
 	while (Block_Size != 0)
 	{
 		size_t idx;
-		uint8_t buffer;
+		uint8_t buffer[1];
 
 		for (idx = 0; idx < Block_Size; idx++)
 		{
 			(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
-				&buffer, sizeof(buffer));
+				buffer, sizeof(buffer));
 		}
 
 		(*in_byteStreamReadInterface.mpfRead)(in_out_pSetjmpStreamState, 
