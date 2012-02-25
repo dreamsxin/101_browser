@@ -33,5 +33,27 @@ module html_editing
     Selection getSelection();
   };
 
+  [Constructor(DOMString type, optional EditingBeforeInputEventInit eventInitDict)]
+  interface EditingBeforeInputEvent : Event {
+    readonly attribute DOMString command;
+    readonly attribute DOMString value;
+  };
+  
+  dictionary EditingBeforeInputEventInit : EventInit {
+    DOMString command;
+    DOMString value;
+  };
+  
+  [Constructor(DOMString type, optional EditingInputEventInit eventInitDict)]
+  interface EditingInputEvent : Event {
+    readonly attribute DOMString command;
+    readonly attribute DOMString value;
+  };
+  
+  dictionary EditingInputEventInit : EventInit {
+    DOMString command;
+    DOMString value;
+  };
+
 
 };
