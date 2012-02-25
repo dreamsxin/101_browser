@@ -52,9 +52,9 @@ void memoryByteStream_v3WriteStateInit(
 	out_pMemoryByteStream_v3WriteState->rwBuffer.writeBuffer = in_pBuffer;
 }
 
-bool memoryByteStream_v3GetTerminateAfterLastOperation(const void *in_pByteStreamState)
+bool memoryByteStream_v3GetTerminateAfterLastOperation(const MemoryByteStream_v3State *in_pByteStreamState)
 {
-	return ((const MemoryByteStream_v3State *) in_pByteStreamState)->terminateAfterLastOperation;;
+	return in_pByteStreamState->terminateAfterLastOperation;;
 }
 
 bool memoryByteStream_v3IsTerminated(const void *in_pByteStreamState)

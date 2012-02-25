@@ -17,33 +17,84 @@
 #include "Unicode/Parser.h"
 #include "MiniStdlib/MTAx_cstdlib.h" // for the conversation functions for endianness
 #include <assert.h>
+#include <string.h> // memset
 
-ReadResult parse_UTF32(
+void utf32_StateInit(UTF32_State *out_pState, 
 	ByteStreamReadInterface_v3 in_readInterface, 
-	void *in_pReadState,
-	ByteStreamWriteInterface_v3 in_writeInterface,
-	void *in_pWriteState, 
+	void *in_pReadState, 
 	bool in_bigEndian)
 {
+	out_pState->parserState.readInterface = in_readInterface;
+	out_pState->parserState.pReadState = in_pReadState;
+	out_pState->bigEndian = in_bigEndian;
+}
+
+void utf32_StateReset(UTF32_State *out_pState)
+{
+	// Nothing
+}
+
+bool utf32_isTerminated(const void *in_pByteStreamState)
+{
+	assert(((UTF32_State *) in_pByteStreamState)->parserState.readInterface.
+		commonByteStreamInterface.mpfIsTerminated != NULL);
+
+	return ((UTF32_State *) in_pByteStreamState)->parserState.readInterface.
+		commonByteStreamInterface.mpfIsTerminated(
+		((UTF32_State *) in_pByteStreamState)->parserState.pReadState);
+}
+
+void utf32_Terminate(void *in_out_pByteStreamState)
+{
+	assert(((UTF32_State *) in_out_pByteStreamState)->parserState.readInterface.
+		commonByteStreamInterface.mpfTerminate != NULL);
+
+	((UTF32_State *) in_out_pByteStreamState)->parserState.readInterface.
+		commonByteStreamInterface.mpfTerminate(
+		((UTF32_State *) in_out_pByteStreamState)->parserState.pReadState);
+}
+
+ByteStreamReadInterface_v3 getUTF32_ReadInterface()
+{
+	ByteStreamReadInterface_v3 out_interface;
+	memset(&out_interface, 0, sizeof(out_interface));
+	out_interface.commonByteStreamInterface.mpfIsTerminated = utf32_isTerminated;
+	out_interface.commonByteStreamInterface.mpfTerminate = utf32_Terminate;
+	out_interface.mpfRead = utf32_read;
+
+	return out_interface;
+}
+
+size_t utf32_read(
+	void *in_out_pByteStreamState, 
+	void *out_pBuffer, size_t in_count)
+{
+	UTF32_State *pUTF32State = (UTF32_State *) in_out_pByteStreamState;
 	UnicodeCodePoint currentCodePoint;
-	size_t rwCount;
+	size_t writeCount = 0;
 	extern const UnicodeCodePoint cReplacementCharacter;
 
-	assert(in_readInterface.mpfRead != NULL);
-	assert(in_writeInterface.mpfWrite != NULL);
+	assert(pUTF32State->parserState.readInterface.mpfRead != NULL);
+	assert(pUTF32State->parserState.readInterface.commonByteStreamInterface.mpfIsTerminated != NULL);
 	
-	if (in_readInterface.commonByteStreamInterface.mpfIsTerminated(in_pReadState))
+	if (pUTF32State->parserState.readInterface.commonByteStreamInterface.
+		mpfIsTerminated(pUTF32State->parserState.pReadState))
 		goto terminate;
 
-	while (1)
+	while (writeCount != in_count)
 	{
-		rwCount = in_readInterface.mpfRead(in_pReadState, &currentCodePoint, 4);
+		size_t rwCount;
+		assert(writeCount < in_count);
+		
+		rwCount = pUTF32State->parserState.readInterface.mpfRead(
+			pUTF32State->parserState.pReadState, &currentCodePoint, 4);
 
 		assert(rwCount <= 4);
 
 		if (0 == rwCount)
 		{
-			assert(in_readInterface.commonByteStreamInterface.mpfIsTerminated(in_pReadState));
+			assert(pUTF32State->parserState.readInterface.commonByteStreamInterface.mpfIsTerminated(
+				pUTF32State->parserState.pReadState));
 
 			goto terminate;
 		}
@@ -51,38 +102,37 @@ ReadResult parse_UTF32(
 		{
 			assert(rwCount > 0);
 			assert(rwCount < 4);
-			assert(in_readInterface.commonByteStreamInterface.mpfIsTerminated(in_pReadState));
+			assert(pUTF32State->parserState.readInterface.commonByteStreamInterface.mpfIsTerminated(
+				pUTF32State->parserState.pReadState));
 
 			currentCodePoint = cReplacementCharacter;
 			goto write_terminal_character;
 		}
 
-		if (in_bigEndian)
+		if (pUTF32State->bigEndian)
 			currentCodePoint = _byteswap_ulong(currentCodePoint);
 
 		if ((currentCodePoint >= 0xD800 && currentCodePoint <= 0xDFFF) ||
 			currentCodePoint >= 0x110000)
 			currentCodePoint = cReplacementCharacter;
 
-		if (in_readInterface.commonByteStreamInterface.mpfIsTerminated(in_pReadState))
+		if (pUTF32State->parserState.readInterface.commonByteStreamInterface.
+			mpfIsTerminated(pUTF32State->parserState.pReadState))
 			goto write_terminal_character;
 
-		rwCount = in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, 
-			sizeof(UnicodeCodePoint));
-
-		if (rwCount != sizeof(UnicodeCodePoint))
-			return ReadResultWriteError;
+		*(UnicodeCodePoint *) out_pBuffer = currentCodePoint;
+		writeCount++;
+		out_pBuffer = (UnicodeCodePoint *) out_pBuffer + 1;
 	}
 
-write_terminal_character:
-	rwCount = in_writeInterface.mpfWrite(in_pWriteState, &currentCodePoint, 
-		sizeof(UnicodeCodePoint));
+	goto terminate;
 
-	if (sizeof(UnicodeCodePoint) != rwCount)
-		return ReadResultWriteError;
+write_terminal_character:
+	*(UnicodeCodePoint *) out_pBuffer = currentCodePoint;
+	writeCount++;
+
 	// Otherwise continue and terminate
 
 terminate:
-	in_writeInterface.commonByteStreamInterface.mpfTerminate(in_pWriteState);
-	return ReadResultOK;
+	return writeCount;
 }

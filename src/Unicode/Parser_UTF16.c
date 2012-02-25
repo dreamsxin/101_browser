@@ -174,6 +174,11 @@ begin_of_S:
 		}
 	}
 
+	// To insert for new version
+#if 0
+	goto terminate;
+#endif
+
 write_terminal_replacement_character:
 	currentCodePoint = cReplacementCharacter;
 write_terminal_character:

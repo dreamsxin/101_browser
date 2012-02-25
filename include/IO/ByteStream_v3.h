@@ -27,7 +27,7 @@ extern "C" {
 typedef struct
 {
 	bool (*mpfIsTerminated)(const void *in_pByteStreamState);
-	void (*mpfTerminate)(void *out_pByteStreamState);
+	void (*mpfTerminate)(void *in_out_pByteStreamState);
 } CommonByteStreamInterface_v3;
 
 typedef struct

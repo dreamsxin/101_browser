@@ -52,7 +52,6 @@ size_t memoryByteStream_v3Read(void *in_out_pByteStreamState,
 size_t memoryByteStream_v3Write(void *in_out_pByteStreamState, 
 	const void *in_pBuffer, size_t in_count);
 
-bool memoryByteStream_v3GetTerminateAfterLastOperation(const void *in_pByteStreamState);
 bool memoryByteStream_v3IsTerminated(const void *in_pByteStreamState);
 void memoryByteStream_v3Terminate(void *out_pByteStreamState);
 
