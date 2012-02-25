@@ -808,6 +808,12 @@ void read_Application_Extension(SetjmpStreamState *in_out_pSetjmpStreamState,
 			ReadResultInvalidData, in_pfErrorHandler, 
 			"read_Application_Extension: expecting terminator block after NETSCAPE 2.0 Application Extension");
 	}
+	else if (strncmp(applExt.Application_Identifier, "XMP Data", 8) == 0 && 
+		strncmp(applExt.Application_Authentication_Code, "XMP", 3) == 0)
+	{
+		// TODO: Implement properly
+		skipBlock(in_out_pSetjmpStreamState, in_byteStreamReadInterface);
+	}
 	else
 	{
 		longjmp(*in_out_pSetjmpStreamState->setjmpState.mpJmpBuffer, ReadResultNotImplemented);

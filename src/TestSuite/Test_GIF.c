@@ -52,6 +52,7 @@ static char* gif_filenames[] = {
 	"testfiles/gif/a_image.gif",
 	"testfiles/gif/tc217.gif",
 	"testfiles/gif/tumblr_lytmpoEsiT1qz4ssl.gif", 
+	"testfiles/gif/hertz-2011-hp.gif", 
 
 	"testfiles/gif/fileformat.info/GMARBLES.GIF",
 	"testfiles/gif/fileformat.info/MARBLES.GIF",
