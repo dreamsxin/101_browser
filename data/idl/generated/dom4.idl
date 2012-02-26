@@ -1,4 +1,4 @@
-module domcore
+module dom4
 {
   exception DOMException {
     const unsigned short INDEX_SIZE_ERR = 1;
