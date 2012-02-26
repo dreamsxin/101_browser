@@ -708,7 +708,6 @@ void read_Image_Data(SetjmpStreamState *in_out_pSetjmpStreamState,
 						"read_Image_Data: more pixels than defined in Image Descriptor");
 				}
 
-
 #if 0
 				printf("%u ", currentPaletteIndex);
 #endif
