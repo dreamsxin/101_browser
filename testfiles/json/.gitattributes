@@ -1,2 +1,2 @@
 *.json -crlf
-sample.json binary
+sample*.json binary
