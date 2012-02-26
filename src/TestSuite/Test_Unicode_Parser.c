@@ -219,6 +219,7 @@ void test_Unicode_Parser_UTF32()
 
 	size_t currentReadCount;
 	size_t allReadCount;
+	ByteStreamReadInterface_v3 utf32Interface = getUTF32_ReadInterface();
 
 	for (terminateAfterLastOperation = 0; terminateAfterLastOperation < 2; terminateAfterLastOperation++)
 	{
@@ -244,7 +245,7 @@ void test_Unicode_Parser_UTF32()
 
 			allReadCount = 0;
 
-			while ((currentReadCount = utf32_read(&utf32State, &singleCodePoint, 1)) != 0)
+			while ((currentReadCount = utf32Interface.mpfRead(&utf32State, &singleCodePoint, 1)) != 0)
 			{
 				test(1 == currentReadCount);
 				test(result[allReadCount] == singleCodePoint);
@@ -254,18 +255,20 @@ void test_Unicode_Parser_UTF32()
 			
 			test(readState.bufferPos == readState.bufferSize);
 			test(readState.isTerminated);
+			test(utf32Interface.commonByteStreamInterface.mpfIsTerminated(&utf32State));
 
 			test(sizeof(result) == allReadCount*sizeof(UnicodeCodePoint));
 
 			memoryByteStream_v3StateReset(&readState);
 
-			allReadCount = utf32_read(&utf32State, 
+			allReadCount = utf32Interface.mpfRead(&utf32State, 
 				bufferOut, sizeof(bufferOut) / sizeof(UnicodeCodePoint));
 
 			test(sizeof(result) / sizeof(UnicodeCodePoint) == allReadCount);
 
 			test(readState.bufferPos == readState.bufferSize);
 			test(readState.isTerminated);
+			test(utf32Interface.commonByteStreamInterface.mpfIsTerminated(&utf32State));
 			test(!memcmp(result, bufferOut, sizeof(result)));
 		}
 
@@ -291,7 +294,7 @@ void test_Unicode_Parser_UTF32()
 
 			allReadCount = 0;
 
-			while ((currentReadCount = utf32_read(&utf32State, &singleCodePoint, 1)) != 0)
+			while ((currentReadCount = utf32Interface.mpfRead(&utf32State, &singleCodePoint, 1)) != 0)
 			{
 				test(1 == currentReadCount);
 				test(result[allReadCount] == singleCodePoint);
@@ -301,18 +304,20 @@ void test_Unicode_Parser_UTF32()
 			
 			test(readState.bufferPos == readState.bufferSize);
 			test(readState.isTerminated);
+			test(utf32Interface.commonByteStreamInterface.mpfIsTerminated(&utf32State));
 
 			test(sizeof(result) == allReadCount*sizeof(UnicodeCodePoint));
 
 			memoryByteStream_v3StateReset(&readState);
 
-			allReadCount = utf32_read(&utf32State, 
+			allReadCount = utf32Interface.mpfRead(&utf32State, 
 				bufferOut, sizeof(bufferOut) / sizeof(UnicodeCodePoint));
 
 			test(sizeof(result) / sizeof(UnicodeCodePoint) == allReadCount);
 
 			test(readState.bufferPos == readState.bufferSize);
 			test(readState.isTerminated);
+			test(utf32Interface.commonByteStreamInterface.mpfIsTerminated(&utf32State));
 			test(!memcmp(result, bufferOut, sizeof(result)));
 		}
 	}

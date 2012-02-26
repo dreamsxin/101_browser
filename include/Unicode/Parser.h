@@ -41,7 +41,6 @@ typedef struct
 	bool bigEndian;
 
 	// Temporary variables
-	UnicodeCodePoint currentCodePoint;
 	bool isSecondByte;
 	uint16_t currentWord;
 } UTF16_State;
@@ -79,7 +78,7 @@ DLLEXPORT ByteStreamReadInterface_v3 getUTF32_ReadInterface();
 * Parameters:
 * in_count: number of codepoints (not bytes!) to read
 */
-DLLEXPORT size_t utf32_read(
+size_t utf32_read(
 	void *in_out_pByteStreamState, 
 	void *out_pBuffer, size_t in_count);
 
