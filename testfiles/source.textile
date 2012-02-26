@@ -141,6 +141,14 @@ h4. sample.json
 
 From sample.zip of the project json-test-suite (http://code.google.com/p/json-test-suite/)
 
+h4. sample_utf8.json
+
+A simple copy of sample.json
+
+h4. sample_utf[16|32][b|l]e.json
+
+sample_utf8.json converted to these Unicode representations - without BOM, as the JSON standard requires. Created by create_json_files.bat in util folder.
+
 h2. Subfolder "png"
 
 All images are taken from PngSuite by Willem van Schaik. See http://www.schaik.com/pngsuite/ (on http://www.libpng.org/pub/png/pngsuite.html it is mirrored).
