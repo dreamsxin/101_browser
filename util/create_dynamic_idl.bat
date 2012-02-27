@@ -20,6 +20,9 @@ CALL create_single_dynamic_idl.bat http://dev.w3.org/html5/eventsource/ serverse
 
 CALL create_single_dynamic_idl.bat http://dev.w3.org/geo/api/spec-source.html geo ../data/idl/generated/geolocation.idl
 
+REM There is work to do until this can be used
+REM CALL create_single_dynamic_idl.bat http://dev.w3.org/2011/webrtc/editor/webrtc.html webrtc ../data/idl/generated/webrtc.idl
+
 CALL create_single_dynamic_idl.bat http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html dom4 ../data/idl/generated/dom4.idl
 
 CALL create_single_dynamic_idl.bat http://dev.w3.org/csswg/cssom/ cssom ../data/idl/generated/cssom.idl
