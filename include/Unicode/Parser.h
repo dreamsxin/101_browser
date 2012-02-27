@@ -49,7 +49,7 @@ typedef struct
 
 	// Temporary variables
 	UTF16_CurrentLabel currentLabel;
-	bool isSecondByte;
+	bool isSecondWord;
 	uint16_t currentWord;
 } UTF16_State;
 

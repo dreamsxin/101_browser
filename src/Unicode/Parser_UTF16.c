@@ -33,7 +33,7 @@ void utf16_StateInit(UTF16_State *out_pState,
 
 void utf16_StateReset(UTF16_State *out_pState)
 {
-	out_pState->isSecondByte = false;
+	out_pState->isSecondWord = false;
 	out_pState->currentLabel = UTF16_CurrentLabel_Begin;
 	// No necessity to initialize/reset currentWord
 }
@@ -95,7 +95,7 @@ StateLabel_Begin:
 			assert(pUTF16State->parserState.readInterface.commonByteStreamInterface.
 				mpfIsTerminated(pUTF16State->parserState.pReadState));
 
-			if (!pUTF16State->isSecondByte)
+			if (!pUTF16State->isSecondWord)
 				goto terminate;
 			else
 				goto StateLabel_WriteTerminalReplacementCharacter;
@@ -105,7 +105,7 @@ StateLabel_Begin:
 			assert(pUTF16State->parserState.readInterface.commonByteStreamInterface.
 				mpfIsTerminated(pUTF16State->parserState.pReadState));
 
-			if (!pUTF16State->isSecondByte)
+			if (!pUTF16State->isSecondWord)
 			{
 				goto StateLabel_WriteTerminalReplacementCharacter;
 			}
@@ -146,7 +146,7 @@ StateLabel_Begin:
 			if (pUTF16State->bigEndian)
 				pUTF16State->currentWord = _byteswap_ushort(pUTF16State->currentWord);
 
-			if (!pUTF16State->isSecondByte)
+			if (!pUTF16State->isSecondWord)
 			{
 StateLabel_BeginOfS:
 				if (pUTF16State->currentWord < 0xD800 || 
@@ -166,14 +166,14 @@ StateLabel_BeginOfS:
 					assert(pUTF16State->currentWord <= 0xDBFF);
 
 					currentCodePoint = (pUTF16State->currentWord & 0x3FFu) << 10u;
-					pUTF16State->isSecondByte = true;
+					pUTF16State->isSecondWord = true;
 
 					continue;
 				}
 			}
 			else
 			{
-				pUTF16State->isSecondByte = false;
+				pUTF16State->isSecondWord = false;
 
 				if (pUTF16State->currentWord < 0xDC00 || 
 					0xDFFF < pUTF16State->currentWord)
