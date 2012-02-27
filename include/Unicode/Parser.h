@@ -30,9 +30,16 @@ extern "C" {
 
 typedef struct
 {
-	ByteStreamReadInterface_v3 readInterface;
 	void *pReadState;
+	ByteStreamReadInterface_v3 readInterface;
 } ParserState;
+
+typedef enum
+{
+	UTF16_CurrentLabel_Begin,
+	UTF16_CurrentLabel_BeginOfS, 
+	UTF16_CurrentLabel_WriteTerminalReplacementCharacter
+} UTF16_CurrentLabel;
 
 typedef struct
 {
@@ -41,6 +48,7 @@ typedef struct
 	bool bigEndian;
 
 	// Temporary variables
+	UTF16_CurrentLabel currentLabel;
 	bool isSecondByte;
 	uint16_t currentWord;
 } UTF16_State;
@@ -58,12 +66,18 @@ DLLEXPORT ReadResult parse_UTF8(
 	ByteStreamInterface in_writeInterface,
 	void *in_pWriteState);
 
-DLLEXPORT ReadResult parse_UTF16(
+DLLEXPORT void utf16_StateInit(UTF16_State *out_pState, 
 	ByteStreamReadInterface_v3 in_readInterface, 
-	void *in_pReadState,
-	ByteStreamWriteInterface_v3 in_writeInterface,
-	void *in_pWriteState, 
+	void *in_pReadState, 
 	bool in_bigEndian);
+
+DLLEXPORT void utf16_StateReset(UTF16_State *out_pState);
+
+size_t utf16_read(
+	void *in_out_pByteStreamState, 
+	void *out_pBuffer, size_t in_count);
+
+DLLEXPORT ByteStreamReadInterface_v3 getUTF16_ReadInterface();
 
 DLLEXPORT void utf32_StateInit(UTF32_State *out_pState, 
 	ByteStreamReadInterface_v3 in_readInterface, 
@@ -81,6 +95,13 @@ DLLEXPORT ByteStreamReadInterface_v3 getUTF32_ReadInterface();
 size_t utf32_read(
 	void *in_out_pByteStreamState, 
 	void *out_pBuffer, size_t in_count);
+
+ByteStreamReadInterface_v3 getParser_ReadInterface(
+	size_t (*mpfReadFunction)(void *in_out_pByteStreamState, 
+		void *out_pBuffer, size_t in_count));
+
+void writeCodePoint(UnicodeCodePoint **out_ppBuffer, 
+	size_t *in_out_pWriteCount, UnicodeCodePoint in_codePoint);
 
 #ifdef __cplusplus
 }
