@@ -24,7 +24,7 @@ wget http://matroska.svn.sourceforge.net/viewvc/matroska/trunk/foundation_src/sp
 ./create_single_dynamic_idl.sh http://dev.w3.org/html5/spec/Overview.html html5 ../data/idl/generated/w3c_html5.idl
 ./create_single_dynamic_idl.sh http://dev.w3.org/geo/api/spec-source.html geo ../data/idl/generated/geolocation.idl
 
-./create_single_dynamic_idl.sh http://dev.w3.org/2011/webrtc/editor/webrtc.html webrtc ../data/idl/generated/webrtc.idl
+# ./create_single_dynamic_idl.sh http://dev.w3.org/2011/webrtc/editor/webrtc.html webrtc ../data/idl/generated/webrtc.idl
 
 ./create_single_dynamic_idl.sh http://dvcs.w3.org/hg/domcore/raw-file/tip/Overview.html dom4 ../data/idl/generated/dom4.idl
 
