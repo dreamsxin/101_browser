@@ -79,7 +79,6 @@ size_t utf16_read(
 	do
 	{
 		size_t rwCount;
-		UnicodeCodePoint currentCodePoint;
 
 StateLabel_Begin:
 		assert(writeCount < in_count);
@@ -140,6 +139,7 @@ StateLabel_Begin:
 		}
 		else
 		{
+			UnicodeCodePoint currentCodePoint;
 			assert(2 == rwCount);
 
 			if (pUTF16State->bigEndian)
@@ -177,9 +177,7 @@ StateLabel_BeginOfS:
 				if (pUTF16State->currentWord < 0xDC00 || 
 					0xDFFF < pUTF16State->currentWord)
 				{
-					currentCodePoint = cReplacementCharacter;
-
-					writeCodePoint((UnicodeCodePoint**) &out_pBuffer, &writeCount, currentCodePoint);
+					writeCodePoint((UnicodeCodePoint**) &out_pBuffer, &writeCount, cReplacementCharacter);
 
 					if (writeCount == in_count)
 					{
