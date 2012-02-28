@@ -115,6 +115,9 @@ void test_Unicode_Parser_UTF16()
 	const UnicodeCodePoint result[] = {
 		0x00FF, 0x2020, 0xD7FF, 
 
+		// Replacement character because of single high surrogate
+		0xFF, 0xFD, 
+
 		// Taken from http://en.wikipedia.org/w/index.php?title=UTF-16&oldid=474632903#Examples
 		0x007A, 0x6C34, 0x10000, 0x1D11E, 0x10FFFD
 	};
@@ -131,6 +134,9 @@ void test_Unicode_Parser_UTF16()
 				0x00, 0xFF, 
 				0x20, 0x20, 
 				0xD7, 0xFF, 
+
+				// Single High Surrogate
+				0xD8, 0x00, 
 
 				// Taken from http://en.wikipedia.org/w/index.php?title=UTF-16&oldid=474632903#Examples
 				0x00, 0x7A, 
@@ -182,6 +188,9 @@ void test_Unicode_Parser_UTF16()
 				0xFF, 0x00, 
 				0x20, 0x20, 
 				0xFF, 0xD7, 
+				
+				// Single High Surrogate
+				0x00, 0xD8, 
 
 				// Taken from http://en.wikipedia.org/w/index.php?title=UTF-16&oldid=474632903#Examples
 				0x7A, 0x00, 

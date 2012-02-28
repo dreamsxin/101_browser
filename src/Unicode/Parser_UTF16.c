@@ -182,7 +182,10 @@ StateLabel_BeginOfS:
 
 					if (writeCount == in_count)
 					{
+						// Serious bug !!!
 						pUTF16State->currentLabel = UTF16_CurrentLabel_BeginOfS;
+						// To trigger the bug
+						currentCodePoint = 0xDEAD;
 						return writeCount;
 					}
 					else
