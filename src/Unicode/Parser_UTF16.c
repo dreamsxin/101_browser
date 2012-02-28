@@ -105,37 +105,36 @@ StateLabel_Begin:
 			assert(pUTF16State->parserState.readInterface.commonByteStreamInterface.
 				mpfIsTerminated(pUTF16State->parserState.pReadState));
 
-			if (!pUTF16State->isSecondWord)
+			if (!pUTF16State->isSecondWord || !pUTF16State->bigEndian || 
+				/*
+				* Q: Why the bitwise and with 0xFF?
+				* A: Because we read only one byte (the lower one), we don't 
+				*    know what the value of the higher byte is. It can be
+				*    anything.
+				*/
+				((pUTF16State->currentWord & 0xFF) >= 0xDC && 
+				(pUTF16State->currentWord & 0xFF) <= 0xDF))
 			{
 				goto StateLabel_WriteTerminalReplacementCharacter;
 			}
 			else
 			{
-				/*
-				* Q: Why this line?
-				* A: Because we read only one byte (the lower one), we don't 
-				*    know what the value of the higher byte is. It can be
-				*    anything.
-				*/
-				pUTF16State->currentWord = pUTF16State->currentWord & 0xFF;
+				assert(pUTF16State->isSecondWord);
+				assert(pUTF16State->bigEndian);
+				assert((pUTF16State->currentWord & 0xFF) < 0xDC || 
+					(pUTF16State->currentWord & 0xFF) > 0xDF);
 
-				if (pUTF16State->currentWord >= 0xDC && 
-					pUTF16State->currentWord <= 0xDF)
-					goto StateLabel_WriteTerminalReplacementCharacter;
+				writeCodePoint((UnicodeCodePoint**) &out_pBuffer, &writeCount, cReplacementCharacter);
+
+				if (writeCount == in_count)
+				{
+					pUTF16State->currentLabel = UTF16_CurrentLabel_WriteTerminalReplacementCharacter;
+					return writeCount;
+				}
 				else
 				{
-					writeCodePoint((UnicodeCodePoint**) &out_pBuffer, &writeCount, cReplacementCharacter);
-
-					if (writeCount == in_count)
-					{
-						pUTF16State->currentLabel = UTF16_CurrentLabel_WriteTerminalReplacementCharacter;
-						return writeCount;
-					}
-					else
-					{
-						assert(writeCount < in_count);
-						goto StateLabel_WriteTerminalReplacementCharacter;
-					}
+					assert(writeCount < in_count);
+					goto StateLabel_WriteTerminalReplacementCharacter;
 				}
 			}
 		}
