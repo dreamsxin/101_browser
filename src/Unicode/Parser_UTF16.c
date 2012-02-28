@@ -139,7 +139,7 @@ StateLabel_Begin:
 		}
 		else
 		{
-			UnicodeCodePoint currentCodePoint;
+			UnicodeCodePoint currentCodePoint = 0xFFFFFFFF;
 			assert(2 == rwCount);
 
 			if (pUTF16State->bigEndian)
@@ -192,6 +192,7 @@ StateLabel_BeginOfS:
 				}
 				else
 				{
+					// Potential serious bug: currentCodePoint not initialized
 					currentCodePoint |= (pUTF16State->currentWord & 0x3FFu);
 					currentCodePoint += 0x10000;
 				}
