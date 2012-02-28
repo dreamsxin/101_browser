@@ -115,11 +115,14 @@ void test_Unicode_Parser_UTF16()
 	const UnicodeCodePoint result[] = {
 		0x00FF, 0x2020, 0xD7FF, 
 
-		// Replacement character because of single high surrogate
+		// Replacement character because of single High Surrogate
 		0xFFFD, 
 
 		// Taken from http://en.wikipedia.org/w/index.php?title=UTF-16&oldid=474632903#Examples
-		0x007A, 0x6C34, 0x10000, 0x1D11E, 0x10FFFD
+		0x007A, 0x6C34, 0x10000, 0x1D11E, 0x10FFFD, 
+
+		// Replacement character because of single Low Surrogate
+		0xFFFD
 	};
 
 	size_t currentReadCount;
@@ -143,7 +146,10 @@ void test_Unicode_Parser_UTF16()
 				0x6C, 0x34, 
 				0xD8, 0x00, 0xDC, 0x00, 
 				0xD8, 0x34, 0xDD, 0x1E, 
-				0xDB, 0xFF, 0xDF, 0xFD
+				0xDB, 0xFF, 0xDF, 0xFD, 
+
+				// Single Low Surrogate
+				0xDC, 0x00
 			};
 
 			memoryByteStream_v3ReadStateInit(&readState, bufferIn, sizeof(bufferIn), 
@@ -197,7 +203,10 @@ void test_Unicode_Parser_UTF16()
 				0x34, 0x6C, 
 				0x00, 0xD8, 0x00, 0xDC, 
 				0x34, 0xD8, 0x1E, 0xDD, 
-				0xFF, 0xDB, 0xFD, 0xDF
+				0xFF, 0xDB, 0xFD, 0xDF, 
+
+				// Single Low Surrogate
+				0x00, 0xDC
 			};
 
 			memoryByteStream_v3ReadStateInit(&readState, bufferIn, sizeof(bufferIn), 
