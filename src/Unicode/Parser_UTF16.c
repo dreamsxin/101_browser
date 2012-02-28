@@ -43,6 +43,9 @@ ByteStreamReadInterface_v3 getUTF16_ReadInterface()
 	return getParser_ReadInterface(utf16_read);
 }
 
+// See http://unicode.org/faq/utf_bom.html#utf16-4
+const UnicodeCodePoint SURROGATE_OFFSET = 0x10000 - (0xD800 << 10) - 0xDC00;
+
 size_t utf16_read(
 	void *in_out_pByteStreamState, 
 	void *out_pBuffer, size_t in_count)
@@ -79,13 +82,14 @@ size_t utf16_read(
 	do
 	{
 		size_t rwCount;
+		uint16_t currentWord;
 
 StateLabel_Begin:
 		assert(writeCount < in_count);
 
 		rwCount = pUTF16State->parserState.readInterface.mpfRead(
 			pUTF16State->parserState.pReadState, 
-			&pUTF16State->currentWord, 2);
+			&currentWord, 2);
 
 		assert(rwCount <= 2);
 
@@ -111,8 +115,7 @@ StateLabel_Begin:
 				*    know what the value of the higher byte is. It can be
 				*    anything.
 				*/
-				((pUTF16State->currentWord & 0xFF) >= 0xDC && 
-				(pUTF16State->currentWord & 0xFF) <= 0xDF))
+				((currentWord & 0xFF) >= 0xDC && (currentWord & 0xFF) <= 0xDF))
 			{
 				goto StateLabel_WriteTerminalReplacementCharacter;
 			}
@@ -120,8 +123,7 @@ StateLabel_Begin:
 			{
 				assert(pUTF16State->isSecondWord);
 				assert(pUTF16State->bigEndian);
-				assert((pUTF16State->currentWord & 0xFF) < 0xDC || 
-					(pUTF16State->currentWord & 0xFF) > 0xDF);
+				assert((currentWord & 0xFF) < 0xDC || (currentWord & 0xFF) > 0xDF);
 
 				writeCodePoint((UnicodeCodePoint**) &out_pBuffer, &writeCount, cReplacementCharacter);
 
@@ -143,28 +145,28 @@ StateLabel_Begin:
 			assert(2 == rwCount);
 
 			if (pUTF16State->bigEndian)
-				pUTF16State->currentWord = _byteswap_ushort(pUTF16State->currentWord);
+				currentWord = _byteswap_ushort(currentWord);
 
 			if (!pUTF16State->isSecondWord)
 			{
 StateLabel_BeginOfS:
-				if (pUTF16State->currentWord < 0xD800 || 
-					pUTF16State->currentWord >= 0xDC00)
+				if (currentWord < 0xD800 || currentWord >= 0xDC00)
 				{
 					// 0xDC00 <= currentWord < 0xE000: low surrogate
-					if (0xDC00 <= pUTF16State->currentWord  && 
-						pUTF16State->currentWord < 0xE000)
+					if (0xDC00 <= currentWord  && currentWord < 0xE000)
 						currentCodePoint = cReplacementCharacter;
 					else
-						currentCodePoint = pUTF16State->currentWord;
+						currentCodePoint = currentWord;
 				}
 				else
 				{
-					assert(pUTF16State->currentWord >= 0xD800);
-					assert(pUTF16State->currentWord < 0xDC00);
-					assert(pUTF16State->currentWord <= 0xDBFF);
+					assert(currentWord >= 0xD800);
+					assert(currentWord < 0xDC00);
+					assert(currentWord <= 0xDBFF);
 
-					currentCodePoint = (pUTF16State->currentWord & 0x3FFu) << 10u;
+					pUTF16State->prevWord = currentWord;
+
+					//currentCodePoint = (pUTF16State->currentWord & 0x3FFu) << 10u;
 					pUTF16State->isSecondWord = true;
 
 					continue;
@@ -174,8 +176,7 @@ StateLabel_BeginOfS:
 			{
 				pUTF16State->isSecondWord = false;
 
-				if (pUTF16State->currentWord < 0xDC00 || 
-					0xDFFF < pUTF16State->currentWord)
+				if (currentWord < 0xDC00 || 0xDFFF < currentWord)
 				{
 					writeCodePoint((UnicodeCodePoint**) &out_pBuffer, &writeCount, cReplacementCharacter);
 
@@ -192,9 +193,8 @@ StateLabel_BeginOfS:
 				}
 				else
 				{
-					// Potential serious bug: currentCodePoint not initialized
-					currentCodePoint |= (pUTF16State->currentWord & 0x3FFu);
-					currentCodePoint += 0x10000;
+					// See http://unicode.org/faq/utf_bom.html#utf16-4
+					currentCodePoint = (pUTF16State->prevWord << 10) + currentWord + SURROGATE_OFFSET;
 				}
 			}
 

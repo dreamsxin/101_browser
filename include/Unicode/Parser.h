@@ -50,7 +50,7 @@ typedef struct
 	// Temporary variables
 	UTF16_CurrentLabel currentLabel;
 	bool isSecondWord;
-	uint16_t currentWord;
+	uint16_t prevWord;
 } UTF16_State;
 
 typedef struct
