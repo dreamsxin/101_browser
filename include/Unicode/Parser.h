@@ -37,7 +37,7 @@ typedef struct
 typedef enum
 {
 	UTF16_CurrentLabel_Begin,
-	UTF16_CurrentLabel_BeginOfS, 
+	UTF16_CurrentLabel_HandleAfterHighSurrogate, 
 	UTF16_CurrentLabel_WriteTerminalReplacementCharacter
 } UTF16_CurrentLabel;
 

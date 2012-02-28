@@ -116,7 +116,7 @@ void test_Unicode_Parser_UTF16()
 		0x00FF, 0x2020, 0xD7FF, 
 
 		// Replacement character because of single high surrogate
-		0xFF, 0xFD, 
+		0xFFFD, 
 
 		// Taken from http://en.wikipedia.org/w/index.php?title=UTF-16&oldid=474632903#Examples
 		0x007A, 0x6C34, 0x10000, 0x1D11E, 0x10FFFD

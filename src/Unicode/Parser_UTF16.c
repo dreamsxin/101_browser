@@ -71,8 +71,8 @@ size_t utf16_read(
 	{
 	case UTF16_CurrentLabel_Begin:
 		goto StateLabel_Begin;
-	case UTF16_CurrentLabel_BeginOfS:
-		goto StateLabel_BeginOfS;
+	case UTF16_CurrentLabel_HandleAfterHighSurrogate:
+		goto StateLabel_HandleAfterHighSurrogate;
 	case UTF16_CurrentLabel_WriteTerminalReplacementCharacter:
 		goto StateLabel_WriteTerminalReplacementCharacter;
 	default:
@@ -149,7 +149,7 @@ StateLabel_Begin:
 
 			if (!pUTF16State->isSecondWord)
 			{
-StateLabel_BeginOfS:
+begin_of_S:
 				if (currentWord < 0xD800 || currentWord >= 0xDC00)
 				{
 					// 0xDC00 <= currentWord < 0xE000: low surrogate
@@ -182,17 +182,19 @@ StateLabel_BeginOfS:
 
 					if (writeCount == in_count)
 					{
-						// Serious bug !!!
-						pUTF16State->currentLabel = UTF16_CurrentLabel_BeginOfS;
-						// To trigger the bug
-						currentCodePoint = 0xDEAD;
+						pUTF16State->currentLabel = UTF16_CurrentLabel_HandleAfterHighSurrogate;
+
+						// Backup currentCodeWord
+						pUTF16State->prevWord = currentWord;
 						return writeCount;
+
+StateLabel_HandleAfterHighSurrogate:
+						// Restore currentCodeWord
+						currentWord = pUTF16State->prevWord;
 					}
-					else
-					{
-						assert(writeCount < in_count);
-						goto StateLabel_BeginOfS;
-					}
+
+					assert(writeCount < in_count);
+					goto begin_of_S;
 				}
 				else
 				{
