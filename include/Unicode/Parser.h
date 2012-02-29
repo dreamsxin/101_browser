@@ -96,17 +96,6 @@ size_t utf32_read(
 	void *in_out_pByteStreamState, 
 	void *out_pBuffer, size_t in_count);
 
-void parserStateInit(ParserState *out_pParserState, 
-	void *in_pReadState, 
-	ByteStreamReadInterface_v3 in_readInterface);
-
-ByteStreamReadInterface_v3 getParser_ReadInterface(
-	size_t (*mpfReadFunction)(void *in_out_pByteStreamState, 
-		void *out_pBuffer, size_t in_count));
-
-void writeCodePoint(UnicodeCodePoint **out_ppBuffer, 
-	size_t *in_out_pWriteCount, UnicodeCodePoint in_codePoint);
-
 #ifdef __cplusplus
 }
 #endif

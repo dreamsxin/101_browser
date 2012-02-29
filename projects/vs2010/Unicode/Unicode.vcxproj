@@ -102,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\Unicode\Parser.h" />
+    <ClInclude Include="..\..\..\include\Unicode\Parser_Util.h" />
     <ClInclude Include="..\..\..\include\Unicode\Unicode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

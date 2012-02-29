@@ -24,6 +24,9 @@
     <ClInclude Include="..\..\..\include\Unicode\Parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\Unicode\Parser_Util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Unicode\generated\WhiteSpaceIntervals.cpp">

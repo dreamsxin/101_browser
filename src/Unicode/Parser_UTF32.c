@@ -15,6 +15,7 @@
 */
 
 #include "Unicode/Parser.h"
+#include "Unicode/Parser_Util.h"
 #include "MiniStdlib/MTAx_cstdlib.h" // for the conversation functions for endianness
 #include <assert.h>
 
