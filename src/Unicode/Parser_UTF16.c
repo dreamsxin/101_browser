@@ -161,7 +161,6 @@ begin_of_S:
 				else
 				{
 					assert(currentWord >= 0xD800);
-					assert(currentWord < 0xDC00);
 					assert(currentWord <= 0xDBFF);
 
 					pUTF16State->prevWord = currentWord;
