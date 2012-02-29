@@ -164,8 +164,6 @@ begin_of_S:
 					assert(currentWord <= 0xDBFF);
 
 					pUTF16State->prevWord = currentWord;
-
-					//currentCodePoint = (pUTF16State->currentWord & 0x3FFu) << 10u;
 					pUTF16State->isSecondWord = true;
 
 					continue;
