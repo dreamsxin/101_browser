@@ -155,8 +155,8 @@ void test_Unicode_Parser_UTF16()
 			memoryByteStream_v3ReadStateInit(&readState, bufferIn, sizeof(bufferIn), 
 				(bool) terminateAfterLastOperation);
 
-			utf16_StateInit(&utf16State, memoryByteStreamReadInterface_v3_get(), 
-				&readState, true);
+			utf16_StateInit(&utf16State, &readState, 
+				memoryByteStreamReadInterface_v3_get(), true);
 
 			allReadCount = 0;
 
@@ -212,8 +212,8 @@ void test_Unicode_Parser_UTF16()
 			memoryByteStream_v3ReadStateInit(&readState, bufferIn, sizeof(bufferIn), 
 				(bool) terminateAfterLastOperation);
 
-			utf16_StateInit(&utf16State, memoryByteStreamReadInterface_v3_get(), 
-				&readState, false);
+			utf16_StateInit(&utf16State, &readState, 
+				memoryByteStreamReadInterface_v3_get(), false);
 
 			allReadCount = 0;
 
@@ -290,8 +290,8 @@ void test_Unicode_Parser_UTF32()
 			memoryByteStream_v3ReadStateInit(&readState, bufferIn, sizeof(bufferIn), 
 				(bool) terminateAfterLastOperation);
 
-			utf32_StateInit(&utf32State, memoryByteStreamReadInterface_v3_get(), 
-				&readState, true);
+			utf32_StateInit(&utf32State, &readState, 
+				memoryByteStreamReadInterface_v3_get(), true);
 
 			allReadCount = 0;
 
@@ -339,8 +339,8 @@ void test_Unicode_Parser_UTF32()
 			memoryByteStream_v3ReadStateInit(&readState, bufferIn, sizeof(bufferIn), 
 				(bool) terminateAfterLastOperation);
 
-			utf32_StateInit(&utf32State, memoryByteStreamReadInterface_v3_get(), 
-				&readState, false);
+			utf32_StateInit(&utf32State, &readState, 
+				memoryByteStreamReadInterface_v3_get(), false);
 
 			allReadCount = 0;
 

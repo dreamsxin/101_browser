@@ -40,6 +40,14 @@ void utfX_Terminate(void *in_out_pByteStreamState)
 		((ParserState *) in_out_pByteStreamState)->pReadState);
 }
 
+void parserStateInit(ParserState *out_pParserState, 
+	void *in_pReadState, 
+	ByteStreamReadInterface_v3 in_readInterface)
+{
+	out_pParserState->pReadState = in_pReadState;
+	out_pParserState->readInterface = in_readInterface;
+}
+
 ByteStreamReadInterface_v3 getParser_ReadInterface(
 	size_t (*mpfReadFunction)(void *in_out_pByteStreamState, 
 		void *out_pBuffer, size_t in_count))

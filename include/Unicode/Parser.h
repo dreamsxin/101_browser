@@ -67,8 +67,8 @@ DLLEXPORT ReadResult parse_UTF8(
 	void *in_pWriteState);
 
 DLLEXPORT void utf16_StateInit(UTF16_State *out_pState, 
-	ByteStreamReadInterface_v3 in_readInterface, 
 	void *in_pReadState, 
+	ByteStreamReadInterface_v3 in_readInterface, 
 	bool in_bigEndian);
 
 DLLEXPORT void utf16_StateReset(UTF16_State *out_pState);
@@ -80,8 +80,8 @@ size_t utf16_read(
 DLLEXPORT ByteStreamReadInterface_v3 getUTF16_ReadInterface();
 
 DLLEXPORT void utf32_StateInit(UTF32_State *out_pState, 
-	ByteStreamReadInterface_v3 in_readInterface, 
 	void *in_pReadState, 
+	ByteStreamReadInterface_v3 in_readInterface, 
 	bool in_bigEndian);
 
 DLLEXPORT void utf32_StateReset(UTF32_State *out_pState);
@@ -95,6 +95,10 @@ DLLEXPORT ByteStreamReadInterface_v3 getUTF32_ReadInterface();
 size_t utf32_read(
 	void *in_out_pByteStreamState, 
 	void *out_pBuffer, size_t in_count);
+
+void parserStateInit(ParserState *out_pParserState, 
+	void *in_pReadState, 
+	ByteStreamReadInterface_v3 in_readInterface);
 
 ByteStreamReadInterface_v3 getParser_ReadInterface(
 	size_t (*mpfReadFunction)(void *in_out_pByteStreamState, 

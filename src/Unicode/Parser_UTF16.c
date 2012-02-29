@@ -20,12 +20,11 @@
 #include <assert.h>
 
 void utf16_StateInit(UTF16_State *out_pState, 
-	ByteStreamReadInterface_v3 in_readInterface, 
 	void *in_pReadState, 
+	ByteStreamReadInterface_v3 in_readInterface, 
 	bool in_bigEndian)
 {
-	out_pState->parserState.pReadState = in_pReadState;
-	out_pState->parserState.readInterface = in_readInterface;
+	parserStateInit(&out_pState->parserState, in_pReadState, in_readInterface);
 	out_pState->bigEndian = in_bigEndian;
 	
 	utf16_StateReset(out_pState);
