@@ -33,9 +33,9 @@ void utf16_StateInit(UTF16_State *out_pState,
 
 void utf16_StateReset(UTF16_State *out_pState)
 {
-	out_pState->isSecondWord = false;
 	out_pState->currentLabel = UTF16_CurrentLabel_Begin;
-	// No necessity to initialize/reset currentWord
+	out_pState->isSecondWord = false;
+	// No necessity to initialize/reset prevWord
 }
 
 ByteStreamReadInterface_v3 getUTF16_ReadInterface()
