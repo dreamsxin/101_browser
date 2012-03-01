@@ -206,11 +206,11 @@ module dom4
   interface XMLDocument : Document {};
 
   interface DOMImplementation {
-    boolean hasFeature(DOMString feature, [TreatNullAs=EmptyString] DOMString version);
-  
     DocumentType createDocumentType(DOMString qualifiedName, DOMString publicId, DOMString systemId);
     XMLDocument createDocument(DOMString? namespace, DOMString qualifiedName, DocumentType? doctype);
     Document createHTMLDocument(DOMString title);
+  
+    boolean hasFeature(DOMString feature, [TreatNullAs=EmptyString] DOMString version);
   };
 
   interface DocumentFragment : Node {
