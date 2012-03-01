@@ -52,3 +52,6 @@ http://download.blender.org/peach/trailer/trailer_400p.ogg
 
 http://ftp.nluug.nl/ftp/graphics/blender/apricot/trailer/sintel_trailer-480p.ogv
 (linked from http://www.sintel.org/download - other versions (e. g. H.264 in MP4 and MKV containers) are available there, too)
+
+
+http://www.bing.com/az/hprichv/?p=GCanyon_Artbeats_JT-FH102-90_DE-DE.ogv
