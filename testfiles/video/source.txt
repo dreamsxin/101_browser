@@ -56,3 +56,8 @@ http://ftp.nluug.nl/ftp/graphics/blender/apricot/trailer/sintel_trailer-480p.ogv
 
 http://www.bing.com/az/hprichv/?p=GCanyon_Artbeats_JT-FH102-90_DE-DE.ogv
 http://www.bing.com/az/hprichv/?p=GCanyon_Artbeats_JT-FH102-90_DE-DE.mp4
+
+
+Subfolder TheoraTestsuite
+
+See http://wiki.xiph.org/TheoraTestsuite (its source is saved in TheoraTestsuite/TheoraTestsuite.txt).

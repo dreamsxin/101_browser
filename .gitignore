@@ -92,5 +92,7 @@ doc/*.toc
 *.mov
 *.webm
 *.mp4
-*.ogv
+testfiles/video/*.ogv
 testfiles/video/*.ogg
+testfiles/video/TheoraTestsuite/*.ogv
+testfiles/video/TheoraTestsuite/*.ogg
