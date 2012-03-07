@@ -65,6 +65,13 @@ h4. a_image.gif
 
 http://www-eng-x.llnl.gov/documents/a_image.gif (linked from http://www-eng-x.llnl.gov/documents/tests/gif.html)
 
+h4. nightearth.gif
+
+http://eoimages.gsfc.nasa.gov/images/imagerecords/55000/55167/nightearth.gif
+Referenced in http://visibleearth.nasa.gov/view.php?id=55167
+
+A 15000x30000 GIF file challenging the stability of the decoder and viewer code.
+
 h4. hertz-2011-hp.gif
 
 http://www.google.de/logos/2012/hertz-2011-hp.gif
