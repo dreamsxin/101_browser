@@ -843,6 +843,20 @@ module html
     readonly attribute unsigned long height;
     readonly attribute Uint8ClampedArray data;
   };
+  
+  [Constructor(optional Element scope)]
+  interface Path {
+    void addFillText(DOMString text, double x, double y, optional double maxWidth);
+    void addStrokeText(DOMString text, double x, double y, optional double maxWidth);
+    void addFillText(DOMString text, Path path, double x, double y, optional double maxWidth);
+    void addStrokeText(DOMString text, Path path, double x, double y, optional double maxWidth);
+    void addFill(Path path);
+    void addStroke(Path path);
+  };
+  Path implements CanvasTransformation;
+  Path implements CanvasLineStyles;
+  Path implements CanvasPathMethods;
+  Path implements CanvasText;
 
   interface HTMLMapElement : HTMLElement {
              attribute DOMString name;
