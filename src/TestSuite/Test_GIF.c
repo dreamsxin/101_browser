@@ -93,6 +93,11 @@ void testGIF()
 {
 	size_t idx;
 
+	bool boolResult;
+	GIF_Data_Stream dataStream;
+	ReadResult readResult;
+	FileByteStreamState fileByteStreamState;
+
 	// We want to be sure...
 	test(sizeof(Logical_Screen_Descriptor) == 7);
 	test(sizeof(Graphic_Control_Extension) == 5);
@@ -100,39 +105,32 @@ void testGIF()
 
 	for (idx = 0; idx < sizeof(gif_filenames)/sizeof(char*); idx++)
 	{
-		GIF_Data_Stream dataStream;
-		ReadResult readResult;
-		FileByteStreamState fileByteStreamState;
+		boolResult = fileByteReadStreamStateInit(gif_filenames[idx], &fileByteStreamState);
+		test(boolResult);
 
-		if (!fileByteReadStreamStateInit(gif_filenames[idx], &fileByteStreamState))
+		if (boolResult)
 		{
-			fprintf(stderr, "Could not open file %s\n", gif_filenames[idx]);
-			exit(1);
+			readResult = read_GIF_Data_Stream(&fileByteStreamState, getFileByteStreamInterface(), &dataStream, NULL);
+			test(ReadResultOK == readResult);
+
+			fileByteReadStreamStateDestroy(&fileByteStreamState);
 		}
-
-		readResult = read_GIF_Data_Stream(&fileByteStreamState, getFileByteStreamInterface(), &dataStream, NULL);
-		test(ReadResultOK == readResult);
-
-		fileByteReadStreamStateDestroy(&fileByteStreamState);
 	}
 
 	for (idx = 0; idx < sizeof(filenameResults)/sizeof(filenameResults[0]); idx++)
 	{
-		GIF_Data_Stream dataStream;
-		ReadResult readResult;
-		FileByteStreamState fileByteStreamState;
-
+#if 0
 		printf("Trying file %s\n", filenameResults[idx].char96);
+#endif
+		boolResult = fileByteReadStreamStateInit(filenameResults[idx].char96, &fileByteStreamState);
+		test(boolResult);
 
-		if (!fileByteReadStreamStateInit(filenameResults[idx].char96, &fileByteStreamState))
+		if (boolResult)
 		{
-			fprintf(stderr, "Could not open file %s\n", filenameResults[idx].char96);
-			exit(1);
+			readResult = read_GIF_Data_Stream(&fileByteStreamState, getFileByteStreamInterface(), &dataStream, NULL);
+			test(filenameResults[idx].readResult == readResult);
+
+			fileByteReadStreamStateDestroy(&fileByteStreamState);
 		}
-
-		readResult = read_GIF_Data_Stream(&fileByteStreamState, getFileByteStreamInterface(), &dataStream, NULL);
-		test(filenameResults[idx].readResult == readResult);
-
-		fileByteReadStreamStateDestroy(&fileByteStreamState);
 	}
 }
