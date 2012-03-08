@@ -1,9 +1,3 @@
-h2. Subfolder "deflate"
-
-zeros.raw is taken from zlib 1.2.5's (http://zlib.net/) folder contrib/puff.
-
-The files pngcrush* are based on the explanation on http://garethrees.org/2007/11/14/pngcrush/ (see also create_testfiles.sh in deflate folder).
-
 h2. Subfolder "gif"
 
 h3. Subfolder fileformat.info
@@ -159,6 +153,12 @@ sample_utf8.json converted to these Unicode representations - without BOM, as th
 h2. Subfolder "png"
 
 All images are taken from PngSuite by Willem van Schaik. See http://www.schaik.com/pngsuite/ (on http://www.libpng.org/pub/png/pngsuite.html it is mirrored).
+
+h2. Subfolder "rfc1950_rfc1951"
+
+zeros.raw is taken from zlib 1.2.5's (http://zlib.net/) folder contrib/puff.
+
+The files pngcrush* are based on the explanation on http://garethrees.org/2007/11/14/pngcrush/ (see also create_testfiles.sh in deflate folder).
 
 h2. Subfolder "Unicode"
 
