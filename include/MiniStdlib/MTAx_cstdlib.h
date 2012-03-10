@@ -28,7 +28,8 @@ extern "C" {
 #endif
 
 #ifdef __GNUC__
-#define _byteswap_ushort __builtin_bswap16
+// No __builtin_bswap16 function available in gcc
+#define _byteswap_ushort(x) ((uint16_t) ((((uint16_t) x) << 8u) | (((uint16_t) x) >> 8u)))
 #define _byteswap_ulong __builtin_bswap32
 #define _byteswap_uint64 __builtin_bswap64
 #endif

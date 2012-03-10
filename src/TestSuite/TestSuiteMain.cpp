@@ -18,6 +18,7 @@
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
 #include "Network/Network.h"
+#include <cstdlib> // for exit and EXIT_FAILURE
 
 int main()
 {
