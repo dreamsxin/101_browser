@@ -31,15 +31,22 @@ module canvas
     void fillRect(double x, double y, double w, double h);
     void strokeRect(double x, double y, double w, double h);
   
-    // current default path API (see also CanvasPathMethods)
+    // path API (see also CanvasPathMethods)
     void beginPath();
     void fill();
+    void fill(Path path);
     void stroke();
+    void stroke(Path path);
     void drawSystemFocusRing(Element element);
+    void drawSystemFocusRing(Path path, Element element);
     boolean drawCustomFocusRing(Element element);
+    boolean drawCustomFocusRing(Path path, Element element);
     void scrollPathIntoView();
+    void scrollPathIntoView(Path path);
     void clip();
+    void clip(Path path);
     boolean isPointInPath(double x, double y);
+    boolean isPointInPath(Path path, double x, double y);
   
     // text (see also the CanvasText interface)
     void fillText(DOMString text, double x, double y, optional double maxWidth);
@@ -121,6 +128,20 @@ module canvas
     readonly attribute unsigned long height;
     readonly attribute Uint8ClampedArray data;
   };
+  
+  [Constructor(optional Element scope)]
+  interface Path {
+    void addFill(Path path);
+    void addStroke(Path path);
+    void addFillText(DOMString text, double x, double y, optional double maxWidth);
+    void addStrokeText(DOMString text, double x, double y, optional double maxWidth);
+    void addFillText(DOMString text, Path path, optional double maxWidth);
+    void addStrokeText(DOMString text, Path path, optional double maxWidth);
+  };
+  Path implements CanvasTransformation;
+  Path implements CanvasLineStyles;
+  Path implements CanvasPathMethods;
+  Path implements CanvasText;
 
 
 };
