@@ -827,10 +827,11 @@ module html
     void lineTo(double x, double y);
     void quadraticCurveTo(double cpx, double cpy, double x, double y);
     void bezierCurveTo(double cp1x, double cp1y, double cp2x, double cp2y, double x, double y);
-    void arcTo(double x1, double y1, double x2, double y2, double radiusX, optional double radiusY); 
+    void arcTo(double x1, double y1, double x2, double y2, double radius); 
+    void arcTo(double x1, double y1, double x2, double y2, double radiusX, double radiusY, double rotation); 
     void rect(double x, double y, double w, double h);
-    void arc(double x, double y, double radius, double startAngle, double endAngle, optional boolean anticlockwise); 
-    void arc(double x, double y, double radiusX, double radiusY, double startAngle, double endAngle, optional boolean anticlockwise); 
+    void arc(double x, double y, double radius, double startAngle, double endAngle, optional boolean anticlockwise = false); 
+    void ellipse(double x, double y, double radiusX, double radiusY, double rotation, double startAngle, double endAngle, boolean anticlockwise); 
   };
   
   interface CanvasGradient {
@@ -854,6 +855,7 @@ module html
   
   [Constructor(optional Element scope)]
   interface Path {
+    void addPathData(DOMString d);
     void addFill(Path path);
     void addStroke(Path path);
     void addFillText(DOMString text, double x, double y, optional double maxWidth);
