@@ -56,6 +56,13 @@ http://ftp.nluug.nl/ftp/graphics/blender/apricot/trailer/sintel_trailer-480p.ogv
 
 http://www.bing.com/az/hprichv/?p=GCanyon_Artbeats_JT-FH102-90_DE-DE.ogv
 http://www.bing.com/az/hprichv/?p=GCanyon_Artbeats_JT-FH102-90_DE-DE.mp4
+http://www.bing.com/az/hprichv/?p=GCanyon_Artbeats_JT-FH102-90_DE-DE.webm
+http://www.bing.com/az/hprichv/?p=MtFlowers_Matera_DE-DE.mp4
+http://www.bing.com/az/hprichv/?p=MtFlowers_Matera_DE-DE.ogv
+http://www.bing.com/az/hprichv/?p=MtFlowers_Matera_DE-DE.webm
+http://www.bing.com/az/hprichv/?p=SeaLions_Corbis_3B2FBBAE_0008_DE-DE.mp4
+http://www.bing.com/az/hprichv/?p=SeaLions_Corbis_3B2FBBAE_0008_DE-DE.ogv
+http://www.bing.com/az/hprichv/?p=SeaLions_Corbis_3B2FBBAE_0008_DE-DE.webm
 
 
 Subfolder TheoraTestsuite
