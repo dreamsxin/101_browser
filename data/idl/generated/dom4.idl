@@ -401,6 +401,7 @@ module dom4
     unsigned short acceptNode(Node node);
   };
 
+  [ArrayClass]
   interface NodeList {
     getter Node? item(unsigned long index);
     readonly attribute unsigned long length;
@@ -412,6 +413,7 @@ module dom4
     getter object? namedItem(DOMString name); // only returns Element
   };
 
+  [NoInterfaceObject]
   interface DOMStringList {
     readonly attribute unsigned long length;
     getter DOMString? item(unsigned long index);

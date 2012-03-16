@@ -809,6 +809,11 @@ module html
              attribute DOMString lineCap; // "butt", "round", "square" (default "butt")
              attribute DOMString lineJoin; // "round", "bevel", "miter" (default "miter")
              attribute double miterLimit; // (default 10)
+  
+    // dashed lines
+    void setLineDash(sequence<double> segments); // default empty
+    sequence<double> getLineDash();
+             attribute double lineDashOffset;
   };
   
   [NoInterfaceObject]
@@ -855,13 +860,13 @@ module html
   
   [Constructor(optional Element scope)]
   interface Path {
-    void addPathData(DOMString d);
-    void addFill(Path path);
-    void addStroke(Path path);
-    void addFillText(DOMString text, double x, double y, optional double maxWidth);
-    void addStrokeText(DOMString text, double x, double y, optional double maxWidth);
-    void addFillText(DOMString text, Path path, optional double maxWidth);
-    void addStrokeText(DOMString text, Path path, optional double maxWidth);
+    void addPathData(DOMString d); 
+    void addPath(Path path);
+    void addPathByStrokingPath(Path path);
+    void addText(DOMString text, double x, double y, optional double maxWidth);
+    void addPathByStrokingText(DOMString text, double x, double y, optional double maxWidth);
+    void addText(DOMString text, Path path, optional double maxWidth);
+    void addPathByStrokingText(DOMString text, Path path, optional double maxWidth);
   };
   Path implements CanvasTransformation;
   Path implements CanvasLineStyles;
