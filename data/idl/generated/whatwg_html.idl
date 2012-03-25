@@ -787,6 +787,9 @@ module html
     void drawImage((HTMLImageElement or HTMLCanvasElement or HTMLVideoElement) image, double dx, double dy, double dw, double dh);
     void drawImage((HTMLImageElement or HTMLCanvasElement or HTMLVideoElement) image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh);
   
+    // hit regions
+    void addHitRegion(HitRegionOptions options);
+  
     // pixel manipulation
     ImageData createImageData(double sw, double sh);
     ImageData createImageData(ImageData imagedata);
@@ -842,6 +845,19 @@ module html
   
   interface TextMetrics {
     readonly attribute double width;
+  };
+  
+  dictionary HitRegionOptions {
+    Path? path = null;
+    SVGMatrix? transform = null;
+    DOMString id = '';
+    DOMString? parentID = null;
+    DOMString cursor = 'inherit';
+    // for control-backed regions:
+    Element? control = null;
+    // for unbacked regions:
+    DOMString? label = null;
+    DOMString? role = null;
   };
   
   interface ImageData {
