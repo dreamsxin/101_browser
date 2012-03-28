@@ -732,11 +732,13 @@ module html
     void restore(); // pop state stack and restore state
   
     // transformations (default transform is the identity matrix)
+             attribute SVGMatrix currentTransform;
     void scale(double x, double y);
     void rotate(double angle);
     void translate(double x, double y);
     void transform(double a, double b, double c, double d, double e, double f);
     void setTransform(double a, double b, double c, double d, double e, double f);
+    void resetTransform();
   
     // compositing
              attribute double globalAlpha; // (default 1.0)
@@ -774,6 +776,7 @@ module html
     void scrollPathIntoView(Path path);
     void clip();
     void clip(Path path);
+    void resetClip();
     boolean isPointInPath(double x, double y);
     boolean isPointInPath(Path path, double x, double y);
   
@@ -783,6 +786,7 @@ module html
     TextMetrics measureText(DOMString text);
   
     // drawing images
+             attribute boolean imageSmoothingEnabled; // (default true)
     void drawImage((HTMLImageElement or HTMLCanvasElement or HTMLVideoElement) image, double dx, double dy);
     void drawImage((HTMLImageElement or HTMLCanvasElement or HTMLVideoElement) image, double dx, double dy, double dw, double dh);
     void drawImage((HTMLImageElement or HTMLCanvasElement or HTMLVideoElement) image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh);
@@ -841,15 +845,29 @@ module html
   
   interface CanvasPattern {
     // opaque object
+    void setTransform(SVGMatrix transform);
   };
   
   interface TextMetrics {
-    readonly attribute double width;
+    // x-direction
+    readonly attribute double width; // advance width
+    readonly attribute double actualBoundingBoxLeft;
+    readonly attribute double actualBoundingBoxRight;
+  
+    // y-direction
+    readonly attribute double fontBoundingBoxAscent;
+    readonly attribute double fontBoundingBoxDescent;
+    readonly attribute double actualBoundingBoxAscent;
+    readonly attribute double actualBoundingBoxDescent;
+    readonly attribute double emHeightAscent;
+    readonly attribute double emHeightDescent;
+    readonly attribute double hangingBaseline;
+    readonly attribute double alphabeticBaseline;
+    readonly attribute double ideographicBaseline;
   };
   
   dictionary HitRegionOptions {
     Path? path = null;
-    SVGMatrix? transform = null;
     DOMString id = '';
     DOMString? parentID = null;
     DOMString cursor = 'inherit';
@@ -871,6 +889,7 @@ module html
   DrawingStyle implements CanvasDrawingStyles;
   
   [Constructor,
+   Constructor(Path path),
    Constructor(DOMString d)]
   interface Path {
     void addPath(Path path, SVGMatrix? transformation);
@@ -881,6 +900,14 @@ module html
     void addPathByStrokingText(DOMString text, CanvasDrawingStyles styles, SVGMatrix? transformation, Path path, optional double maxWidth);
   };
   Path implements CanvasPathMethods;
+
+  partial interface MouseEvent {
+    readonly attribute DOMString? region;
+  };
+  
+  partial dictionary MouseEventInit {
+    DOMString? region;
+  };
 
   interface HTMLMapElement : HTMLElement {
              attribute DOMString name;
