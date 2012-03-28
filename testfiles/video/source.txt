@@ -66,7 +66,9 @@ http://www.bing.com/az/hprichv/?p=SeaLions_Corbis_3B2FBBAE_0008_DE-DE.webm
 http://www.bing.com/az/hprichv/?p=Thunderstorm_ArtBeats_EST121_DE-DE.mp4
 http://www.bing.com/az/hprichv/?p=Thunderstorm_ArtBeats_EST121_DE-DE.ogv
 http://www.bing.com/az/hprichv/?p=Thunderstorm_ArtBeats_EST121_DE-DE.webm
-
+http://www.bing.com/az/hprichv/?p=KolnWalk_Clipcanvas_32544_DE-DE.ogv
+http://www.bing.com/az/hprichv/?p=KolnWalk_Clipcanvas_32544_DE-DE.webm
+http://www.bing.com/az/hprichv/?p=KolnWalk_Clipcanvas_32544_08_DE-DE.mp4
 
 
 Subfolder TheoraTestsuite
