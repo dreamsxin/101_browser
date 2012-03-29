@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2011 Wolfgang Keller
+ * Copyright 2008-2012 Wolfgang Keller
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,6 +51,13 @@ FILE* logFile = NULL;
 Gui::Cursor cursor;
 bool gMultipleMice = false;
 
+void handleDraw(Window* window)
+{
+	drawGui(gMultipleMice ? &window->rawMice : NULL);
+	SwapBuffers(window->hDC);
+	ValidateRect(window->hWnd, NULL);
+}
+
 LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	Window* window = (Window*) GetWindowLongPtr(hWnd, GWL_USERDATA);
@@ -90,6 +97,7 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				}
 
 				ReshapeGL(window->width, window->height);
+
 				/*
 				 * A WM_PAINT will be called automatically - so there is no need for
 				 * InvalidateRect(window->hWnd, NULL, FALSE);
@@ -98,15 +106,7 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	case WM_PAINT:
-		/*
-		 * I know many say should not put OpenGL code into this
-		 * handler - but what should be done else
-		 * for drawing the window *while* resizing, moving etc.
-		 */
-		UpdateGuiState();
-		drawGui(gMultipleMice ? &window->rawMice : NULL);
-		SwapBuffers(window->hDC);
-		ValidateRect(window->hWnd, NULL);
+		handleDraw(window);
 		return 0;
 	case WM_KEYDOWN:
 		if (wParam == VK_F12)

@@ -23,7 +23,6 @@
 
 void ReshapeGL(int width, int height);
 void initializeOpenGLGuiState();
-void UpdateGuiState();
 void drawGui(
 #ifdef _WIN32
 			 const ArrayBlock<Gui::Mouse::RawMouse>* in_pRawMice

@@ -61,10 +61,6 @@ void initializeOpenGLGuiState()
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);          // Set Perspective Calculations To Most Accurate
 }
 
-void UpdateGuiState()
-{
-}
-
 void drawGui(
 #ifdef _WIN32
 			 const ArrayBlock<Gui::Mouse::RawMouse>* in_pRawMice

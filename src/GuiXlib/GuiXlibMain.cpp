@@ -284,7 +284,6 @@ void printEvent(int type)
 
 void draw(const OZO_Display* pDisplay, const OZO_Window* pWindow)
 {
-	UpdateGuiState();
 	drawGui();
 	glXSwapBuffers(pDisplay->display, pWindow->handle);
 }
