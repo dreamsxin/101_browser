@@ -10,7 +10,7 @@ h2. 1. Basic information
 |Author|Wolfgang Keller|
 |Email|wolfgangkeller@gmail.com|
 |Website|http://github.com/nubok/101_browser|
-|Description|A small web browser (or more precise: a small yet-to-become web browser)|
+|Description|A small yet-to-become web browser|
 
 See the text generated from doc/101_browser_book.tex by LaTeX for lots of details.
 
