@@ -4,6 +4,12 @@ h3. Subfolder fileformat.info
 
 All images are taken from http://www.fileformat.info/format/gif/sample/index.htm
 
+h3. Subfolder images
+
+optimized.gif and original.gif are taken from images.zip from http://code.google.com/p/imageoptim/issues/detail?id=37&q=gif
+
+It originally triggered a bug in the GIF decoding code of Mac OS X.
+
 h3. Subfolder wikipedia
 
 h4. empty.gif

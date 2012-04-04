@@ -51,7 +51,10 @@ static char* gif_filenames[] = {
 
 	"testfiles/gif/a_image.gif",
 	"testfiles/gif/hertz-2011-hp.gif",
+	// Commented because it is very slow at the moment
+#if 0
 	"testfiles/gif/nightearth.gif",
+#endif
 	"testfiles/gif/tc217.gif",
 	"testfiles/gif/tumblr_lytmpoEsiT1qz4ssl.gif",
 
@@ -62,7 +65,10 @@ static char* gif_filenames[] = {
 	"testfiles/gif/fileformat.info/WFPC03.GIF",
 	"testfiles/gif/fileformat.info/WFPC04.GIF",
 	"testfiles/gif/fileformat.info/WFPC05.GIF",
-	"testfiles/gif/fileformat.info/WFPC06.GIF"
+	"testfiles/gif/fileformat.info/WFPC06.GIF",
+
+	"testfiles/gif/images/original.gif", 
+	"testfiles/gif/images/optimized.gif"
 };
 
 static Char96ReadResultPair filenameResults[] = 
