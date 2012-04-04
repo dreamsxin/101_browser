@@ -535,9 +535,8 @@ module html
   
     // playback state
              attribute double currentTime;
-    readonly attribute double initialTime;
     readonly attribute double duration;
-    readonly attribute Date startOffsetTime;
+    readonly attribute Date startDate;
     readonly attribute boolean paused;
              attribute double defaultPlaybackRate;
              attribute double playbackRate;
@@ -1821,7 +1820,7 @@ module html
 
   [Constructor(DOMString type, optional StorageEventInit eventInitDict)]
   interface StorageEvent : Event {
-    readonly attribute DOMString key;
+    readonly attribute DOMString? key;
     readonly attribute DOMString? oldValue;
     readonly attribute DOMString? newValue;
     readonly attribute DOMString url;
@@ -1829,7 +1828,7 @@ module html
   };
   
   dictionary StorageEventInit : EventInit {
-    DOMString key;
+    DOMString? key;
     DOMString? oldValue;
     DOMString? newValue;
     DOMString url;

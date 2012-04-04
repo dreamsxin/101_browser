@@ -497,9 +497,8 @@ module html5
   
     // playback state
              attribute double currentTime;
-    readonly attribute double initialTime;
     readonly attribute double duration;
-    readonly attribute Date startOffsetTime;
+    readonly attribute Date startDate;
     readonly attribute boolean paused;
              attribute double defaultPlaybackRate;
              attribute double playbackRate;
