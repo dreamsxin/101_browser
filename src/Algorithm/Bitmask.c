@@ -28,16 +28,8 @@ bool checkBitmask(const void *in_pBuffer, size_t in_bufferSize,
 	
 	for (index = 0; index < in_bufferSize; index++)
 	{
-		for (currentBit = 0; currentBit < 8; currentBit++)
-		{
-			if (pMaskIdentifierBits[index] & (1 << currentBit))
-			{
-				if ((pBuffer[index] & (1 << currentBit)) != (pMaskValueBits[index] & (1 << currentBit)))
-				{
-					return false;
-				}
-			}
-		}
+		if (pMaskIdentifierBits[index] & (pBuffer[index] ^ pMaskValueBits[index]))
+			return false;
 	}
 
 	return true;
