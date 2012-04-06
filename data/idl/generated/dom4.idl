@@ -86,9 +86,10 @@ module dom4
   interface MutationObserver {
     void observe(Node target, MutationObserverInit options);
     void disconnect();
+    sequence<MutationRecord> takeRecords();
   };
   
-  callback MutationCallback = void (MutationRecord[] mutations, MutationObserver observer);
+  callback MutationCallback = void (sequence<MutationRecord> mutations, MutationObserver observer);
   
   dictionary MutationObserverInit {
     boolean childList;

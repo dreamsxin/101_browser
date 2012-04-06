@@ -1294,6 +1294,12 @@ module html
              attribute DOMString label;
   };
 
+  interface HTMLDialogElement : HTMLElement {
+             attribute boolean open;
+    void show(optional (MouseEvent or Element) anchor);
+    void showModal(optional (MouseEvent or Element) anchor);
+  };
+
   [ReplaceableNamedProperties]
   interface Window : EventTarget {
     // the current browsing context
