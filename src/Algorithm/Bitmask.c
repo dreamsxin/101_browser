@@ -24,7 +24,6 @@ bool checkBitmask(const void *in_pBuffer, size_t in_bufferSize,
 	const uint8_t *pMaskIdentifierBits = (const uint8_t*) in_pMaskIdentifierBits;
 	const uint8_t *pMaskValueBits = (const uint8_t*) in_pMaskValueBits;
 	size_t index;
-	uint8_t currentBit;
 	
 	for (index = 0; index < in_bufferSize; index++)
 	{
