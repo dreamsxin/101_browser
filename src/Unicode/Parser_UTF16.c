@@ -17,15 +17,11 @@
 #include "Unicode/Parser.h"
 #include "Unicode/Parser_Util.h"
 #include "MiniStdlib/cstdint.h"
-#include "MiniStdlib/MTAx_cstdlib.h" // for the conversation functions for endianness
+#include "MiniStdlib/MTAx_cstdlib.h" // for the conversation functions of endianness
 #include <assert.h>
 
-void utf16_StateInit(UTF16_State *out_pState, 
-	void *in_pReadState, 
-	ByteStreamReadInterface_v3 in_readInterface, 
-	bool in_bigEndian)
+void utf16_StateInit(UTF16_State *out_pState, bool in_bigEndian)
 {
-	parserStateInit(&out_pState->parserState, in_pReadState, in_readInterface);
 	out_pState->bigEndian = in_bigEndian;
 	
 	utf16_StateReset(out_pState);
@@ -33,137 +29,142 @@ void utf16_StateInit(UTF16_State *out_pState,
 
 void utf16_StateReset(UTF16_State *out_pState)
 {
-	out_pState->currentLabel = UTF16_CurrentLabel_Begin;
+	out_pState->entryPoint = UTF16_EntryPoint_BeforeReading;
+	out_pState->readCount = 0;
 	out_pState->isSecondWord = false;
 	// No necessity to initialize/reset prevWord
-}
-
-ByteStreamReadInterface_v3 getUTF16_ReadInterface()
-{
-	return getParser_ReadInterface(utf16_read);
 }
 
 // See http://unicode.org/faq/utf_bom.html#utf16-4
 const UnicodeCodePoint SURROGATE_OFFSET = 0x10000 - (0xD800 << 10) - 0xDC00;
 
-size_t utf16_read(
+ParseBlocker utf16_parse(
 	void *in_out_pByteStreamState, 
-	void *out_pBuffer, size_t in_count)
+	void *in_pReadState, ByteStreamReadInterface_v4 in_readInterface, 
+	void *in_pWriteState, ByteStreamWriteInterface_v4 in_writeInterface)
 {
 	UTF16_State *pUTF16State = (UTF16_State *) in_out_pByteStreamState;
-	size_t writeCount = 0;
 	extern const UnicodeCodePoint cReplacementCharacter;
 
-	assert(pUTF16State->parserState.readInterface.mpfRead != NULL);
-	assert(pUTF16State->parserState.readInterface.commonByteStreamInterface.mpfIsTerminated != NULL);
+	assert(in_readInterface.mpfRead != NULL);
+	assert(in_readInterface.commonByteStreamInterface.mpfGetStatus != NULL);
 
-	/*
-	* Q: Why do we test this before and not in the loop
-	*    (kind of while (writeCount != in_count))?
-	* A: If we jump to StateLabel_BeginOfS or 
-	*    StateLabel_WriteTerminalReplacementCharacter we require
-	*    in_count != 0 to avoid a buffer overflow.
-	*/
-	if (0 == in_count)
-		return 0;
-
-	switch (pUTF16State->currentLabel)
+	switch (pUTF16State->entryPoint)
 	{
-	case UTF16_CurrentLabel_Begin:
-		goto StateLabel_Begin;
-	case UTF16_CurrentLabel_HandleAfterHighSurrogate:
-		goto StateLabel_HandleAfterHighSurrogate;
-	case UTF16_CurrentLabel_WriteTerminalReplacementCharacter:
-		goto StateLabel_WriteTerminalReplacementCharacter;
-	default:
-		assert(false);
+	case UTF16_EntryPoint_BeforeReading:
+		goto Label_EntryPoint_BeforeReading;
+	case UTF16_EntryPoint_BeforeWritingReplacementCharacterAndGotoBegin:
+		goto Label_EntryPoint_BeforeWritingReplacementCharacterAndGotoBegin;
+	case UTF16_EntryPoint_WriteCodePoint:
+		goto Label_EntryPoint_WriteCodePoint;
+	case UTF16_EntryPoint_WriteTwoTerminalReplacementCharacters:
+		goto Label_EntryPoint_WriteTwoTerminalReplacementCharacters;
+	case UTF16_EntryPoint_WriteTerminalReplacementCharacter:
+		goto Label_EntryPoint_WriteTerminalReplacementCharacter;
+	case UTF16_EntryPoint_Terminated:
+		goto Label_EntryPoint_Terminated;
 	}
 
-	do
+	assert(false);
+
+	while (1)
 	{
 		size_t rwCount;
-		uint16_t currentWord;
 
-StateLabel_Begin:
-		assert(writeCount < in_count);
+		pUTF16State->readCount = 0;
 
-		rwCount = pUTF16State->parserState.readInterface.mpfRead(
-			pUTF16State->parserState.pReadState, 
-			&currentWord, 2);
+Label_EntryPoint_BeforeReading:
+		assert(pUTF16State->readCount < 2);
+		rwCount = in_readInterface.mpfRead(in_pReadState, 
+			((uint8_t *) &pUTF16State->currentWord) + pUTF16State->readCount, 
+			2 - pUTF16State->readCount);
 
-		assert(rwCount <= 2);
+		assert(rwCount <= 2u - pUTF16State->readCount);
 
-		if (0 == rwCount)
+		pUTF16State->readCount += (uint8_t) rwCount;
+
+		if (0 == pUTF16State->readCount)
 		{
-			assert(pUTF16State->parserState.readInterface.commonByteStreamInterface.
-				mpfIsTerminated(pUTF16State->parserState.pReadState));
+			ByteStreamStatus_v4 status = in_readInterface.
+				commonByteStreamInterface.mpfGetStatus(in_pReadState);
+			assert(ByteStreamStatus_OK != status);
 
-			if (!pUTF16State->isSecondWord)
-				goto terminate;
-			else
-				goto StateLabel_WriteTerminalReplacementCharacter;
-		}
-		else if (1 == rwCount)
-		{
-			assert(pUTF16State->parserState.readInterface.commonByteStreamInterface.
-				mpfIsTerminated(pUTF16State->parserState.pReadState));
-
-			if (!pUTF16State->isSecondWord || !pUTF16State->bigEndian || 
-				/*
-				* Q: Why the bitwise and with 0xFF?
-				* A: Because we read only one byte (the lower one), we don't 
-				*    know what the value of the higher byte is. It can be
-				*    anything.
-				*/
-				((currentWord & 0xFF) >= 0xDC && (currentWord & 0xFF) <= 0xDF))
+			if (ByteStreamStatus_Terminated == status)
 			{
-				goto StateLabel_WriteTerminalReplacementCharacter;
+				if (!pUTF16State->isSecondWord)
+					goto terminate;
+				else
+					goto Label_EntryPoint_WriteTerminalReplacementCharacter;
 			}
 			else
 			{
-				assert(pUTF16State->isSecondWord);
-				assert(pUTF16State->bigEndian);
-				assert((currentWord & 0xFF) < 0xDC || (currentWord & 0xFF) > 0xDF);
+				pUTF16State->entryPoint = UTF16_EntryPoint_BeforeReading;
+				return ParseBlocker_Reader;
+			}
+		}
+		else if (1 == pUTF16State->readCount)
+		{
+			ByteStreamStatus_v4 status = in_readInterface.
+				commonByteStreamInterface.mpfGetStatus(in_pReadState);
+			assert(ByteStreamStatus_OK != status);
 
-				writeCodePoint((UnicodeCodePoint**) &out_pBuffer, &writeCount, cReplacementCharacter);
-
-				if (writeCount == in_count)
+			if (ByteStreamStatus_Terminated == status)
+			{
+				if (!pUTF16State->isSecondWord || 
+					!pUTF16State->bigEndian || 
+					/*
+					* Q: Why the bitwise and with 0xFF?
+					* A: Because we read only one byte (the lower one), we don't 
+					*    know what the value of the higher byte is. It can be
+					*    anything.
+					*/
+					(0xDC <= (pUTF16State->currentWord & 0xFF) && 
+					(pUTF16State->currentWord & 0xFF) <= 0xDF))
 				{
-					pUTF16State->currentLabel = UTF16_CurrentLabel_WriteTerminalReplacementCharacter;
-					return writeCount;
+					goto Label_EntryPoint_WriteTerminalReplacementCharacter;
 				}
 				else
 				{
-					assert(writeCount < in_count);
-					goto StateLabel_WriteTerminalReplacementCharacter;
+					assert(pUTF16State->isSecondWord);
+					assert(pUTF16State->bigEndian);
+					assert((pUTF16State->currentWord & 0xFF) < 0xDC || 
+						(pUTF16State->currentWord & 0xFF) > 0xDF);
+
+					goto Label_EntryPoint_WriteTwoTerminalReplacementCharacters;
 				}
+			}
+			else
+			{
+				pUTF16State->entryPoint = UTF16_EntryPoint_BeforeReading;
+				return ParseBlocker_Reader;
 			}
 		}
 		else
 		{
-			UnicodeCodePoint currentCodePoint = 0xFFFFFFFF;
-			assert(2 == rwCount);
+			assert(2 == pUTF16State->readCount);
 
 			if (pUTF16State->bigEndian)
-				currentWord = _byteswap_ushort(currentWord);
+				pUTF16State->currentWord = _byteswap_ushort(pUTF16State->currentWord);
 
 			if (!pUTF16State->isSecondWord)
 			{
 begin_of_S:
-				if (currentWord < 0xD800 || currentWord >= 0xDC00)
+				if (pUTF16State->currentWord < 0xD800 || 
+					pUTF16State->currentWord >= 0xDC00)
 				{
-					// 0xDC00 <= currentWord < 0xE000: low surrogate
-					if (0xDC00 <= currentWord  && currentWord < 0xE000)
-						currentCodePoint = cReplacementCharacter;
+					// 0xDC00 <= pUTF16State->currentWord < 0xE000: low surrogate
+					if (0xDC00 <= pUTF16State->currentWord  && 
+						pUTF16State->currentWord < 0xE000)
+						pUTF16State->currentCodePoint = cReplacementCharacter;
 					else
-						currentCodePoint = currentWord;
+						pUTF16State->currentCodePoint = pUTF16State->currentWord;
 				}
 				else
 				{
-					assert(currentWord >= 0xD800);
-					assert(currentWord <= 0xDBFF);
+					assert(pUTF16State->currentWord >= 0xD800);
+					assert(pUTF16State->currentWord <= 0xDBFF);
 
-					pUTF16State->prevWord = currentWord;
+					pUTF16State->prevWord = pUTF16State->currentWord;
 					pUTF16State->isSecondWord = true;
 
 					continue;
@@ -173,44 +174,56 @@ begin_of_S:
 			{
 				pUTF16State->isSecondWord = false;
 
-				if (currentWord < 0xDC00 || 0xDFFF < currentWord)
+				if (pUTF16State->currentWord < 0xDC00 || 0xDFFF < pUTF16State->currentWord)
 				{
-					writeCodePoint((UnicodeCodePoint**) &out_pBuffer, &writeCount, cReplacementCharacter);
+Label_EntryPoint_BeforeWritingReplacementCharacterAndGotoBegin:
+					if (emitCodepoint(in_pWriteState, in_writeInterface, 
+						cReplacementCharacter, &pUTF16State->entryPoint, 
+						sizeof(UTF16_EntryPoint), 
+						UTF16_EntryPoint_BeforeWritingReplacementCharacterAndGotoBegin))
+						return ParseBlocker_Writer;
 
-					if (writeCount == in_count)
-					{
-						pUTF16State->currentLabel = UTF16_CurrentLabel_HandleAfterHighSurrogate;
-
-						// Backup currentCodeWord
-						pUTF16State->prevWord = currentWord;
-						return writeCount;
-
-StateLabel_HandleAfterHighSurrogate:
-						// Restore currentCodeWord
-						currentWord = pUTF16State->prevWord;
-					}
-
-					assert(writeCount < in_count);
 					goto begin_of_S;
 				}
 				else
 				{
 					// See http://unicode.org/faq/utf_bom.html#utf16-4
-					currentCodePoint = (pUTF16State->prevWord << 10) + currentWord + SURROGATE_OFFSET;
+					pUTF16State->currentCodePoint = 
+						(pUTF16State->prevWord << 10) + pUTF16State->currentWord + SURROGATE_OFFSET;
 				}
 			}
 
-			writeCodePoint((UnicodeCodePoint**) &out_pBuffer, &writeCount, currentCodePoint);
+Label_EntryPoint_WriteCodePoint:
+			if (emitCodepoint(in_pWriteState, in_writeInterface, 
+				pUTF16State->currentCodePoint, &pUTF16State->entryPoint, 
+				sizeof(UTF16_EntryPoint), 
+				UTF16_EntryPoint_WriteCodePoint))
+				return ParseBlocker_Writer;
 		}
-	} while (writeCount != in_count);
+	}
 
-	goto terminate;
+Label_EntryPoint_WriteTwoTerminalReplacementCharacters:
+	if (emitCodepoint(in_pWriteState, in_writeInterface, 
+		cReplacementCharacter, &pUTF16State->entryPoint, 
+		sizeof(UTF16_EntryPoint), 
+		UTF16_EntryPoint_WriteTwoTerminalReplacementCharacters))
+		return ParseBlocker_Writer;
 
-StateLabel_WriteTerminalReplacementCharacter:
-	assert(writeCount < in_count);
-	writeCodePoint((UnicodeCodePoint**) &out_pBuffer, &writeCount, cReplacementCharacter);
+Label_EntryPoint_WriteTerminalReplacementCharacter:
+	assert(ByteStreamStatus_Terminated == in_readInterface.
+		commonByteStreamInterface.mpfGetStatus(in_pReadState));
+
+	if (emitCodepoint(in_pWriteState, in_writeInterface, 
+		pUTF16State->currentCodePoint, &pUTF16State->entryPoint, 
+		sizeof(UTF16_EntryPoint), 
+		UTF16_EntryPoint_WriteTerminalReplacementCharacter))
+		return ParseBlocker_Writer;
 
 terminate:
-	pUTF16State->currentLabel = UTF16_CurrentLabel_Begin;
-	return writeCount;
+	pUTF16State->entryPoint = UTF16_EntryPoint_Terminated;
+
+Label_EntryPoint_Terminated:
+	assert(ByteStreamStatus_Terminated == in_readInterface.
+		commonByteStreamInterface.mpfGetStatus(in_pReadState));
+	return ParseBlocker_Neither;
 }

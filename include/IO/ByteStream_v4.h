@@ -14,35 +14,41 @@
 * limitations under the License.
 */
 
-#ifndef _MTAx_IO_ByteStream_v3_h
-#define _MTAx_IO_ByteStream_v3_h
+#ifndef _MTAx_IO_ByteStream_v4_h
+#define _MTAx_IO_ByteStream_v4_h
 
 #include "MiniStdlib/cstddef.h"
-#include "MiniStdlib/cstdbool.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct
+typedef enum
 {
-	bool (*mpfIsTerminated)(const void *in_pByteStreamState);
-	void (*mpfTerminate)(void *in_out_pByteStreamState);
-} CommonByteStreamInterface_v3;
+	ByteStreamStatus_OK,
+	ByteStreamStatus_Terminated,
+	ByteStreamStatus_InterventionRequired,
+	ByteStreamStatus_Error
+} ByteStreamStatus_v4;
 
 typedef struct
 {
-	CommonByteStreamInterface_v3 commonByteStreamInterface;
+	ByteStreamStatus_v4 (*mpfGetStatus)(const void *in_pByteStreamState);
+	void (*mpfTerminate)(void *in_out_pByteStreamState);
+} CommonByteStreamInterface_v4;
+
+typedef struct
+{
+	CommonByteStreamInterface_v4 commonByteStreamInterface;
 	size_t (*mpfRead)(void *in_out_pByteStreamState, 
 		void *out_pBuffer, size_t in_count);
-} ByteStreamReadInterface_v3;
+} ByteStreamReadInterface_v4;
 
 typedef struct
 {
-	CommonByteStreamInterface_v3 commonByteStreamInterface;
+	CommonByteStreamInterface_v4 commonByteStreamInterface;
 	size_t (*mpfWrite)(void *in_out_pByteStreamState, 
 		const void *in_pBuffer, size_t in_count);
-} ByteStreamWriteInterface_v3;
+} ByteStreamWriteInterface_v4;
 
 #ifdef __cplusplus
 }

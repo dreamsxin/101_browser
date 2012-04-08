@@ -19,85 +19,122 @@
 #include "MiniStdlib/MTAx_cstdlib.h" // for the conversation functions for endianness
 #include <assert.h>
 
-void utf32_StateInit(UTF32_State *out_pState, 
-	void *in_pReadState, 
-	ByteStreamReadInterface_v3 in_readInterface, 
-	bool in_bigEndian)
+void utf32_StateInit(UTF32_State *out_pState, bool in_bigEndian)
 {
-	parserStateInit(&out_pState->parserState, in_pReadState, in_readInterface);
 	out_pState->bigEndian = in_bigEndian;
+	utf32_StateReset(out_pState);
 }
 
 void utf32_StateReset(UTF32_State *out_pState)
 {
-	// Nothing
+	out_pState->entryPoint = UTF32_EntryPoint_BeforeReading;
+	out_pState->readCount = 0;
 }
 
-ByteStreamReadInterface_v3 getUTF32_ReadInterface(const UTF32_State *out_pState)
-{
-	return getParser_ReadInterface(utf32_read);
-}
-
-size_t utf32_read(
+ParseBlocker utf32_parse(
 	void *in_out_pByteStreamState, 
-	void *out_pBuffer, size_t in_count)
+	void *in_pReadState, ByteStreamReadInterface_v4 in_readInterface, 
+	void *in_pWriteState, ByteStreamWriteInterface_v4 in_writeInterface)
 {
 	UTF32_State *pUTF32State = (UTF32_State *) in_out_pByteStreamState;
-	size_t writeCount = 0;
 	extern const UnicodeCodePoint cReplacementCharacter;
 
-	assert(pUTF32State->parserState.readInterface.mpfRead != NULL);
-	assert(pUTF32State->parserState.readInterface.commonByteStreamInterface.mpfIsTerminated != NULL);
-	
-	if (pUTF32State->parserState.readInterface.commonByteStreamInterface.
-		mpfIsTerminated(pUTF32State->parserState.pReadState))
-		goto terminate;
+	assert(in_readInterface.mpfRead != NULL);
+	assert(in_readInterface.commonByteStreamInterface.mpfGetStatus != NULL);
 
-	while (writeCount != in_count)
+	switch (pUTF32State->entryPoint)
+	{
+	case UTF32_EntryPoint_BeforeReading:
+		goto Label_EntryPoint_BeforeReading;
+	case UTF32_EntryPoint_WriteTerminalReplacementCharacter:
+		goto Label_EntryPoint_WriteTerminalReplacementCharacter;
+	case UTF32_EntryPoint_WriteCharacter:
+		goto Label_EntryPoint_WriteCharacter;
+	case UTF32_EntryPoint_Terminated:
+		goto Label_EntryPoint_Terminated;
+	}
+
+	assert(false);
+
+	while (1)
 	{
 		size_t rwCount;
-		UnicodeCodePoint currentCodePoint;
 
-		assert(writeCount < in_count);
-		
-		rwCount = pUTF32State->parserState.readInterface.mpfRead(
-			pUTF32State->parserState.pReadState, &currentCodePoint, 4);
+		pUTF32State->readCount = 0;
 
-		assert(rwCount <= 4);
+Label_EntryPoint_BeforeReading:
+		assert(pUTF32State->readCount < 4);
 
-		if (0 == rwCount)
+		rwCount = in_readInterface.mpfRead(in_pReadState, 
+			((uint8_t*) &pUTF32State->currentCodePoint)+pUTF32State->readCount, 
+			4 - pUTF32State->readCount);
+
+		assert(rwCount <= 4u - pUTF32State->readCount);
+
+		pUTF32State->readCount += (uint8_t) rwCount;
+
+		if (0 == pUTF32State->readCount)
 		{
-			assert(pUTF32State->parserState.readInterface.commonByteStreamInterface.
-				mpfIsTerminated(pUTF32State->parserState.pReadState));
+			ByteStreamStatus_v4 status = in_readInterface.
+				commonByteStreamInterface.mpfGetStatus(in_pReadState);
+			assert(ByteStreamStatus_OK != status);
 
-			goto terminate;
+			if (ByteStreamStatus_Terminated == status)
+				goto terminate;
+			else
+			{
+				pUTF32State->entryPoint = UTF32_EntryPoint_BeforeReading;
+				return ParseBlocker_Reader;
+			}
 		}
-		else if (4 != rwCount)
+		else if (4 != pUTF32State->readCount)
 		{
-			assert(rwCount > 0);
-			assert(rwCount < 4);
-			assert(pUTF32State->parserState.readInterface.commonByteStreamInterface.
-				mpfIsTerminated(pUTF32State->parserState.pReadState));
+			ByteStreamStatus_v4 status = in_readInterface.
+				commonByteStreamInterface.mpfGetStatus(in_pReadState);
+			assert(ByteStreamStatus_OK != status);
+			
+			assert(pUTF32State->readCount < 4);
 
-			goto write_terminal_replacement_character;
+			if (ByteStreamStatus_Terminated == status)
+			{
+Label_EntryPoint_WriteTerminalReplacementCharacter:
+				// Write terminal replacement character
+				if (emitCodepoint(in_pWriteState, in_writeInterface, 
+					cReplacementCharacter, &pUTF32State->entryPoint, 
+					sizeof(UTF32_EntryPoint), 
+					UTF32_EntryPoint_WriteCharacter))
+					return ParseBlocker_Writer;
+
+				goto terminate;
+			}
+			else
+			{
+				pUTF32State->entryPoint = UTF32_EntryPoint_BeforeReading;
+				return ParseBlocker_Reader;
+			}
 		}
 
 		if (pUTF32State->bigEndian)
-			currentCodePoint = _byteswap_ulong(currentCodePoint);
+			pUTF32State->currentCodePoint = _byteswap_ulong(pUTF32State->currentCodePoint);
 
-		if ((currentCodePoint >= 0xD800 && currentCodePoint <= 0xDFFF) ||
-			currentCodePoint >= 0x110000)
-			currentCodePoint = cReplacementCharacter;
+		if ((pUTF32State->currentCodePoint >= 0xD800 && 
+			pUTF32State->currentCodePoint <= 0xDFFF) ||
+			pUTF32State->currentCodePoint >= 0x110000)
+			pUTF32State->currentCodePoint = cReplacementCharacter;
 
-		writeCodePoint((UnicodeCodePoint**) &out_pBuffer, &writeCount, currentCodePoint);
+Label_EntryPoint_WriteCharacter:
+		if (emitCodepoint(in_pWriteState, in_writeInterface, 
+			pUTF32State->currentCodePoint, &pUTF32State->entryPoint, 
+			sizeof(UTF32_EntryPoint), 
+			UTF32_EntryPoint_WriteCharacter))
+			return ParseBlocker_Writer;
 	}
 
-	goto terminate;
-
-write_terminal_replacement_character:
-	assert(writeCount < in_count);
-	writeCodePoint((UnicodeCodePoint**) &out_pBuffer, &writeCount, cReplacementCharacter);
-
 terminate:
-	return writeCount;
+	pUTF32State->entryPoint = UTF32_EntryPoint_Terminated;
+
+Label_EntryPoint_Terminated:
+	assert(ByteStreamStatus_Terminated == in_readInterface.
+		commonByteStreamInterface.mpfGetStatus(in_pReadState));
+	return ParseBlocker_Neither;
 }

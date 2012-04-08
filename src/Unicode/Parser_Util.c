@@ -14,58 +14,32 @@
 * limitations under the License.
 */
 
-#include "Unicode/Parser.h"
-#include <string.h> // memset
+#include "Unicode/Parser_Util.h"
 #include <assert.h>
+#include <string.h> // memcpy
 
 const UnicodeCodePoint cReplacementCharacter = 0xFFFD;
 
-bool utfX_isTerminated(const void *in_pByteStreamState)
+int emitCodepoint(void *in_out_pWriteState, ByteStreamWriteInterface_v4 in_writeInterface, 
+	UnicodeCodePoint in_codePoint, void *out_pFailureEntryPointAdress, 
+	unsigned int in_failureEntryPointValue, size_t in_failureEntryPointSize)
 {
-	assert(((ParserState*) in_pByteStreamState)->readInterface.
-		commonByteStreamInterface.mpfIsTerminated != NULL);
+	size_t writeCount = in_writeInterface.mpfWrite(in_out_pWriteState, &in_codePoint, 1);
 
-	return ((ParserState *) in_pByteStreamState)->readInterface.
-		commonByteStreamInterface.mpfIsTerminated(
-		((ParserState *) in_pByteStreamState)->pReadState);
-}
+	assert(in_failureEntryPointSize > 0);
+	assert(in_failureEntryPointSize <= sizeof(int));
 
-void utfX_Terminate(void *in_out_pByteStreamState)
-{
-	assert(((ParserState *) in_out_pByteStreamState)->readInterface.
-		commonByteStreamInterface.mpfTerminate != NULL);
-
-	((ParserState *) in_out_pByteStreamState)->readInterface.
-		commonByteStreamInterface.mpfTerminate(
-		((ParserState *) in_out_pByteStreamState)->pReadState);
-}
-
-void parserStateInit(ParserState *out_pParserState, 
-	void *in_pReadState, 
-	ByteStreamReadInterface_v3 in_readInterface)
-{
-	out_pParserState->pReadState = in_pReadState;
-	out_pParserState->readInterface = in_readInterface;
-}
-
-ByteStreamReadInterface_v3 getParser_ReadInterface(
-	size_t (*mpfReadFunction)(void *in_out_pByteStreamState, 
-		void *out_pBuffer, size_t in_count))
-{
-	ByteStreamReadInterface_v3 out_interface;
-	memset(&out_interface, 0, sizeof(out_interface));
-
-	out_interface.commonByteStreamInterface.mpfIsTerminated = utfX_isTerminated;
-	out_interface.commonByteStreamInterface.mpfTerminate = utfX_Terminate;
-	out_interface.mpfRead = mpfReadFunction;
-
-	return out_interface;
-}
-
-void writeCodePoint(UnicodeCodePoint **out_ppBuffer, 
-	size_t *in_out_pWriteCount, UnicodeCodePoint in_codePoint)
-{
-	**out_ppBuffer = in_codePoint;
-	(*in_out_pWriteCount)++;
-	(*out_ppBuffer)++;
+	if (0 == writeCount)
+	{
+		assert(out_pFailureEntryPointAdress != NULL);
+		// Note that this line depends on little-endian architecture
+		memcpy(out_pFailureEntryPointAdress, &in_failureEntryPointValue, 
+			in_failureEntryPointSize);
+		return 1; // Failure
+	}
+	else
+	{
+		assert(1 == writeCount);
+		return 0; // Success
+	}
 }

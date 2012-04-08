@@ -18,14 +18,14 @@
 #define _MTAx_JSON_JSON_h
 
 #include "MiniStdlib/declspec.h"
-#include "IO/ByteStream_v3.h"
+#include "IO/ByteStream_v4.h"
 #include "Util/ReadResult.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-DLLEXPORT ReadResult parseJSON(ByteStreamReadInterface_v3 in_readInterface, void *in_pReadState);
+DLLEXPORT ReadResult parseJSON(ByteStreamReadInterface_v4 in_readInterface, void *in_pReadState);
 
 #ifdef __cplusplus
 }

@@ -18,7 +18,7 @@
 #include <assert.h> // assert
 #include <stddef.h> // size_t
 
-ReadResult parseJSON(ByteStreamReadInterface_v3 in_readInterface, void *in_pReadState)
+ReadResult parseJSON(ByteStreamReadInterface_v4 in_readInterface, void *in_pReadState)
 {
 	unsigned char fourBytes[4];
 	size_t bytesReadCountForDetectingEncoding;
@@ -73,7 +73,7 @@ ReadResult parseJSON(ByteStreamReadInterface_v3 in_readInterface, void *in_pRead
 		if (in_readInterface.mpfRead(in_pReadState, fourBytes+2, 2) != 2)
 			return ReadResultPrematureEndOfStream;
 
-		     if (0x0 != fourBytes[2] && 0x0 == fourBytes[3])
+		if (0x0 != fourBytes[2] && 0x0 == fourBytes[3])
 		{
 			// UTF16-LE
 			

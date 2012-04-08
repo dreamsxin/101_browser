@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 
-#include "IO/MemoryByteStream.h"
-#include "IO/MemoryByteStream_v3.h"
-#include "IO/PipeStream.h"
+#include "IO/MemoryByteStream_v4.h"
 #include "Unicode/Parser.h"
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
 #include <assert.h>
 #include <stdio.h>
-
-typedef struct
-{
-	uint8_t *pInputBytes;
-	MemoryByteStreamReadState *pReadState;
-} Test_Parser_Userdata;
+#include <string.h> // memcmp
 
 void test_UTF8_Coroutine(ByteStreamReference in_byteStreamReference, void *in_pUserData)
 {
@@ -45,18 +38,13 @@ void test_UTF8_Coroutine(ByteStreamReference in_byteStreamReference, void *in_pU
 
 void test_Unicode_Parser_UTF8()
 {
-	Test_Parser_Userdata test_UTF8_userdata;
 	bool result;
 	MemoryByteStreamReadState readState;
-	PipeStreamState pipeStreamState;
 	ByteStreamInterface pipeStreamInterface;
-	CoroutineDescriptor thisCoroutine;
-	CoroutineDescriptor otherCoroutine;
 	size_t idx;
 	UnicodeCodePoint currentCodePoint;
 	size_t readCount;
 
-	result = convertThreadToCoroutine(&thisCoroutine);
 
 	test(result);
 	if (!result)
@@ -76,9 +64,11 @@ void test_Unicode_Parser_UTF8()
 		test_UTF8_userdata.pInputBytes = inputBytes;
 		test_UTF8_userdata.pReadState = &readState;
 
+#if 0
 		result = pipeStreamInit(&pipeStreamState, &pipeStreamInterface,
 			false, &thisCoroutine, &otherCoroutine,
 			&test_UTF8_Coroutine, &test_UTF8_userdata);
+#endif
 
 		test(result);
 		if (!result)
@@ -99,15 +89,13 @@ void test_Unicode_Parser_UTF8()
 
 		readCount = pipeStreamRead(&pipeStreamState, &currentCodePoint, sizeof(UnicodeCodePoint));
 		test(0 == readCount);
-
-		pipeStreamStateDestroy(&pipeStreamState);
 	}
 }
 
 void test_Unicode_Parser_UTF16()
 {
 	UnicodeCodePoint bufferOut[32];
-	MemoryByteStream_v3State readState;
+	MemoryByteStream_v4State readState;
 	UTF16_State utf16State;
 	uint8_t terminateAfterLastOperation;
 	UnicodeCodePoint singleCodePoint;
@@ -127,7 +115,7 @@ void test_Unicode_Parser_UTF16()
 
 	size_t currentReadCount;
 	size_t allReadCount;
-	ByteStreamReadInterface_v3 utf16Interface = getUTF16_ReadInterface();
+	ByteStreamReadInterface_v4 utf16Interface = getUTF16_ReadInterface();
 	
 	for (terminateAfterLastOperation = 0; terminateAfterLastOperation < 2; terminateAfterLastOperation++)
 	{
@@ -152,11 +140,10 @@ void test_Unicode_Parser_UTF16()
 				0xDC, 0x00
 			};
 
-			memoryByteStream_v3ReadStateInit(&readState, bufferIn, sizeof(bufferIn), 
+			memoryByteStream_v4ReadStateInit(&readState, bufferIn, 1, sizeof(bufferIn), 
 				(bool) terminateAfterLastOperation);
 
-			utf16_StateInit(&utf16State, &readState, 
-				memoryByteStreamReadInterface_v3_get(), true);
+			utf16_StateInit(&utf16State, true);
 
 			allReadCount = 0;
 
@@ -168,13 +155,15 @@ void test_Unicode_Parser_UTF16()
 				allReadCount++;
 			}
 			
-			test(readState.bufferPos == readState.bufferSize);
-			test(readState.isTerminated);
+			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
+			test(readState.isTriggered);
+			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
+				commonByteStreamInterface.mpfGetStatus(&readState));
 			test(utf16Interface.commonByteStreamInterface.mpfIsTerminated(&utf16State));
 
 			test(sizeof(result) == allReadCount*sizeof(UnicodeCodePoint));
 
-			memoryByteStream_v3StateReset(&readState);
+			memoryByteStream_v4StateReset(&readState);
 			utf16_StateReset(&utf16State);
 
 			allReadCount = utf16Interface.mpfRead(&utf16State, 
@@ -182,8 +171,10 @@ void test_Unicode_Parser_UTF16()
 
 			test(sizeof(result) == allReadCount * sizeof(UnicodeCodePoint));
 
-			test(readState.bufferPos == readState.bufferSize);
-			test(readState.isTerminated);
+			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
+			test(readState.isTriggered);
+			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
+				commonByteStreamInterface.mpfGetStatus(&readState));
 			test(utf16Interface.commonByteStreamInterface.mpfIsTerminated(&utf16State));
 			test(!memcmp(result, bufferOut, sizeof(result)));
 		}
@@ -209,11 +200,10 @@ void test_Unicode_Parser_UTF16()
 				0x00, 0xDC
 			};
 
-			memoryByteStream_v3ReadStateInit(&readState, bufferIn, sizeof(bufferIn), 
+			memoryByteStream_v4ReadStateInit(&readState, bufferIn, 1, sizeof(bufferIn), 
 				(bool) terminateAfterLastOperation);
 
-			utf16_StateInit(&utf16State, &readState, 
-				memoryByteStreamReadInterface_v3_get(), false);
+			utf16_StateInit(&utf16State, false);
 
 			allReadCount = 0;
 
@@ -225,13 +215,15 @@ void test_Unicode_Parser_UTF16()
 				allReadCount++;
 			}
 
-			test(readState.bufferPos == readState.bufferSize);
-			test(readState.isTerminated);
+			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
+			test(readState.isTriggered);
+			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
+				commonByteStreamInterface.mpfGetStatus(&readState));
 			test(utf16Interface.commonByteStreamInterface.mpfIsTerminated(&utf16State));
 
 			test(sizeof(result) == allReadCount*sizeof(UnicodeCodePoint));
 
-			memoryByteStream_v3StateReset(&readState);
+			memoryByteStream_v4StateReset(&readState);
 			utf16_StateReset(&utf16State);
 
 			allReadCount = utf16Interface.mpfRead(&utf16State, 
@@ -239,8 +231,10 @@ void test_Unicode_Parser_UTF16()
 
 			test(sizeof(result) == allReadCount * sizeof(UnicodeCodePoint));
 
-			test(readState.bufferPos == readState.bufferSize);
-			test(readState.isTerminated);
+			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
+			test(readState.isTriggered);
+			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
+				commonByteStreamInterface.mpfGetStatus(&readState));
 			test(utf16Interface.commonByteStreamInterface.mpfIsTerminated(&utf16State));
 			test(!memcmp(result, bufferOut, sizeof(result)));
 		}
@@ -250,7 +244,7 @@ void test_Unicode_Parser_UTF16()
 void test_Unicode_Parser_UTF32()
 {
 	UnicodeCodePoint bufferOut[32];
-	MemoryByteStream_v3State readState;
+	MemoryByteStream_v4State readState;
 	UTF32_State utf32State;
 	uint8_t terminateAfterLastOperation;
 	UnicodeCodePoint singleCodePoint;
@@ -269,7 +263,7 @@ void test_Unicode_Parser_UTF32()
 
 	size_t currentReadCount;
 	size_t allReadCount;
-	ByteStreamReadInterface_v3 utf32Interface = getUTF32_ReadInterface();
+	ByteStreamReadInterface_v4 utf32Interface = getUTF32_ReadInterface();
 
 	for (terminateAfterLastOperation = 0; terminateAfterLastOperation < 2; terminateAfterLastOperation++)
 	{
@@ -287,11 +281,10 @@ void test_Unicode_Parser_UTF32()
 				0x00, 0x00, 0x00
 			};
 
-			memoryByteStream_v3ReadStateInit(&readState, bufferIn, sizeof(bufferIn), 
+			memoryByteStream_v4ReadStateInit(&readState, bufferIn, sizeof(bufferIn), 
 				(bool) terminateAfterLastOperation);
 
-			utf32_StateInit(&utf32State, &readState, 
-				memoryByteStreamReadInterface_v3_get(), true);
+			utf32_StateInit(&utf32State, true);
 
 			allReadCount = 0;
 
@@ -303,21 +296,25 @@ void test_Unicode_Parser_UTF32()
 				allReadCount++;
 			}
 			
-			test(readState.bufferPos == readState.bufferSize);
-			test(readState.isTerminated);
+			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
+			test(readState.isTriggered);
+			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
+				commonByteStreamInterface.mpfGetStatus(&readState));
 			test(utf32Interface.commonByteStreamInterface.mpfIsTerminated(&utf32State));
 
 			test(sizeof(result) == allReadCount*sizeof(UnicodeCodePoint));
 
-			memoryByteStream_v3StateReset(&readState);
+			memoryByteStream_v4StateReset(&readState);
 
 			allReadCount = utf32Interface.mpfRead(&utf32State, 
 				bufferOut, sizeof(bufferOut) / sizeof(UnicodeCodePoint));
 
 			test(sizeof(result) == allReadCount * sizeof(UnicodeCodePoint));
 
-			test(readState.bufferPos == readState.bufferSize);
-			test(readState.isTerminated);
+			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
+			test(readState.isTriggered);
+			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
+				commonByteStreamInterface.mpfGetStatus(&readState));
 			test(utf32Interface.commonByteStreamInterface.mpfIsTerminated(&utf32State));
 			test(!memcmp(result, bufferOut, sizeof(result)));
 		}
@@ -336,11 +333,10 @@ void test_Unicode_Parser_UTF32()
 				0x20, 0x00, 0x00
 			};
 
-			memoryByteStream_v3ReadStateInit(&readState, bufferIn, sizeof(bufferIn), 
+			memoryByteStream_v4ReadStateInit(&readState, bufferIn, 1, sizeof(bufferIn), 
 				(bool) terminateAfterLastOperation);
 
-			utf32_StateInit(&utf32State, &readState, 
-				memoryByteStreamReadInterface_v3_get(), false);
+			utf32_StateInit(&utf32State, false);
 
 			allReadCount = 0;
 
@@ -352,21 +348,25 @@ void test_Unicode_Parser_UTF32()
 				allReadCount++;
 			}
 			
-			test(readState.bufferPos == readState.bufferSize);
-			test(readState.isTerminated);
+			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
+			test(readState.isTriggered);
+			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
+				commonByteStreamInterface.mpfGetStatus(&readState));
 			test(utf32Interface.commonByteStreamInterface.mpfIsTerminated(&utf32State));
 
 			test(sizeof(result) == allReadCount*sizeof(UnicodeCodePoint));
 
-			memoryByteStream_v3StateReset(&readState);
+			memoryByteStream_v4StateReset(&readState);
 
 			allReadCount = utf32Interface.mpfRead(&utf32State, 
 				bufferOut, sizeof(bufferOut) / sizeof(UnicodeCodePoint));
 
 			test(sizeof(result) == allReadCount * sizeof(UnicodeCodePoint));
 
-			test(readState.bufferPos == readState.bufferSize);
-			test(readState.isTerminated);
+			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
+			test(readState.isTriggered);
+			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
+				commonByteStreamInterface.mpfGetStatus(&readState));
 			test(utf32Interface.commonByteStreamInterface.mpfIsTerminated(&utf32State));
 			test(!memcmp(result, bufferOut, sizeof(result)));
 		}

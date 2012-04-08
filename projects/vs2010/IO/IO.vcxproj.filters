@@ -45,10 +45,10 @@
     <ClInclude Include="..\..\..\include\IO\ByteStream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\IO\ByteStream_v3.h">
+    <ClInclude Include="..\..\..\include\IO\ByteStream_v4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\IO\MemoryByteStream_v3.h">
+    <ClInclude Include="..\..\..\include\IO\MemoryByteStream_v4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -80,7 +80,7 @@
     <ClCompile Include="..\..\..\src\IO\SetjmpStream.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\IO\MemoryByteStream_v3.c">
+    <ClCompile Include="..\..\..\src\IO\MemoryByteStream_v4.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

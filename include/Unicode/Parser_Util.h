@@ -23,16 +23,18 @@
 extern "C" {
 #endif
 
-void parserStateInit(ParserState *out_pParserState, 
-	void *in_pReadState, 
-	ByteStreamReadInterface_v3 in_readInterface);
-
-ByteStreamReadInterface_v3 getParser_ReadInterface(
-	size_t (*mpfReadFunction)(void *in_out_pByteStreamState, 
-		void *out_pBuffer, size_t in_count));
-
-void writeCodePoint(UnicodeCodePoint **out_ppBuffer, 
-	size_t *in_out_pWriteCount, UnicodeCodePoint in_codePoint);
+/*
+* Return value:
+* 0 - success
+* 1 (!= 0) - failure
+*
+* Q: Why the fiddling with out_pFailureEntryPointAdress and in_failureEntryPointValue
+*    instead of simply passing some value?
+* A: Because you can't rely that different enums have the same size.
+*/
+int emitCodepoint(void *in_out_pWriteState, ByteStreamWriteInterface_v4 in_writeInterface, 
+	UnicodeCodePoint in_codePoint, void *out_pFailureEntryPointAdress, 
+	unsigned int in_failureEntryPointValue, size_t in_failureEntryPointSize);
 
 #ifdef __cplusplus
 }
