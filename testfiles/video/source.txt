@@ -75,6 +75,9 @@ http://www.bing.com/az/hprichv/?p=April_Fools_106048130_DE-DE.ogv
 http://www.bing.com/az/hprichv/?p=paris_master_958x512_DE-DE.mp4
 http://www.bing.com/az/hprichv/?p=paris_master_958x512_theora_DE-DE.ogv
 http://www.bing.com/az/hprichv/?p=paris_master_958x512_DE-DE.webm
+http://www.bing.com/az/hprichv/?p=Bunnies_Getty_110409433_DE-DE.mp4
+http://www.bing.com/az/hprichv/?p=Bunnies_Getty_110409433_DE-DE.ogv
+http://www.bing.com/az/hprichv/?p=Bunnies_Getty_110409433_DE-DE.webm
 
 
 Subfolder TheoraTestsuite
