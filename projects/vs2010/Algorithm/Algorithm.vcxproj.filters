@@ -24,6 +24,9 @@
     <ClCompile Include="..\..\..\src\Algorithm\Bitmask.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\Algorithm\List.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\Algorithm\BinarySearch.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\Algorithm\Bitmask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\Algorithm\List.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -85,12 +85,14 @@
     <ClCompile Include="..\..\..\src\Algorithm\BinarySearch.c" />
     <ClCompile Include="..\..\..\src\Algorithm\Bitmask.c" />
     <ClCompile Include="..\..\..\src\Algorithm\IterateWhile.c" />
+    <ClCompile Include="..\..\..\src\Algorithm\List.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\Algorithm\BinarySearch.h" />
     <ClInclude Include="..\..\..\include\Algorithm\Bitmask.h" />
     <ClInclude Include="..\..\..\include\Algorithm\CompareResult.h" />
     <ClInclude Include="..\..\..\include\Algorithm\IterateWhile.h" />
+    <ClInclude Include="..\..\..\include\Algorithm\List.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
