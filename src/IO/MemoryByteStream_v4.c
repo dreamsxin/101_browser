@@ -50,12 +50,11 @@ void memoryByteStream_v4ReadStateInit(
 void memoryByteStream_v4WriteStateInit(
 	MemoryByteStream_v4State *out_pMemoryByteStream_v4WriteState,
 	void *in_pBuffer, size_t in_blockSize, size_t in_bufferBlockCount, 
-	bool in_triggerAsEarlyAsPossible, 
-	bool in_terminateAfterLastOperation)
+	bool in_triggerAsEarlyAsPossible)
 {
 	memoryByteStream_v4StateInit(out_pMemoryByteStream_v4WriteState, 
 		in_blockSize, in_bufferBlockCount, in_triggerAsEarlyAsPossible, 
-		in_terminateAfterLastOperation);
+		false);
 	
 	out_pMemoryByteStream_v4WriteState->rwBuffer.writeBuffer = in_pBuffer;
 }

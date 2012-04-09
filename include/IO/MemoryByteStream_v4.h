@@ -47,8 +47,7 @@ DLLEXPORT void memoryByteStream_v4ReadStateInit(
 DLLEXPORT void memoryByteStream_v4WriteStateInit(
 	MemoryByteStream_v4State *out_pMemoryByteStream_v4WriteState,
 	void *in_pBuffer, size_t in_blockSize, size_t in_bufferBlockCount, 
-	bool in_triggerAsEarlyAsPossible, 
-	bool in_terminateAfterLastOperation);
+	bool in_triggerAsEarlyAsPossible);
 
 DLLEXPORT void memoryByteStream_v4StateReset(MemoryByteStream_v4State *in_pMemoryByteStream_v4State);
 
