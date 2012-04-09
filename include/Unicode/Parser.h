@@ -143,7 +143,7 @@ DLLEXPORT void utf8_StateInit(UTF8_State *out_pState);
 DLLEXPORT void utf8_StateReset(UTF8_State *out_pState);
 
 DLLEXPORT ParseBlocker utf8_parse(
-	void *in_out_pByteStreamState, 
+	void *in_out_pParserState, 
 	void *in_pReadState, ByteStreamReadInterface_v4 in_readInterface, 
 	void *in_pWriteState, ByteStreamWriteInterface_v4 in_writeInterface);
 
@@ -154,7 +154,7 @@ DLLEXPORT void utf16_StateInit(UTF16_State *out_pState, bool in_bigEndian);
 DLLEXPORT void utf16_StateReset(UTF16_State *out_pState);
 
 DLLEXPORT ParseBlocker utf16_parse(
-	void *in_out_pByteStreamState, 
+	void *in_out_pParserState, 
 	void *in_pReadState, ByteStreamReadInterface_v4 in_readInterface, 
 	void *in_pWriteState, ByteStreamWriteInterface_v4 in_writeInterface);
 
@@ -165,7 +165,7 @@ DLLEXPORT void utf32_StateInit(UTF32_State *out_pState, bool in_bigEndian);
 DLLEXPORT void utf32_StateReset(UTF32_State *out_pState);
 
 DLLEXPORT ParseBlocker utf32_parse(
-	void *in_out_pByteStreamState, 
+	void *in_out_pParserState, 
 	void *in_pReadState, ByteStreamReadInterface_v4 in_readInterface, 
 	void *in_pWriteState, ByteStreamWriteInterface_v4 in_writeInterface);
 

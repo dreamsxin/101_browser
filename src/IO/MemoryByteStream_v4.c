@@ -83,6 +83,7 @@ ByteStreamStatus_v4 memoryByteStream_v4GetStatus(const void *in_pByteStreamState
 void memoryByteStream_v4Terminate(void *out_pByteStreamState)
 {
 	((MemoryByteStream_v4State *) out_pByteStreamState)->isTriggered = true;
+#error Fix bug - when resetting it should be not terminated
 	((MemoryByteStream_v4State *) out_pByteStreamState)->terminateAfterLastOperation;
 
 	assert(ByteStreamStatus_Terminated == memoryByteStream_v4GetStatus(out_pByteStreamState));

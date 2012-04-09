@@ -38,11 +38,11 @@ void append(UnicodeCodePoint *in_out_pCodepoint, uint8_t in_currentByte)
 }
 
 ParseBlocker utf8_parse(
-	void *in_out_pByteStreamState, 
+	void *in_out_pParserState, 
 	void *in_pReadState, ByteStreamReadInterface_v4 in_readInterface, 
 	void *in_pWriteState, ByteStreamWriteInterface_v4 in_writeInterface)
 {
-	UTF8_State *pUTF8State = (UTF8_State *) in_out_pByteStreamState;
+	UTF8_State *pUTF8State = (UTF8_State *) in_out_pParserState;
 	extern const UnicodeCodePoint cReplacementCharacter;
 
 	switch (pUTF8State->entryPoint)

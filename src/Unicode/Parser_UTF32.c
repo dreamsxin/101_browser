@@ -32,11 +32,11 @@ void utf32_StateReset(UTF32_State *out_pState)
 }
 
 ParseBlocker utf32_parse(
-	void *in_out_pByteStreamState, 
+	void *in_out_pParserState, 
 	void *in_pReadState, ByteStreamReadInterface_v4 in_readInterface, 
 	void *in_pWriteState, ByteStreamWriteInterface_v4 in_writeInterface)
 {
-	UTF32_State *pUTF32State = (UTF32_State *) in_out_pByteStreamState;
+	UTF32_State *pUTF32State = (UTF32_State *) in_out_pParserState;
 	extern const UnicodeCodePoint cReplacementCharacter;
 
 	assert(in_readInterface.mpfRead != NULL);

@@ -39,11 +39,11 @@ void utf16_StateReset(UTF16_State *out_pState)
 const UnicodeCodePoint SURROGATE_OFFSET = 0x10000 - (0xD800 << 10) - 0xDC00;
 
 ParseBlocker utf16_parse(
-	void *in_out_pByteStreamState, 
+	void *in_out_pParserState, 
 	void *in_pReadState, ByteStreamReadInterface_v4 in_readInterface, 
 	void *in_pWriteState, ByteStreamWriteInterface_v4 in_writeInterface)
 {
-	UTF16_State *pUTF16State = (UTF16_State *) in_out_pByteStreamState;
+	UTF16_State *pUTF16State = (UTF16_State *) in_out_pParserState;
 	extern const UnicodeCodePoint cReplacementCharacter;
 
 	assert(in_readInterface.mpfRead != NULL);
