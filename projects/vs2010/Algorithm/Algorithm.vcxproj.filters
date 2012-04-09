@@ -44,8 +44,5 @@
     <ClInclude Include="..\..\..\include\Algorithm\List.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\Algorithm\internal\AlgorithmProject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

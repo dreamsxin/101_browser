@@ -91,7 +91,6 @@
     <ClInclude Include="..\..\..\include\Algorithm\BinarySearch.h" />
     <ClInclude Include="..\..\..\include\Algorithm\Bitmask.h" />
     <ClInclude Include="..\..\..\include\Algorithm\CompareResult.h" />
-    <ClInclude Include="..\..\..\include\Algorithm\internal\AlgorithmProject.h" />
     <ClInclude Include="..\..\..\include\Algorithm\IterateWhile.h" />
     <ClInclude Include="..\..\..\include\Algorithm\List.h" />
   </ItemGroup>
