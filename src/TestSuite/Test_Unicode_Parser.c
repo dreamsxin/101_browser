@@ -141,6 +141,7 @@ void test_Unicode_Parser_UTF16()
 			while ((parseBlocker = utf16_parse(&utf16State, &readState, readInterface, 
 				&writeState, writeInterface)) != ParseBlocker_Neither)
 			{
+				test(ParseBlocker_Writer == parseBlocker);
 				assert(allReadCount < sizeof(result) / sizeof(UnicodeCodePoint));
 				test(result[allReadCount] == singleCodePoint);
 
@@ -203,6 +204,7 @@ void test_Unicode_Parser_UTF16()
 			while ((parseBlocker = utf16_parse(&utf16State, &readState, readInterface, 
 				&writeState, writeInterface)) != ParseBlocker_Neither)
 			{
+				test(ParseBlocker_Writer == parseBlocker);
 				assert(allReadCount < sizeof(result) / sizeof(UnicodeCodePoint));
 				test(result[allReadCount] == singleCodePoint);
 
@@ -289,6 +291,7 @@ void test_Unicode_Parser_UTF32()
 			while ((parseBlocker = utf32_parse(&utf32State, &readState, readInterface, 
 				&writeState, writeInterface)) != ParseBlocker_Neither)
 			{
+				test(ParseBlocker_Writer == parseBlocker);
 				assert(allReadCount < sizeof(result) / sizeof(UnicodeCodePoint));
 				test(result[allReadCount] == singleCodePoint);
 
@@ -344,6 +347,7 @@ void test_Unicode_Parser_UTF32()
 			while ((parseBlocker = utf32_parse(&utf32State, &readState, readInterface, 
 				&writeState, writeInterface)) != ParseBlocker_Neither)
 			{
+				test(ParseBlocker_Writer == parseBlocker);
 				assert(allReadCount < sizeof(result) / sizeof(UnicodeCodePoint));
 				test(result[allReadCount] == singleCodePoint);
 
