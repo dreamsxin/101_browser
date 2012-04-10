@@ -147,7 +147,6 @@ void test_Unicode_Parser_UTF16()
 			}
 			
 			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
-			test(readState.isTriggered);
 			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
 				commonByteStreamInterface.mpfGetStatus(&readState));
 
@@ -164,7 +163,6 @@ void test_Unicode_Parser_UTF16()
 			test(ParseBlocker_Neither == parseBlocker);
 
 			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
-			test(readState.isTriggered);
 			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
 				commonByteStreamInterface.mpfGetStatus(&readState));
 			test(ByteStreamStatus_Terminated == 
@@ -210,7 +208,6 @@ void test_Unicode_Parser_UTF16()
 			}
 
 			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
-			test(readState.isTriggered);
 			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
 				commonByteStreamInterface.mpfGetStatus(&readState));
 
@@ -227,7 +224,6 @@ void test_Unicode_Parser_UTF16()
 			test(ParseBlocker_Neither == parseBlocker);
 
 			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
-			test(readState.isTriggered);
 			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
 				commonByteStreamInterface.mpfGetStatus(&readState));
 			test(ByteStreamStatus_Terminated == 
@@ -297,7 +293,6 @@ void test_Unicode_Parser_UTF32()
 			}
 			
 			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
-			test(readState.isTriggered);
 			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
 				commonByteStreamInterface.mpfGetStatus(&readState));
 
@@ -314,7 +309,6 @@ void test_Unicode_Parser_UTF32()
 			test(ParseBlocker_Neither == parseBlocker);
 
 			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
-			test(readState.isTriggered);
 			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
 				commonByteStreamInterface.mpfGetStatus(&readState));
 			test(ByteStreamStatus_Terminated == 
@@ -353,7 +347,6 @@ void test_Unicode_Parser_UTF32()
 			}
 			
 			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
-			test(readState.isTriggered);
 			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
 				commonByteStreamInterface.mpfGetStatus(&readState));
 
@@ -370,7 +363,6 @@ void test_Unicode_Parser_UTF32()
 			test(ParseBlocker_Neither == parseBlocker);
 
 			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
-			test(readState.isTriggered);
 			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
 				commonByteStreamInterface.mpfGetStatus(&readState));
 			test(ByteStreamStatus_Terminated == 
