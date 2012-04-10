@@ -76,11 +76,18 @@ void memoryByteStream_v4SetStatus(void *in_out_pByteStreamState, ByteStreamStatu
 {
 	MemoryByteStream_v4State *pState = (MemoryByteStream_v4State *) 
 		in_out_pByteStreamState;
+	ByteStreamStatus_v4 currentStatus = memoryByteStream_v4GetStatus(in_out_pByteStreamState);
 
-	assert(ByteStreamStatus_OK == pState->status || 
-		in_status == pState->status);
-
-	pState->status = in_status;
+	if (ByteStreamStatus_InterventionRequired == currentStatus || 
+		ByteStreamStatus_OK == currentStatus || 
+		in_status == currentStatus)
+	{
+		pState->status = in_status;
+	}
+	else
+	{
+		assert(false);
+	}
 }
 
 void memoryByteStream_v4StateReset(MemoryByteStream_v4State *in_pMemoryByteStream_v4State)
