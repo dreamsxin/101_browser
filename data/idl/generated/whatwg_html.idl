@@ -111,6 +111,7 @@ module html
     [TreatNonCallableAsNull] attribute Function? oncanplaythrough;
     [TreatNonCallableAsNull] attribute Function? onchange;
     [TreatNonCallableAsNull] attribute Function? onclick;
+    [TreatNonCallableAsNull] attribute Function? onclose;
     [TreatNonCallableAsNull] attribute Function? oncontextmenu;
     [TreatNonCallableAsNull] attribute Function? oncuechange;
     [TreatNonCallableAsNull] attribute Function? ondblclick;
@@ -219,6 +220,7 @@ module html
     [TreatNonCallableAsNull] attribute Function? oncanplaythrough;
     [TreatNonCallableAsNull] attribute Function? onchange;
     [TreatNonCallableAsNull] attribute Function? onclick;
+    [TreatNonCallableAsNull] attribute Function? onclose;
     [TreatNonCallableAsNull] attribute Function? oncontextmenu;
     [TreatNonCallableAsNull] attribute Function? oncuechange;
     [TreatNonCallableAsNull] attribute Function? ondblclick;
@@ -1296,8 +1298,10 @@ module html
 
   interface HTMLDialogElement : HTMLElement {
              attribute boolean open;
+             attribute DOMString returnValue;
     void show(optional (MouseEvent or Element) anchor);
     void showModal(optional (MouseEvent or Element) anchor);
+    void close(optional DOMString returnValue);
   };
 
   [ReplaceableNamedProperties]
@@ -1360,6 +1364,7 @@ module html
     [TreatNonCallableAsNull] attribute Function? oncanplaythrough;
     [TreatNonCallableAsNull] attribute Function? onchange;
     [TreatNonCallableAsNull] attribute Function? onclick;
+    [TreatNonCallableAsNull] attribute Function? onclose;
     [TreatNonCallableAsNull] attribute Function? oncontextmenu;
     [TreatNonCallableAsNull] attribute Function? oncuechange;
     [TreatNonCallableAsNull] attribute Function? ondblclick;
