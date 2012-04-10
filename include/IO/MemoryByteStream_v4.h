@@ -27,16 +27,19 @@ extern "C" {
 
 typedef struct
 {
+	// Permanent data
 	union {
 		const void *readBuffer;
 		void *writeBuffer;
 	} rwBuffer;
 	size_t blockSize;
 	size_t bufferBlockCount;
-	size_t currentBufferBlockIndex;
 	bool triggerAsEarlyAsPossible;
 	bool terminateAfterLastOperation;
-	bool isTriggered;
+
+	// Temporary data
+	size_t currentBufferBlockIndex;
+	ByteStreamStatus_v4 status;
 } MemoryByteStream_v4State;
 
 DLLEXPORT void memoryByteStream_v4ReadStateInit(
@@ -56,8 +59,8 @@ size_t memoryByteStream_v4Read(void *in_out_pByteStreamState,
 size_t memoryByteStream_v4Write(void *in_out_pByteStreamState, 
 	const void *in_pBuffer, size_t in_count);
 
-bool memoryByteStream_v4IsTerminated(const void *in_pByteStreamState);
-void memoryByteStream_v4Terminate(void *out_pByteStreamState);
+ByteStreamStatus_v4 memoryByteStream_v4GetStatus(const void *in_pByteStreamState);
+void memoryByteStream_v4SetStatus(void *in_out_pByteStreamState, ByteStreamStatus_v4 in_status);
 
 size_t memoryByteStream_v4Read(void *in_out_pByteStreamState, 
 		void *out_pBuffer, size_t in_count);

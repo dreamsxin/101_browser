@@ -33,7 +33,7 @@ typedef enum
 typedef struct
 {
 	ByteStreamStatus_v4 (*mpfGetStatus)(const void *in_pByteStreamState);
-	void (*mpfTerminate)(void *in_out_pByteStreamState);
+	void (*mpfSetStatus)(void *in_out_pByteStreamState, ByteStreamStatus_v4 in_status);
 } CommonByteStreamInterface_v4;
 
 typedef struct

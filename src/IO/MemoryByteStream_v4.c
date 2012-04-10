@@ -69,31 +69,36 @@ ByteStreamStatus_v4 memoryByteStream_v4GetStatus(const void *in_pByteStreamState
 	const MemoryByteStream_v4State *cpState = (const MemoryByteStream_v4State *) 
 		in_pByteStreamState;
 
-	if (!cpState->isTriggered)
-		return ByteStreamStatus_OK;
-	else
-	{
-		if (!cpState->terminateAfterLastOperation)
-			return ByteStreamStatus_InterventionRequired;
-		else
-			return ByteStreamStatus_Terminated;
-	}
+	return cpState->status;
 }
 
-void memoryByteStream_v4Terminate(void *out_pByteStreamState)
+void memoryByteStream_v4SetStatus(void *in_out_pByteStreamState, ByteStreamStatus_v4 in_status)
 {
-	((MemoryByteStream_v4State *) out_pByteStreamState)->isTriggered = true;
-#error Fix bug - when resetting it should be not terminated
-	((MemoryByteStream_v4State *) out_pByteStreamState)->terminateAfterLastOperation;
+	MemoryByteStream_v4State *pState = (MemoryByteStream_v4State *) 
+		in_out_pByteStreamState;
 
-	assert(ByteStreamStatus_Terminated == memoryByteStream_v4GetStatus(out_pByteStreamState));
+	assert(ByteStreamStatus_OK == pState->status || 
+		in_status == pState->status);
+
+	pState->status = in_status;
 }
 
 void memoryByteStream_v4StateReset(MemoryByteStream_v4State *in_pMemoryByteStream_v4State)
 {
 	in_pMemoryByteStream_v4State->currentBufferBlockIndex = 0;
-	in_pMemoryByteStream_v4State->isTriggered = (in_pMemoryByteStream_v4State->triggerAsEarlyAsPossible && 
-		0 == in_pMemoryByteStream_v4State->bufferBlockCount);
+
+	if (in_pMemoryByteStream_v4State->triggerAsEarlyAsPossible && 
+		0 == in_pMemoryByteStream_v4State->bufferBlockCount)
+	{
+		if (in_pMemoryByteStream_v4State->terminateAfterLastOperation)
+			in_pMemoryByteStream_v4State->status = ByteStreamStatus_Terminated;
+		else
+			in_pMemoryByteStream_v4State->status = ByteStreamStatus_InterventionRequired;
+	}
+	else
+	{
+		in_pMemoryByteStream_v4State->status = ByteStreamStatus_OK;
+	}
 }
 
 size_t memoryByteStream_v4Copy(MemoryByteStream_v4State *in_out_pMemoryByteStream_v4State, 
@@ -101,7 +106,9 @@ size_t memoryByteStream_v4Copy(MemoryByteStream_v4State *in_out_pMemoryByteStrea
 {
 	size_t copyCount;
 
-	if (in_out_pMemoryByteStream_v4State->isTriggered)
+	assert(in_count > 0);
+
+	if (ByteStreamStatus_OK != memoryByteStream_v4GetStatus(in_out_pMemoryByteStream_v4State))
 		return 0;
 	
 	assert(in_out_pMemoryByteStream_v4State->currentBufferBlockIndex <= 
@@ -114,15 +121,17 @@ size_t memoryByteStream_v4Copy(MemoryByteStream_v4State *in_out_pMemoryByteStrea
 
 	assert(in_out_pMemoryByteStream_v4State->currentBufferBlockIndex <= in_out_pMemoryByteStream_v4State->bufferBlockCount);
 
-	if (memoryByteStream_v4GetTriggerAsEarlyAsPossible(in_out_pMemoryByteStream_v4State))
+	assert(ByteStreamStatus_OK == memoryByteStream_v4GetStatus(in_out_pMemoryByteStream_v4State));
+
+	if ((memoryByteStream_v4GetTriggerAsEarlyAsPossible(in_out_pMemoryByteStream_v4State) &&
+		in_out_pMemoryByteStream_v4State->bufferBlockCount == 
+		in_out_pMemoryByteStream_v4State->currentBufferBlockIndex) || 
+		(!memoryByteStream_v4GetTriggerAsEarlyAsPossible(in_out_pMemoryByteStream_v4State) &&
+		(copyCount < in_count)))
 	{
-		in_out_pMemoryByteStream_v4State->isTriggered = 
-			(in_out_pMemoryByteStream_v4State->bufferBlockCount == in_out_pMemoryByteStream_v4State->currentBufferBlockIndex);
-	}
-	else
-	{
-		assert(!memoryByteStream_v4GetTriggerAsEarlyAsPossible(in_out_pMemoryByteStream_v4State));
-		in_out_pMemoryByteStream_v4State->isTriggered = (copyCount < in_count);
+		in_out_pMemoryByteStream_v4State->status = 
+			in_out_pMemoryByteStream_v4State->terminateAfterLastOperation ? 
+			ByteStreamStatus_Terminated : ByteStreamStatus_InterventionRequired;
 	}
 
 	return copyCount;
@@ -153,7 +162,7 @@ size_t memoryByteStream_v4Write(void *in_out_pByteStreamState,
 void initCommonInterface(CommonByteStreamInterface_v4 *out_pCommon)
 {
 	out_pCommon->mpfGetStatus = memoryByteStream_v4GetStatus;
-	out_pCommon->mpfTerminate = memoryByteStream_v4Terminate;
+	out_pCommon->mpfSetStatus = memoryByteStream_v4SetStatus;
 }
 
 ByteStreamReadInterface_v4 memoryByteStreamReadInterface_v4_get()
