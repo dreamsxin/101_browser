@@ -304,6 +304,11 @@ Label_EntryPoint_X_append_emit_between_0x80_0xBF:
 	}
 
 terminate:
+	if (!ByteStreamStatus_Error == in_writeInterface.
+		commonByteStreamInterface.mpfGetStatus(in_pWriteState))
+		in_writeInterface.commonByteStreamInterface.mpfSetStatus(
+		in_pWriteState, ByteStreamStatus_Terminated);
+
 	pUTF8State->entryPoint = UTF8_EntryPoint_Terminated;
 
 Label_EntryPoint_Terminated:

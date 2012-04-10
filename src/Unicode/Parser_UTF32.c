@@ -131,6 +131,11 @@ Label_EntryPoint_WriteCharacter:
 	}
 
 terminate:
+	if (!ByteStreamStatus_Error == in_writeInterface.
+		commonByteStreamInterface.mpfGetStatus(in_pWriteState))
+		in_writeInterface.commonByteStreamInterface.mpfSetStatus(
+		in_pWriteState, ByteStreamStatus_Terminated);
+
 	pUTF32State->entryPoint = UTF32_EntryPoint_Terminated;
 
 Label_EntryPoint_Terminated:

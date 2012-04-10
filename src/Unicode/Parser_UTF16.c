@@ -220,6 +220,11 @@ Label_EntryPoint_WriteTerminalReplacementCharacter:
 		return ParseBlocker_Writer;
 
 terminate:
+	if (!ByteStreamStatus_Error == in_writeInterface.
+		commonByteStreamInterface.mpfGetStatus(in_pWriteState))
+		in_writeInterface.commonByteStreamInterface.mpfSetStatus(
+		in_pWriteState, ByteStreamStatus_Terminated);
+
 	pUTF16State->entryPoint = UTF16_EntryPoint_Terminated;
 
 Label_EntryPoint_Terminated:
