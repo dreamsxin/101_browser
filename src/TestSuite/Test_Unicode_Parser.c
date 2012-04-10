@@ -153,6 +153,8 @@ void test_Unicode_Parser_UTF16()
 			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
 			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
 				commonByteStreamInterface.mpfGetStatus(&readState));
+			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
+				commonByteStreamInterface.mpfGetStatus(&writeState));
 
 			test(sizeof(result) == allReadCount*sizeof(UnicodeCodePoint));
 
@@ -218,6 +220,8 @@ void test_Unicode_Parser_UTF16()
 			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
 			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
 				commonByteStreamInterface.mpfGetStatus(&readState));
+			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
+				commonByteStreamInterface.mpfGetStatus(&writeState));
 
 			test(sizeof(result) == allReadCount*sizeof(UnicodeCodePoint));
 
@@ -307,6 +311,8 @@ void test_Unicode_Parser_UTF32()
 			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
 			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
 				commonByteStreamInterface.mpfGetStatus(&readState));
+			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
+				commonByteStreamInterface.mpfGetStatus(&writeState));
 
 			test(sizeof(result) == allReadCount*sizeof(UnicodeCodePoint));
 
@@ -365,6 +371,8 @@ void test_Unicode_Parser_UTF32()
 			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
 			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
 				commonByteStreamInterface.mpfGetStatus(&readState));
+			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
+				commonByteStreamInterface.mpfGetStatus(&writeState));
 
 			test(sizeof(result) == allReadCount*sizeof(UnicodeCodePoint));
 
