@@ -149,6 +149,9 @@ void test_Unicode_Parser_UTF16()
 
 				allReadCount++;
 			}
+
+			test(1 == writeState.currentBufferBlockIndex);
+			allReadCount++;
 			
 			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
 			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
@@ -216,6 +219,9 @@ void test_Unicode_Parser_UTF16()
 
 				allReadCount++;
 			}
+
+			test(1 == writeState.currentBufferBlockIndex);
+			allReadCount++;
 
 			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
 			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
@@ -307,6 +313,9 @@ void test_Unicode_Parser_UTF32()
 
 				allReadCount++;
 			}
+
+			test(1 == writeState.currentBufferBlockIndex);
+			allReadCount++;
 			
 			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
 			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
@@ -367,6 +376,9 @@ void test_Unicode_Parser_UTF32()
 
 				allReadCount++;
 			}
+
+			test(1 == writeState.currentBufferBlockIndex);
+			allReadCount++;
 			
 			test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
 			test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
