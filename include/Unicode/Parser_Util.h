@@ -34,7 +34,7 @@ extern "C" {
 */
 int emitCodepoint(void *in_out_pWriteState, ByteStreamWriteInterface_v4 in_writeInterface, 
 	UnicodeCodePoint in_codePoint, void *out_pFailureEntryPointAdress, 
-	unsigned int in_failureEntryPointValue, size_t in_failureEntryPointSize);
+	size_t in_failureEntryPointSize, unsigned int in_failureEntryPointValue);
 
 #ifdef __cplusplus
 }
