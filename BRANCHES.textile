@@ -1,0 +1,17 @@
+h1. 101_browser branches
+
+h2. Currently used branches
+
+|_. Branch|_. Explanation|
+|linux, windows|Current status of the platform-specific development which is not guaranteed to compile under another platform.|
+| master|The status of code that compiles under both Windows and Linux. Normally behind these respective branches, but sometimes even ahead, if there ware changes introduced that are not specific to any platform.|
+|windows_error|Windows-specific branch that will probably have compilation errors or failed testcases for bugfixing purposes. Note that there is currently no linux_error branch since the main development occures on Windows.|
+
+h2. Important historic branches
+
+|_. Branch|_. Explanation|
+|linux_xcb|Experimental Linux branch using XCB instead of Xlib. It was abandonded because of bad support for GLX in xcb.|
+|windows_newio|Experiments with another IO system which wasn't developed further since it hadn't brought the hoped advantages.|
+
+The other branches are from internal experiments and not of any importance (not even historic) anymore.
+
