@@ -76,8 +76,8 @@ int main()
 		fprintf(stderr, "Could not start network\n");
 		exit(EXIT_FAILURE);
 	}
-	// There are bugs. Fix them first
-#if 0
+
+#if 1
 	printf("Testing DNS\n");
 	test_DNS();
 #endif
