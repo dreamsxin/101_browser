@@ -37,19 +37,25 @@ void test_Unicode_Parser_UTF8()
 	* (24th of January 2011)
 	*/
 	uint8_t bufferIn[] = {
-#if 0
-		0x41, // 'A'
-		0x98, 0xBA, 
-		0x42, // 'B'
+		0x41,             // 'A'
+		0x98, 
+		0xBA, 
+		0x42,             // 'B'
 		0xE2, 0x98, 
-		0x43, // 'C'
-#endif
-		0xE2, 0x98, 0xBA, 0xE2, 0x98 };
+		0x43,             // 'C'
+		0xE2, 0x98, 0xBA, // 0x263A
+		0xE2, 0x98
+	};
 	UnicodeCodePoint result[] = {
-#if 0
-		'A', 0xFFFD, 0xFFFD, 'B', 0xFFFD, 'C', 
-#endif
-		0x263A, 0xFFFD };
+		'A', 
+		0xFFFD, 
+		0xFFFD, 
+		'B', 
+		0xFFFD, 
+		'C', 
+		0x263A, 
+		0xFFFD
+	};
 	
 	ByteStreamReadInterface_v4 readInterface = memoryByteStreamReadInterface_v4_get();
 	ByteStreamWriteInterface_v4 writeInterface = memoryByteStreamWriteInterface_v4_get();

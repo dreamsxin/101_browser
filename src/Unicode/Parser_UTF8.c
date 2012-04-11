@@ -210,8 +210,15 @@ Label_EntryPoint_not_Start_leq_0x7F_or_geq_0xC0:
 				assert(0x80 <= pUTF8State->currentByte);
 				assert(pUTF8State->currentByte <= 0xBF);
 
-				if ((UTF8_InternalState_X_error < pUTF8State->internalState &&
-					UTF8_InternalState_X_X_X_X_X_error <= pUTF8State->internalState) ||
+				if (UTF8_InternalState_X_X_append_emit == pUTF8State->internalState ||
+					UTF8_InternalState_X_X_X_append_emit == pUTF8State->internalState)
+				{
+					append(&pUTF8State->codePoint, pUTF8State->currentByte);
+					pUTF8State->internalState = (UTF8_InternalState) 
+						((unsigned int) pUTF8State->internalState-1);
+				}
+				else if ((UTF8_InternalState_X_error < pUTF8State->internalState &&
+					pUTF8State->internalState <= UTF8_InternalState_X_X_X_X_X_error) ||
 					UTF8_InternalState_X_X_append_emit == pUTF8State->internalState ||
 					UTF8_InternalState_X_X_X_append_emit == pUTF8State->internalState)
 				{
@@ -231,6 +238,8 @@ Label_EntryPoint_X_error_between_0x80_0xBF:
 				}
 				else if (UTF8_InternalState_X_append_emit == pUTF8State->internalState)
 				{
+					append(&pUTF8State->codePoint, pUTF8State->currentByte);
+
 Label_EntryPoint_X_append_emit_between_0x80_0xBF:
 					if (emitCodepoint(in_pWriteState, in_writeInterface, pUTF8State->codePoint, 
 						&pUTF8State->entryPoint, sizeof(UTF8_EntryPoint), 
