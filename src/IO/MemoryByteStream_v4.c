@@ -152,7 +152,8 @@ size_t memoryByteStream_v4Read(void *in_out_pByteStreamState,
 
 	return memoryByteStream_v4Copy(pMemoryByteStream_v4State, 
 		(uint8_t*) pMemoryByteStream_v4State->rwBuffer.readBuffer
-		+ pMemoryByteStream_v4State->currentBufferBlockIndex, out_pBuffer, in_count);
+		+ pMemoryByteStream_v4State->currentBufferBlockIndex * pMemoryByteStream_v4State->blockSize, 
+		out_pBuffer, in_count);
 }
 
 size_t memoryByteStream_v4Write(void *in_out_pByteStreamState, 
@@ -163,7 +164,8 @@ size_t memoryByteStream_v4Write(void *in_out_pByteStreamState,
 
 	return memoryByteStream_v4Copy(pMemoryByteStream_v4State, 
 		in_pBuffer, (uint8_t*) pMemoryByteStream_v4State->rwBuffer.writeBuffer
-		+ pMemoryByteStream_v4State->currentBufferBlockIndex, in_count);
+		+ pMemoryByteStream_v4State->currentBufferBlockIndex * pMemoryByteStream_v4State->blockSize, 
+		in_count);
 }
 
 void initCommonInterface(CommonByteStreamInterface_v4 *out_pCommon)
