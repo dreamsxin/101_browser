@@ -24,59 +24,89 @@
 
 void test_Unicode_Parser_UTF8()
 {
-#if 0
-	MemoryByteStreamReadState readState;
-	ByteStreamInterface pipeStreamInterface;
-	size_t idx;
-	UnicodeCodePoint currentCodePoint;
-	size_t readCount;
+	UnicodeCodePoint bufferOut[32];
+	MemoryByteStream_v4State readState;
+	MemoryByteStream_v4State writeState;
+	UTF8_State utf8State;
+	uint8_t triggerAsEarlyAsPossible;
+	UnicodeCodePoint singleCodePoint;
 
 	/*
 	* the test string from
 	* http://www.whatwg.org/specs/web-apps/current-work/#utf-8
 	* (24th of January 2011)
 	*/
-	uint8_t bufferIn[] = { 0x41, 0x98, 0xBA, 0x42, 0xE2, 0x98, 0x43, 0xE2, 0x98, 0xBA, 0xE2, 0x98 };
-	UnicodeCodePoint result[] = { 'A', 0xFFFD, 0xFFFD, 'B', 0xFFFD, 'C', 0x263A, 0xFFFD };
-
+	uint8_t bufferIn[] = {
+#if 0
+		0x41, // 'A'
+		0x98, 0xBA, 
+		0x42, // 'B'
+		0xE2, 0x98, 
+		0x43, // 'C'
+#endif
+		0xE2, 0x98, 0xBA, 0xE2, 0x98 };
+	UnicodeCodePoint result[] = {
+#if 0
+		'A', 0xFFFD, 0xFFFD, 'B', 0xFFFD, 'C', 
+#endif
+		0x263A, 0xFFFD };
+	
 	ByteStreamReadInterface_v4 readInterface = memoryByteStreamReadInterface_v4_get();
 	ByteStreamWriteInterface_v4 writeInterface = memoryByteStreamWriteInterface_v4_get();
 
+	ParseBlocker parseBlocker;
+	size_t allReadCount;
+
+	for (triggerAsEarlyAsPossible = 0; triggerAsEarlyAsPossible < 2; triggerAsEarlyAsPossible++)
 	{
-		
+		memoryByteStream_v4ReadStateInit(&readState, bufferIn, 1, sizeof(bufferIn), 
+			(bool) triggerAsEarlyAsPossible, true);
+		memoryByteStream_v4WriteStateInit(&writeState, &singleCodePoint, 4, 1, false);
 
-		memoryByteStreamReadStateInit(&readState, inputBytes, sizeof(inputBytes));
+		utf8_StateInit(&utf8State);
 
-		test_UTF8_userdata.pInputBytes = inputBytes;
-		test_UTF8_userdata.pReadState = &readState;
+		allReadCount = 0;
 
-#if 0
-		result = pipeStreamInit(&pipeStreamState, &pipeStreamInterface,
-			false, &thisCoroutine, &otherCoroutine,
-			&test_UTF8_Coroutine, &test_UTF8_userdata);
-#endif
-
-		test(result);
-		if (!result)
-			return;
-
-		test(pipeStreamInterface.mpfRead != NULL);
-		if (NULL == pipeStreamInterface.mpfRead)
-			return;
-
-		for (idx = 0; idx < sizeof(outputCodepoints) / sizeof(UnicodeCodePoint); idx++)
+		while ((parseBlocker = utf8_parse(&utf8State, &readState, readInterface, 
+			&writeState, writeInterface)) != ParseBlocker_Neither)
 		{
-			readCount = (*pipeStreamInterface.mpfRead)
-				(&pipeStreamState, &currentCodePoint, sizeof(UnicodeCodePoint));
+			test(ParseBlocker_Writer == parseBlocker);
+			memoryByteStream_v4StateReset(&writeState);
 
-			test(readCount == sizeof(UnicodeCodePoint));
-			test(currentCodePoint == outputCodepoints[idx]);
+			assert(allReadCount < sizeof(result) / sizeof(UnicodeCodePoint));
+			test(result[allReadCount] == singleCodePoint);
+
+			allReadCount++;
 		}
 
-		readCount = pipeStreamRead(&pipeStreamState, &currentCodePoint, sizeof(UnicodeCodePoint));
-		test(0 == readCount);
+		test(1 == writeState.currentBufferBlockIndex);
+		allReadCount++;
+
+		test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
+		test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
+			commonByteStreamInterface.mpfGetStatus(&readState));
+		test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
+			commonByteStreamInterface.mpfGetStatus(&writeState));
+
+		test(sizeof(result) == allReadCount*sizeof(UnicodeCodePoint));
+
+		memoryByteStream_v4StateReset(&readState);
+		memoryByteStream_v4WriteStateInit(&writeState, bufferOut, 4, 
+			sizeof(bufferOut) / sizeof(UnicodeCodePoint), false);
+		utf8_StateReset(&utf8State);
+
+		parseBlocker = utf8_parse(&utf8State, &readState, readInterface, 
+			&writeState, writeInterface);
+
+		test(ParseBlocker_Neither == parseBlocker);
+
+		test(readState.currentBufferBlockIndex == readState.bufferBlockCount);
+		test(ByteStreamStatus_Terminated == memoryByteStreamReadInterface_v4_get().
+			commonByteStreamInterface.mpfGetStatus(&readState));
+		test(ByteStreamStatus_Terminated == 
+			writeInterface.commonByteStreamInterface.mpfGetStatus(&writeState));
+		test(!memcmp(result, bufferOut, sizeof(result)));
 	}
-#endif
 }
 
 void test_Unicode_Parser_UTF16()
