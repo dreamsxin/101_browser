@@ -107,6 +107,7 @@ module html
     // event handler IDL attributes
     [TreatNonCallableAsNull] attribute Function? onabort;
     [TreatNonCallableAsNull] attribute Function? onblur;
+    [TreatNonCallableAsNull] attribute Function? oncancel;
     [TreatNonCallableAsNull] attribute Function? oncanplay;
     [TreatNonCallableAsNull] attribute Function? oncanplaythrough;
     [TreatNonCallableAsNull] attribute Function? onchange;
@@ -216,6 +217,7 @@ module html
     // event handler IDL attributes
     [TreatNonCallableAsNull] attribute Function? onabort;
     [TreatNonCallableAsNull] attribute Function? onblur;
+    [TreatNonCallableAsNull] attribute Function? oncancel;
     [TreatNonCallableAsNull] attribute Function? oncanplay;
     [TreatNonCallableAsNull] attribute Function? oncanplaythrough;
     [TreatNonCallableAsNull] attribute Function? onchange;
@@ -1360,6 +1362,7 @@ module html
     [TreatNonCallableAsNull] attribute Function? onbeforeprint;
     [TreatNonCallableAsNull] attribute Function? onbeforeunload;
     [TreatNonCallableAsNull] attribute Function? onblur;
+    [TreatNonCallableAsNull] attribute Function? oncancel;
     [TreatNonCallableAsNull] attribute Function? oncanplay;
     [TreatNonCallableAsNull] attribute Function? oncanplaythrough;
     [TreatNonCallableAsNull] attribute Function? onchange;

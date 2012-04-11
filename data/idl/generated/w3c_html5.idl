@@ -86,10 +86,12 @@ module html5
     // event handler IDL attributes
     [TreatNonCallableAsNull] attribute Function? onabort;
     [TreatNonCallableAsNull] attribute Function? onblur;
+    [TreatNonCallableAsNull] attribute Function? oncancel;
     [TreatNonCallableAsNull] attribute Function? oncanplay;
     [TreatNonCallableAsNull] attribute Function? oncanplaythrough;
     [TreatNonCallableAsNull] attribute Function? onchange;
     [TreatNonCallableAsNull] attribute Function? onclick;
+    [TreatNonCallableAsNull] attribute Function? onclose;
     [TreatNonCallableAsNull] attribute Function? oncontextmenu;
     [TreatNonCallableAsNull] attribute Function? oncuechange;
     [TreatNonCallableAsNull] attribute Function? ondblclick;
@@ -185,10 +187,12 @@ module html5
     // event handler IDL attributes
     [TreatNonCallableAsNull] attribute Function? onabort;
     [TreatNonCallableAsNull] attribute Function? onblur;
+    [TreatNonCallableAsNull] attribute Function? oncancel;
     [TreatNonCallableAsNull] attribute Function? oncanplay;
     [TreatNonCallableAsNull] attribute Function? oncanplaythrough;
     [TreatNonCallableAsNull] attribute Function? onchange;
     [TreatNonCallableAsNull] attribute Function? onclick;
+    [TreatNonCallableAsNull] attribute Function? onclose;
     [TreatNonCallableAsNull] attribute Function? oncontextmenu;
     [TreatNonCallableAsNull] attribute Function? oncuechange;
     [TreatNonCallableAsNull] attribute Function? ondblclick;
@@ -1065,6 +1069,14 @@ module html5
              attribute DOMString label;
   };
 
+  interface HTMLDialogElement : HTMLElement {
+             attribute boolean open;
+             attribute DOMString returnValue;
+    void show(optional (MouseEvent or Element) anchor);
+    void showModal(optional (MouseEvent or Element) anchor);
+    void close(optional DOMString returnValue);
+  };
+
   [ReplaceableNamedProperties]
   interface Window : EventTarget {
     // the current browsing context
@@ -1115,10 +1127,12 @@ module html5
     [TreatNonCallableAsNull] attribute Function? onbeforeprint;
     [TreatNonCallableAsNull] attribute Function? onbeforeunload;
     [TreatNonCallableAsNull] attribute Function? onblur;
+    [TreatNonCallableAsNull] attribute Function? oncancel;
     [TreatNonCallableAsNull] attribute Function? oncanplay;
     [TreatNonCallableAsNull] attribute Function? oncanplaythrough;
     [TreatNonCallableAsNull] attribute Function? onchange;
     [TreatNonCallableAsNull] attribute Function? onclick;
+    [TreatNonCallableAsNull] attribute Function? onclose;
     [TreatNonCallableAsNull] attribute Function? oncontextmenu;
     [TreatNonCallableAsNull] attribute Function? oncuechange;
     [TreatNonCallableAsNull] attribute Function? ondblclick;
