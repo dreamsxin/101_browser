@@ -30,8 +30,11 @@ void test_Unicode_Parser_UTF8()
 	MemoryByteStream_v4State writeState;
 	UTF8_State utf8State;
 	uint8_t triggerAsEarlyAsPossible;
-	UnicodeCodePoint singleCodePoint;
 
+	UnicodeCodePoint singleCodePoint;
+	uint8_t singleByte;
+
+	size_t idx;
 	
 	uint8_t bufferIn[] = {
 		// taken from
@@ -532,6 +535,8 @@ void test_Unicode_Parser_UTF8()
 
 	for (triggerAsEarlyAsPossible = 0; triggerAsEarlyAsPossible < 2; triggerAsEarlyAsPossible++)
 	{
+		// 1st test run
+		
 		memoryByteStream_v4ReadStateInit(&readState, bufferIn, 1, sizeof(bufferIn), 
 			(bool) triggerAsEarlyAsPossible, true);
 		memoryByteStream_v4WriteStateInit(&writeState, &singleCodePoint, 4, 1, false);
@@ -548,7 +553,7 @@ void test_Unicode_Parser_UTF8()
 
 			if (allReadCount >= sizeof(result) / sizeof(UnicodeCodePoint))
 			{
-				fprintf(stderr, "Buffer overflow detected in line %u. Exiting.", __LINE__);
+				fprintf(stderr, "Buffer overflow detected in line %u of file %s. Exiting.", __LINE__, __FILE__);
 				exit(EXIT_FAILURE);
 			}
 			
@@ -568,7 +573,38 @@ void test_Unicode_Parser_UTF8()
 
 		test(sizeof(result) == allReadCount*sizeof(UnicodeCodePoint));
 
-		memoryByteStream_v4StateReset(&readState);
+		// 2nd test run
+
+		memoryByteStream_v4ReadStateInit(&readState, &singleByte, 1, 1, 
+			(bool) triggerAsEarlyAsPossible, false);
+		memoryByteStream_v4WriteStateInit(&writeState, bufferOut, 4, 
+			sizeof(bufferOut) / sizeof(UnicodeCodePoint), false);
+		utf8_StateReset(&utf8State);
+
+		for (idx = 0; idx < sizeof(bufferIn); idx++)
+		{
+			singleByte = bufferIn[idx];
+			
+			parseBlocker = utf8_parse(&utf8State, &readState, readInterface, 
+				&writeState, writeInterface);
+
+			test(ParseBlocker_Reader == parseBlocker);
+
+			memoryByteStream_v4StateReset(&readState);
+		}
+
+		readInterface.commonByteStreamInterface.mpfSetStatus
+			(&readState, ByteStreamStatus_Terminated);
+
+		parseBlocker = utf8_parse(&utf8State, &readState, readInterface, 
+			&writeState, writeInterface);
+		
+		test(ParseBlocker_Neither == parseBlocker);
+
+		// 3rd test run
+
+		memoryByteStream_v4ReadStateInit(&readState, bufferIn, 1, sizeof(bufferIn), 
+			(bool) triggerAsEarlyAsPossible, true);
 		memoryByteStream_v4WriteStateInit(&writeState, bufferOut, 4, 
 			sizeof(bufferOut) / sizeof(UnicodeCodePoint), false);
 		utf8_StateReset(&utf8State);
@@ -654,7 +690,7 @@ void test_Unicode_Parser_UTF16()
 
 				if (allReadCount >= sizeof(result) / sizeof(UnicodeCodePoint))
 				{
-					fprintf(stderr, "Buffer overflow detected in line %u. Exiting.", __LINE__);
+					fprintf(stderr, "Buffer overflow detected in line %u of file %s. Exiting.", __LINE__, __FILE__);
 					exit(EXIT_FAILURE);
 				}
 
@@ -729,7 +765,7 @@ void test_Unicode_Parser_UTF16()
 
 				if (allReadCount >= sizeof(result) / sizeof(UnicodeCodePoint))
 				{
-					fprintf(stderr, "Buffer overflow detected in line %u. Exiting.", __LINE__);
+					fprintf(stderr, "Buffer overflow detected in line %u of file %s. Exiting.", __LINE__, __FILE__);
 					exit(EXIT_FAILURE);
 				}
 
@@ -828,7 +864,7 @@ void test_Unicode_Parser_UTF32()
 
 				if (allReadCount >= sizeof(result) / sizeof(UnicodeCodePoint))
 				{
-					fprintf(stderr, "Buffer overflow detected in line %u. Exiting.", __LINE__);
+					fprintf(stderr, "Buffer overflow detected in line %u of file %s. Exiting.", __LINE__, __FILE__);
 					exit(EXIT_FAILURE);
 				}
 
@@ -896,7 +932,7 @@ void test_Unicode_Parser_UTF32()
 
 				if (allReadCount >= sizeof(result) / sizeof(UnicodeCodePoint))
 				{
-					fprintf(stderr, "Buffer overflow detected in line %u. Exiting.", __LINE__);
+					fprintf(stderr, "Buffer overflow detected in line %u of file %s. Exiting.", __LINE__, __FILE__);
 					exit(EXIT_FAILURE);
 				}
 
