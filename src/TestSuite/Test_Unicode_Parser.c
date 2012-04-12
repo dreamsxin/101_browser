@@ -276,6 +276,7 @@ void test_Unicode_Parser_UTF8()
 		0xED, 0xAF, 0xBF, 0xED, 0xBF, 0xBF
 
 		// 5.3 Other illegal code positions
+
 		// 5.3.1  U+FFFE = ef bf be
 		// 5.3.2  U+FFFF = ef bf bf
 	};
@@ -518,6 +519,7 @@ void test_Unicode_Parser_UTF8()
 		0xFFFD, 0xFFFD
 
 		// 5.3 Other illegal code positions
+
 		// 5.3.1  U+FFFE = ef bf be
 		// 5.3.2  U+FFFF = ef bf bf
 	};
