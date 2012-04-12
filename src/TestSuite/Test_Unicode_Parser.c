@@ -579,6 +579,7 @@ void test_Unicode_Parser_UTF8()
 			(bool) triggerAsEarlyAsPossible, false);
 		memoryByteStream_v4WriteStateInit(&writeState, bufferOut, 4, 
 			sizeof(bufferOut) / sizeof(UnicodeCodePoint), false);
+		utf8_StateReset(&utf8State);
 
 		for (idx = 0; idx < sizeof(bufferIn); idx++)
 		{
@@ -591,6 +592,9 @@ void test_Unicode_Parser_UTF8()
 
 			memoryByteStream_v4StateReset(&readState);
 		}
+
+		readInterface.commonByteStreamInterface.mpfSetStatus
+			(&readState, ByteStreamStatus_Terminated);
 
 		parseBlocker = utf8_parse(&utf8State, &readState, readInterface, 
 			&writeState, writeInterface);
