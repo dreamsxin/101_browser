@@ -102,7 +102,7 @@ Label_EntryPoint_WriteTerminalReplacementCharacter:
 				if (emitCodepoint(in_pWriteState, in_writeInterface, 
 					cReplacementCharacter, &pUTF32State->entryPoint, 
 					sizeof(UTF32_EntryPoint), 
-					UTF32_EntryPoint_WriteCharacter))
+					UTF32_EntryPoint_WriteTerminalReplacementCharacter))
 					return ParseBlocker_Writer;
 
 				goto terminate;
