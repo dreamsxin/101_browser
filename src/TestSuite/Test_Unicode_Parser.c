@@ -1103,7 +1103,7 @@ void test_Unicode_Parser_UTF32()
 			{
 				singleByte = bufferIn[idx];
 
-				parseBlocker = utf8_parse(&utf32State, &readState, readInterface, 
+				parseBlocker = utf32_parse(&utf32State, &readState, readInterface, 
 					&writeState, writeInterface);
 
 				test(ParseBlocker_Reader == parseBlocker);
