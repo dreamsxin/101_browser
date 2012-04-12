@@ -1,4 +1,3 @@
-
 move out\vs2010\Debug\TestSuite.exe.orig out\vs2010\Debug\TestSuite.exe
 move out\vs2010\Debug\Algorithm.dll.orig out\vs2010\Debug\Algorithm.dll
 move out\vs2010\Debug\BigNumber.dll.orig out\vs2010\Debug\BigNumber.dll
