@@ -553,7 +553,7 @@ void test_Unicode_Parser_UTF8()
 
 			if (allReadCount >= sizeof(result) / sizeof(UnicodeCodePoint))
 			{
-				fprintf(stderr, "Buffer overflow detected in line %u. Exiting.", __LINE__);
+				fprintf(stderr, "Buffer overflow detected in line %u of file %s. Exiting.", __LINE__, __FILE__);
 				exit(EXIT_FAILURE);
 			}
 			
@@ -686,7 +686,7 @@ void test_Unicode_Parser_UTF16()
 
 				if (allReadCount >= sizeof(result) / sizeof(UnicodeCodePoint))
 				{
-					fprintf(stderr, "Buffer overflow detected in line %u. Exiting.", __LINE__);
+					fprintf(stderr, "Buffer overflow detected in line %u of file %s. Exiting.", __LINE__, __FILE__);
 					exit(EXIT_FAILURE);
 				}
 
@@ -761,7 +761,7 @@ void test_Unicode_Parser_UTF16()
 
 				if (allReadCount >= sizeof(result) / sizeof(UnicodeCodePoint))
 				{
-					fprintf(stderr, "Buffer overflow detected in line %u. Exiting.", __LINE__);
+					fprintf(stderr, "Buffer overflow detected in line %u of file %s. Exiting.", __LINE__, __FILE__);
 					exit(EXIT_FAILURE);
 				}
 
@@ -860,7 +860,7 @@ void test_Unicode_Parser_UTF32()
 
 				if (allReadCount >= sizeof(result) / sizeof(UnicodeCodePoint))
 				{
-					fprintf(stderr, "Buffer overflow detected in line %u. Exiting.", __LINE__);
+					fprintf(stderr, "Buffer overflow detected in line %u of file %s. Exiting.", __LINE__, __FILE__);
 					exit(EXIT_FAILURE);
 				}
 
@@ -928,7 +928,7 @@ void test_Unicode_Parser_UTF32()
 
 				if (allReadCount >= sizeof(result) / sizeof(UnicodeCodePoint))
 				{
-					fprintf(stderr, "Buffer overflow detected in line %u. Exiting.", __LINE__);
+					fprintf(stderr, "Buffer overflow detected in line %u of file %s. Exiting.", __LINE__, __FILE__);
 					exit(EXIT_FAILURE);
 				}
 
