@@ -628,6 +628,13 @@ void test_Unicode_Parser_UTF8()
 		test(ByteStreamStatus_Terminated == 
 			writeInterface.commonByteStreamInterface.mpfGetStatus(&writeState));
 		test(!memcmp(result, bufferOut, sizeof(result)));
+
+		// Testing behaviour after termination
+		test(writeState.currentBufferBlockIndex * writeState.blockSize == sizeof(result));
+		parseBlocker = utf8_parse(&utf8State, &readState, readInterface, 
+			&writeState, writeInterface);
+		test(ParseBlocker_Neither == parseBlocker);
+		test(writeState.currentBufferBlockIndex * writeState.blockSize == sizeof(result));
 	}
 }
 
@@ -779,6 +786,13 @@ void test_Unicode_Parser_UTF16()
 			test(ByteStreamStatus_Terminated == 
 				writeInterface.commonByteStreamInterface.mpfGetStatus(&writeState));
 			test(!memcmp(result, bufferOut, sizeof(result)));
+
+			// Testing behaviour after termination
+			test(writeState.currentBufferBlockIndex * writeState.blockSize == sizeof(result));
+			parseBlocker = utf16_parse(&utf16State, &readState, readInterface, 
+				&writeState, writeInterface);
+			test(ParseBlocker_Neither == parseBlocker);
+			test(writeState.currentBufferBlockIndex * writeState.blockSize == sizeof(result));
 		}
 
 		// Little Endian
@@ -895,6 +909,13 @@ void test_Unicode_Parser_UTF16()
 			test(ByteStreamStatus_Terminated == 
 				writeInterface.commonByteStreamInterface.mpfGetStatus(&writeState));
 			test(!memcmp(result, bufferOut, sizeof(result)));
+
+			// Testing behaviour after termination
+			test(writeState.currentBufferBlockIndex * writeState.blockSize == sizeof(result));
+			parseBlocker = utf16_parse(&utf16State, &readState, readInterface, 
+				&writeState, writeInterface);
+			test(ParseBlocker_Neither == parseBlocker);
+			test(writeState.currentBufferBlockIndex * writeState.blockSize == sizeof(result));
 		}
 	}
 }
@@ -1039,6 +1060,13 @@ void test_Unicode_Parser_UTF32()
 			test(ByteStreamStatus_Terminated == 
 				writeInterface.commonByteStreamInterface.mpfGetStatus(&writeState));
 			test(!memcmp(result, bufferOut, sizeof(result)));
+
+			// Testing behaviour after termination
+			test(writeState.currentBufferBlockIndex * writeState.blockSize == sizeof(result));
+			parseBlocker = utf32_parse(&utf32State, &readState, readInterface, 
+				&writeState, writeInterface);
+			test(ParseBlocker_Neither == parseBlocker);
+			test(writeState.currentBufferBlockIndex * writeState.blockSize == sizeof(result));
 		}
 
 		// Little Endian
@@ -1146,6 +1174,13 @@ void test_Unicode_Parser_UTF32()
 			test(ByteStreamStatus_Terminated == 
 				writeInterface.commonByteStreamInterface.mpfGetStatus(&writeState));
 			test(!memcmp(result, bufferOut, sizeof(result)));
+
+			// Testing behaviour after termination
+			test(writeState.currentBufferBlockIndex * writeState.blockSize == sizeof(result));
+			parseBlocker = utf32_parse(&utf32State, &readState, readInterface, 
+				&writeState, writeInterface);
+			test(ParseBlocker_Neither == parseBlocker);
+			test(writeState.currentBufferBlockIndex * writeState.blockSize == sizeof(result));
 		}
 	}
 }
