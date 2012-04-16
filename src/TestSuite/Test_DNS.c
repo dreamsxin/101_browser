@@ -16,6 +16,9 @@
 
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
+#ifdef _WIN32
+#include <Ws2tcpip.h> // for inet_pton - works only from Vista/Server 2008 on
+#endif
 #include "DNS/DNS.h"
 #include <string.h>
 #include <stdio.h>
@@ -101,12 +104,39 @@ void test_readDNS()
 		"217.237.151.51";
 #endif
 
-	test(!readDNS(server, "twitter.com"));
-	test(!readDNS(server, "blog.fefe.de"));
-	test(!readDNS(server, "fsf.org"));
-	test(!readDNS(server, "qwerzhgcysry.org"));
-	test(!readDNS(server, "qwerzhgcysry.blu"));
-	test(!readDNS(server, "se"));
+	IN_ADDR serverAddr;
+
+	/*
+	* Reason for inet_pton: inet_addr has a problem (see 
+	* http://www.manpagez.com/man/3/inet_addr/):
+	* "BUGS
+	*
+	* The value INADDR_NONE (0xffffffff) is a valid broadcast address, but
+	* inet_addr() cannot return that value without indicating failure.  The
+	* newer inet_aton() function does not share this problem."
+	* 
+	* Unluckily inet_addr is not supported on Windows. So we use
+	* inet_pton as given as answer on
+	* http://stackoverflow.com/a/2422653
+	*/
+	if (inet_pton(AF_INET, server, 
+		/*
+		* http://msdn.microsoft.com/en-us/library/cc805844%28VS.85%29.aspx
+		* "When the Family parameter is AF_INET, this buffer should be large enough
+		* to hold an IN_ADDR structure."
+		*/
+		&serverAddr) != 1)
+	{
+		fprintf(stderr, "Error when using inet_pton.\n");
+		exit(EXIT_FAILURE);
+	}
+
+	test(!readDNS(serverAddr, "twitter.com"));
+	test(!readDNS(serverAddr, "blog.fefe.de"));
+	test(!readDNS(serverAddr, "fsf.org"));
+	test(!readDNS(serverAddr, "qwerzhgcysry.org"));
+	test(!readDNS(serverAddr, "qwerzhgcysry.blu"));
+	test(!readDNS(serverAddr, "se"));
 }
 
 void test_DNS()

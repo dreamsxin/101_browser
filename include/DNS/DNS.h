@@ -19,6 +19,7 @@
 
 #include "MiniStdlib/declspec.h"
 #include "MiniStdlib/cstdbool.h"
+#include "Network/Network.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -55,7 +56,7 @@ DLLEXPORT int prepareOrCheckQNAME(char *in_out_preQNAME, const char *in_pLabel,
 /*
 * Assumption: startupNetwork() has successfully been called before.
 */
-DLLEXPORT int readDNS(const char *in_cDnsServer, const char *in_cDomain);
+DLLEXPORT int readDNS(IN_ADDR in_serverAddr, const char *in_cDomain);
 
 #ifdef __cplusplus
 }
