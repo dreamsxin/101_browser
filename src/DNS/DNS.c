@@ -16,7 +16,6 @@
 
 #include "DNS/DNS.h"
 #include "Network/Network.h"
-
 #include <assert.h>
 #include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/cstring.h"

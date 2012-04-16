@@ -78,7 +78,6 @@ void test_prepareQNAME()
 void test_readDNS()
 {
 	char server[] = 
-#if 1
 		/*
 		* Google DNS
 		* has adresses
@@ -87,6 +86,10 @@ void test_readDNS()
 		* according to
 		* http://code.google.com/intl/de/speed/public-dns/
 		*/
+#if 0
+		"8.8.4.4";
+#endif
+#if 1
 		"8.8.8.8";
 #endif
 		/*
@@ -96,7 +99,12 @@ void test_readDNS()
 		* according to
 		* https://groups.google.com/group/public-dns-announce/msg/938acdc14aeb96d0
 		*/
-
+#if 0
+		"2001:4860:4860::8888";
+#endif
+#if 0
+		"2001:4860:4860::8844";
+#endif
 #if 0
 		"217.237.149.205";
 #endif
