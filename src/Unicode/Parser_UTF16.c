@@ -14,9 +14,8 @@
 * limitations under the License.
 */
 
-#include "Unicode/Parser.h"
+#include "Unicode/Parser_UTF16.h"
 #include "Unicode/Parser_Util.h"
-#include "MiniStdlib/cstdint.h"
 #include "MiniStdlib/MTAx_cstdlib.h" // for the conversation functions of endianness
 #include <assert.h>
 

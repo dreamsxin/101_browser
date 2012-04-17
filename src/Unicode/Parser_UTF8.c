@@ -14,9 +14,8 @@
 * limitations under the License.
 */
 
-#include "Unicode/Parser.h"
+#include "Unicode/Parser_UTF8.h"
 #include "Unicode/Parser_Util.h"
-#include "Algorithm/Bitmask.h"
 #include "MiniStdlib/cstdint.h"
 #include <assert.h>
 

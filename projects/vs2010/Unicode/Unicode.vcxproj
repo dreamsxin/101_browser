@@ -102,6 +102,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\Unicode\Parser.h" />
+    <ClInclude Include="..\..\..\include\Unicode\Parser_UTF16.h" />
+    <ClInclude Include="..\..\..\include\Unicode\Parser_UTF32.h" />
+    <ClInclude Include="..\..\..\include\Unicode\Parser_UTF8.h" />
     <ClInclude Include="..\..\..\include\Unicode\Parser_Util.h" />
     <ClInclude Include="..\..\..\include\Unicode\Unicode.h" />
   </ItemGroup>

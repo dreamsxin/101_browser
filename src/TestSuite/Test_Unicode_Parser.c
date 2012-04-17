@@ -15,7 +15,9 @@
 */
 
 #include "IO/MemoryByteStream_v4.h"
-#include "Unicode/Parser.h"
+#include "Unicode/Parser_UTF8.h"
+#include "Unicode/Parser_UTF16.h"
+#include "Unicode/Parser_UTF32.h"
 #include "TestSuite/Tests.h"
 #include "TestSuite/TestSuite.h"
 #include <assert.h>

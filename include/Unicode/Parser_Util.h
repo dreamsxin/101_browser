@@ -18,6 +18,8 @@
 #define _Unicode_Parser_Util_h
 
 #include "Unicode/Parser.h"
+#include "Unicode/Unicode.h"
+#include "IO/ByteStream_v4.h"
 
 #ifdef __cplusplus
 extern "C" {
