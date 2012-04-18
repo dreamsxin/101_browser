@@ -92,6 +92,63 @@ h2. Subfolder "imagetestsuite"
 
 http://code.google.com/p/imagetestsuite/
 
+h2. Subfolder "ico"
+
+h4. adobe_favicon.ico
+
+http://www.adobe.com/favicon.ico
+
+h4. bing_favicon.ico
+
+http://www.bing.com/s/wlflag.ico
+http://www.bing.com/favicon.ico
+
+h4. facebook_favicon.ico
+
+http://static.ak.fbcdn.net/rsrc.php/yi/r/q9U99v3_saj.ico
+http://www.facebook.com/favicon.ico
+
+h4. google_favicon.ico
+
+http://www.google.de/favicon.ico
+
+h4. heise_favicon.ico
+
+http://www.heise.de/favicon.ico
+
+h4. heise_favicon_foto.ico
+
+http://www.heise.de/favicon_foto.ico
+
+h4. twitter_favicon.ico
+
+https://twitter.com/favicon.ico
+
+h4. twitter_phoenix_favicon.ico
+
+https://twitter.com/phoenix/favicon.ico
+
+h4. xkcd_favicon.ico
+
+http://imgs.xkcd.com/s/919f273.ico
+http://xkcd.com/favicon.ico
+
+h4. yahoo_favicon.ico
+
+http://de.yahoo.com/favicon.ico
+
+h4. ycombinator_favicon.ico
+
+http://ycombinator.com/favicon.ico
+
+h4. youtube_favicon.ico
+
+http://youtube.com/favicon.ico
+
+h4. youtube_favicon2.ico
+
+http://s.ytimg.com/yt/favicon-refresh-vfldLzJxy.ico
+
 h2. Subfolder "jpeg"
 
 h3. Subfolder "xhtml-print"

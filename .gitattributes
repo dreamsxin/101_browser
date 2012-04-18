@@ -1,4 +1,5 @@
 *.gif binary
+*.ico binary
 *.jpg binary
 *.png binary
 *.raw binary
