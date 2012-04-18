@@ -71,6 +71,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DNS", "projects\vs2010\DNS\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JSON", "projects\vs2010\JSON\JSON.vcxproj", "{7E0D6F9C-1C28-46C5-B7A3-1E64ECBDE6FA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DIB", "projects\vs2010\DIB\DIB.vcxproj", "{E4624D38-0E45-441A-B792-E0842AD15CB3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -501,6 +503,18 @@ Global
 		{7E0D6F9C-1C28-46C5-B7A3-1E64ECBDE6FA}.LIB Release|Win32.Build.0 = Release|Win32
 		{7E0D6F9C-1C28-46C5-B7A3-1E64ECBDE6FA}.Release|Win32.ActiveCfg = Release|Win32
 		{7E0D6F9C-1C28-46C5-B7A3-1E64ECBDE6FA}.Release|Win32.Build.0 = Release|Win32
+		{E4624D38-0E45-441A-B792-E0842AD15CB3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E4624D38-0E45-441A-B792-E0842AD15CB3}.Debug|Win32.Build.0 = Debug|Win32
+		{E4624D38-0E45-441A-B792-E0842AD15CB3}.LIB ASM Debug|Win32.ActiveCfg = Debug|Win32
+		{E4624D38-0E45-441A-B792-E0842AD15CB3}.LIB ASM Debug|Win32.Build.0 = Debug|Win32
+		{E4624D38-0E45-441A-B792-E0842AD15CB3}.LIB ASM Release|Win32.ActiveCfg = Release|Win32
+		{E4624D38-0E45-441A-B792-E0842AD15CB3}.LIB ASM Release|Win32.Build.0 = Release|Win32
+		{E4624D38-0E45-441A-B792-E0842AD15CB3}.LIB Debug|Win32.ActiveCfg = Debug|Win32
+		{E4624D38-0E45-441A-B792-E0842AD15CB3}.LIB Debug|Win32.Build.0 = Debug|Win32
+		{E4624D38-0E45-441A-B792-E0842AD15CB3}.LIB Release|Win32.ActiveCfg = Release|Win32
+		{E4624D38-0E45-441A-B792-E0842AD15CB3}.LIB Release|Win32.Build.0 = Release|Win32
+		{E4624D38-0E45-441A-B792-E0842AD15CB3}.Release|Win32.ActiveCfg = Release|Win32
+		{E4624D38-0E45-441A-B792-E0842AD15CB3}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
